@@ -4,8 +4,8 @@
 
 # pySigma databricks Backend
 
-This is the databricks backend for pySigma. It provides the package `sigma.backends.databricks` with the `DatabricksSigmaBackend` class.
-Further, it contains the following processing pipelines in `sigma.pipelines.databricks_sigma`:
+This is the databricks backend for pySigma. It provides the package `sigma.backends.databricks` with the `DatabricksBackend` class.
+Further, it contains the following processing pipelines in `sigma.pipelines.databricks`:
 
 * pipeline1: purpose
 * pipeline2: purpose

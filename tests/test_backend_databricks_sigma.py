@@ -1,13 +1,13 @@
 import pytest
 from sigma.collection import SigmaCollection
-from sigma.backends.databricks import DatabricksSigmaBackend
+from sigma.backends.databricks import DatabricksBackend
 
 @pytest.fixture
 def databricks_sigma_backend():
-    return DatabricksSigmaBackend()
+    return DatabricksBackend()
 
 # TODO: implement tests for some basic queries and their expected results.
-def test_databricks_sigma_and_expression(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_and_expression(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -23,7 +23,7 @@ def test_databricks_sigma_and_expression(databricks_sigma_backend : DatabricksSi
         """)
     ) == ["fieldA='valueA' AND fieldB='valueB'"]
 
-def test_databricks_sigma_or_expression(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_or_expression(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -40,7 +40,7 @@ def test_databricks_sigma_or_expression(databricks_sigma_backend : DatabricksSig
         """)
     ) == ["fieldA='valueA' OR fieldB='valueB'"]
 
-def test_databricks_sigma_and_or_expression(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_and_or_expression(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -60,7 +60,7 @@ def test_databricks_sigma_and_or_expression(databricks_sigma_backend : Databrick
         """)
     ) == ["(fieldA in ('valueA1', 'valueA2')) AND (fieldB in ('valueB1', 'valueB2'))"]
 
-def test_databricks_sigma_or_and_expression(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_or_and_expression(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -77,9 +77,9 @@ def test_databricks_sigma_or_and_expression(databricks_sigma_backend : Databrick
                     fieldB: valueB2
                 condition: 1 of sel*
         """)
-    ) == ['<insert expected result here>']
+    ) == ["fieldA='valueA1' AND fieldB='valueB1' OR fieldA='valueA2' AND fieldB='valueB2'"]
 
-def test_databricks_sigma_in_expression(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_in_expression(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -95,9 +95,9 @@ def test_databricks_sigma_in_expression(databricks_sigma_backend : DatabricksSig
                         - valueC*
                 condition: sel
         """)
-    ) == ['<insert expected result here>']
+    ) == ["fieldA='valueA' OR fieldA='valueB' OR startswith(fieldA, 'valueC')"]
 
-def test_databricks_sigma_regex_query(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_regex_query(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -113,7 +113,7 @@ def test_databricks_sigma_regex_query(databricks_sigma_backend : DatabricksSigma
         """)
     ) == ["fieldA rlike 'foo.*bar' AND fieldB='foo'"]
 
-def test_databricks_sigma_cidr_query(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_cidr_query(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -126,9 +126,9 @@ def test_databricks_sigma_cidr_query(databricks_sigma_backend : DatabricksSigmaB
                     field|cidr: 192.168.0.0/16
                 condition: sel
         """)
-    ) == ['<insert expected result here>']
+    ) == ['cidrmatch(field, 192.168.0.0/16)']
 
-def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -141,19 +141,19 @@ def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend : 
                     field name: value
                 condition: sel
         """)
-    ) == ['<insert expected result here>']
+    ) == ["`field name`='value'"]
 
 # TODO: implement tests for all backend features that don't belong to the base class defaults, e.g. features that were
 # implemented with custom code, deferred expressions etc.
 
 
 
-def test_databricks_sigma_format1_output(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_format1_output(databricks_sigma_backend : DatabricksBackend):
     """Test for output format format1."""
     # TODO: implement a test for the output format
     pass
 
-def test_databricks_sigma_format2_output(databricks_sigma_backend : DatabricksSigmaBackend):
+def test_databricks_sigma_format2_output(databricks_sigma_backend : DatabricksBackend):
     """Test for output format format2."""
     # TODO: implement a test for the output format
     pass

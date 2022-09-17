@@ -1,14 +1,20 @@
 from sigma.conversion.state import ConversionState
 from sigma.rule import SigmaRule
+from sigma.exceptions import SigmaError, SigmaValueError
+from sigma.conversion.deferred import DeferredQueryExpression
 from sigma.conversion.base import TextQueryBackend
-from sigma.conditions import ConditionItem, ConditionAND, ConditionOR, ConditionNOT
+from sigma.conditions import ConditionItem, ConditionOR, ConditionAND, ConditionNOT, \
+    ConditionFieldEqualsValueExpression, ConditionValueExpression, ConditionType
+from sigma.types import SigmaBool, SigmaExpansion, SigmaString, SigmaNumber, SigmaRegularExpression, \
+    SigmaCompareExpression, SigmaNull, SigmaQueryExpression, SigmaCIDRExpression, SpecialChars
+
 from sigma.types import SigmaCompareExpression
 # from sigma.pipelines.databricks import # TODO: add pipeline imports or delete this line
 import sigma
 import re
-from typing import ClassVar, Dict, Tuple, Pattern, List
+from typing import Pattern, Union, ClassVar, Optional, Tuple, List, Dict, Any
 
-class DatabricksSigmaBackend(TextQueryBackend):
+class DatabricksBackend(TextQueryBackend):
     """databricks backend."""
     # TODO: change the token definitions according to the syntax. Delete these not supported by your backend.
     # See the pySigma documentation for further infromation:
@@ -16,7 +22,9 @@ class DatabricksSigmaBackend(TextQueryBackend):
 
     # Operator precedence: tuple of Condition{AND,OR,NOT} in order of precedence.
     # The backend generates grouping if required
-    precedence: ClassVar[Tuple[ConditionItem, ConditionItem, ConditionItem]] = (ConditionNOT, ConditionAND, ConditionOR)
+    precedence: ClassVar[Tuple[ConditionItem, ConditionItem, ConditionItem]] = (
+        ConditionNOT, ConditionAND, ConditionOR
+    )
     # Expression for precedence override grouping as format string with {expr} placeholder
     group_expression: ClassVar[str] = "({expr})"
 
@@ -32,7 +40,7 @@ class DatabricksSigmaBackend(TextQueryBackend):
     ### Quoting
     # Character used to quote field characters if field_quote_pattern matches (or not, depending on
     # field_quote_pattern_negation). No field name quoting is done if not set.
-    field_quote: ClassVar[str] = "'"
+    field_quote: ClassVar[str] = "`"
     # Quote field names if this pattern (doesn't) matches, depending on field_quote_pattern_negation. Field name is
     # always quoted if pattern is not set.
     field_quote_pattern: ClassVar[Pattern] = re.compile("^\\w+$")
@@ -41,7 +49,7 @@ class DatabricksSigmaBackend(TextQueryBackend):
 
     ### Escaping
     # Character to escape particular parts defined in field_escape_pattern.
-    field_escape: ClassVar[str] = "\\"
+    field_escape: ClassVar[str] = ""
     # Escape quote string defined in field_quote
     field_escape_quote: ClassVar[bool] = True
     # All matches of this pattern are prepended with the string contained in field_escape.
@@ -52,7 +60,7 @@ class DatabricksSigmaBackend(TextQueryBackend):
     escape_char    : ClassVar[str] = "\\"    # Escaping character for special characrers inside string
     wildcard_multi : ClassVar[str] = ".*"     # Character used as multi-character wildcard
     wildcard_single: ClassVar[str] = "."     # Character used as single-character wildcard
-    add_escaped    : ClassVar[str] = "\\"    # Characters quoted in addition to wildcards and string quote
+    add_escaped    : ClassVar[str] = "\\'"    # Characters quoted in addition to wildcards and string quote
     filter_chars   : ClassVar[str] = ""      # Characters filtered
     bool_values    : ClassVar[Dict[bool, str]] = {   # Values to which boolean values are mapped.
         True: "true",
@@ -60,11 +68,11 @@ class DatabricksSigmaBackend(TextQueryBackend):
     }
 
     # String matching operators. if none is appropriate eq_token is used.
-    startswith_expression: ClassVar[str] = "{field} like {value}%"
-    endswith_expression  : ClassVar[str] = "endswith"
-    contains_expression  : ClassVar[str] = "contains"
+    startswith_expression: ClassVar[str] = "startswith({field}, {value})"
+    endswith_expression  : ClassVar[str] = "endswith({field}, {value})"
+    contains_expression  : ClassVar[str] = "contains({field}, {value})"
     # Special expression if wildcards can't be matched with the eq_token operator
-    wildcard_match_expression: ClassVar[str] = "match"
+    wildcard_match_expression: ClassVar[str] = "{field} regexp {value}"
 
     # Regular expressions
     # Regular expression query as format string with placeholders {field} and {regex}
@@ -75,6 +83,7 @@ class DatabricksSigmaBackend(TextQueryBackend):
     re_escape: ClassVar[Tuple[str]] = ("{}[]()\\+")
 
     # cidr expressions
+    # TODO: fix that
     cidr_wildcard: ClassVar[str] = "*"    # Character used as single wildcard
     # CIDR expression query as format string with placeholders {field} = {value}
     cidr_expression: ClassVar[str] = "cidrmatch({field}, {value})"
@@ -113,9 +122,10 @@ class DatabricksSigmaBackend(TextQueryBackend):
     # List element separator
     list_separator: ClassVar[str] = ", "
 
+    # TODO: think how to handle them? We really can't match them without field...
     # Value not bound to a field
     # Expression for string value not bound to a field as format string with placeholder {value}
-    unbound_value_str_expression: ClassVar[str] = "'{value}'"
+    unbound_value_str_expression: ClassVar[str] = "{value}"
     # Expression for number value not bound to a field as format string with placeholder {value}
     unbound_value_num_expression: ClassVar[str] = '{value}'
     # Expression for regular expression not bound to a field as format string with placeholder {value}
@@ -131,8 +141,6 @@ class DatabricksSigmaBackend(TextQueryBackend):
 
     # TODO: implement custom methods for query elements not covered by the default backend base.
     # Documentation: https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html
-
-
 
     def finalize_query_format1(self, rule: SigmaRule, query: str, index: int, state: ConversionState) -> str:
         # TODO: implement the per-query output for the output format format1 here. Usually, the generated query is
