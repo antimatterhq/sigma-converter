@@ -2,12 +2,14 @@ import pytest
 from sigma.collection import SigmaCollection
 from sigma.backends.databricks import DatabricksBackend
 
+
 @pytest.fixture
 def databricks_sigma_backend():
     return DatabricksBackend()
 
+
 # TODO: implement tests for some basic queries and their expected results.
-def test_databricks_sigma_and_expression(databricks_sigma_backend : DatabricksBackend):
+def test_databricks_sigma_and_expression(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -21,9 +23,10 @@ def test_databricks_sigma_and_expression(databricks_sigma_backend : DatabricksBa
                     fieldB: valueB
                 condition: sel
         """)
-    ) == ["fieldA='valueA' AND fieldB='valueB'"]
+    ) == ["lower(fieldA) = lower('valueA') AND lower(fieldB) = lower('valueB')"]
 
-def test_databricks_sigma_or_expression(databricks_sigma_backend : DatabricksBackend):
+
+def test_databricks_sigma_or_expression(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -38,9 +41,10 @@ def test_databricks_sigma_or_expression(databricks_sigma_backend : DatabricksBac
                     fieldB: valueB
                 condition: 1 of sel*
         """)
-    ) == ["fieldA='valueA' OR fieldB='valueB'"]
+    ) == ["lower(fieldA) = lower('valueA') OR lower(fieldB) = lower('valueB')"]
 
-def test_databricks_sigma_and_or_expression(databricks_sigma_backend : DatabricksBackend):
+
+def test_databricks_sigma_and_or_expression(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -58,9 +62,11 @@ def test_databricks_sigma_and_or_expression(databricks_sigma_backend : Databrick
                         - valueB2
                 condition: sel
         """)
-    ) == ["(fieldA in ('valueA1', 'valueA2')) AND (fieldB in ('valueB1', 'valueB2'))"]
+    ) == ["(lower(fieldA) = lower('valueA1') OR lower(fieldA) = lower('valueA2')) AND "
+          "(lower(fieldB) = lower('valueB1') OR lower(fieldB) = lower('valueB2'))"]
 
-def test_databricks_sigma_or_and_expression(databricks_sigma_backend : DatabricksBackend):
+
+def test_databricks_sigma_or_and_expression(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -77,9 +83,11 @@ def test_databricks_sigma_or_and_expression(databricks_sigma_backend : Databrick
                     fieldB: valueB2
                 condition: 1 of sel*
         """)
-    ) == ["fieldA='valueA1' AND fieldB='valueB1' OR fieldA='valueA2' AND fieldB='valueB2'"]
+    ) == ["lower(fieldA) = lower('valueA1') AND lower(fieldB) = lower('valueB1') OR lower(fieldA) = lower('valueA2') "
+          "AND lower(fieldB) = lower('valueB2')"]
 
-def test_databricks_sigma_in_expression(databricks_sigma_backend : DatabricksBackend):
+
+def test_databricks_sigma_in_expression(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -95,9 +103,11 @@ def test_databricks_sigma_in_expression(databricks_sigma_backend : DatabricksBac
                         - valueC*
                 condition: sel
         """)
-    ) == ["fieldA='valueA' OR fieldA='valueB' OR startswith(fieldA, 'valueC')"]
+    ) == ["lower(fieldA) = lower('valueA') OR lower(fieldA) = lower('valueB') OR "
+          "startswith(lower(fieldA), lower('valueC'))"]
 
-def test_databricks_sigma_regex_query(databricks_sigma_backend : DatabricksBackend):
+
+def test_databricks_sigma_regex_query(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -111,9 +121,10 @@ def test_databricks_sigma_regex_query(databricks_sigma_backend : DatabricksBacke
                     fieldB: foo
                 condition: sel
         """)
-    ) == ["fieldA rlike 'foo.*bar' AND fieldB='foo'"]
+    ) == ["fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')"]
 
-def test_databricks_sigma_cidr_query(databricks_sigma_backend : DatabricksBackend):
+
+def test_databricks_sigma_cidr_query(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -128,7 +139,8 @@ def test_databricks_sigma_cidr_query(databricks_sigma_backend : DatabricksBacken
         """)
     ) == ["cidrmatch(field, '192.168.0.0/16')"]
 
-def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend : DatabricksBackend):
+
+def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
             title: Test
@@ -141,7 +153,7 @@ def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend : 
                     field name: value
                 condition: sel
         """)
-    ) == ["`field name`='value'"]
+    ) == ["lower(`field name`) = lower('value')"]
 
 
 def test_databricks_sigma_detection_yaml_output(databricks_sigma_backend: DatabricksBackend):
@@ -164,9 +176,6 @@ def test_databricks_sigma_detection_yaml_output(databricks_sigma_backend: Databr
     assert yaml_rules == """description: Detections generated from Sigma rules
 detections:
 - name: Test
-  sql: fieldA rlike 'foo.*bar' AND fieldB='foo'
+  sql: fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')
   status: release
 """
-
-
-

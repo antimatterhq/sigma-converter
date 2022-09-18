@@ -17,6 +17,7 @@ from typing import Pattern, Union, ClassVar, Optional, Tuple, List, Dict, Any
 
 import yaml
 
+
 class DatabricksBackend(TextQueryBackend):
     """databricks backend."""
     # TODO: change the token definitions according to the syntax. Delete these not supported by your backend.
@@ -32,11 +33,11 @@ class DatabricksBackend(TextQueryBackend):
     group_expression: ClassVar[str] = "({expr})"
 
     # Generated query tokens
-    token_separator: str = " "     # separator inserted between all boolean operators
+    token_separator: str = " "  # separator inserted between all boolean operators
     or_token: ClassVar[str] = "OR"
     and_token: ClassVar[str] = "AND"
     not_token: ClassVar[str] = "NOT"
-    eq_token: ClassVar[str] = "="  # Token inserted between field and value (without separator)
+    eq_token: ClassVar[str] = " = "  # Token inserted between field and value (without separator)
 
     # String output
     ## Fields
@@ -59,23 +60,23 @@ class DatabricksBackend(TextQueryBackend):
     field_escape_pattern: ClassVar[Pattern] = re.compile("\\s")
 
     ## Values
-    str_quote      : ClassVar[str] = "'"     # string quoting character (added as escaping character)
-    escape_char    : ClassVar[str] = "\\"    # Escaping character for special characrers inside string
-    wildcard_multi : ClassVar[str] = ".*"     # Character used as multi-character wildcard
-    wildcard_single: ClassVar[str] = "."     # Character used as single-character wildcard
-    add_escaped    : ClassVar[str] = "\\'"    # Characters quoted in addition to wildcards and string quote
-    filter_chars   : ClassVar[str] = ""      # Characters filtered
-    bool_values    : ClassVar[Dict[bool, str]] = {   # Values to which boolean values are mapped.
+    str_quote: ClassVar[str] = "'"  # string quoting character (added as escaping character)
+    escape_char: ClassVar[str] = "\\"  # Escaping character for special characrers inside string
+    wildcard_multi: ClassVar[str] = ".*"  # Character used as multi-character wildcard
+    wildcard_single: ClassVar[str] = "."  # Character used as single-character wildcard
+    add_escaped: ClassVar[str] = "\\'"  # Characters quoted in addition to wildcards and string quote
+    filter_chars: ClassVar[str] = ""  # Characters filtered
+    bool_values: ClassVar[Dict[bool, str]] = {  # Values to which boolean values are mapped.
         True: "true",
         False: "false",
     }
 
     # String matching operators. if none is appropriate eq_token is used.
-    startswith_expression: ClassVar[str] = "startswith({field}, {value})"
-    endswith_expression  : ClassVar[str] = "endswith({field}, {value})"
-    contains_expression  : ClassVar[str] = "contains({field}, {value})"
+    startswith_expression: ClassVar[str] = "startswith(lower({field}), lower({value}))"
+    endswith_expression: ClassVar[str] = "endswith(lower({field}), lower({value}))"
+    contains_expression: ClassVar[str] = "contains(lower({field}), lower({value}))"
     # Special expression if wildcards can't be matched with the eq_token operator
-    wildcard_match_expression: ClassVar[str] = "{field} regexp {value}"
+    wildcard_match_expression: ClassVar[str] = "lower({field}) regexp {value}"
 
     # Regular expressions
     # Regular expression query as format string with placeholders {field} and {regex}
@@ -87,7 +88,7 @@ class DatabricksBackend(TextQueryBackend):
 
     # cidr expressions
     # TODO: fix that
-    cidr_wildcard: ClassVar[str] = "*"    # Character used as single wildcard
+    cidr_wildcard: ClassVar[str] = "*"  # Character used as single wildcard
     # CIDR expression query as format string with placeholders {field} = {value}
     cidr_expression: ClassVar[str] = "cidrmatch({field}, '{value}')"
     # CIDR expression query as format string with placeholders {field} = in({list})
@@ -98,9 +99,9 @@ class DatabricksBackend(TextQueryBackend):
     compare_op_expression: ClassVar[str] = "{field} {operator} {value}"
     # Mapping between CompareOperators elements and strings used as replacement for {operator} in compare_op_expression
     compare_operators: ClassVar[Dict[SigmaCompareExpression.CompareOperators, str]] = {
-        SigmaCompareExpression.CompareOperators.LT : "<",
+        SigmaCompareExpression.CompareOperators.LT: "<",
         SigmaCompareExpression.CompareOperators.LTE: "<=",
-        SigmaCompareExpression.CompareOperators.GT : ">",
+        SigmaCompareExpression.CompareOperators.GT: ">",
         SigmaCompareExpression.CompareOperators.GTE: ">=",
     }
 
@@ -110,14 +111,14 @@ class DatabricksBackend(TextQueryBackend):
 
     # Field value in list, e.g. "field in (value list)" or "field containsall (value list)"
     # Convert OR as in-expression
-    convert_or_as_in: ClassVar[bool] = True
+    convert_or_as_in: ClassVar[bool] = False
     # Convert AND as in-expression
     convert_and_as_in: ClassVar[bool] = False
     # Values in list can contain wildcards. If set to False (default) only plain values are converted
     # into in-expressions.
     in_expressions_allow_wildcards: ClassVar[bool] = False
     # Expression for field in list of values as format string with placeholders {field}, {op} and {list}
-    field_in_list_expression: ClassVar[str] = "{field} {op} ({list})"
+    field_in_list_expression: ClassVar[str] = "lower({field}) {op} ({list})"
     # Operator used to convert OR into in-expressions. Must be set if convert_or_as_in is set
     or_in_operator: ClassVar[str] = "in"
     # Operator used to convert AND into in-expressions. Must be set if convert_and_as_in is set
@@ -141,6 +142,48 @@ class DatabricksBackend(TextQueryBackend):
     deferred_separator: ClassVar[str] = "\n| "
     # String used as query if final query only contains deferred expression
     deferred_only_query: ClassVar[str] = "*"
+
+    def convert_condition_field_eq_val_str(self, cond: ConditionFieldEqualsValueExpression,
+                                           state: ConversionState) -> Union[str, DeferredQueryExpression]:
+        """Conversion of field = string value expressions"""
+        try:
+            if (                                                                # Check conditions for usage of 'startswith' operator
+                self.startswith_expression is not None                            # 'startswith' operator is defined in backend
+                and cond.value.endswith(SpecialChars.WILDCARD_MULTI)            # String ends with wildcard
+                and not cond.value[:-1].contains_special()                      # Remainder of string doesn't contains special characters
+            ):
+                expr = self.startswith_expression                               # If all conditions are fulfilled, use 'startswith' operartor instead of equal token
+                value = cond.value[:-1]
+            elif (                                                              # Same as above but for 'endswith' operator: string starts with wildcard and doesn't contains further special characters
+                self.endswith_expression is not None
+                and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
+                and not cond.value[1:].contains_special()
+            ):
+                expr = self.endswith_expression
+                value = cond.value[1:]
+            elif (                                                              # contains: string starts and ends with wildcard
+                self.contains_expression is not None
+                and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
+                and cond.value.endswith(SpecialChars.WILDCARD_MULTI)
+                and not cond.value[1:-1].contains_special()
+            ):
+                expr = self.contains_expression
+                value = cond.value[1:-1]
+            elif (                                                              # wildcard match expression: string contains wildcard
+                self.wildcard_match_expression is not None
+                and cond.value.contains_special()
+            ):
+                expr = self.wildcard_match_expression
+                value = cond.value
+            else:
+                expr =  "lower({field}) = lower({value})"
+                value = cond.value
+            return expr.format(field=self.escape_and_quote_field(cond.field),
+                               value=self.convert_value_str(value, state))
+        except TypeError:       # pragma: no cover
+            raise NotImplementedError("Field equals string value expressions with strings are not supported by the "
+                                      "backend.")
+
 
     # TODO: implement custom methods for query elements not covered by the default backend base.
     # Documentation: https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html

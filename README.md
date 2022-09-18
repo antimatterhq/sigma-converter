@@ -28,6 +28,8 @@ This backend is currently maintained by:
 
 ## TODOs
 
+ - \[X\]support for case insensitive strings (from doc: `All values are treated as case-insensitive strings`)
+ 
  - Try to rewrite expressions like `foo*bar` into `(startswith(field, "foo") and endswith(field, "bar"))`
  
  - Fix error when processing following files: `sigma/rules/proxy/proxy_empty_ua.yml` & `sigma/rules/cloud/azure/azure_ad_sign_ins_from_unknown_devices.yml` & `sigma/rules/windows/registry/registry_set/registry_set_disable_winevt_logging.yml`
