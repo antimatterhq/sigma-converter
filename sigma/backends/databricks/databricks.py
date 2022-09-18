@@ -89,7 +89,7 @@ class DatabricksBackend(TextQueryBackend):
     # TODO: fix that
     cidr_wildcard: ClassVar[str] = "*"    # Character used as single wildcard
     # CIDR expression query as format string with placeholders {field} = {value}
-    cidr_expression: ClassVar[str] = "cidrmatch({field}, {value})"
+    cidr_expression: ClassVar[str] = "cidrmatch({field}, '{value}')"
     # CIDR expression query as format string with placeholders {field} = in({list})
     cidr_in_list_expression: ClassVar[str] = "{field} in ({value})"
 
@@ -155,7 +155,7 @@ class DatabricksBackend(TextQueryBackend):
         detections = []
         for query in queries:
             d = json.loads(query)
-            if d["status"] == "deprecated" or d["status"] == "unsupported":
+            if d["status"] == "deprecated" or d["status"] == "unsupported" or d["sql"] == "":
                 continue
             detections.append(d)
         data["detections"] = detections

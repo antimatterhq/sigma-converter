@@ -126,7 +126,7 @@ def test_databricks_sigma_cidr_query(databricks_sigma_backend : DatabricksBacken
                     field|cidr: 192.168.0.0/16
                 condition: sel
         """)
-    ) == ['cidrmatch(field, 192.168.0.0/16)']
+    ) == ["cidrmatch(field, '192.168.0.0/16')"]
 
 def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend : DatabricksBackend):
     assert databricks_sigma_backend.convert(
