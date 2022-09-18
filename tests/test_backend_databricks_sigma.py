@@ -143,19 +143,30 @@ def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend : 
         """)
     ) == ["`field name`='value'"]
 
-# TODO: implement tests for all backend features that don't belong to the base class defaults, e.g. features that were
-# implemented with custom code, deferred expressions etc.
 
+def test_databricks_sigma_detection_yaml_output(databricks_sigma_backend: DatabricksBackend):
+    sigma_rules = SigmaCollection.from_yaml("""
+            title: Test
+            status: stable
+            logsource:
+                category: test_category
+                product: test_product
+            detection:
+                sel:
+                    fieldA|re: foo.*bar
+                    fieldB: foo
+                condition: sel
+        """)
+    queries = databricks_sigma_backend.convert(sigma_rules)
+    final_queries = [databricks_sigma_backend.finalize_query_detection_yaml(q[0], q[1], 0, None)
+                     for q in zip(sigma_rules.rules, queries)]
+    yaml_rules = databricks_sigma_backend.finalize_output_detection_yaml(final_queries)
+    assert yaml_rules == """description: Detections generated from Sigma rules
+detections:
+- name: Test
+  sql: fieldA rlike 'foo.*bar' AND fieldB='foo'
+  status: release
+"""
 
-
-def test_databricks_sigma_format1_output(databricks_sigma_backend : DatabricksBackend):
-    """Test for output format format1."""
-    # TODO: implement a test for the output format
-    pass
-
-def test_databricks_sigma_format2_output(databricks_sigma_backend : DatabricksBackend):
-    """Test for output format format2."""
-    # TODO: implement a test for the output format
-    pass
 
 

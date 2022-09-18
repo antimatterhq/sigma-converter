@@ -12,10 +12,15 @@ Further, it contains the following processing pipelines in `sigma.pipelines.data
 
 It supports the following output formats:
 
-* default: plain databricks queries
-* format_1: purpose
-* format_2: purpose
+* default: plain Databricks/Apacha Spark SQL queries
+* detection_yaml: Yaml markup for my own small detection framework
 
 This backend is currently maintained by:
 
 * [Alex Ott](https://github.com/alexott/)
+
+
+## TODOs
+
+ - Try to rewrite expressions like `foo*bar` into `(startswith(field, "foo") and endswith(field, "bar"))`
+ 

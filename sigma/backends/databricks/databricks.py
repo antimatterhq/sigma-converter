@@ -7,12 +7,15 @@ from sigma.conditions import ConditionItem, ConditionOR, ConditionAND, Condition
     ConditionFieldEqualsValueExpression, ConditionValueExpression, ConditionType
 from sigma.types import SigmaBool, SigmaExpansion, SigmaString, SigmaNumber, SigmaRegularExpression, \
     SigmaCompareExpression, SigmaNull, SigmaQueryExpression, SigmaCIDRExpression, SpecialChars
-
 from sigma.types import SigmaCompareExpression
 # from sigma.pipelines.databricks import # TODO: add pipeline imports or delete this line
 import sigma
+
 import re
+import json
 from typing import Pattern, Union, ClassVar, Optional, Tuple, List, Dict, Any
+
+import yaml
 
 class DatabricksBackend(TextQueryBackend):
     """databricks backend."""
@@ -142,24 +145,18 @@ class DatabricksBackend(TextQueryBackend):
     # TODO: implement custom methods for query elements not covered by the default backend base.
     # Documentation: https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html
 
-    def finalize_query_format1(self, rule: SigmaRule, query: str, index: int, state: ConversionState) -> str:
-        # TODO: implement the per-query output for the output format format1 here. Usually, the generated query is
-        # embedded into a template, e.g. a JSON format with additional information from the Sigma rule.
-        return query
+    def finalize_query_detection_yaml(self, rule: SigmaRule, query: str, index: int, state: ConversionState) -> str:
+        statuses = {"experimental": "test", "stable": "release"}
+        rule_status = (rule.status.name or "test").lower()
+        return json.dumps({"name": rule.title, "sql": query, "status": statuses.get(rule_status, rule_status)})
 
-    def finalize_output_format1(self, queries: List[str]) -> str:
-        # TODO: implement the output finalization for all generated queries for the format format1 here. Usually,
-        # the single generated queries are embedded into a structure, e.g. some JSON or XML that can be imported into
-        # the SIEM.
-        return "\n".join(queries)
-
-    def finalize_query_format2(self, rule: SigmaRule, query: str, index: int, state: ConversionState) -> str:
-        # TODO: implement the per-query output for the output format format2 here. Usually, the generated query is
-        # embedded into a template, e.g. a JSON format with additional information from the Sigma rule.
-        return query
-
-    def finalize_output_format2(self, queries: List[str]) -> str:
-        # TODO: implement the output finalization for all generated queries for the format format2 here. Usually,
-        # the single generated queries are embedded into a structure, e.g. some JSON or XML that can be imported into
-        # the SIEM.
-        return "\n".join(queries)
+    def finalize_output_detection_yaml(self, queries: List[str]) -> str:
+        data = {"description": "Detections generated from Sigma rules"}
+        detections = []
+        for query in queries:
+            d = json.loads(query)
+            if d["status"] == "deprecated" or d["status"] == "unsupported":
+                continue
+            detections.append(d)
+        data["detections"] = detections
+        return yaml.dump(data, default_flow_style=False)
