@@ -19,10 +19,18 @@ import yaml
 
 
 class DatabricksBackend(TextQueryBackend):
-    """databricks backend."""
-    # TODO: change the token definitions according to the syntax. Delete these not supported by your backend.
+    """Databricks backend for PySigma."""
     # See the pySigma documentation for further infromation:
     # https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html
+
+    name: ClassVar[str] = "databricks"
+    formats: Dict[str, str] = {
+        "default": "Plain Databricks SQL queries",
+        "detection_yaml": "Yaml markup for Alex's small detection framework",
+    }
+    # TODO: does the backend requires that a processing pipeline is provided? This information can be used by user
+    # interface programs like Sigma CLI to warn users about inappropriate usage of the backend.
+    requires_pipeline: bool = False
 
     # Operator precedence: tuple of Condition{AND,OR,NOT} in order of precedence.
     # The backend generates grouping if required
@@ -61,7 +69,7 @@ class DatabricksBackend(TextQueryBackend):
 
     ## Values
     str_quote: ClassVar[str] = "'"  # string quoting character (added as escaping character)
-    escape_char: ClassVar[str] = "\\"  # Escaping character for special characrers inside string
+    escape_char: ClassVar[str] = "\\"  # Escaping character for special characters inside string
     wildcard_multi: ClassVar[str] = ".*"  # Character used as multi-character wildcard
     wildcard_single: ClassVar[str] = "."  # Character used as single-character wildcard
     add_escaped: ClassVar[str] = "\\'"  # Characters quoted in addition to wildcards and string quote
@@ -147,21 +155,22 @@ class DatabricksBackend(TextQueryBackend):
                                            state: ConversionState) -> Union[str, DeferredQueryExpression]:
         """Conversion of field = string value expressions"""
         try:
-            if (                                                                # Check conditions for usage of 'startswith' operator
-                self.startswith_expression is not None                            # 'startswith' operator is defined in backend
-                and cond.value.endswith(SpecialChars.WILDCARD_MULTI)            # String ends with wildcard
-                and not cond.value[:-1].contains_special()                      # Remainder of string doesn't contains special characters
+            if (  # Check conditions for usage of 'startswith' operator
+                self.startswith_expression is not None  # 'startswith' operator is defined in backend
+                and cond.value.endswith(SpecialChars.WILDCARD_MULTI)  # String ends with wildcard
+                and not cond.value[:-1].contains_special()  # Remainder of string doesn't contains special characters
             ):
-                expr = self.startswith_expression                               # If all conditions are fulfilled, use 'startswith' operartor instead of equal token
+                expr = self.startswith_expression  # If all conditions are fulfilled, use 'startswith' operartor instead of equal token
                 value = cond.value[:-1]
-            elif (                                                              # Same as above but for 'endswith' operator: string starts with wildcard and doesn't contains further special characters
+            elif (
+            # Same as above but for 'endswith' operator: string starts with wildcard and doesn't contains further special characters
                 self.endswith_expression is not None
                 and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
                 and not cond.value[1:].contains_special()
             ):
                 expr = self.endswith_expression
                 value = cond.value[1:]
-            elif (                                                              # contains: string starts and ends with wildcard
+            elif (  # contains: string starts and ends with wildcard
                 self.contains_expression is not None
                 and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
                 and cond.value.endswith(SpecialChars.WILDCARD_MULTI)
@@ -169,31 +178,30 @@ class DatabricksBackend(TextQueryBackend):
             ):
                 expr = self.contains_expression
                 value = cond.value[1:-1]
-            elif (                                                              # wildcard match expression: string contains wildcard
+            elif (  # wildcard match expression: string contains wildcard
                 self.wildcard_match_expression is not None
                 and cond.value.contains_special()
             ):
                 expr = self.wildcard_match_expression
                 value = cond.value
             else:
-                expr =  "lower({field}) = lower({value})"
+                expr = "lower({field}) = lower({value})"
                 value = cond.value
             return expr.format(field=self.escape_and_quote_field(cond.field),
                                value=self.convert_value_str(value, state))
-        except TypeError:       # pragma: no cover
+        except TypeError:  # pragma: no cover
             raise NotImplementedError("Field equals string value expressions with strings are not supported by the "
                                       "backend.")
-
 
     # TODO: implement custom methods for query elements not covered by the default backend base.
     # Documentation: https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html
 
-    def finalize_query_detection_yaml(self, rule: SigmaRule, query: str, index: int, state: ConversionState) -> str:
+    def finalize_query_detection_yaml(self, rule: SigmaRule, query: str, index: int, state: ConversionState) -> Any:
         statuses = {"experimental": "test", "stable": "release"}
         rule_status = (rule.status.name or "test").lower()
         return json.dumps({"name": rule.title, "sql": query, "status": statuses.get(rule_status, rule_status)})
 
-    def finalize_output_detection_yaml(self, queries: List[str]) -> str:
+    def finalize_output_detection_yaml(self, queries: List[str]) -> Any:
         data = {"description": "Detections generated from Sigma rules"}
         detections = []
         for query in queries:
