@@ -1,21 +1,16 @@
-from sigma.conversion.state import ConversionState
-from sigma.rule import SigmaRule
-from sigma.exceptions import SigmaError, SigmaValueError
-from sigma.conversion.deferred import DeferredQueryExpression
-from sigma.conversion.base import TextQueryBackend
-from sigma.conditions import ConditionItem, ConditionOR, ConditionAND, ConditionNOT, \
-    ConditionFieldEqualsValueExpression, ConditionValueExpression, ConditionType
-from sigma.types import SigmaBool, SigmaExpansion, SigmaString, SigmaNumber, SigmaRegularExpression, \
-    SigmaCompareExpression, SigmaNull, SigmaQueryExpression, SigmaCIDRExpression, SpecialChars
-from sigma.types import SigmaCompareExpression
-# from sigma.pipelines.databricks import # TODO: add pipeline imports or delete this line
-import sigma
-
-import re
 import json
-from typing import Pattern, Union, ClassVar, Optional, Tuple, List, Dict, Any
+import re
+from typing import Pattern, Union, ClassVar, Tuple, List, Dict, Any
 
 import yaml
+from sigma.conditions import ConditionItem, ConditionOR, ConditionAND, ConditionNOT, \
+    ConditionFieldEqualsValueExpression
+from sigma.conversion.base import TextQueryBackend
+from sigma.conversion.deferred import DeferredQueryExpression
+from sigma.conversion.state import ConversionState
+from sigma.rule import SigmaRule
+from sigma.types import SigmaCompareExpression
+from sigma.types import SpecialChars
 
 
 class DatabricksBackend(TextQueryBackend):
@@ -56,10 +51,10 @@ class DatabricksBackend(TextQueryBackend):
     # Quote field names if this pattern (doesn't) matches, depending on field_quote_pattern_negation. Field name is
     # always quoted if pattern is not set.
     field_quote_pattern: ClassVar[Pattern] = re.compile("^(\\w|\\.)+$")
-    # Negate field_quote_pattern result. Field name is quoted if pattern doesn't matches if set to True (default).
+    # Negate field_quote_pattern result. Field name is quoted if pattern doesn't match if set to True (default).
     field_quote_pattern_negation: ClassVar[bool] = True
 
-    ### Escaping
+    # Escaping
     # Character to escape particular parts defined in field_escape_pattern.
     field_escape: ClassVar[str] = ""
     # Escape quote string defined in field_quote
@@ -158,12 +153,14 @@ class DatabricksBackend(TextQueryBackend):
             if (  # Check conditions for usage of 'startswith' operator
                 self.startswith_expression is not None  # 'startswith' operator is defined in backend
                 and cond.value.endswith(SpecialChars.WILDCARD_MULTI)  # String ends with wildcard
-                and not cond.value[:-1].contains_special()  # Remainder of string doesn't contains special characters
+                and not cond.value[:-1].contains_special()  # Remainder of string doesn't contain special characters
             ):
-                expr = self.startswith_expression  # If all conditions are fulfilled, use 'startswith' operartor instead of equal token
+                expr = self.startswith_expression  # If all conditions are fulfilled, use 'startswith' operator
+                # instead of equal token
                 value = cond.value[:-1]
             elif (
-            # Same as above but for 'endswith' operator: string starts with wildcard and doesn't contains further special characters
+                # Same as above but for 'endswith' operator: string starts with wildcard and doesn't contain further
+                # special characters
                 self.endswith_expression is not None
                 and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
                 and not cond.value[1:].contains_special()
