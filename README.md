@@ -29,4 +29,5 @@ This backend is currently maintained by:
 ## TODOs
 
  - Try to rewrite expressions like `foo*bar` into `(startswith(field, "foo") and endswith(field, "bar"))`
- 
+ - fix escaping in the lower/upper functions - don't do this: `lower('com\.objective-see\.lulu\.plist')`
+
