@@ -18,8 +18,9 @@ Further, it contains the following processing pipelines in `sigma.pipelines.data
 
 It supports the following output formats:
 
-* default: plain Databricks/Apacha Spark SQL queries
-* detection_yaml: Yaml markup for my own small detection framework
+* default: plain Databricks/Apache Spark SQL queries
+* dbsql: Databricks SQL queries with rules metadata (title, status) embedded as comment
+* detection_yaml: Yaml markup for my own detection framework
 
 This backend is currently maintained by:
 

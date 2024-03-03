@@ -21,7 +21,8 @@ class DatabricksBackend(TextQueryBackend):
     name: ClassVar[str] = "databricks"
     formats: Dict[str, str] = {
         "default": "Plain Databricks SQL queries",
-        "detection_yaml": "Yaml markup for Alex's small detection framework",
+        "dbsql": "Databricks SQL queries with additional metadata as comments",
+        "detection_yaml": "Yaml markup for Alex's own detection framework",
     }
     # TODO: does the backend requires that a processing pipeline is provided? This information can be used by user
     # interface programs like Sigma CLI to warn users about inappropriate usage of the backend.
@@ -206,12 +207,24 @@ class DatabricksBackend(TextQueryBackend):
     # TODO: implement custom methods for query elements not covered by the default backend base.
     # Documentation: https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html
 
-    def finalize_query_detection_yaml(self, rule: SigmaRule, query: str, index: int, state: ConversionState) -> Any:
+    @staticmethod
+    def finalize_query_dbsql(rule: SigmaRule, query: str, index: int, state: ConversionState) -> Any:
+        rule_status = (rule.status.name or "test").lower()
+        title = rule.title.replace('\n', ' ')
+        return f"-- title: \"{title}\". status: {rule_status}\n{query}"
+
+    @staticmethod
+    def finalize_output_dbsql(queries: List[str]) -> Any:
+        return "\n\n".join(queries)
+
+    @staticmethod
+    def finalize_query_detection_yaml(rule: SigmaRule, query: str, index: int, state: ConversionState) -> Any:
         statuses = {"experimental": "test", "stable": "release"}
         rule_status = (rule.status.name or "test").lower()
         return json.dumps({"name": rule.title, "sql": query, "status": statuses.get(rule_status, rule_status)})
 
-    def finalize_output_detection_yaml(self, queries: List[str]) -> Any:
+    @staticmethod
+    def finalize_output_detection_yaml(queries: List[str]) -> Any:
         data = {"description": "Detections generated from Sigma rules"}
         detections = []
         for query in queries:

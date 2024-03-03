@@ -214,3 +214,22 @@ detections:
   sql: fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')
   status: release
 """
+
+def test_databricks_sigma_dbsql_output(databricks_sigma_backend: DatabricksBackend):
+    sigma_rules = SigmaCollection.from_yaml("""
+            title: Test
+            status: stable
+            logsource:
+                category: test_category
+                product: test_product
+            detection:
+                sel:
+                    fieldA|re: foo.*bar
+                    fieldB: foo
+                condition: sel
+        """)
+    queries = databricks_sigma_backend.convert(sigma_rules)
+    final_queries = [databricks_sigma_backend.finalize_query_dbsql(q[0], q[1], 0, None)
+                     for q in zip(sigma_rules.rules, queries)]
+    sql_rules = databricks_sigma_backend.finalize_output_dbsql(final_queries)
+    assert sql_rules == "-- title: \"Test\". status: stable\nfieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')"
