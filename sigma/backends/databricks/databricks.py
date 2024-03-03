@@ -9,7 +9,7 @@ from sigma.conversion.base import TextQueryBackend
 from sigma.conversion.deferred import DeferredQueryExpression
 from sigma.conversion.state import ConversionState
 from sigma.rule import SigmaRule
-from sigma.types import SigmaCompareExpression
+from sigma.types import SigmaCompareExpression, SigmaString
 from sigma.types import SpecialChars
 
 
@@ -146,9 +146,21 @@ class DatabricksBackend(TextQueryBackend):
     # String used as query if final query only contains deferred expression
     deferred_only_query: ClassVar[str] = "*"
 
+    def make_sql_string(self, s: SigmaString):
+        converted = s.convert(
+            self.escape_char,
+            None,
+            None,
+            self.str_quote + self.add_escaped,
+            self.filter_chars,
+            )
+        return self.quote_string(converted)
+
     def convert_condition_field_eq_val_str(self, cond: ConditionFieldEqualsValueExpression,
                                            state: ConversionState) -> Union[str, DeferredQueryExpression]:
         """Conversion of field = string value expressions"""
+        if not isinstance(cond.value, SigmaString):
+            raise TypeError(f"cond.value type isn't SigmaString: {type(cond.value)}")
         try:
             if (  # Check conditions for usage of 'startswith' operator
                 self.startswith_expression is not None  # 'startswith' operator is defined in backend
@@ -157,7 +169,7 @@ class DatabricksBackend(TextQueryBackend):
             ):
                 expr = self.startswith_expression  # If all conditions are fulfilled, use 'startswith' operator
                 # instead of equal token
-                value = cond.value[:-1]
+                value = self.make_sql_string(cond.value[:-1])
             elif (
                 # Same as above but for 'endswith' operator: string starts with wildcard and doesn't contain further
                 # special characters
@@ -166,7 +178,7 @@ class DatabricksBackend(TextQueryBackend):
                 and not cond.value[1:].contains_special()
             ):
                 expr = self.endswith_expression
-                value = cond.value[1:]
+                value = self.make_sql_string(cond.value[1:])
             elif (  # contains: string starts and ends with wildcard
                 self.contains_expression is not None
                 and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
@@ -174,29 +186,19 @@ class DatabricksBackend(TextQueryBackend):
                 and not cond.value[1:-1].contains_special()
             ):
                 expr = self.contains_expression
-                value = cond.value[1:-1]
+                value = self.make_sql_string(cond.value[1:-1])
             elif (  # wildcard match expression: string contains wildcard
                 self.wildcard_match_expression is not None
                 and cond.value.contains_special()
             ):
                 expr = self.wildcard_match_expression
-                value = cond.value
-            else:
+                value = self.convert_value_str(cond.value, state)
+            else:  # We have just plain string
                 expr = "lower({field}) = lower({value})"
-                converted = cond.value.convert(
-                    self.escape_char,
-                    None,
-                    None,
-                    self.str_quote + self.add_escaped,
-                    self.filter_chars,
-                    )
-                new_value = self.quote_string(converted)
-
-                return expr.format(field=self.escape_and_quote_field(cond.field),
-                                   value=new_value)
+                value=self.make_sql_string(cond.value)
 
             return expr.format(field=self.escape_and_quote_field(cond.field),
-                               value=self.convert_value_str(value, state))
+                               value=value)
         except TypeError:  # pragma: no cover
             raise NotImplementedError("Field equals string value expressions with strings are not supported by the "
                                       "backend.")

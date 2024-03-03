@@ -28,6 +28,7 @@ This backend is currently maintained by:
 
 ## TODOs
 
- - Try to rewrite expressions like `foo*bar` into `(startswith(field, "foo") and endswith(field, "bar"))`
- - fix escaping in the lower/upper functions - don't do this: `lower('com\.objective-see\.lulu\.plist')`
+ - \[x\] Try to rewrite expressions like `foo*bar` into `(startswith(field, "foo") and endswith(field, "bar"))`
+ - \[x\] fix escaping in the lower/upper functions - don't do this: `lower('com\.objective-see\.lulu\.plist')`
+ - \[ \] Fix rules like "Huawei BGP Authentication Failures"
 
