@@ -32,4 +32,5 @@ This backend is currently maintained by:
  - \[x\] Try to rewrite expressions like `foo*bar` into `(startswith(field, "foo") and endswith(field, "bar"))`
  - \[x\] fix escaping in the lower/upper functions - don't do this: `lower('com\.objective-see\.lulu\.plist')`
  - \[ \] Fix rules like "Huawei BGP Authentication Failures"
+ - \[ \] Add support for [all regexp modifiers](https://github.com/SigmaHQ/pySigma?tab=readme-ov-file#modifier-comparison-between-pysigma-and-sigmac), like, `dotall`, `m`/`multiline`, `i`/`ignorecase`, ...
 
