@@ -44,6 +44,24 @@ def test_databricks_sigma_or_expression(databricks_sigma_backend: DatabricksBack
     ) == ["lower(fieldA) = lower('valueA') OR lower(fieldB) = lower('valueB')"]
 
 
+def test_databricks_sigma_match_with_dot_string(databricks_sigma_backend: DatabricksBackend):
+    assert databricks_sigma_backend.convert(
+        SigmaCollection.from_yaml("""
+            title: Test
+            status: test
+            logsource:
+                category: test_category
+                product: test_product
+            detection:
+                sel1:
+                    fieldA: value.A
+                sel2:
+                    fieldB: valueB
+                condition: 1 of sel*
+        """)
+    ) == ["lower(fieldA) = lower('value.A') OR lower(fieldB) = lower('valueB')"]
+
+
 def test_databricks_sigma_and_or_expression(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""

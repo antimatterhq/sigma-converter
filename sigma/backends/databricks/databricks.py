@@ -183,7 +183,18 @@ class DatabricksBackend(TextQueryBackend):
                 value = cond.value
             else:
                 expr = "lower({field}) = lower({value})"
-                value = cond.value
+                converted = cond.value.convert(
+                    self.escape_char,
+                    None,
+                    None,
+                    self.str_quote + self.add_escaped,
+                    self.filter_chars,
+                    )
+                new_value = self.quote_string(converted)
+
+                return expr.format(field=self.escape_and_quote_field(cond.field),
+                                   value=new_value)
+
             return expr.format(field=self.escape_and_quote_field(cond.field),
                                value=self.convert_value_str(value, state))
         except TypeError:  # pragma: no cover
