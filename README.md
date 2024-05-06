@@ -13,8 +13,7 @@ Status: **experimental**, work in progress:
 This is the Databricks backend for pySigma. It provides the package `sigma.backends.databricks` with the `DatabricksBackend` class.
 Further, it contains the following processing pipelines in `sigma.pipelines.databricks`:
 
-* pipeline1: purpose
-* pipeline2: purpose
+* `snake_case`: convert column names into snake case format
 
 It supports the following output formats:
 
