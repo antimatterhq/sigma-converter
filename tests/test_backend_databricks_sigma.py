@@ -198,6 +198,7 @@ def test_databricks_sigma_detection_yaml_output(databricks_sigma_backend: Databr
             logsource:
                 category: test_category
                 product: test_product
+            level: high
             detection:
                 sel:
                     fieldA|re: foo.*bar
@@ -211,8 +212,10 @@ def test_databricks_sigma_detection_yaml_output(databricks_sigma_backend: Databr
     assert yaml_rules == """description: Detections generated from Sigma rules
 detections:
 - name: Test
+  severity: 50
   sql: fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')
   status: release
+  template: Test
 """
 
 def test_databricks_sigma_dbsql_output(databricks_sigma_backend: DatabricksBackend):

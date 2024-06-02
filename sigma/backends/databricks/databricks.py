@@ -8,7 +8,7 @@ from sigma.conditions import ConditionItem, ConditionOR, ConditionAND, Condition
 from sigma.conversion.base import TextQueryBackend
 from sigma.conversion.deferred import DeferredQueryExpression
 from sigma.conversion.state import ConversionState
-from sigma.rule import SigmaRule
+from sigma.rule import SigmaRule, SigmaLevel
 from sigma.types import SigmaCompareExpression, SigmaString
 from sigma.types import SpecialChars
 
@@ -154,7 +154,7 @@ class DatabricksBackend(TextQueryBackend):
             None,
             self.str_quote + self.add_escaped,
             self.filter_chars,
-            )
+        )
         return self.quote_string(converted)
 
     def convert_condition_field_eq_val_str(self, cond: ConditionFieldEqualsValueExpression,
@@ -196,7 +196,7 @@ class DatabricksBackend(TextQueryBackend):
                 value = self.convert_value_str(cond.value, state)
             else:  # We have just plain string
                 expr = "lower({field}) = lower({value})"
-                value=self.make_sql_string(cond.value)
+                value = self.make_sql_string(cond.value)
 
             return expr.format(field=self.escape_and_quote_field(cond.field),
                                value=value)
@@ -220,8 +220,19 @@ class DatabricksBackend(TextQueryBackend):
     @staticmethod
     def finalize_query_detection_yaml(rule: SigmaRule, query: str, index: int, state: ConversionState) -> Any:
         statuses = {"experimental": "test", "stable": "release"}
+        levels = {SigmaLevel.INFORMATIONAL.name: 0, SigmaLevel.LOW.name: 10, SigmaLevel.MEDIUM.name: 30,
+                  SigmaLevel.HIGH.name: 50, SigmaLevel.CRITICAL.name: 90}
         rule_status = (rule.status.name or "test").lower()
-        return json.dumps({"name": rule.title, "sql": query, "status": statuses.get(rule_status, rule_status)})
+        d = {"name": rule.title,
+             "sql": query,
+             "status": statuses.get(rule_status, rule_status),
+             "template": rule.title,
+             }
+        if rule.level:
+            level = levels.get(rule.level.name)
+            if level:
+                d["severity"] = level
+        return json.dumps(d)
 
     @staticmethod
     def finalize_output_detection_yaml(queries: List[str]) -> Any:
