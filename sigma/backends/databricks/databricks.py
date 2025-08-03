@@ -89,6 +89,8 @@ class DatabricksBackend(TextQueryBackend):
     re_escape_char: ClassVar[str] = "\\"
     # List of strings that are escaped
     re_escape: ClassVar[Tuple[str]] = ("{}[]()\\+")
+    # Regular expression flags. We rely on the default implementation of the backend to handle them.
+    re_flag_prefix: bool = True
 
     # cidr expressions
     # TODO: fix that

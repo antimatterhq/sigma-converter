@@ -142,6 +142,23 @@ def test_databricks_sigma_regex_query(databricks_sigma_backend: DatabricksBacken
     ) == ["fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')"]
 
 
+def test_databricks_sigma_regex_query_flags(databricks_sigma_backend: DatabricksBackend):
+    assert databricks_sigma_backend.convert(
+        SigmaCollection.from_yaml("""
+            title: Test
+            status: test
+            logsource:
+                category: test_category
+                product: test_product
+            detection:
+                sel:
+                    fieldA|re|i: foo.*bar
+                    fieldB: foo
+                condition: sel
+        """)
+    ) == ["fieldA rlike '(?i)foo.*bar' AND lower(fieldB) = lower('foo')"]
+
+
 def test_databricks_sigma_cidr_query(databricks_sigma_backend: DatabricksBackend):
     assert databricks_sigma_backend.convert(
         SigmaCollection.from_yaml("""
@@ -217,6 +234,7 @@ detections:
   status: release
   template: Test
 """
+
 
 def test_databricks_sigma_dbsql_output(databricks_sigma_backend: DatabricksBackend):
     sigma_rules = SigmaCollection.from_yaml("""
