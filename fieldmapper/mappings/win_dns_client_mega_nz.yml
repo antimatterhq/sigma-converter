@@ -1,0 +1,47 @@
+id: 66474410-b883-415f-9f8d-75345a0a66a6
+title: DNS Query To MEGA Hosting Website - DNS Client
+status: test
+level: medium
+description: Detects DNS queries for subdomains related to MEGA sharing website
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-16'
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+references:
+    - https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/
+falsepositives:
+    - Legitimate DNS queries and usage of Mega
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''613c03ba-0779-4a53-8a1f-47f914a4ded3''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: dns-client
+    definition: 'Requirements: Microsoft-Windows-DNS Client Events/Operational Event
+        Log must be enabled/collected in order to receive the events.'
+detection:
+    selection:
+        EventID: 3008
+        QueryName|contains: userstorage.mega.co.nz
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:50.514954+00:00'
+        service:
+            source_field: service
+            source_value: dns-client
+            mapped_at: '2025-11-13T20:24:50.514954+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: dns_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:50.514961+00:00'
+        -   source_field: QueryName
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:24:50.514963+00:00'

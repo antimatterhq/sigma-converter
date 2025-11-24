@@ -1,0 +1,39 @@
+id: 039a7469-0296-4450-84c0-f6966b16dc6d
+title: PIM Approvals And Deny Elevation
+status: test
+level: high
+description: Detects when a PIM elevation is approved or denied. Outside of normal
+    operations should be investigated.
+author: Mark Morowczynski '@markmorow', Yochana Henderson, '@Yochana-H'
+date: '2022-08-09'
+tags:
+    - attack.privilege-escalation
+    - attack.t1078.004
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-identity-management#azure-ad-roles-assignment
+falsepositives:
+    - Actual admin using PIM.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        properties.message: Request Approved/Denied
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:40.271502+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:40.271502+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:16:40.271512+00:00'

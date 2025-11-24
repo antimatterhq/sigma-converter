@@ -1,0 +1,40 @@
+id: 3d27f6dd-1c74-4687-b4fa-ca849d128d1c
+title: Office Application Startup - Office Test
+status: test
+level: medium
+description: Detects the addition of office test registry that allows a user to specify
+    an arbitrary DLL that will be executed every time an Office application is started
+author: omkar72
+date: '2020-10-25'
+modified: '2023-11-08'
+tags:
+    - attack.persistence
+    - attack.t1137.002
+references:
+    - https://unit42.paloaltonetworks.com/unit42-technical-walkthrough-office-test-persistence-method-used-in-recent-sofacy-attacks/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: \Software\Microsoft\Office test\Special\Perf
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_event
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

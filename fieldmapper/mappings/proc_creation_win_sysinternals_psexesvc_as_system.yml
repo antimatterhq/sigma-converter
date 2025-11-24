@@ -1,0 +1,51 @@
+id: 7c0dcd3d-acf8-4f71-9570-f448b0034f94
+title: PsExec Service Child Process Execution as LOCAL SYSTEM
+status: test
+level: high
+description: Detects suspicious launch of the PSEXESVC service on this system and
+    a sub process run as LOCAL_SYSTEM (-s), which means that someone remotely started
+    a command on this system running it with highest privileges and not only the privileges
+    of the login user account (e.g. the administrator account)
+author: Florian Roth (Nextron Systems)
+date: '2022-07-21'
+modified: '2023-02-28'
+tags:
+    - attack.execution
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
+falsepositives:
+    - Users that debug Microsoft Intune issues using the commands mentioned in the
+        official documentation; see https://learn.microsoft.com/en-us/mem/intune/apps/intune-management-extension
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fa91cc36-24c9-41ce-b3c8-3bbc3f2f67ba''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage: C:\Windows\PSEXESVC.exe
+        User|contains:
+            - AUTHORI
+            - AUTORI
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:21:00.195895+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:00.195895+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:21:00.195928+00:00'
+        -   source_field: User
+            target_table: process_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:21:00.195933+00:00'

@@ -1,0 +1,60 @@
+id: 207b0396-3689-42d9-8399-4222658efc99
+title: Potential Privilege Escalation To LOCAL SYSTEM
+status: test
+level: high
+description: Detects unknown program using commandline flags usually used by tools
+    such as PsExec and PAExec to start programs with SYSTEM Privileges
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2021-05-22'
+modified: '2024-03-05'
+tags:
+    - attack.resource-development
+    - attack.t1587.001
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
+    - https://www.poweradmin.com/paexec/
+    - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+falsepositives:
+    - Weird admins that rename their tools
+    - Software companies that bundle PsExec/PAExec with their software and rename
+        it, so that it is less embarrassing
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8834e2f7-6b4b-4f09-8906-d2276470ee23''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|windash:
+            - ' -s cmd'
+            - ' -s -i cmd'
+            - ' -i -s cmd'
+            - ' -s pwsh'
+            - ' -s -i pwsh'
+            - ' -i -s pwsh'
+            - ' -s powershell'
+            - ' -s -i powershell'
+            - ' -i -s powershell'
+    filter_main_exclude_coverage:
+        CommandLine|contains:
+            - paexec
+            - PsExec
+            - accepteula
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.512838+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.512838+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.512842+00:00'

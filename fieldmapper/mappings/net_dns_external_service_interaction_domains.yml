@@ -1,0 +1,48 @@
+id: aff715fa-4dd5-497a-8db3-910bea555566
+title: DNS Query to External Service Interaction Domains
+status: test
+level: high
+description: Detects suspicious DNS queries to external service interaction domains
+    often used for out-of-band interactions after successful RCE
+author: Florian Roth (Nextron Systems), Matt Kelly (list of domains)
+date: '2022-06-07'
+tags:
+    - attack.initial-access
+    - attack.t1190
+    - attack.reconnaissance
+    - attack.t1595.002
+references:
+    - https://twitter.com/breakersall/status/1533493587828260866
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: dns
+detection:
+    selection:
+        query|contains:
+            - .interact.sh
+            - .oast.pro
+            - .oast.live
+            - .oast.site
+            - .oast.online
+            - .oast.fun
+            - .oast.me
+            - .burpcollaborator.net
+            - .oastify.com
+            - .canarytokens.com
+            - .requestbin.net
+            - .dnslog.cn
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns
+            mapped_at: '2025-11-13T20:15:12.184885+00:00'
+    detection_fields:
+        -   source_field: query
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:15:12.184895+00:00'

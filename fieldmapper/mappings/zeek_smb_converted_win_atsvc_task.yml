@@ -1,0 +1,50 @@
+id: dde85b37-40cd-4a94-b00c-0b8794f956b5
+title: Remote Task Creation via ATSVC Named Pipe - Zeek
+status: test
+level: medium
+description: Detects remote task creation via at.exe or API interacting with ATSVC
+    namedpipe
+author: Samir Bousseaden, @neu5rn
+date: '2020-04-03'
+modified: '2022-12-27'
+tags:
+    - attack.lateral-movement
+    - attack.persistence
+    - car.2013-05-004
+    - car.2015-04-001
+    - attack.t1053.002
+references:
+    - https://web.archive.org/web/20230409194125/https://blog.menasec.net/2019/03/threat-hunting-25-scheduled-tasks-for.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f6de6525-4509-495a-8a82-1f8b0ed73a00''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: zeek
+    service: smb_files
+detection:
+    selection:
+        path: \\*\IPC$
+        name: atsvc
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: zeek
+            mapped_at: '2025-11-13T20:15:02.791271+00:00'
+        service:
+            source_field: service
+            source_value: smb_files
+            mapped_at: '2025-11-13T20:15:02.791271+00:00'
+    detection_fields:
+        -   source_field: path
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:02.791276+00:00'
+        -   source_field: name
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:15:02.791278+00:00'

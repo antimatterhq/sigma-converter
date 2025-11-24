@@ -1,0 +1,51 @@
+id: 6c4e2f43-d94d-4ead-b64d-97e53fa2bd05
+title: Persistence Via Cron Files
+status: test
+level: medium
+description: Detects creation of cron file or files in Cron directories which could
+    indicates potential persistence.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
+date: '2021-10-15'
+modified: '2022-12-31'
+tags:
+    - attack.persistence
+    - attack.t1053.003
+references:
+    - https://github.com/microsoft/MSTIC-Sysmon/blob/f1477c0512b0747c1455283069c21faec758e29d/linux/configs/attack-based/persistence/T1053.003_Cron_Activity.xml
+falsepositives:
+    - Any legitimate cron file.
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: linux
+detection:
+    selection1:
+        TargetFilename|startswith:
+            - /etc/cron.d/
+            - /etc/cron.daily/
+            - /etc/cron.hourly/
+            - /etc/cron.monthly/
+            - /etc/cron.weekly/
+            - /var/spool/cron/crontabs/
+    selection2:
+        TargetFilename|contains:
+            - /etc/cron.allow
+            - /etc/cron.deny
+            - /etc/crontab
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:15:12.837545+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:12.837545+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:15:12.837550+00:00'

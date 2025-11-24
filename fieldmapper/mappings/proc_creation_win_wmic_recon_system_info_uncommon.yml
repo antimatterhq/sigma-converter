@@ -1,0 +1,74 @@
+id: 9d5a1274-922a-49d0-87f3-8c653483b909
+title: Uncommon System Information Discovery Via Wmic.EXE
+status: test
+level: medium
+description: 'Detects the use of the WMI command-line (WMIC) utility to identify and
+    display various system information,
+
+    including OS, CPU, GPU, and disk drive names; memory capacity; display resolution;
+    and baseboard, BIOS,
+
+    and GPU driver products/versions.
+
+    Some of these commands were used by Aurora Stealer in late 2022/early 2023.
+
+    '
+author: TropChaud
+date: '2023-01-26'
+modified: '2023-12-19'
+tags:
+    - attack.discovery
+    - attack.t1082
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/a2ccd19c37d0278b4ffa8583add3cf52060a5418/atomics/T1082/T1082.md#atomic-test-25---system-information-discovery-with-wmic
+    - https://nwgat.ninja/getting-system-information-with-wmic-on-windows/
+    - https://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar
+    - https://blog.cyble.com/2023/01/18/aurora-a-stealer-using-shapeshifting-tactics/
+    - https://app.any.run/tasks/a6aa0057-82ec-451f-8f99-55650ca537da/
+    - https://www.virustotal.com/gui/file/d6f6bc10ae0e634ed4301d584f61418cee18e5d58ad9af72f8aa552dc4aaeca3/behavior
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d85ecdd7-b855-4e6e-af59-d9c78b5b861e''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_wmic:
+        Description: WMI Commandline Utility
+        OriginalFileName: wmic.exe
+        Image|endswith: \WMIC.exe
+    selection_commands:
+        CommandLine|contains:
+            - LOGICALDISK get Name,Size,FreeSpace
+            - os get Caption,OSArchitecture,Version
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:08.650664+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:08.650664+00:00'
+    detection_fields:
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:08.650727+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:08.650731+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:08.650734+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:08.650736+00:00'

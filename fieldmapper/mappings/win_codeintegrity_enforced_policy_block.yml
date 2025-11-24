@@ -1,0 +1,42 @@
+id: e4be5675-4a53-426a-8c81-a8bb2387e947
+title: CodeIntegrity - Blocked Image/Driver Load For Policy Violation
+status: test
+level: high
+description: Detects blocked load events that did not meet the authenticode signing
+    level requirements or violated the code integrity policy.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-11-10'
+modified: '2023-06-07'
+tags:
+    - attack.privilege-escalation
+    - attack.t1543
+references:
+    - https://twitter.com/wdormann/status/1590434950335320065
+    - https://github.com/MicrosoftDocs/windows-itpro-docs/blob/40fe118976734578f83e5e839b9c63ae7a4af82d/windows/security/threat-protection/windows-defender-application-control/event-id-explanations.md#windows-codeintegrity-operational-log
+    - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: codeintegrity-operational
+detection:
+    selection:
+        EventID: 3077
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:59.864476+00:00'
+        service:
+            source_field: service
+            source_value: codeintegrity-operational
+            mapped_at: '2025-11-13T20:24:59.864476+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:59.864485+00:00'

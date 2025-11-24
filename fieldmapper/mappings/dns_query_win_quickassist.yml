@@ -1,0 +1,50 @@
+id: 882e858a-3233-4ba8-855e-2f3d3575803d
+title: DNS Query Request By QuickAssist.EXE
+status: experimental
+level: low
+description: 'Detects DNS queries initiated by "QuickAssist.exe" to Microsoft Quick
+    Assist primary endpoint that is used to establish a session.
+
+    '
+author: Muhammad Faisal (@faisalusuf)
+date: '2024-12-19'
+tags:
+    - attack.initial-access
+    - attack.t1071.001
+    - attack.t1210
+references:
+    - https://www.microsoft.com/en-us/security/blog/2024/05/15/threat-actors-misusing-quick-assist-in-social-engineering-attacks-leading-to-ransomware/
+    - https://www.linkedin.com/posts/kevin-beaumont-security_ive-been-assisting-a-few-orgs-hit-with-successful-activity-7268055739116445701-xxjZ/
+    - https://x.com/cyb3rops/status/1862406110365245506
+    - https://learn.microsoft.com/en-us/windows/client-management/client-tools/quick-assist
+falsepositives:
+    - Legitimate use of Quick Assist in the environment.
+taxonomy: sigma
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    selection:
+        Image|endswith: \QuickAssist.exe
+        QueryName|endswith: remoteassistance.support.services.microsoft.com
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns_query
+            mapped_at: '2025-11-13T20:21:06.382768+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:06.382768+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: dns_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:06.382774+00:00'
+        -   source_field: QueryName
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:21:06.382776+00:00'

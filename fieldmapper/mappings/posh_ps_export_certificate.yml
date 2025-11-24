@@ -1,0 +1,51 @@
+id: aa7a3fce-bef5-4311-9cc1-5f04bb8c308c
+title: Certificate Exported Via PowerShell - ScriptBlock
+status: test
+level: medium
+description: Detects calls to cmdlets inside of PowerShell scripts that are used to
+    export certificates from the local certificate store. Threat actors were seen
+    abusing this to steal private keys from compromised machines.
+author: Florian Roth (Nextron Systems)
+date: '2021-04-23'
+modified: '2023-05-18'
+tags:
+    - attack.credential-access
+    - attack.t1552.004
+references:
+    - https://us-cert.cisa.gov/ncas/analysis-reports/ar21-112a
+    - https://learn.microsoft.com/en-us/powershell/module/pki/export-pfxcertificate?view=windowsserver2022-ps
+    - https://www.splunk.com/en_us/blog/security/breaking-the-chain-defending-against-certificate-services-abuse.html
+falsepositives:
+    - Legitimate certificate exports by administrators. Additional filters might be
+        required.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9e716b33-63b2-46da-86a4-bd3c3b9b5dfb''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - Export-PfxCertificate
+            - Export-Certificate
+    filter_optional_module_export:
+        ScriptBlockText|contains: CmdletsToExport = @(
+    condition: selection and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.318614+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.318614+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.318618+00:00'

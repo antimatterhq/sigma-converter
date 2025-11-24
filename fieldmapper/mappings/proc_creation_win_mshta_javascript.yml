@@ -1,0 +1,51 @@
+id: 67f113fa-e23d-4271-befa-30113b3e08b1
+title: Suspicious JavaScript Execution Via Mshta.EXE
+status: test
+level: high
+description: Detects execution of javascript code using "mshta.exe".
+author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
+date: '2019-10-24'
+modified: '2023-02-07'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.005
+references:
+    - https://eqllib.readthedocs.io/en/latest/analytics/6bc283c4-21f2-4aed-a05c-a9a3ffa95dd4.html
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.005/T1218.005.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \mshta.exe
+        OriginalFileName: MSHTA.EXE
+    selection_cli:
+        CommandLine|contains: javascript
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:20.249821+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:20.249821+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:20.249826+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:20.249828+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:20.249829+00:00'

@@ -1,0 +1,52 @@
+id: 5594e67a-7f92-4a04-b65d-1a42fd824a60
+title: MSI Installation From Web
+status: test
+level: medium
+description: Detects installation of a remote msi file from web.
+author: Stamatis Chatzimangou
+date: '2022-10-23'
+modified: '2022-10-23'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.t1218.007
+references:
+    - https://twitter.com/_st0pp3r_/status/1583922009842802689
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: application
+detection:
+    selection:
+        Provider_Name: MsiInstaller
+        EventID:
+            - 1040
+            - 1042
+        Data|contains: ://
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:47.320733+00:00'
+        service:
+            source_field: service
+            source_value: application
+            mapped_at: '2025-11-13T20:25:47.320733+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:47.320738+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:47.320740+00:00'
+        -   source_field: Data
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:47.320741+00:00'

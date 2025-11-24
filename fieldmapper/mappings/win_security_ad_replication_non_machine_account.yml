@@ -1,0 +1,66 @@
+id: 17d619c1-e020-4347-957e-1d1207455c93
+title: Active Directory Replication from Non Machine Account
+status: test
+level: critical
+description: Detects potential abuse of Active Directory Replication Service (ADRS)
+    from a non machine account to request credentials.
+author: Roberto Rodriguez @Cyb3rWard0g
+date: '2019-07-26'
+modified: '2021-11-27'
+tags:
+    - attack.credential-access
+    - attack.t1003.006
+references:
+    - https://threathunterplaybook.com/hunts/windows/180815-ADObjectAccessReplication/notebook.html
+    - https://threathunterplaybook.com/library/windows/active_directory_replication.html
+    - https://threathunterplaybook.com/hunts/windows/190101-ADModDirectoryReplication/notebook.html
+fields:
+    - ComputerName
+    - SubjectDomainName
+    - SubjectUserName
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4662
+        AccessMask: '0x100'
+        Properties|contains:
+            - 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
+            - 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
+            - 89e95b76-444d-4c62-991a-0facbeda640c
+    filter:
+        SubjectUserName|endswith: $
+        SubjectUserName|startswith: MSOL_
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:34.993029+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:34.993029+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: account_change
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:36.008246+00:00'
+        -   source_field: AccessMask
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:36.008270+00:00'
+        -   source_field: Properties
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:36.008274+00:00'
+        -   source_field: SubjectUserName
+            target_table: account_change
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:22:36.008276+00:00'

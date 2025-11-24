@@ -1,0 +1,54 @@
+id: ad92e3f9-7eb6-460e-96b1-582b0ccbb980
+title: UAC Bypass Using MSConfig Token Modification - Process
+status: test
+level: high
+description: Detects the pattern of UAC Bypass using a msconfig GUI hack (UACMe 55)
+author: Christian Burkard (Nextron Systems)
+date: '2021-08-30'
+modified: '2024-12-01'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+references:
+    - https://github.com/hfiref0x/UACME
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        IntegrityLevel:
+            - High
+            - System
+            - S-1-16-16384
+            - S-1-16-12288
+        ParentImage|endswith: \AppData\Local\Temp\pkgmgr.exe
+        CommandLine: '"C:\Windows\system32\msconfig.exe" -5'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:10.255323+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:10.255323+00:00'
+    detection_fields:
+        -   source_field: IntegrityLevel
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:20:10.255353+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:10.255357+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:10.255360+00:00'

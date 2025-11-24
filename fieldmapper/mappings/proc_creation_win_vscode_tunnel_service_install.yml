@@ -1,0 +1,44 @@
+id: 30bf1789-379d-4fdc-900f-55cd0a90a801
+title: Visual Studio Code Tunnel Service Installation
+status: test
+level: medium
+description: Detects the installation of VsCode tunnel (code-tunnel) as a service.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-10-25'
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+references:
+    - https://ipfyx.fr/post/visual-studio-code-tunnel/
+    - https://badoption.eu/blog/2023/01/31/code_c2.html
+    - https://code.visualstudio.com/docs/remote/tunnels
+falsepositives:
+    - Legitimate installation of code-tunnel as a service
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - 'tunnel '
+            - service
+            - internal-run
+            - tunnel-service.log
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:15.726584+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:15.726584+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:15.726593+00:00'

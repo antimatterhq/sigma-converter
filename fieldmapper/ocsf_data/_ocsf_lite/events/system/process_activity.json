@@ -1,0 +1,204 @@
+{
+  "uid": 7,
+  "caption": "Process Activity",
+  "description": "Process Activity events report when a process launches, injects, opens or terminates another process, successful or otherwise.",
+  "extends": "base_event",
+  "name": "process_activity",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Launch"
+        },
+        "2": {
+          "caption": "Terminate"
+        },
+        "3": {
+          "caption": "Open"
+        },
+        "4": {
+          "caption": "Inject"
+        },
+        "5": {
+          "caption": "Set User ID"
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "actor": {
+      "group": "context",
+      "description": "The actor that performed the activity on the target process. For example, the process that started a new process or injected code into another process.",
+      "requirement": "required",
+      "object": "actor",
+      "constraints": {
+        "at_least_one": [
+          "process",
+          "user",
+          "invoked_by",
+          "session",
+          "app_name",
+          "app_uid"
+        ]
+      }
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "System Activity",
+          "description": "System Activity events."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1007": {
+          "caption": "Process Activity",
+          "description": "Process Activity events report when a process launches, injects, opens or terminates another process, successful or otherwise"
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "device": {
+      "description": "An addressable device, computer system or host.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "device",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "exit_code": {
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "injection_type": {
+      "group": "primary",
+      "requirement": "recommended",
+      "description": "The process injection method, normalized to the caption of the injection_type_id value. In the case of 'Other', it is defined by the event source."
+    },
+    "injection_type_id": {
+      "group": "primary",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown"
+        },
+        "1": {
+          "caption": "Remote Thread"
+        },
+        "2": {
+          "caption": "Load Library"
+        },
+        "3": {
+          "caption": "Queue APC"
+        },
+        "99": {
+          "caption": "Other"
+        }
+      }
+    },
+    "module": {
+      "description": "The module that was injected by the actor process.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "module"
+    },
+    "process": {
+      "description": "The process that initiated the activity.",
+      "requirement": "recommended",
+      "object": "process",
+      "constraints": {
+        "at_least_one": [
+          "cpid",
+          "pid",
+          "uid"
+        ]
+      }
+    },
+    "requested_permissions": {
+      "description": "The permissions mask that was requested by the process.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "type_name": {
+      "description": "The name of the process type.",
+      "requirement": "recommended"
+    },
+    "type_uid": {
+      "description": "The resulting process object when the activity was allowed and successful.",
+      "group": "primary",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "100700": {
+          "caption": "Unknown"
+        },
+        "100701": {
+          "caption": "Launch"
+        },
+        "100702": {
+          "caption": "Terminate"
+        },
+        "100703": {
+          "caption": "Open"
+        },
+        "100704": {
+          "caption": "Inject"
+        },
+        "100705": {
+          "caption": "Set User ID"
+        },
+        "100799": {
+          "caption": "Other"
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    }
+  }
+}

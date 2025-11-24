@@ -1,0 +1,54 @@
+id: 54786ddc-5b8a-11ed-9b6a-0242ac120002
+title: Suspicious Ping/Del Command Combination
+status: test
+level: high
+description: Detects a method often used by ransomware. Which combines the "ping"
+    to wait a couple of seconds and then "del" to delete the file in question. Its
+    used to hide the file responsible for the initial infection for example
+author: Ilya Krestinichev
+date: '2022-11-03'
+modified: '2024-03-05'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.004
+references:
+    - https://blog.sygnia.co/kaseya-ransomware-supply-chain-attack
+    - https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2022/06/23093553/Common-TTPs-of-the-modern-ransomware_low-res.pdf
+    - https://www.acronis.com/en-us/blog/posts/lockbit-ransomware/
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_count:
+        CommandLine|contains|windash: ' -n '
+    selection_nul:
+        CommandLine|contains: Nul
+    selection_del_param:
+        CommandLine|contains|windash:
+            - ' -f '
+            - ' -q '
+    selection_all:
+        CommandLine|contains|all:
+            - ping
+            - 'del '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.423861+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.423861+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:34.423871+00:00'

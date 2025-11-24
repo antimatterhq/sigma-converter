@@ -1,0 +1,45 @@
+id: 51ae86a2-e2e1-4097-ad85-c46cb6851de4
+title: Renamed PsExec Service Execution
+status: test
+level: high
+description: Detects suspicious launch of a renamed version of the PSEXESVC service
+    with, which is not often used by legitimate administrators
+author: Florian Roth (Nextron Systems)
+date: '2022-07-21'
+tags:
+    - attack.execution
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
+    - https://www.youtube.com/watch?v=ro2QuZTIMBM
+falsepositives:
+    - Legitimate administrative tasks
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: psexesvc.exe
+    filter:
+        Image: C:\Windows\PSEXESVC.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:51.908024+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:51.908024+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:51.908030+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:51.908032+00:00'

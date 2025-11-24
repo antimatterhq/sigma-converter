@@ -1,0 +1,40 @@
+id: 5daf11c3-022b-4969-adb9-365e6c078c7c
+title: CodeIntegrity - Disallowed File For Protected Processes Has Been Blocked
+status: test
+level: high
+description: Detects block events for files that are disallowed by code integrity
+    for protected processes
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-06'
+tags:
+    - attack.privilege-escalation
+references:
+    - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations
+    - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations
+    - Internal Research
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: windows
+    service: codeintegrity-operational
+detection:
+    selection:
+        EventID: 3104
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:55.517373+00:00'
+        service:
+            source_field: service
+            source_value: codeintegrity-operational
+            mapped_at: '2025-11-13T20:24:55.517373+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:55.517395+00:00'

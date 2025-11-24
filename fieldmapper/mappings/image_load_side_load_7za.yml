@@ -1,0 +1,54 @@
+id: 4f6edb78-5c21-42ab-a558-fd2a6fc1fd57
+title: Potential 7za.DLL Sideloading
+status: test
+level: low
+description: Detects potential DLL sideloading of "7za.dll"
+author: X__Junior
+date: '2023-06-09'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://www.gov.pl/attachment/ee91f24d-3e67-436d-aa50-7fa56acf789d
+falsepositives:
+    - Legitimate third party application located in "AppData" may leverage this DLL
+        to offer 7z compression functionality and may generate false positives. Apply
+        additional filters as needed.
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \7za.dll
+    filter_main_legit_path:
+        Image|startswith:
+            - C:\Program Files (x86)\
+            - C:\Program Files\
+        ImageLoaded|startswith:
+            - C:\Program Files (x86)\
+            - C:\Program Files\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:25.850104+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:25.850104+00:00'
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:25.850128+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:25.850132+00:00'

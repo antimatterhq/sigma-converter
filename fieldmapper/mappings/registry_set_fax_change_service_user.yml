@@ -1,0 +1,47 @@
+id: e3fdf743-f05b-4051-990a-b66919be1743
+title: Change User Account Associated with the FAX Service
+status: test
+level: high
+description: Detect change of the user account associated with the FAX service to
+    avoid the escalation problem.
+author: frack113
+date: '2022-07-17'
+modified: '2022-12-30'
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+references:
+    - https://twitter.com/dottor_morte/status/1544652325570191361
+    - https://raw.githubusercontent.com/RiccardoAncarani/talks/master/F-Secure/unorthodox-lateral-movement.pdf
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject: HKLM\System\CurrentControlSet\Services\Fax\ObjectName
+    filter:
+        Details|contains: NetworkService
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

@@ -1,0 +1,49 @@
+id: 80e1f67a-4596-4351-98f5-a9c3efabac95
+title: Suspicious Scheduled Task Write to System32 Tasks
+status: test
+level: high
+description: Detects the creation of tasks from processes executed from suspicious
+    locations
+author: Florian Roth (Nextron Systems)
+date: '2021-11-16'
+modified: '2022-01-12'
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.t1053
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: \Windows\System32\Tasks
+        Image|contains:
+            - \AppData\
+            - C:\PerfLogs
+            - \Windows\System32\config\systemprofile
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.587277+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.587277+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.587284+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:34.587286+00:00'

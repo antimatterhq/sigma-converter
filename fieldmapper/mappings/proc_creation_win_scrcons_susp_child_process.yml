@@ -1,0 +1,60 @@
+id: f6d1dd2f-b8ce-40ca-bc23-062efb686b34
+title: Script Event Consumer Spawning Process
+status: test
+level: high
+description: Detects a suspicious child process of Script Event Consumer (scrcons.exe).
+author: Sittikorn S
+date: '2021-06-21'
+modified: '2022-07-14'
+tags:
+    - attack.execution
+    - attack.t1047
+references:
+    - https://redcanary.com/blog/child-processes/
+    - https://docs.paloaltonetworks.com/cortex/cortex-xdr/cortex-xdr-analytics-alert-reference/cortex-xdr-analytics-alert-reference/scrcons-exe-rare-child-process.html
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \scrcons.exe
+        Image|endswith:
+            - \svchost.exe
+            - \dllhost.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \wscript.exe
+            - \cscript.exe
+            - \schtasks.exe
+            - \regsvr32.exe
+            - \mshta.exe
+            - \rundll32.exe
+            - \msiexec.exe
+            - \msbuild.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.134524+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.134524+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:37.134529+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.134531+00:00'

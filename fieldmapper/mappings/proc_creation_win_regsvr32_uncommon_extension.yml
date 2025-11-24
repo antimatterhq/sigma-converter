@@ -1,0 +1,65 @@
+id: 50919691-7302-437f-8e10-1fe088afa145
+title: Regsvr32 DLL Execution With Uncommon Extension
+status: test
+level: medium
+description: Detects a "regsvr32" execution where the DLL doesn't contain a common
+    file extension.
+author: Florian Roth (Nextron Systems)
+date: '2019-07-17'
+modified: '2023-05-24'
+tags:
+    - attack.defense-evasion
+    - attack.t1574
+    - attack.execution
+references:
+    - https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/
+falsepositives:
+    - Other legitimate extensions currently not in the list either from third party
+        or specific Windows components.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \regsvr32.exe
+        OriginalFileName: REGSVR32.EXE
+    filter_main_legit_ext:
+        CommandLine|contains:
+            - .ax
+            - .cpl
+            - .dll
+            - .ocx
+    filter_optional_pascal:
+        CommandLine|contains: .ppl
+    filter_optional_avg:
+        CommandLine|contains: .bav
+    filter_main_null_4688:
+        CommandLine: null
+    filter_main_empty_4688:
+        CommandLine: ''
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.518207+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.518207+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:49.518212+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:49.518214+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.518215+00:00'

@@ -1,0 +1,76 @@
+id: d36f7c12-14a3-4d48-b6b8-774b9c66f44d
+title: Potential Python DLL SideLoading
+status: experimental
+level: medium
+description: Detects potential DLL sideloading of Python DLL files.
+author: Swachchhanda Shrawan Poudel
+date: '2024-10-06'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+references:
+    - https://www.securonix.com/blog/seolurker-attack-campaign-uses-seo-poisoning-fake-google-ads-to-install-malware/
+    - https://thedfirreport.com/2024/09/30/nitrogen-campaign-drops-sliver-and-ends-with-blackcat-ransomware/
+    - https://github.com/wietze/HijackLibs/tree/dc9c9f2f94e6872051dab58fbafb043fdd8b4176/yml/3rd_party/python
+falsepositives:
+    - Legitimate software using Python DLLs
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith:
+            - \python39.dll
+            - \python310.dll
+            - \python311.dll
+            - \python312.dll
+    filter_main_default_install_paths:
+        ImageLoaded|startswith:
+            - C:\Program Files\Python3
+            - C:\Program Files (x86)\Python3
+        ImageLoaded|contains: \AppData\Local\Programs\Python\Python3
+    filter_optional_visual_studio:
+        ImageLoaded|startswith: C:\Program Files\Microsoft Visual Studio\
+    filter_optional_cpython:
+        ImageLoaded|contains:
+            - \cpython\externals\
+            - \cpython\PCbuild\
+    filter_main_legit_signature_details:
+        Product: Python
+        Signed: 'true'
+        Description: Python
+        Company: Python Software Foundation
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Product
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Signed
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Description
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Company
+            target_table: null
+            target_field: null
+            mapped_at: null

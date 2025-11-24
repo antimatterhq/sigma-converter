@@ -1,0 +1,60 @@
+id: b36d01a3-ddaf-4804-be18-18a6247adfcd
+title: Add Windows Capability Via PowerShell Cmdlet
+status: test
+level: medium
+description: Detects usage of the "Add-WindowsCapability" cmdlet to add Windows capabilities.
+    Notable capabilities could be "OpenSSH" and others.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-22'
+modified: '2023-05-09'
+tags:
+    - attack.execution
+references:
+    - https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell
+    - https://www.virustotal.com/gui/file/af1c82237b6e5a3a7cdbad82cc498d298c67845d92971bada450023d1335e267/content
+falsepositives:
+    - Legitimate usage of the capabilities by administrators or users. Add additional
+        filters accordingly.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''155c7fd5-47b4-49b2-bbeb-eb4fab335429''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        OriginalFileName:
+            - PowerShell.EXE
+            - pwsh.dll
+    selection_cmdlet:
+        CommandLine|contains: Add-WindowsCapability
+    selection_capa:
+        CommandLine|contains: OpenSSH.
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:56.659044+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:56.659044+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:56.659048+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:19:56.659050+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:56.659051+00:00'

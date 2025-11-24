@@ -1,0 +1,51 @@
+id: 431a1fdb-4799-4f3b-91c3-a683b003fc49
+title: New Kernel Driver Via SC.EXE
+status: test
+level: medium
+description: Detects creation of a new service (kernel driver) with the type "kernel"
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-14'
+modified: '2022-08-08'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1543.003
+references:
+    - https://www.aon.com/cyber-solutions/aon_cyber_labs/yours-truly-signed-av-driver-weaponizing-an-antivirus-driver/
+falsepositives:
+    - Rare legitimate installation of kernel drivers via sc.exe
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \sc.exe
+        CommandLine|contains:
+            - create
+            - config
+        CommandLine|contains|all:
+            - binPath
+            - type
+            - kernel
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:31.546854+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:31.546854+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:31.546860+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:31.546862+00:00'

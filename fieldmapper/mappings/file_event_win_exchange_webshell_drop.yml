@@ -1,0 +1,60 @@
+id: bd1212e5-78da-431e-95fa-c58e3237a8e6
+title: Suspicious ASPX File Drop by Exchange
+status: test
+level: high
+description: Detects suspicious file type dropped by an Exchange component in IIS
+    into a suspicious folder
+author: Florian Roth (Nextron Systems), MSTI (query, idea)
+date: '2022-10-01'
+tags:
+    - attack.persistence
+    - attack.t1505.003
+references:
+    - https://www.microsoft.com/security/blog/2022/09/30/analyzing-attacks-using-the-exchange-vulnerabilities-cve-2022-41040-and-cve-2022-41082/
+    - https://www.gteltsc.vn/blog/canh-bao-chien-dich-tan-cong-su-dung-lo-hong-zero-day-tren-microsoft-exchange-server-12714.html
+    - https://en.gteltsc.vn/blog/cap-nhat-nhe-ve-lo-hong-bao-mat-0day-microsoft-exchange-dang-duoc-su-dung-de-tan-cong-cac-to-chuc-tai-viet-nam-9685.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6b269392-9eba-40b5-acb6-55c882b20ba6''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|endswith: \w3wp.exe
+        CommandLine|contains: MSExchange
+        TargetFilename|contains:
+            - FrontEnd\HttpProxy\
+            - \inetpub\wwwroot\aspnet_client\
+    selection_types:
+        TargetFilename|endswith:
+            - .aspx
+            - .asp
+            - .ashx
+    condition: all of selection*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:35.639922+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:35.639922+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:35.639959+00:00'
+        -   source_field: CommandLine
+            target_table: file_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:35.639964+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:35.639967+00:00'

@@ -1,0 +1,51 @@
+id: 312d0384-401c-4b8b-abdf-685ffba9a332
+title: Email Exifiltration Via Powershell
+status: test
+level: high
+description: Detects email exfiltration via powershell cmdlets
+author: Nasreddine Bencherchali (Nextron Systems),  Azure-Sentinel (idea)
+date: '2022-09-09'
+tags:
+    - attack.exfiltration
+references:
+    - https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/
+    - https://github.com/Azure/Azure-Sentinel/blob/7e6aa438e254d468feec061618a7877aa528ee9f/Hunting%20Queries/Microsoft%20365%20Defender/Ransomware/DEV-0270/Email%20data%20exfiltration%20via%20PowerShell.yaml
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        CommandLine|contains|all:
+            - Add-PSSnapin
+            - Get-Recipient
+            - -ExpandProperty
+            - EmailAddresses
+            - SmtpAddress
+            - -hidetableheaders
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:16.889094+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:16.889094+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:16.889099+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:16.889100+00:00'

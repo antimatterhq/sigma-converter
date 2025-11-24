@@ -1,0 +1,51 @@
+id: 0ee4d8a5-4e67-4faf-acfa-62a78457d1f2
+title: HybridConnectionManager Service Installation
+status: test
+level: high
+description: Rule to detect the Hybrid Connection Manager service installation.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+date: '2021-04-12'
+modified: '2022-10-09'
+tags:
+    - attack.persistence
+    - attack.t1554
+references:
+    - https://twitter.com/Cyb3rWard0g/status/1381642789369286662
+falsepositives:
+    - Legitimate use of Hybrid Connection Manager via Azure function apps.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    selection:
+        EventID: 4697
+        ServiceName: HybridConnectionManager
+        ServiceFileName|contains: HybridConnectionManager
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:18.714832+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:18.714832+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:18.714908+00:00'
+        -   source_field: ServiceName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:18.714917+00:00'
+        -   source_field: ServiceFileName
+            target_table: file_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:23:18.714921+00:00'

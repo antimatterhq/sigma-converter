@@ -1,0 +1,56 @@
+id: 9a4ff3b8-6187-4fd2-8e8b-e0eae1129495
+title: SysKey Registry Keys Access
+status: test
+level: high
+description: Detects handle requests and access operations to specific registry keys
+    to calculate the SysKey
+author: Roberto Rodriguez @Cyb3rWard0g
+date: '2019-08-12'
+modified: '2021-11-27'
+tags:
+    - attack.discovery
+    - attack.t1012
+references:
+    - https://threathunterplaybook.com/hunts/windows/190625-RegKeyAccessSyskey/notebook.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID:
+            - 4656
+            - 4663
+        ObjectType: key
+        ObjectName|endswith:
+            - lsa\JD
+            - lsa\GBG
+            - lsa\Skew1
+            - lsa\Data
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:37.037369+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:37.037369+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:37.748685+00:00'
+        -   source_field: ObjectType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:37.748703+00:00'
+        -   source_field: ObjectName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:37.748705+00:00'

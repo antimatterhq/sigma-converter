@@ -1,0 +1,51 @@
+id: c191e2fa-f9d6-4ccf-82af-4f2aba08359f
+title: Logon from a Risky IP Address
+status: test
+level: medium
+description: Detects when a Microsoft Cloud App Security reported when a user signs
+    into your sanctioned apps from a risky IP address.
+author: Austin Songer @austinsonger
+date: '2021-08-23'
+modified: '2022-10-09'
+tags:
+    - attack.initial-access
+    - attack.t1078
+references:
+    - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
+    - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    selection:
+        eventSource: SecurityComplianceCenter
+        eventName: Log on from a risky IP address
+        status: success
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: m365
+            mapped_at: '2025-11-13T20:17:47.724367+00:00'
+        service:
+            source_field: service
+            source_value: threat_management
+            mapped_at: '2025-11-13T20:17:47.724367+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: authentication
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:47.724380+00:00'
+        -   source_field: eventName
+            target_table: authentication
+            target_field: action
+            mapped_at: '2025-11-13T20:17:47.724382+00:00'
+        -   source_field: status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:17:47.724383+00:00'

@@ -1,0 +1,52 @@
+id: 9ed5959a-c43c-4c59-84e3-d28628429456
+title: UAC Bypass Using Iscsicpl - ImageLoad
+status: test
+level: high
+description: Detects the "iscsicpl.exe" UAC bypass technique that leverages a DLL
+    Search Order hijacking technique to load a custom DLL's from temp or a any user
+    controlled location in the users %PATH%
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-17'
+modified: '2022-07-25'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+references:
+    - https://github.com/hackerhouse-opensource/iscsicpl_bypassUAC
+    - https://twitter.com/wdormann/status/1547583317410607110
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image: C:\Windows\SysWOW64\iscsicpl.exe
+        ImageLoaded|endswith: \iscsiexe.dll
+    filter:
+        ImageLoaded|contains|all:
+            - C:\Windows\
+            - iscsiexe.dll
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:30.125094+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:30.125094+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:30.125099+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:30.125101+00:00'

@@ -1,0 +1,64 @@
+id: 7090adee-82e2-4269-bd59-80691e7c6338
+title: Console CodePage Lookup Via CHCP
+status: test
+level: medium
+description: Detects use of chcp to look up the system locale value as part of host
+    discovery
+author: _pete_0, TheDFIRReport
+date: '2022-02-21'
+modified: '2024-03-05'
+tags:
+    - attack.discovery
+    - attack.t1614.001
+references:
+    - https://thedfirreport.com/2022/04/04/stolen-images-campaign-ends-in-conti-ransomware/
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/chcp
+falsepositives:
+    - During Anaconda update the 'conda.exe' process will eventually execution the
+        'chcp' command.
+    - Discord was seen using chcp to look up code pages
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \cmd.exe
+        ParentCommandLine|contains|windash:
+            - ' -c '
+            - ' -r '
+            - ' -k '
+        Image|endswith: \chcp.com
+        CommandLine|endswith:
+            - chcp
+            - 'chcp '
+            - 'chcp  '
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.122376+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.122376+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:59.122382+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:59.122384+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:59.122385+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:59.122386+00:00'

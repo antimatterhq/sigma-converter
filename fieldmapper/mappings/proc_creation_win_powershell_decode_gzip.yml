@@ -1,0 +1,42 @@
+id: 98767d61-b2e8-4d71-b661-e36783ee24c1
+title: Gzip Archive Decode Via PowerShell
+status: test
+level: medium
+description: Detects attempts of decoding encoded Gzip archives via PowerShell.
+author: Hieu Tran
+date: '2023-03-13'
+tags:
+    - attack.command-and-control
+    - attack.t1132.001
+references:
+    - https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution
+falsepositives:
+    - Legitimate administrative scripts may use this functionality. Use "ParentImage"
+        in combination with the script names and allowed users and applications to
+        filter legitimate executions
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - GZipStream
+            - ::Decompress
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.448925+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.448925+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:14.448931+00:00'

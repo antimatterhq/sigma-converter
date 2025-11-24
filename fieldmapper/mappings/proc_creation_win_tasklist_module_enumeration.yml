@@ -1,0 +1,60 @@
+id: 34275eb8-fa19-436b-b959-3d9ecd53fa1f
+title: Loaded Module Enumeration Via Tasklist.EXE
+status: experimental
+level: medium
+description: 'Detects the enumeration of a specific DLL or EXE being used by a binary
+    via "tasklist.exe".
+
+    This is often used by attackers in order to find the specific process identifier
+    (PID) that is using the DLL in question.
+
+    In order to dump the process memory or perform other nefarious actions.
+
+    '
+author: Swachchhanda Shrawan Poudel
+date: '2024-02-12'
+modified: '2024-03-13'
+tags:
+    - attack.t1003
+references:
+    - https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+    - https://pentestlab.blog/tag/svchost/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \tasklist.exe
+        OriginalFileName: tasklist.exe
+    selection_flags:
+        CommandLine|contains|windash: -m
+    selection_module:
+        CommandLine|contains: rdpcorets.dll
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.275391+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.275391+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.275398+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:58.275400+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.275402+00:00'

@@ -1,0 +1,69 @@
+id: 647c7b9e-d784-4fda-b9a0-45c565a7b729
+title: Operator Bloopers Cobalt Strike Commands
+status: test
+level: high
+description: Detects use of Cobalt Strike commands accidentally entered in the CMD
+    shell
+author: _pete_0, TheDFIRReport
+date: '2022-05-06'
+modified: '2023-01-30'
+tags:
+    - attack.execution
+    - attack.t1059.003
+    - stp.1u
+references:
+    - https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/cobalt-4-5-user-guide.pdf
+    - https://thedfirreport.com/2021/10/04/bazarloader-and-the-conti-leaks/
+    - https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4f154fb6-27d1-4813-a759-78b93e0b9c48''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        OriginalFileName: Cmd.Exe
+        Image|endswith: \cmd.exe
+    selection_cli:
+        CommandLine|startswith:
+            - 'cmd '
+            - cmd.exe
+            - c:\windows\system32\cmd.exe
+        CommandLine|contains:
+            - psinject
+            - spawnas
+            - make_token
+            - remote-exec
+            - rev2self
+            - dcsync
+            - logonpasswords
+            - execute-assembly
+            - getsystem
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:03.239464+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:03.239464+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:03.239469+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:03.239471+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:03.239472+00:00'

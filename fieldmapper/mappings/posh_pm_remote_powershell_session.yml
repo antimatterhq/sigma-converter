@@ -1,0 +1,46 @@
+id: 96b9f619-aa91-478f-bacb-c3e50f8df575
+title: Remote PowerShell Session (PS Module)
+status: test
+level: high
+description: Detects remote PowerShell sessions
+author: Roberto Rodriguez @Cyb3rWard0g, Tim Shelton
+date: '2019-08-10'
+modified: '2023-01-20'
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.lateral-movement
+    - attack.t1021.006
+references:
+    - https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html
+falsepositives:
+    - Legitimate use remote PowerShell sessions
+taxonomy: sigma
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection:
+        ContextInfo|contains|all:
+            - ' = ServerRemoteHost '
+            - wsmprovhost.exe
+    filter_pwsh_archive:
+        ContextInfo|contains: \Windows\system32\WindowsPowerShell\v1.0\Modules\Microsoft.PowerShell.Archive\Microsoft.PowerShell.Archive.psm1
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_module
+            mapped_at: '2025-11-13T20:21:51.359036+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:51.359036+00:00'
+    detection_fields:
+        -   source_field: ContextInfo
+            target_table: script_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.359042+00:00'

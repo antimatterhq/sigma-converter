@@ -1,0 +1,62 @@
+id: e9c8808f-4cfb-4ba9-97d4-e5f3beaa244d
+title: Windows Defender Exclusion Registry Key - Write Access Requested
+status: test
+level: medium
+description: 'Detects write access requests to the Windows Defender exclusions registry
+    keys. This could be an indication of an attacker trying to request a handle or
+    access the object to write new exclusions in order to bypass security.
+
+    '
+author: '@BarryShooshooga, Nasreddine Bencherchali (Nextron Systems)'
+date: '2019-10-26'
+modified: '2023-11-11'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://www.bleepingcomputer.com/news/security/gootkit-malware-bypasses-windows-defender-by-setting-path-exclusions/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''46a68649-f218-4f86-aea1-16a759d81820''),
+    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''a33f8808-2812-4373-ae95-8cfb82134978''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : Security Settings/Local Policies/Audit
+        Policy, Registry System Access Control (SACL): Auditing/User'
+detection:
+    selection:
+        AccessList|contains:
+            - '%%4417'
+            - '%%4418'
+        EventID:
+            - 4656
+            - 4663
+        ObjectName|contains: \Microsoft\Windows Defender\Exclusions\
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:36.013147+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:36.013147+00:00'
+    detection_fields:
+        -   source_field: AccessList
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:36.013160+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:36.013163+00:00'
+        -   source_field: ObjectName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:36.013166+00:00'

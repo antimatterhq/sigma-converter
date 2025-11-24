@@ -1,0 +1,81 @@
+id: f200dc3f-b219-425d-a17e-c38467364816
+title: Clipboard Collection of Image Data with Xclip Tool
+status: test
+level: low
+description: 'Detects attempts to collect image data stored in the clipboard from
+    users with the usage of xclip tool.
+
+    Xclip has to be installed.
+
+    Highly recommended using rule on servers, due to high usage of clipboard utilities
+    on user workstations.
+
+    '
+author: Pawel Mazur
+date: '2021-10-01'
+modified: '2022-10-09'
+tags:
+    - attack.collection
+    - attack.t1115
+references:
+    - https://linux.die.net/man/1/xclip
+falsepositives:
+    - Legitimate usage of xclip tools
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: EXECVE
+        a0: xclip
+        a1:
+            - -selection
+            - -sel
+        a2:
+            - clipboard
+            - clip
+        a3: -t
+        a4|startswith: image/
+        a5: -o
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:45.374090+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:45.374090+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:45.374109+00:00'
+        -   source_field: a0
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:45.374112+00:00'
+        -   source_field: a1
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:45.374114+00:00'
+        -   source_field: a2
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:45.374116+00:00'
+        -   source_field: a3
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:45.374118+00:00'
+        -   source_field: a4
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:45.374119+00:00'
+        -   source_field: a5
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:45.374121+00:00'

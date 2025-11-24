@@ -1,0 +1,58 @@
+id: 1412aa78-a24c-4abd-83df-767dfb2c5bbe
+title: Potentially Suspicious WebDAV LNK Execution
+status: test
+level: medium
+description: Detects possible execution via LNK file accessed on a WebDAV server.
+author: Micah Babinski
+date: '2023-08-21'
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.t1204
+references:
+    - https://www.trellix.com/en-us/about/newsroom/stories/research/beyond-file-search-a-novel-method.html
+    - https://micahbabinski.medium.com/search-ms-webdav-and-chill-99c5b23ac462
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f0507c0f-a3a2-40f5-acc6-7f543c334993''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \explorer.exe
+        Image|endswith:
+            - \cmd.exe
+            - \cscript.exe
+            - \mshta.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \wscript.exe
+        CommandLine|contains: \DavWWWRoot\
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.631785+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.631785+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:38.631791+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.631793+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.631794+00:00'

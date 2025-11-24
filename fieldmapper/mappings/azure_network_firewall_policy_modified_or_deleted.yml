@@ -1,0 +1,49 @@
+id: 83c17918-746e-4bd9-920b-8e098bf88c23
+title: Azure Network Firewall Policy Modified or Deleted
+status: test
+level: medium
+description: Identifies when a Firewall Policy is Modified or Deleted.
+author: Austin Songer @austinsonger
+date: '2021-09-02'
+modified: '2022-08-23'
+tags:
+    - attack.impact
+    - attack.defense-evasion
+    - attack.t1562.007
+references:
+    - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
+falsepositives:
+    - Firewall Policy being modified or deleted may be performed by a system administrator.
+        Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+    - Firewall Policy modified or deleted from unfamiliar users should be investigated.
+        If known behavior is causing false positives, it can be exempted from the
+        rule.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    selection:
+        operationName:
+            - MICROSOFT.NETWORK/FIREWALLPOLICIES/WRITE
+            - MICROSOFT.NETWORK/FIREWALLPOLICIES/JOIN/ACTION
+            - MICROSOFT.NETWORK/FIREWALLPOLICIES/CERTIFICATES/ACTION
+            - MICROSOFT.NETWORK/FIREWALLPOLICIES/DELETE
+    condition: selection
+ocsf_mapping:
+    class_name: entity_management
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:32.223957+00:00'
+        service:
+            source_field: service
+            source_value: activitylogs
+            mapped_at: '2025-11-13T20:17:32.223957+00:00'
+    detection_fields:
+        -   source_field: operationName
+            target_table: entity_management
+            target_field: api.operation
+            mapped_at: '2025-11-13T20:17:32.223962+00:00'

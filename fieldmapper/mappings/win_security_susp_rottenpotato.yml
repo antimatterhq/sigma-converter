@@ -1,0 +1,63 @@
+id: 16f5d8ca-44bd-47c8-acbe-6fc95a16c12f
+title: RottenPotato Like Attack Pattern
+status: test
+level: high
+description: Detects logon events that have characteristics of events generated during
+    an attack with RottenPotato and the like
+author: '@SBousseaden, Florian Roth'
+date: '2019-11-15'
+modified: '2022-12-22'
+tags:
+    - attack.privilege-escalation
+    - attack.credential-access
+    - attack.t1557.001
+references:
+    - https://twitter.com/SBousseaden/status/1195284233729777665
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 3
+        TargetUserName: ANONYMOUS LOGON
+        WorkstationName: '-'
+        IpAddress:
+            - 127.0.0.1
+            - ::1
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:05.605334+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:25:05.605334+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:05.605375+00:00'
+        -   source_field: LogonType
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:05.605380+00:00'
+        -   source_field: TargetUserName
+            target_table: network_activity
+            target_field: user.name
+            mapped_at: '2025-11-13T20:25:05.605383+00:00'
+        -   source_field: WorkstationName
+            target_table: network_activity
+            target_field: src_endpoint.hostname
+            mapped_at: '2025-11-13T20:25:05.605386+00:00'
+        -   source_field: IpAddress
+            target_table: network_activity
+            target_field: src_endpoint.ip
+            mapped_at: '2025-11-13T20:25:05.605389+00:00'

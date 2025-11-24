@@ -1,0 +1,41 @@
+id: c1d147ae-a951-48e5-8b41-dcd0170c7213
+title: App Granted Microsoft Permissions
+status: test
+level: high
+description: Detects when an application is granted delegated or app role permissions
+    for Microsoft Graph, Exchange, Sharepoint, or Azure AD
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
+date: '2022-07-10'
+tags:
+    - attack.credential-access
+    - attack.t1528
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-granted-highly-privileged-permissions
+falsepositives:
+    - When the permission is legitimately needed for the app
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        properties.message:
+            - Add delegated permission grant
+            - Add app role assignment to service principal
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:34.252515+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:34.252515+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:16:34.252543+00:00'

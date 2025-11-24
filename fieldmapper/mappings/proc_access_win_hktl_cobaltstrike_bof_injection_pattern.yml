@@ -1,0 +1,50 @@
+id: 09706624-b7f6-455d-9d02-adee024cee1d
+title: HackTool - CobaltStrike BOF Injection Pattern
+status: test
+level: high
+description: Detects a typical pattern of a CobaltStrike BOF which inject into other
+    processes
+author: Christian Burkard (Nextron Systems)
+date: '2021-08-04'
+modified: '2023-11-28'
+tags:
+    - attack.execution
+    - attack.t1106
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://github.com/boku7/injectAmsiBypass
+    - https://github.com/boku7/spawn
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        CallTrace|re: ^C:\\Windows\\SYSTEM32\\ntdll\.dll\+[a-z0-9]{4,6}\|C:\\Windows\\System32\\KERNELBASE\.dll\+[a-z0-9]{4,6}\|UNKNOWN\([A-Z0-9]{16}\)$
+        GrantedAccess:
+            - '0x1028'
+            - '0x1fffff'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:18:54.493843+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:54.493843+00:00'
+    detection_fields:
+        -   source_field: CallTrace
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:54.493878+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:18:54.493883+00:00'

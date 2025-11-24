@@ -1,0 +1,59 @@
+id: 7b14c76a-c602-4ae6-9717-eff868153fc0
+title: HackTool - NoFilter Execution
+status: test
+level: high
+description: 'Detects execution of NoFilter, a tool for abusing the Windows Filtering
+    Platform for privilege escalation via hardcoded policy name indicators
+
+    '
+author: Stamatis Chatzimangou (st0pp3r)
+date: '2024-01-05'
+tags:
+    - attack.privilege-escalation
+    - attack.t1134
+    - attack.t1134.001
+references:
+    - https://github.com/deepinstinct/NoFilter/blob/121d215ab130c5e8e3ad45a7e7fcd56f4de97b4d/NoFilter/Consts.cpp
+    - https://github.com/deepinstinct/NoFilter
+    - https://www.deepinstinct.com/blog/nofilter-abusing-windows-filtering-platform-for-privilege-escalation
+    - https://x.com/_st0pp3r_/status/1742203752361128162?s=20
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Filtering Platform Policy Change needs to be
+        enabled'
+detection:
+    selection_5447:
+        EventID: 5447
+        FilterName|contains: RonPolicy
+    selection_5449:
+        EventID: 5449
+        ProviderContextName|contains: RonPolicy
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:53.283241+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:53.283241+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:54.346303+00:00'
+        -   source_field: FilterName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:54.346324+00:00'
+        -   source_field: ProviderContextName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:54.346328+00:00'

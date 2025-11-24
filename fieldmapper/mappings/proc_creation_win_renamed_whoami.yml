@@ -1,0 +1,48 @@
+id: f1086bf7-a0c4-4a37-9102-01e573caf4a0
+title: Renamed Whoami Execution
+status: test
+level: critical
+description: Detects the execution of whoami that has been renamed to a different
+    name to avoid detection
+author: Florian Roth (Nextron Systems)
+date: '2021-08-12'
+modified: '2022-10-09'
+tags:
+    - attack.discovery
+    - attack.t1033
+    - car.2016-03-001
+references:
+    - https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/
+    - https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: whoami.exe
+    filter:
+        Image|endswith: \whoami.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:51.926211+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:51.926211+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:51.926218+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:51.926219+00:00'

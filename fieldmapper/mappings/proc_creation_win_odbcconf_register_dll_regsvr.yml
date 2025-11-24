@@ -1,0 +1,63 @@
+id: 9f0a8bf3-a65b-440a-8c1e-5cb1547c8e70
+title: New DLL Registered Via Odbcconf.EXE
+status: test
+level: medium
+description: Detects execution of "odbcconf" with "REGSVR" in order to register a
+    new DLL (equivalent to running regsvr32). Attackers abuse this to install and
+    run malicious DLLs.
+author: Kirill Kiryanov, Beyu Denis, Daniil Yugoslavskiy, oscd.community, Nasreddine
+    Bencherchali (Nextron Systems)
+date: '2023-05-22'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.008
+references:
+    - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
+    - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
+    - https://redcanary.com/blog/raspberry-robin/
+    - https://web.archive.org/web/20191023232753/https://twitter.com/Hexacorn/status/1187143326673330176
+    - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
+    - https://www.trendmicro.com/en_us/research/17/h/backdoor-carrying-emails-set-sights-on-russian-speaking-businesses.html
+falsepositives:
+    - Legitimate DLLs being registered via "odbcconf" will generate false positives.
+        Investigate the path of the DLL and its content to determine if the action
+        is authorized.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ba4cfc11-d0fa-4d94-bf20-7c332c412e76''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \odbcconf.exe
+        OriginalFileName: odbcconf.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - 'REGSVR '
+            - .dll
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:20.268510+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:20.268510+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:20.268522+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:20.268524+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:20.268525+00:00'

@@ -1,0 +1,42 @@
+id: 8bc063d5-3a3a-4f01-a140-bc15e55e8437
+title: Suspicious GetTypeFromCLSID ShellExecute
+status: test
+level: medium
+description: Detects suspicious Powershell code that execute COM Objects
+author: frack113
+date: '2022-04-02'
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1546.015
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.015/T1546.015.md#atomic-test-2---powershell-execute-com-object
+falsepositives:
+    - Legitimate PowerShell scripts
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - ::GetTypeFromCLSID(
+            - .ShellExecute(
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.265829+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.265829+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.265833+00:00'

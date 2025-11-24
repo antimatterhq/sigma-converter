@@ -1,0 +1,47 @@
+id: b5aa7d60-c17e-4538-97de-09029d6cd76b
+title: Suspicious Digital Signature Of AppX Package
+status: test
+level: medium
+description: Detects execution of AppX packages with known suspicious or malicious
+    signature
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-16'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+references:
+    - Internal Research
+    - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: appxpackaging-om
+detection:
+    selection:
+        EventID: 157
+        subjectName: CN=Foresee Consulting Inc., O=Foresee Consulting Inc., L=North
+            York, S=Ontario, C=CA, SERIALNUMBER=1004913-1, OID.1.3.6.1.4.1.311.60.2.1.3=CA,
+            OID.2.5.4.15=Private Organization
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:22.659293+00:00'
+        service:
+            source_field: service
+            source_value: appxpackaging-om
+            mapped_at: '2025-11-13T20:22:22.659293+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:24.712890+00:00'
+        -   source_field: subjectName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:24.712972+00:00'

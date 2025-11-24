@@ -1,0 +1,54 @@
+id: f033f3f3-fd24-4995-97d8-a3bb17550a88
+title: WMI Persistence - Security
+status: test
+level: medium
+description: Detects suspicious WMI event filter and command line event consumer based
+    on WMI and Security Logs.
+author: Florian Roth (Nextron Systems), Gleb Sukhodolskiy, Timur Zinniatullin oscd.community
+date: '2017-08-22'
+modified: '2022-11-29'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1546.003
+references:
+    - https://twitter.com/mattifestation/status/899646620148539397
+    - https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/
+falsepositives:
+    - Unknown (data set is too small; further testing needed)
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0b7889b4-5577-4521-a60a-3376ee7f9f7b''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4662
+        ObjectType: WMI Namespace
+        ObjectName|contains: subscription
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:06.993875+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:06.993875+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:06.993884+00:00'
+        -   source_field: ObjectType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:06.993887+00:00'
+        -   source_field: ObjectName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:06.993889+00:00'

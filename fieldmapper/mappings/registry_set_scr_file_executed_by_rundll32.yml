@@ -1,0 +1,57 @@
+id: 40b6e656-4e11-4c0c-8772-c1cc6dae34ce
+title: ScreenSaver Registry Key Set
+status: test
+level: medium
+description: Detects registry key established after masqueraded .scr file execution
+    using Rundll32 through desk.cpl
+author: Jose Luis Sanchez Martinez (@Joseliyo_Jstnk)
+date: '2022-05-04'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+references:
+    - https://twitter.com/VakninHai/status/1517027824984547329
+    - https://twitter.com/pabraeken/status/998627081360695297
+    - https://jstnk9.github.io/jstnk9/research/InstallScreenSaver-SCR-files
+falsepositives:
+    - Legitimate use of screen saver
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        Image|endswith: \rundll32.exe
+    registry:
+        TargetObject|contains: \Control Panel\Desktop\SCRNSAVE.EXE
+        Details|endswith: .scr
+    filter:
+        Details|contains:
+            - C:\Windows\System32\
+            - C:\Windows\SysWOW64\
+    condition: selection and registry and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:05.880234+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:05.880234+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:05.880240+00:00'
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:05.880242+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:05.880243+00:00'

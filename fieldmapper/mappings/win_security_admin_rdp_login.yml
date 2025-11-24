@@ -1,0 +1,60 @@
+id: 0f63e1ef-1eb9-4226-9d54-8927ca08520a
+title: Admin User Remote Logon
+status: test
+level: low
+description: Detect remote login by Administrator user (depending on internal pattern).
+author: juju4
+date: '2017-10-29'
+modified: '2022-10-09'
+tags:
+    - attack.lateral-movement
+    - attack.t1078.001
+    - attack.t1078.002
+    - attack.t1078.003
+    - car.2016-04-005
+references:
+    - https://car.mitre.org/wiki/CAR-2016-04-005
+falsepositives:
+    - Legitimate administrative activity.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Identifiable administrators usernames (pattern or special
+        unique character. ex: "Admin-*"), internal policy mandating use only as secondary
+        account'
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 10
+        AuthenticationPackageName: Negotiate
+        TargetUserName|startswith: Admin
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:12.712683+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:25:12.712683+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:12.712728+00:00'
+        -   source_field: LogonType
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:12.712732+00:00'
+        -   source_field: AuthenticationPackageName
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:12.712736+00:00'
+        -   source_field: TargetUserName
+            target_table: authentication
+            target_field: user.name
+            mapped_at: '2025-11-13T20:25:12.712739+00:00'

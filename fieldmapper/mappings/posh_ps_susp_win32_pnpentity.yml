@@ -1,0 +1,41 @@
+id: b26647de-4feb-4283-af6b-6117661283c5
+title: Powershell Suspicious Win32_PnPEntity
+status: test
+level: low
+description: Adversaries may attempt to gather information about attached peripheral
+    devices and components connected to a computer system.
+author: frack113
+date: '2021-08-23'
+modified: '2022-12-25'
+tags:
+    - attack.discovery
+    - attack.t1120
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1120/T1120.md
+falsepositives:
+    - Admin script
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains: Win32_PnPEntity
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.339479+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.339479+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.339484+00:00'

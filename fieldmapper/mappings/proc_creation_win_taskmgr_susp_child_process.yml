@@ -1,0 +1,49 @@
+id: 3d7679bd-0c00-440c-97b0-3f204273e6c7
+title: New Process Created Via Taskmgr.EXE
+status: test
+level: low
+description: Detects the creation of a process via the Windows task manager. This
+    might be an attempt to bypass UAC
+author: Florian Roth (Nextron Systems)
+date: '2018-03-13'
+modified: '2024-01-18'
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+references:
+    - https://twitter.com/ReneFreingruber/status/1172244989335810049
+falsepositives:
+    - Administrative activity
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \taskmgr.exe
+    filter_main_generic:
+        Image|endswith:
+            - :\Windows\System32\mmc.exe
+            - :\Windows\System32\resmon.exe
+            - :\Windows\System32\Taskmgr.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.006669+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.006669+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:38.006673+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.006674+00:00'

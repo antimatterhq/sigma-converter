@@ -1,0 +1,58 @@
+id: 28c8f68b-098d-45af-8d43-8089f3e35403
+title: Potential Register_App.Vbs LOLScript Abuse
+status: test
+level: medium
+description: Detects potential abuse of the "register_app.vbs" script that is part
+    of the Windows SDK. The script offers the capability to register new VSS/VDS Provider
+    as a COM+ application. Attackers can use this to install malicious DLLs for persistence
+    and execution.
+author: Austin Songer @austinsonger
+date: '2021-11-05'
+modified: '2022-07-07'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://twitter.com/sblmsrsn/status/1456613494783160325?s=20
+    - https://github.com/microsoft/Windows-classic-samples/blob/7cbd99ac1d2b4a0beffbaba29ea63d024ceff700/Samples/Win7Samples/winbase/vss/vsssampleprovider/register_app.vbs
+falsepositives:
+    - Other VB scripts that leverage the same starting command line flags
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \cscript.exe
+            - \wscript.exe
+        OriginalFileName:
+            - cscript.exe
+            - wscript.exe
+    selection_cli:
+        CommandLine|contains: '.vbs -register '
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:20.223268+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:20.223268+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:20.223276+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:20.223278+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:20.223280+00:00'

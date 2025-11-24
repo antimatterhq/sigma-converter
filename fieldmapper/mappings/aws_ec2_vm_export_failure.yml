@@ -1,0 +1,63 @@
+id: 54b9a76a-3c71-4673-b4b3-2edb4566ea7b
+title: AWS EC2 VM Export Failure
+status: test
+level: low
+description: An attempt to export an AWS EC2 instance has been detected. A VM Export
+    might indicate an attempt to extract information from an instance.
+author: Diogo Braz
+date: '2020-04-16'
+modified: '2022-10-05'
+tags:
+    - attack.collection
+    - attack.t1005
+    - attack.exfiltration
+    - attack.t1537
+references:
+    - https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventName: CreateInstanceExportTask
+        eventSource: ec2.amazonaws.com
+    filter1:
+        errorMessage|contains: '*'
+    filter2:
+        errorCode|contains: '*'
+    filter3:
+        responseElements|contains: Failure
+    condition: selection and not 1 of filter*
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:17:59.599839+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:17:59.599839+00:00'
+    detection_fields:
+        -   source_field: eventName
+            target_table: api_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:01.112043+00:00'
+        -   source_field: eventSource
+            target_table: api_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:18:01.112078+00:00'
+        -   source_field: errorMessage
+            target_table: api_activity
+            target_field: api.response.error
+            mapped_at: '2025-11-13T20:18:01.112083+00:00'
+        -   source_field: errorCode
+            target_table: api_activity
+            target_field: api.response.code
+            mapped_at: '2025-11-13T20:18:01.112086+00:00'
+        -   source_field: responseElements
+            target_table: api_activity
+            target_field: api.response.data
+            mapped_at: '2025-11-13T20:18:01.112089+00:00'

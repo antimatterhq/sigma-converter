@@ -1,0 +1,51 @@
+id: 4e762605-34a8-406d-b72e-c1a089313320
+title: Potential Fake Instance Of Hxtsr.EXE Executed
+status: test
+level: medium
+description: 'HxTsr.exe is a Microsoft compressed executable file called Microsoft
+    Outlook Communications.
+
+    HxTsr.exe is part of Outlook apps, because it resides in a hidden "WindowsApps"
+    subfolder of "C:\Program Files".
+
+    Any instances of hxtsr.exe not in this folder may be malware camouflaging itself
+    as HxTsr.exe
+
+    '
+author: Sreeman
+date: '2020-04-17'
+modified: '2024-02-08'
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \hxtsr.exe
+    filter_main_hxtsr:
+        Image|contains: :\program files\windowsapps\microsoft.windowscommunicationsapps_
+        Image|endswith: \hxtsr.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.926669+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.926669+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.926674+00:00'

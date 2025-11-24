@@ -1,0 +1,40 @@
+id: 7bbc309f-e2b1-4eb1-8369-131a367d67d3
+title: Too Many Global Admins
+status: test
+level: high
+description: Identifies an event where there are there are too many accounts assigned
+    the Global Administrator role.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-14'
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.privilege-escalation
+references:
+    - https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-configure-security-alerts#there-are-too-many-global-administrators
+falsepositives:
+    - Investigate if threshold setting in PIM is too low.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: pim
+detection:
+    selection:
+        riskEventType: tooManyGlobalAdminsAssignedToTenantAlertIncident
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.463051+00:00'
+        service:
+            source_field: service
+            source_value: pim
+            mapped_at: '2025-11-13T20:16:23.463051+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.463057+00:00'

@@ -1,0 +1,85 @@
+id: 4be8b654-0c01-4c9d-a10c-6b28467fc651
+title: LSASS Access From Potentially White-Listed Processes
+status: test
+level: high
+description: 'Detects a possible process memory dump that uses a white-listed filename
+    like TrolleyExpress.exe as a way to dump the LSASS process memory without Microsoft
+    Defender interference
+
+    '
+author: Florian Roth (Nextron Systems)
+date: '2022-02-10'
+modified: '2023-11-29'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0002
+references:
+    - https://twitter.com/_xpn_/status/1491557187168178176
+    - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz
+    - https://twitter.com/mrd0x/status/1460597833917251595
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: \lsass.exe
+        SourceImage|endswith:
+            - \TrolleyExpress.exe
+            - \ProcessDump.exe
+            - \dump64.exe
+        GrantedAccess|endswith:
+            - '10'
+            - '30'
+            - '50'
+            - '70'
+            - '90'
+            - B0
+            - D0
+            - F0
+            - '18'
+            - '38'
+            - '58'
+            - '78'
+            - '98'
+            - B8
+            - D8
+            - F8
+            - 1A
+            - 3A
+            - 5A
+            - 7A
+            - 9A
+            - BA
+            - DA
+            - FA
+            - '0x14C2'
+            - FF
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:19:03.810373+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:03.810373+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:03.810398+00:00'
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:03.810402+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:19:03.810404+00:00'

@@ -1,0 +1,61 @@
+id: 35bc7e28-ee6b-492f-ab04-da58fcf6402e
+title: Windows Network Access Suspicious desktop.ini Action
+status: test
+level: medium
+description: Detects unusual processes accessing desktop.ini remotely over network
+    share, which can be leveraged to alter how Explorer displays a folder's content
+    (i.e. renaming files) without changing them on disk.
+author: Tim Shelton (HAWK.IO)
+date: '2021-12-06'
+modified: '2022-01-16'
+tags:
+    - attack.persistence
+    - attack.t1547.009
+references:
+    - https://isc.sans.edu/forums/diary/Desktopini+as+a+postexploitation+tool/25912/
+falsepositives:
+    - Read only access list authority
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 5145
+        ObjectType: File
+        RelativeTargetName|endswith: \desktop.ini
+        AccessList|contains:
+            - WriteData
+            - DELETE
+            - WriteDAC
+            - AppendData
+            - AddSubdirectory
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:51.690226+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:51.690226+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:51.690270+00:00'
+        -   source_field: ObjectType
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:51.690275+00:00'
+        -   source_field: RelativeTargetName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:51.690278+00:00'
+        -   source_field: AccessList
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:51.690281+00:00'

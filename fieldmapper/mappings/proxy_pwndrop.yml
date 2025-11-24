@@ -1,0 +1,41 @@
+id: 2b1ee7e4-89b6-4739-b7bb-b811b6607e5e
+title: PwnDrp Access
+status: test
+level: critical
+description: Detects downloads from PwnDrp web servers developed for red team testing
+    and most likely also used for criminal activity
+author: Florian Roth (Nextron Systems)
+date: '2020-04-15'
+modified: '2021-11-27'
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+    - attack.t1102.001
+    - attack.t1102.003
+references:
+    - https://breakdev.org/pwndrop/
+fields:
+    - ClientIP
+    - c-uri
+    - c-useragent
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection:
+        c-uri|contains: /pwndrop/
+    condition: selection
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:25.859784+00:00'
+    detection_fields:
+        -   source_field: c-uri
+            target_table: http_activity
+            target_field: http_request.url
+            mapped_at: '2025-11-13T20:14:25.859788+00:00'

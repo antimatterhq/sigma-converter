@@ -1,0 +1,74 @@
+id: 02ee49e2-e294-4d0f-9278-f5b3212fc588
+title: New RUN Key Pointing to Suspicious Folder
+status: experimental
+level: high
+description: Detects suspicious new RUN key element pointing to an executable in a
+    suspicious folder
+author: Florian Roth (Nextron Systems), Markus Neis, Sander Wiebing
+date: '2018-08-25'
+modified: '2024-07-16'
+tags:
+    - attack.persistence
+    - attack.t1547.001
+references:
+    - https://www.fireeye.com/blog/threat-research/2018/08/fin7-pursuing-an-enigmatic-and-evasive-global-criminal-operation.html
+falsepositives:
+    - Software using weird folders for updates
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_target:
+        TargetObject|contains:
+            - \SOFTWARE\Microsoft\Windows\CurrentVersion\Run\
+            - \SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce\
+    selection_details:
+        Details|contains:
+            - :\$Recycle.bin\
+            - :\Temp\
+            - :\Users\Default\
+            - :\Users\Desktop\
+            - :\Users\Public\
+            - :\Windows\Temp\
+            - \AppData\Local\Temp\
+            - '%temp%\'
+            - '%tmp%\'
+        Details|startswith:
+            - '%Public%\'
+            - wscript
+            - cscript
+    filter_main_windows_update:
+        TargetObject|contains: \Microsoft\Windows\CurrentVersion\RunOnce\
+        Image|startswith: C:\Windows\SoftwareDistribution\Download\
+        Details|contains|all:
+            - 'rundll32.exe '
+            - C:\WINDOWS\system32\advpack.dll,DelNodeRunDLL32
+        Details|contains:
+            - \AppData\Local\Temp\
+            - C:\Windows\Temp\
+    condition: all of selection_* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:05.946971+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:05.946971+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:05.946978+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:05.946980+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:05.946982+00:00'

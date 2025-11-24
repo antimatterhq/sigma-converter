@@ -1,0 +1,39 @@
+id: a6355fbe-f36f-45d8-8efc-ab42465cbc52
+title: Delegated Permissions Granted For All Users
+status: test
+level: high
+description: Detects when highly privileged delegated permissions are granted on behalf
+    of all users
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
+date: '2022-07-28'
+tags:
+    - attack.credential-access
+    - attack.t1528
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-granted-highly-privileged-permissions
+falsepositives:
+    - When the permission is legitimately needed for the app
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        properties.message: Add delegated permission grant
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:49.467822+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:49.467822+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:16:49.467846+00:00'

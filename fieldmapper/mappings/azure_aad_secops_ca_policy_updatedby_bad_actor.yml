@@ -1,0 +1,45 @@
+id: 50a3c7aa-ec29-44a4-92c1-fce229eef6fc
+title: CA Policy Updated by Non Approved Actor
+status: test
+level: medium
+description: Monitor and alert on conditional access changes. Is Initiated by (actor)
+    approved to make changes? Review Modified Properties and compare "old" vs "new"
+    value.
+author: Corissa Koopmans, '@corissalea'
+date: '2022-07-19'
+modified: '2024-05-28'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1548
+    - attack.t1556
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-infrastructure#conditional-access
+falsepositives:
+    - Misconfigured role permissions
+    - Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        properties.message: Update conditional access policy
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:27.896699+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:27.896699+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:16:27.896721+00:00'

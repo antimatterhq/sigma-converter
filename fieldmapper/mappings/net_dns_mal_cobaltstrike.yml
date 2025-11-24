@@ -1,0 +1,39 @@
+id: 2975af79-28c4-4d2f-a951-9095f229df29
+title: Cobalt Strike DNS Beaconing
+status: test
+level: critical
+description: Detects suspicious DNS queries known from Cobalt Strike beacons
+author: Florian Roth (Nextron Systems)
+date: '2018-05-10'
+modified: '2022-10-09'
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+references:
+    - https://www.icebrg.io/blog/footprints-of-fin7-tracking-actor-patterns
+    - https://www.sekoia.io/en/hunting-and-detecting-cobalt-strike/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: dns
+detection:
+    selection1:
+        query|startswith:
+            - aaa.stage.
+            - post.1
+    selection2:
+        query|contains: .stage.123456.
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns
+            mapped_at: '2025-11-13T20:15:10.418014+00:00'
+    detection_fields:
+        -   source_field: query
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:15:10.418023+00:00'

@@ -1,0 +1,52 @@
+id: 2625cc59-0634-40d0-821e-cb67382a3dd7
+title: Systemd Service Reload or Start
+status: test
+level: low
+description: Detects a reload or a start of a service.
+author: Jakob Weinzettl, oscd.community
+date: '2019-09-23'
+modified: '2021-11-27'
+tags:
+    - attack.persistence
+    - attack.t1543.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.002/T1543.002.md
+falsepositives:
+    - Installation of legitimate service.
+    - Legitimate reconfiguration of service.
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: EXECVE
+        a0|contains: systemctl
+        a1|contains:
+            - daemon-reload
+            - start
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:31.560837+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:31.560837+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.560852+00:00'
+        -   source_field: a0
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.560854+00:00'
+        -   source_field: a1
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.560856+00:00'

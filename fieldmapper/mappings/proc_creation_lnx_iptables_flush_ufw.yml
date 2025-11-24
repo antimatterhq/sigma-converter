@@ -1,0 +1,61 @@
+id: 3be619f4-d9ec-4ea8-a173-18fdd01996ab
+title: Flush Iptables Ufw Chain
+status: test
+level: medium
+description: Detect use of iptables to flush all firewall rules, tables and chains
+    and allow all network traffic
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+date: '2023-01-18'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.004
+references:
+    - https://blogs.blackberry.com/
+    - https://www.cyberciti.biz/tips/linux-iptables-how-to-flush-all-rules.html
+    - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
+falsepositives:
+    - Network administrators
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_img:
+        Image|endswith:
+            - /iptables
+            - /xtables-legacy-multi
+            - /iptables-legacy-multi
+            - /ip6tables
+            - /ip6tables-legacy-multi
+    selection_params:
+        CommandLine|contains:
+            - -F
+            - -Z
+            - -X
+    selection_ufw:
+        CommandLine|contains:
+            - ufw-logging-deny
+            - ufw-logging-allow
+            - ufw6-logging-deny
+            - ufw6-logging-allow
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.858211+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.858211+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.858223+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.858225+00:00'

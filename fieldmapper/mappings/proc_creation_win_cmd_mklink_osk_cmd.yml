@@ -1,0 +1,58 @@
+id: e9b61244-893f-427c-b287-3e708f321c6b
+title: Potential Privilege Escalation Using Symlink Between Osk and Cmd
+status: test
+level: high
+description: Detects the creation of a symbolic link between "cmd.exe" and the accessibility
+    on-screen keyboard binary (osk.exe) using "mklink". This technique provides an
+    elevated command prompt to the user from the login screen without the need to
+    log in.
+author: frack113
+date: '2022-12-11'
+modified: '2022-12-20'
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1546.008
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/5c1e6f1b4fafd01c8d1ece85f510160fc1275fbf/atomics/T1546.008/T1546.008.md
+    - https://ss64.com/nt/mklink.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \cmd.exe
+        OriginalFileName: Cmd.Exe
+    selection_cli:
+        CommandLine|contains|all:
+            - mklink
+            - \osk.exe
+            - \cmd.exe
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.476410+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.476410+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:49.476417+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:49.476418+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.476420+00:00'

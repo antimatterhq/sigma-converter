@@ -1,0 +1,68 @@
+id: 313d6012-51a0-4d93-8dfc-de8553239e25
+title: Install New Package Via Winget Local Manifest
+status: test
+level: medium
+description: 'Detects usage of winget to install applications via manifest file. Adversaries
+    can abuse winget to download payloads remotely and execute them.
+
+    The manifest option enables you to install an application by passing in a YAML
+    file directly to the client.
+
+    Winget can be used to download and install exe, msi or msix files later.
+
+    '
+author: Sreeman, Florian Roth (Nextron Systems), frack113
+date: '2020-04-21'
+modified: '2023-04-17'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1059
+references:
+    - https://learn.microsoft.com/en-us/windows/package-manager/winget/install#local-install
+    - https://lolbas-project.github.io/lolbas/Binaries/Winget/
+    - https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget
+falsepositives:
+    - Some false positives are expected in some environment that may use this functionality
+        to install and test their custom applications
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \winget.exe
+        OriginalFileName: winget.exe
+    selection_install_flag:
+        CommandLine|contains:
+            - install
+            - ' add '
+    selection_manifest_flag:
+        CommandLine|contains:
+            - '-m '
+            - --manifest
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.643872+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.643872+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.643877+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.643879+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.643880+00:00'

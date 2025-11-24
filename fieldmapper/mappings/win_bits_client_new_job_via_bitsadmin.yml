@@ -1,0 +1,46 @@
+id: 1ff315dc-2a3a-4b71-8dde-873818d25d39
+title: New BITS Job Created Via Bitsadmin
+status: test
+level: low
+description: Detects the creation of a new bits job by Bitsadmin
+author: frack113
+date: '2022-03-01'
+modified: '2023-03-27'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+falsepositives:
+    - Many legitimate applications or scripts could leverage "bitsadmin". This event
+        is best correlated with EID 16403 via the JobID field
+taxonomy: sigma
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    selection:
+        EventID: 3
+        processPath|endswith: \bitsadmin.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:17.836369+00:00'
+        service:
+            source_field: service
+            source_value: bits-client
+            mapped_at: '2025-11-13T20:24:17.836369+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:18.871756+00:00'
+        -   source_field: processPath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:24:18.871765+00:00'

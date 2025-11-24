@@ -1,0 +1,61 @@
+id: 32438676-1dba-4ac7-bf69-b86cba995e05
+title: GCP Access Policy Deleted
+status: test
+level: medium
+description: 'Detects when an access policy that is applied to a GCP cloud resource
+    is deleted.
+
+    An adversary would be able to remove access policies to gain access to a GCP cloud
+    resource.
+
+    '
+author: Bryan Lim
+date: '2024-01-12'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1098
+references:
+    - https://cloud.google.com/access-context-manager/docs/audit-logging
+    - https://cloud.google.com/logging/docs/audit/understanding-audit-logs
+    - https://cloud.google.com/logging/docs/reference/audit/auditlog/rest/Shared.Types/AuditLog
+falsepositives:
+    - Legitimate administrative activities
+taxonomy: sigma
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    selection:
+        data.protoPayload.authorizationInfo.permission:
+            - accesscontextmanager.accessPolicies.delete
+            - accesscontextmanager.accessPolicies.accessLevels.delete
+            - accesscontextmanager.accessPolicies.accessZones.delete
+            - accesscontextmanager.accessPolicies.authorizedOrgsDescs.delete
+        data.protoPayload.authorizationInfo.granted: 'true'
+        data.protoPayload.serviceName: accesscontextmanager.googleapis.com
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: gcp
+            mapped_at: '2025-11-13T20:17:36.707996+00:00'
+        service:
+            source_field: service
+            source_value: gcp.audit
+            mapped_at: '2025-11-13T20:17:36.707996+00:00'
+    detection_fields:
+        -   source_field: data.protoPayload.authorizationInfo.permission
+            target_table: account_change
+            target_field: actor.authorizations.decision
+            mapped_at: '2025-11-13T20:17:38.650406+00:00'
+        -   source_field: data.protoPayload.authorizationInfo.granted
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:38.650428+00:00'
+        -   source_field: data.protoPayload.serviceName
+            target_table: account_change
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:38.650432+00:00'

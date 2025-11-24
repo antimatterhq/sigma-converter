@@ -1,0 +1,42 @@
+id: 49329257-089d-46e6-af37-4afce4290685
+title: HackTool - SharpEvtMute DLL Load
+status: test
+level: high
+description: Detects the load of EvtMuteHook.dll, a key component of SharpEvtHook,
+    a tool that tampers with the Windows event logs
+author: Florian Roth (Nextron Systems)
+date: '2022-09-07'
+modified: '2024-11-23'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://github.com/bats3c/EvtMute
+falsepositives:
+    - Other DLLs with the same Imphash
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''bedfc8ad-d1c7-4e37-a20e-e2b0dbee759c''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Hashes|contains: IMPHASH=330768A4F172E10ACB6287B87289D83B
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: Hashes
+            target_table: null
+            target_field: null
+            mapped_at: null

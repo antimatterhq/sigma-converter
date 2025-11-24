@@ -1,0 +1,64 @@
+id: cef24b90-dddc-4ae1-a09a-8764872f69fc
+title: Suspicious Get Local Groups Information
+status: test
+level: low
+description: 'Adversaries may attempt to find local system groups and permission settings.
+
+    The knowledge of local system permission groups can help adversaries determine
+    which groups exist and which users belong to a particular group.
+
+    Adversaries may use this information to determine which users have elevated permissions,
+    such as the users found within the local administrators group.
+
+    '
+author: frack113
+date: '2021-12-12'
+modified: '2022-12-25'
+tags:
+    - attack.discovery
+    - attack.t1069.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.001/T1069.001.md
+falsepositives:
+    - Administrator script
+taxonomy: sigma
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    test_3:
+        Payload|contains:
+            - get-localgroup
+            - Get-LocalGroupMember
+        ContextInfo|contains:
+            - get-localgroup
+            - Get-LocalGroupMember
+    test_6:
+        Payload|contains|all:
+            - Get-WMIObject
+            - Win32_Group
+        ContextInfo|contains|all:
+            - Get-WMIObject
+            - Win32_Group
+    condition: 1 of test_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_module
+            mapped_at: '2025-11-13T20:21:51.375800+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:51.375800+00:00'
+    detection_fields:
+        -   source_field: Payload
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.375805+00:00'
+        -   source_field: ContextInfo
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.375807+00:00'

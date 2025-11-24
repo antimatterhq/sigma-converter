@@ -1,0 +1,156 @@
+{
+  "uid": 5,
+  "caption": "User Access Management",
+  "description": "User Access Management events report management updates to a user's privileges.",
+  "extends": "base_event",
+  "name": "user_access",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Assign Privileges",
+          "description": "Assign privileges to a user."
+        },
+        "2": {
+          "caption": "Revoke Privileges",
+          "description": "Revoke privileges from a user."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "actor": {
+      "group": "context",
+      "requirement": "required",
+      "object": "actor",
+      "constraints": {
+        "at_least_one": [
+          "process",
+          "user",
+          "invoked_by",
+          "session",
+          "app_name",
+          "app_uid"
+        ]
+      }
+    },
+    "api": {
+      "group": "primary",
+      "requirement": "required",
+      "object": "api"
+    },
+    "class_uid": {
+      "description": "The class of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "3005": {
+          "caption": "User Access Management",
+          "description": "User Access Management events report management updates to a user's privileges."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "cloud": {
+      "caption": "Cloud",
+      "description": "The Cloud object contains information about a cloud or Software-as-a-Service account or similar construct, such as AWS Account ID, regions, organizations, folders, compartments, tenants, etc.",
+      "object": "cloud"
+    },
+    "privileges": {
+      "description": "List of privileges assigned to a user.",
+      "group": "primary",
+      "requirement": "required"
+    },
+    "resource": {
+      "description": "Resource that the privileges give access to.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "resource_details",
+      "constraints": {
+        "at_least_one": [
+          "name",
+          "uid"
+        ]
+      }
+    },
+    "src_endpoint": {
+      "description": "The endpoint from which the privileges were granted.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "type_uid": {
+      "description": "The type of the event.",
+      "group": "primary",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "300500": {
+          "caption": "Unknown",
+          "description": "The activity type \"User Access Management: Unknown\" is not further specified."
+        },
+        "300501": {
+          "caption": "Assign Privileges",
+          "description": "Assign privileges to a user."
+        },
+        "300502": {
+          "caption": "Revoke Privileges",
+          "description": "Revoke privileges from a user."
+        },
+        "300599": {
+          "caption": "Other",
+          "description": "The activity type is not mapped."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "user": {
+      "description": "A user that was added to or removed from the group.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "user",
+      "constraints": {
+        "at_least_one": [
+          "name",
+          "uid",
+          "account"
+        ]
+      }
+    }
+  }
+}

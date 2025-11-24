@@ -1,0 +1,55 @@
+id: 1f358e2e-cb63-43c3-b575-dfb072a6814f
+title: System and Hardware Information Discovery
+status: stable
+level: informational
+description: Detects system information discovery commands
+author: Ömer Günal, oscd.community
+date: '2020-10-08'
+modified: '2022-11-26'
+tags:
+    - attack.discovery
+    - attack.t1082
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1082/T1082.md#atomic-test-4---linux-vm-check-via-hardware
+falsepositives:
+    - Legitimate administration activities
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''42df45e7-e6e9-43b5-8f26-bec5b39cc239''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: PATH
+        name:
+            - /sys/class/dmi/id/bios_version
+            - /sys/class/dmi/id/product_name
+            - /sys/class/dmi/id/chassis_vendor
+            - /proc/scsi/scsi
+            - /proc/ide/hd0/model
+            - /proc/version
+            - /etc/*version
+            - /etc/*release
+            - /etc/issue
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:34.792351+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:34.792351+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:34.792380+00:00'
+        -   source_field: name
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:15:34.792385+00:00'

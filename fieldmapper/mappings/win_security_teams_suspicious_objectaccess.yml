@@ -1,0 +1,53 @@
+id: 25cde13e-8e20-4c29-b949-4e795b76f16f
+title: Suspicious Teams Application Related ObjectAcess Event
+status: test
+level: high
+description: Detects an access to authentication tokens and accounts of Microsoft
+    Teams desktop application.
+author: '@SerkinValery'
+date: '2022-09-16'
+tags:
+    - attack.credential-access
+    - attack.t1528
+references:
+    - https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/
+    - https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4663
+        ObjectName|contains:
+            - \Microsoft\Teams\Cookies
+            - \Microsoft\Teams\Local Storage\leveldb
+    filter:
+        ProcessName|contains: \Microsoft\Teams\current\Teams.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:47.692314+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:47.692314+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:48.631207+00:00'
+        -   source_field: ObjectName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:48.631239+00:00'
+        -   source_field: ProcessName
+            target_table: file_activity
+            target_field: actor.process.name
+            mapped_at: '2025-11-13T20:22:48.631244+00:00'

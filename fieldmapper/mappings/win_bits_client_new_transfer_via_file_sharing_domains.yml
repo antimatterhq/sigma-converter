@@ -1,0 +1,79 @@
+id: d635249d-86b5-4dad-a8c7-d7272b788586
+title: BITS Transfer Job Download From File Sharing Domains
+status: experimental
+level: high
+description: Detects BITS transfer job downloading files from a file sharing domain.
+author: Florian Roth (Nextron Systems)
+date: '2022-06-28'
+modified: '2024-10-21'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+    - https://twitter.com/malmoeb/status/1535142803075960832
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker
+    - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    selection:
+        EventID: 16403
+        RemoteName|contains:
+            - .githubusercontent.com
+            - anonfiles.com
+            - cdn.discordapp.com
+            - ddns.net
+            - dl.dropboxusercontent.com
+            - ghostbin.co
+            - glitch.me
+            - gofile.io
+            - hastebin.com
+            - mediafire.com
+            - mega.nz
+            - onrender.com
+            - pages.dev
+            - paste.ee
+            - pastebin.com
+            - pastebin.pl
+            - pastetext.net
+            - pixeldrain.com
+            - privatlab.com
+            - privatlab.net
+            - send.exploit.in
+            - sendspace.com
+            - storage.googleapis.com
+            - storjshare.io
+            - supabase.co
+            - temp.sh
+            - transfer.sh
+            - trycloudflare.com
+            - ufile.io
+            - w3spaces.com
+            - workers.dev
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:18.880307+00:00'
+        service:
+            source_field: service
+            source_value: bits-client
+            mapped_at: '2025-11-13T20:24:18.880307+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:18.880332+00:00'
+        -   source_field: RemoteName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:18.880337+00:00'

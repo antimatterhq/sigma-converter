@@ -1,0 +1,64 @@
+id: f35c5d71-b489-4e22-a115-f003df287317
+title: Potential CobaltStrike Process Patterns
+status: test
+level: high
+description: Detects potential process patterns related to Cobalt Strike beacon activity
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2021-07-27'
+modified: '2023-03-29'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://hausec.com/2021/07/26/cobalt-strike-and-tradecraft/
+    - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_generic_1:
+        CommandLine|endswith: cmd.exe /C whoami
+        ParentImage|startswith: C:\Temp\
+    selection_generic_2:
+        ParentImage|endswith:
+            - \runonce.exe
+            - \dllhost.exe
+        CommandLine|contains|all:
+            - cmd.exe /c echo
+            - '> \\.\pipe'
+    selection_conhost_1:
+        ParentCommandLine|contains|all:
+            - cmd.exe /C echo
+            - ' > \\.\pipe'
+        CommandLine|endswith: conhost.exe 0xffffffff -ForceV1
+    selection_conhost_2:
+        ParentCommandLine|endswith: /C whoami
+        CommandLine|endswith: conhost.exe 0xffffffff -ForceV1
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:33.252366+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:33.252366+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.252375+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:33.252377+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.252378+00:00'

@@ -1,0 +1,58 @@
+id: f117933c-980c-4f78-b384-e3d838111165
+title: Windows Share Mount Via Net.EXE
+status: test
+level: low
+description: Detects when a share is mounted using the "net.exe" utility
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-02-02'
+modified: '2023-02-21'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+references:
+    - https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view
+falsepositives:
+    - Legitimate activity by administrators and scripts
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3abd6094-7027-475f-9630-8ab9be7b9725''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \net.exe
+            - \net1.exe
+        OriginalFileName:
+            - net.exe
+            - net1.exe
+    selection_cli:
+        CommandLine|contains:
+            - ' use '
+            - ' \\'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:24.070982+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:24.070982+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:24.071002+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:24.071005+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:24.071007+00:00'

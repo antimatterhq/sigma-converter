@@ -1,0 +1,41 @@
+id: 6555754e-5e7f-4a67-ad1c-4041c413a007
+title: Anomalous Token
+status: test
+level: high
+description: Indicates that there are abnormal characteristics in the token such as
+    an unusual token lifetime or a token that is played from an unfamiliar location.
+author: Mark Morowczynski '@markmorow'
+date: '2023-08-07'
+tags:
+    - attack.t1528
+    - attack.credential-access
+references:
+    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#anomalous-token
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
+falsepositives:
+    - We recommend investigating the sessions flagged by this detection in the context
+        of other sign-ins from the user.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    selection:
+        riskEventType: anomalousToken
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.438868+00:00'
+        service:
+            source_field: service
+            source_value: riskdetection
+            mapped_at: '2025-11-13T20:16:23.438868+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.438879+00:00'

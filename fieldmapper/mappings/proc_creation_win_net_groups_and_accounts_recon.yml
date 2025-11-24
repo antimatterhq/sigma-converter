@@ -1,0 +1,85 @@
+id: d95de845-b83c-4a9a-8a6a-4fc802ebf6c0
+title: Suspicious Group And Account Reconnaissance Activity Using Net.EXE
+status: test
+level: medium
+description: 'Detects suspicious reconnaissance command line activity on Windows systems
+    using Net.EXE
+
+    Check if the user that executed the commands is suspicious (e.g. service accounts,
+    LOCAL_SYSTEM)
+
+    '
+author: Florian Roth (Nextron Systems), omkar72, @svch0st, Nasreddine Bencherchali
+    (Nextron Systems)
+date: '2019-01-16'
+modified: '2023-03-02'
+tags:
+    - attack.discovery
+    - attack.t1087.001
+    - attack.t1087.002
+references:
+    - https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/
+    - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
+    - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+falsepositives:
+    - Inventory tool runs
+    - Administrative activity
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \net.exe
+            - \net1.exe
+        OriginalFileName:
+            - net.exe
+            - net1.exe
+    selection_group_root:
+        CommandLine|contains:
+            - ' group '
+            - ' localgroup '
+    selection_group_flags:
+        CommandLine|contains:
+            - domain admins
+            - ' administrator'
+            - ' administrateur'
+            - enterprise admins
+            - Exchange Trusted Subsystem
+            - Remote Desktop Users
+            - Utilisateurs du Bureau à distance
+            - Usuarios de escritorio remoto
+            - ' /do'
+    filter_group_add:
+        CommandLine|contains: ' /add'
+    selection_accounts_root:
+        CommandLine|contains: ' accounts '
+    selection_accounts_flags:
+        CommandLine|contains: ' /do'
+    condition: selection_img and ((all of selection_group_* and not filter_group_add)
+        or all of selection_accounts_*)
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:25.831735+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:25.831735+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:25.831744+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:25.831745+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:25.831747+00:00'

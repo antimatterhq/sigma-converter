@@ -1,0 +1,57 @@
+id: ba4cfc11-d0fa-4d94-bf20-7c332c412e76
+title: Potentially Suspicious DLL Registered Via Odbcconf.EXE
+status: test
+level: high
+description: Detects execution of "odbcconf" with the "REGSVR" action where the DLL
+    in question doesn't contain a ".dll" extension. Which is often used as a method
+    to evade defenses.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-22'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.008
+references:
+    - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
+    - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
+    - https://www.trendmicro.com/en_us/research/17/h/backdoor-carrying-emails-set-sights-on-russian-speaking-businesses.html
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9f0a8bf3-a65b-440a-8c1e-5cb1547c8e70''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \odbcconf.exe
+        OriginalFileName: odbcconf.exe
+    selection_cli:
+        CommandLine|contains: 'REGSVR '
+    filter_main_dll_ext:
+        CommandLine|contains: .dll
+    condition: all of selection_* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.091922+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.091922+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.091940+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:37.091943+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:37.091945+00:00'

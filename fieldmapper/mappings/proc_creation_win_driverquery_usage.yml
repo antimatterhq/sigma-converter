@@ -1,0 +1,63 @@
+id: a20def93-0709-4eae-9bd2-31206e21e6b2
+title: DriverQuery.EXE Execution
+status: test
+level: medium
+description: Detect usage of the "driverquery" utility. Which can be used to perform
+    reconnaissance on installed drivers
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-19'
+modified: '2023-09-29'
+tags:
+    - attack.discovery
+references:
+    - https://thedfirreport.com/2023/01/09/unwrapping-ursnifs-gifts/
+    - https://www.vmray.com/cyber-security-blog/analyzing-ursnif-behavior-malware-sandbox/
+    - https://www.fireeye.com/blog/threat-research/2020/01/saigon-mysterious-ursnif-fork.html
+falsepositives:
+    - Legitimate use by third party tools in order to investigate installed drivers
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9fc3072c-dc8f-4bf7-b231-18950000fadd''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: driverquery.exe
+        OriginalFileName: drvqry.exe
+    filter_main_other:
+        ParentImage|endswith:
+            - \cscript.exe
+            - \mshta.exe
+            - \regsvr32.exe
+            - \rundll32.exe
+            - \wscript.exe
+        ParentImage|contains:
+            - \AppData\Local\
+            - \Users\Public\
+            - \Windows\Temp\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:09.489508+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:09.489508+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:09.489513+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:09.489515+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:09.489516+00:00'

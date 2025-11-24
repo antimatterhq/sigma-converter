@@ -1,0 +1,54 @@
+id: 6942bd25-5970-40ab-af49-944247103358
+title: Suspicious Get Information for SMB Share - PowerShell Module
+status: test
+level: low
+description: 'Adversaries may look for folders and drives shared on remote systems
+    as a means of identifying sources of information to gather as a precursor for
+    Collection and
+
+    to identify potential systems of interest for Lateral Movement.
+
+    Networks often contain shared network drives and folders that enable users to
+    access file directories on various systems across a network.
+
+    '
+author: frack113
+date: '2021-12-15'
+modified: '2022-12-02'
+tags:
+    - attack.discovery
+    - attack.t1069.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.002/T1069.002.md
+falsepositives:
+    - Administrator script
+taxonomy: sigma
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection:
+        Payload|contains: get-smbshare
+        ContextInfo|contains: get-smbshare
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_module
+            mapped_at: '2025-11-13T20:21:51.357145+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:51.357145+00:00'
+    detection_fields:
+        -   source_field: Payload
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.357153+00:00'
+        -   source_field: ContextInfo
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.357155+00:00'

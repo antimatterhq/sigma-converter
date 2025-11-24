@@ -1,0 +1,56 @@
+id: aa8e035d-7be4-48d3-a944-102aec04400d
+title: Suspicious Extrac32 Execution
+status: test
+level: medium
+description: Download or Copy file with Extrac32
+author: frack113
+date: '2021-11-26'
+modified: '2022-08-13'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Extrac32/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_lolbas:
+        CommandLine|contains: extrac32.exe
+        Image|endswith: \extrac32.exe
+        OriginalFileName: extrac32.exe
+    selection_archive:
+        CommandLine|contains: .cab
+    selection_options:
+        CommandLine|contains:
+            - /C
+            - /Y
+            - ' \\'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.053880+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.053880+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.053886+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.053887+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.053888+00:00'

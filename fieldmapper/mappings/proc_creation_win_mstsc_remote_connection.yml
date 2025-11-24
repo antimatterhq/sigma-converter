@@ -1,0 +1,64 @@
+id: 954f0af7-62dd-418f-b3df-a84bc2c7a774
+title: New Remote Desktop Connection Initiated Via Mstsc.EXE
+status: test
+level: medium
+description: 'Detects the usage of "mstsc.exe" with the "/v" flag to initiate a connection
+    to a remote server.
+
+    Adversaries may use valid accounts to log into a computer using the Remote Desktop
+    Protocol (RDP). The adversary may then perform actions as the logged-on user.
+
+    '
+author: frack113
+date: '2022-01-07'
+modified: '2024-06-04'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md#t1021001---remote-desktop-protocol
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mstsc
+falsepositives:
+    - WSL (Windows Sub System For Linux)
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \mstsc.exe
+        OriginalFileName: mstsc.exe
+    selection_cli:
+        CommandLine|contains|windash: ' /v:'
+    filter_optional_wsl:
+        ParentImage: C:\Windows\System32\lxss\wslhost.exe
+        CommandLine|contains: C:\ProgramData\Microsoft\WSL\wslg.rdp
+    condition: all of selection_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.357249+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.357249+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.357254+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:30.357256+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.357257+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:30.357258+00:00'

@@ -1,0 +1,45 @@
+id: 4e25af4b-246d-44ea-8563-e42aacab006b
+title: Potential Xterm Reverse Shell
+status: test
+level: medium
+description: Detects usage of "xterm" as a potential reverse shell tunnel
+author: '@d4ns4n_'
+date: '2023-04-24'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+    - https://www.revshells.com/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|contains: xterm
+        CommandLine|contains: -display
+        CommandLine|endswith: :1
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.885339+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.885339+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.885346+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.885348+00:00'

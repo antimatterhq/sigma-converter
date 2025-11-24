@@ -1,0 +1,45 @@
+id: b2572bf9-e20a-4594-b528-40bde666525a
+title: Impossible Travel
+status: test
+level: high
+description: Identifies user activities originating from geographically distant locations
+    within a time period shorter than the time it takes to travel from the first location
+    to the second.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-03'
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.initial-access
+references:
+    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#impossible-travel
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
+falsepositives:
+    - Connecting to a VPN, performing activity and then dropping and performing additional
+        activity.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    selection:
+        riskEventType: impossibleTravel
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.443040+00:00'
+        service:
+            source_field: service
+            source_value: riskdetection
+            mapped_at: '2025-11-13T20:16:23.443040+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.443047+00:00'

@@ -1,0 +1,57 @@
+id: c4e92a97-a9ff-4392-9d2d-7a4c642768ca
+title: Service Installed By Unusual Client - Security
+status: test
+level: high
+description: Detects a service installed by a client which has PID 0 or whose parent
+    has PID 0
+author: Tim Rauch (Nextron Systems), Elastic (idea)
+date: '2022-09-15'
+modified: '2023-01-04'
+tags:
+    - attack.privilege-escalation
+    - attack.t1543
+references:
+    - https://www.elastic.co/guide/en/security/current/windows-service-installed-via-an-unusual-client.html
+    - https://www.x86matthew.com/view_post?id=create_svc_rpc
+    - https://twitter.com/SBousseaden/status/1490608838701166596
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''71c276aa-49cd-43d2-b920-2dcd3e6962d5''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: The System Security Extension audit subcategory need
+        to be enabled to log the EID 4697'
+detection:
+    selection_eid:
+        EventID: 4697
+    selection_pid:
+        ClientProcessId: 0
+        ParentProcessId: 0
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:32.346791+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:32.346791+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:33.714191+00:00'
+        -   source_field: ClientProcessId
+            target_table: process_activity
+            target_field: actor.process.pid
+            mapped_at: '2025-11-13T20:23:33.714209+00:00'
+        -   source_field: ParentProcessId
+            target_table: process_activity
+            target_field: process.parent_process.pid
+            mapped_at: '2025-11-13T20:23:33.714213+00:00'

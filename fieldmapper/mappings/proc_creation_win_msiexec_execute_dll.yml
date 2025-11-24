@@ -1,0 +1,65 @@
+id: 6f4191bb-912b-48a8-9ce7-682769541e6d
+title: Suspicious Msiexec Execute Arbitrary DLL
+status: test
+level: medium
+description: 'Adversaries may abuse msiexec.exe to proxy execution of malicious payloads.
+
+    Msiexec.exe is the command-line utility for the Windows Installer and is thus
+    commonly associated with executing installation packages (.msi)
+
+    '
+author: frack113
+date: '2022-01-16'
+modified: '2024-03-13'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.007
+references:
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+    - https://twitter.com/_st0pp3r_/status/1583914515996897281
+falsepositives:
+    - Legitimate script
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \msiexec.exe
+        CommandLine|contains|windash: ' -y'
+    filter_apple:
+        CommandLine|contains:
+            - \MsiExec.exe" /Y "C:\Program Files\Bonjour\mdnsNSP.dll
+            - \MsiExec.exe" /Y "C:\Program Files (x86)\Bonjour\mdnsNSP.dll
+            - \MsiExec.exe" /Y "C:\Program Files (x86)\Apple Software Update\ScriptingObjectModel.dll
+            - \MsiExec.exe" /Y "C:\Program Files (x86)\Apple Software Update\SoftwareUpdateAdmin.dll
+            - \MsiExec.exe" /Y "C:\Windows\CCM\
+            - \MsiExec.exe" /Y C:\Windows\CCM\
+            - \MsiExec.exe" -Y "C:\Program Files\Bonjour\mdnsNSP.dll
+            - \MsiExec.exe" -Y "C:\Program Files (x86)\Bonjour\mdnsNSP.dll
+            - \MsiExec.exe" -Y "C:\Program Files (x86)\Apple Software Update\ScriptingObjectModel.dll
+            - \MsiExec.exe" -Y "C:\Program Files (x86)\Apple Software Update\SoftwareUpdateAdmin.dll
+            - \MsiExec.exe" -Y "C:\Windows\CCM\
+            - \MsiExec.exe" -Y C:\Windows\CCM\
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:41.456648+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:41.456648+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:41.456658+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:41.456660+00:00'

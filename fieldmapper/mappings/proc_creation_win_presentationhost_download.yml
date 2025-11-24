@@ -1,0 +1,55 @@
+id: b124ddf4-778d-418e-907f-6dd3fc0d31cd
+title: Arbitrary File Download Via PresentationHost.EXE
+status: test
+level: medium
+description: Detects usage of "PresentationHost" which is a utility that runs ".xbap"
+    (Browser Applications) files to download arbitrary files
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-19'
+modified: '2023-11-09'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+references:
+    - https://github.com/LOLBAS-Project/LOLBAS/pull/239/files
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \presentationhost.exe
+        OriginalFileName: PresentationHost.exe
+    selection_cli:
+        CommandLine|contains:
+            - http://
+            - https://
+            - ftp://
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:15.018522+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:15.018522+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:15.018529+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:15.018531+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:15.018532+00:00'

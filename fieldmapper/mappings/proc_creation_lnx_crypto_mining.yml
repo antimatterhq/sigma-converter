@@ -1,0 +1,56 @@
+id: 9069ea3c-b213-4c52-be13-86506a227ab1
+title: Linux Crypto Mining Indicators
+status: test
+level: high
+description: Detects command line parameters or strings often used by crypto miners
+author: Florian Roth (Nextron Systems)
+date: '2021-10-26'
+modified: '2022-12-25'
+tags:
+    - attack.impact
+    - attack.t1496
+references:
+    - https://www.poolwatch.io/coin/monero
+falsepositives:
+    - Legitimate use of crypto miners
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        CommandLine|contains:
+            - ' --cpu-priority='
+            - --donate-level=0
+            - ' -o pool.'
+            - ' --nicehash'
+            - ' --algo=rx/0 '
+            - stratum+tcp://
+            - stratum+udp://
+            - sh -c /sbin/modprobe msr allow_writes=on
+            - LS1kb25hdGUtbGV2ZWw9
+            - 0tZG9uYXRlLWxldmVsP
+            - tLWRvbmF0ZS1sZXZlbD
+            - c3RyYXR1bSt0Y3A6Ly
+            - N0cmF0dW0rdGNwOi8v
+            - zdHJhdHVtK3RjcDovL
+            - c3RyYXR1bSt1ZHA6Ly
+            - N0cmF0dW0rdWRwOi8v
+            - zdHJhdHVtK3VkcDovL
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.897369+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.897369+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.897375+00:00'

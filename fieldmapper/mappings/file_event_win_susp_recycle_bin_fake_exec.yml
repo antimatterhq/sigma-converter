@@ -1,0 +1,52 @@
+id: cd8b36ac-8e4a-4c2f-a402-a29b8fbd5bca
+title: Suspicious File Creation Activity From Fake Recycle.Bin Folder
+status: test
+level: high
+description: Detects file write event from/to a fake recycle bin folder that is often
+    used as a staging directory for malware
+author: X__Junior (Nextron Systems)
+date: '2023-07-12'
+modified: '2023-12-11'
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+references:
+    - https://www.mandiant.com/resources/blog/infected-usb-steal-secrets
+    - https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5ce0f04e-3efc-42af-839d-5b3a543b76c0''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|contains:
+            - RECYCLERS.BIN\
+            - RECYCLER.BIN\
+        TargetFilename|contains:
+            - RECYCLERS.BIN\
+            - RECYCLER.BIN\
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.576203+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.576203+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:34.576215+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.576218+00:00'

@@ -1,0 +1,55 @@
+id: 52d097e2-063e-4c9c-8fbb-855c8948d135
+title: Suspicious Windows Update Agent Empty Cmdline
+status: test
+level: high
+description: 'Detects suspicious Windows Update Agent activity in which a wuauclt.exe
+    process command line doesn''t contain any command line flags
+
+    '
+author: Florian Roth (Nextron Systems)
+date: '2022-02-26'
+modified: '2023-11-11'
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+references:
+    - https://redcanary.com/blog/blackbyte-ransomware/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \Wuauclt.exe
+        OriginalFileName: Wuauclt.exe
+    selection_cli:
+        CommandLine|endswith:
+            - Wuauclt
+            - Wuauclt.exe
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:52.620178+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:52.620178+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:52.620184+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:52.620186+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:52.620187+00:00'

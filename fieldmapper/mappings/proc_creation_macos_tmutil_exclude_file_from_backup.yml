@@ -1,0 +1,52 @@
+id: 9acf45ed-3a26-4062-bf08-56857613eb52
+title: New File Exclusion Added To Time Machine Via Tmutil - MacOS
+status: experimental
+level: medium
+description: 'Detects the addition of a new file or path exclusion to MacOS Time Machine
+    via the "tmutil" utility.
+
+    An adversary could exclude a path from Time Machine backups to prevent certain
+    files from being backed up.
+
+    '
+author: Pratinav Chandra
+date: '2024-05-29'
+tags:
+    - attack.impact
+    - attack.t1490
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1490/T1490.md#atomic-test-12---disable-time-machine
+    - https://www.loobins.io/binaries/tmutil/
+falsepositives:
+    - Legitimate administrator activity
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection_img:
+        Image|endswith: /tmutil
+        CommandLine|contains: tmutil
+    selection_cmd:
+        CommandLine|contains: addexclusion
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.769490+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.769490+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.769498+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.769499+00:00'

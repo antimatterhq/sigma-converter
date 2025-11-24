@@ -1,0 +1,58 @@
+id: 74a2b202-73e0-4693-9a3a-9d36146d0775
+title: Remote Access Tool - MeshAgent Command Execution via MeshCentral
+status: experimental
+level: medium
+description: 'Detects the use of MeshAgent to execute commands on the target host,
+    particularly when threat actors might abuse it to execute commands directly.
+
+    MeshAgent can execute commands on the target host by leveraging win-console to
+    obscure their activities and win-dispatcher to run malicious code through IPC
+    with child processes.
+
+    '
+author: '@Kostastsale'
+date: '2024-09-22'
+tags:
+    - attack.command-and-control
+    - attack.t1219
+references:
+    - https://github.com/Ylianst/MeshAgent
+    - https://github.com/Ylianst/MeshAgent/blob/52cf129ca43d64743181fbaf940e0b4ddb542a37/modules/win-dispatcher.js#L173
+    - https://github.com/Ylianst/MeshAgent/blob/52cf129ca43d64743181fbaf940e0b4ddb542a37/modules/win-info.js#L55
+falsepositives:
+    - False positives can be found in environments using MessAgent for remote management,
+        analysis should prioritize the grandparent process, MessAgent.exe, and scrutinize
+        the resulting child processes triggered by any suspicious interactive commands
+        directed at the target host.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \meshagent.exe
+        Image|endswith:
+            - \cmd.exe
+            - \powershell.exe
+            - \pwsh.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.978700+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.978700+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:34.978711+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:34.978714+00:00'

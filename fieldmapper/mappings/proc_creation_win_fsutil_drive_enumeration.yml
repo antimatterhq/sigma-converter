@@ -1,0 +1,51 @@
+id: 63de06b9-a385-40b5-8b32-73f2b9ef84b6
+title: Fsutil Drive Enumeration
+status: test
+level: low
+description: Attackers may leverage fsutil to enumerated connected drives.
+author: Christopher Peacock '@securepeacock', SCYTHE '@scythe_io'
+date: '2022-03-29'
+modified: '2022-07-14'
+tags:
+    - attack.discovery
+    - attack.t1120
+references:
+    - Turla has used fsutil fsinfo drives to list connected drives.
+    - https://github.com/elastic/detection-rules/blob/414d32027632a49fb239abb8fbbb55d3fa8dd861/rules/windows/discovery_peripheral_device.toml
+falsepositives:
+    - Certain software or administrative tasks may trigger false positives.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \fsutil.exe
+        OriginalFileName: fsutil.exe
+    selection_cli:
+        CommandLine|contains: drives
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.104041+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.104041+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.104047+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.104048+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.104054+00:00'

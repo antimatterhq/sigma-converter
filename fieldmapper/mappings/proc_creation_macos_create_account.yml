@@ -1,0 +1,50 @@
+id: 51719bf5-e4fd-4e44-8ba8-b830e7ac0731
+title: Creation Of A Local User Account
+status: test
+level: low
+description: Detects the creation of a new user account. Such accounts may be used
+    for persistence that do not require persistent remote access tools to be deployed
+    on the system.
+author: Alejandro Ortuno, oscd.community
+date: '2020-10-06'
+modified: '2023-02-18'
+tags:
+    - attack.t1136.001
+    - attack.persistence
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1136.001/T1136.001.md
+    - https://ss64.com/osx/sysadminctl.html
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection_dscl:
+        Image|endswith: /dscl
+        CommandLine|contains: create
+    selection_sysadminctl:
+        Image|endswith: /sysadminctl
+        CommandLine|contains: addUser
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.817580+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.817580+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.817583+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.817585+00:00'

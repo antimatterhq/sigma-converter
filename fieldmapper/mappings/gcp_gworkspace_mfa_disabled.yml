@@ -1,0 +1,53 @@
+id: 780601d1-6376-4f2a-884e-b8d45599f78c
+title: Google Workspace MFA Disabled
+status: test
+level: medium
+description: Detects when multi-factor authentication (MFA) is disabled.
+author: Austin Songer
+date: '2021-08-26'
+modified: '2023-10-11'
+tags:
+    - attack.impact
+references:
+    - https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3
+    - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-security-settings#ENFORCE_STRONG_AUTHENTICATION
+    - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-security-settings?hl=en#ALLOW_STRONG_AUTHENTICATION
+falsepositives:
+    - MFA may be disabled and performed by a system administrator.
+taxonomy: sigma
+logsource:
+    product: gcp
+    service: google_workspace.admin
+detection:
+    selection_base:
+        eventService: admin.googleapis.com
+        eventName:
+            - ENFORCE_STRONG_AUTHENTICATION
+            - ALLOW_STRONG_AUTHENTICATION
+    selection_eventValue:
+        new_value: 'false'
+    condition: all of selection*
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: gcp
+            mapped_at: '2025-11-13T20:17:44.898388+00:00'
+        service:
+            source_field: service
+            source_value: google_workspace.admin
+            mapped_at: '2025-11-13T20:17:44.898388+00:00'
+    detection_fields:
+        -   source_field: eventService
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:46.230331+00:00'
+        -   source_field: eventName
+            target_table: account_change
+            target_field: action
+            mapped_at: '2025-11-13T20:17:46.230366+00:00'
+        -   source_field: new_value
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:46.230369+00:00'

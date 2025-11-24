@@ -1,0 +1,63 @@
+id: 56321594-9087-49d9-bf10-524fe8479452
+title: Potential Persistence Via Netsh Helper DLL
+status: test
+level: medium
+description: 'Detects the execution of netsh with "add helper" flag in order to add
+    a custom helper DLL. This technique can be abused to add a malicious helper DLL
+    that can be used as a persistence proxy that gets called when netsh.exe is executed.
+
+    '
+author: Victor Sergeev, oscd.community
+date: '2019-10-25'
+modified: '2023-11-28'
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1546.007
+    - attack.s0108
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.007/T1546.007.md
+    - https://github.com/outflanknl/NetshHelperBeacon
+    - https://web.archive.org/web/20160928212230/https://www.adaptforward.com/2016/09/using-netshell-to-execute-evil-dlls-and-persist-on-a-host/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c90362e0-2df3-4e61-94fe-b37615814cb1''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''e7b18879-676e-4a0e-ae18-27039185a8e7''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        OriginalFileName: netsh.exe
+        Image|endswith: \netsh.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - add
+            - helper
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.453550+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.453550+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:14.453556+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:14.453557+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:14.453559+00:00'

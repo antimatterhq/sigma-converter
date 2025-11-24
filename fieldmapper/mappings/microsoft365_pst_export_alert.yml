@@ -1,0 +1,55 @@
+id: 18b88d08-d73e-4f21-bc25-4b9892a4fdd0
+title: PST Export Alert Using eDiscovery Alert
+status: test
+level: medium
+description: Alert on when a user has performed an eDiscovery search or exported a
+    PST file from the search. This PST file usually has sensitive information including
+    email body content
+author: Sorina Ionescu
+date: '2022-02-08'
+modified: '2022-11-17'
+tags:
+    - attack.collection
+    - attack.t1114
+references:
+    - https://learn.microsoft.com/en-us/microsoft-365/compliance/alert-policies?view=o365-worldwide
+falsepositives:
+    - PST export can be done for legitimate purposes but due to the sensitive nature
+        of its content it must be monitored.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6897cd82-6664-11ed-9022-0242ac120002''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: m365
+    service: threat_management
+    definition: Requires the 'eDiscovery search or exported' alert to be enabled
+detection:
+    selection:
+        eventSource: SecurityComplianceCenter
+        eventName: eDiscovery search started or exported
+        status: success
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: m365
+            mapped_at: '2025-11-13T20:17:46.239456+00:00'
+        service:
+            source_field: service
+            source_value: threat_management
+            mapped_at: '2025-11-13T20:17:46.239456+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: authentication
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:46.239474+00:00'
+        -   source_field: eventName
+            target_table: authentication
+            target_field: action
+            mapped_at: '2025-11-13T20:17:46.239477+00:00'
+        -   source_field: status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:17:46.239480+00:00'

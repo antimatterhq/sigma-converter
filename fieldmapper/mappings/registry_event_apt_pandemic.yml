@@ -1,0 +1,40 @@
+id: 47e0852a-cf81-4494-a8e6-31864f8c86ed
+title: Pandemic Registry Key
+status: test
+level: critical
+description: Detects Pandemic Windows Implant
+author: Florian Roth (Nextron Systems)
+date: '2017-06-01'
+modified: '2022-10-09'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://wikileaks.org/vault7/#Pandemic
+    - https://twitter.com/MalwareJake/status/870349480356454401
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: \SYSTEM\CurrentControlSet\services\null\Instance
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_event
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

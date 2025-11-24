@@ -1,0 +1,50 @@
+id: 7ed2c9f7-c59d-4c82-a7e2-f859aa676099
+title: Suspicious MacOS Firmware Activity
+status: test
+level: medium
+description: Detects when a user manipulates with Firmward Password on MacOS. NOTE
+    - this command has been disabled on silicon-based apple computers.
+author: Austin Songer @austinsonger
+date: '2021-09-30'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+references:
+    - https://github.com/usnistgov/macos_security/blob/932a51f3e819dd3e02ebfcf3ef433cfffafbe28b/rules/os/os_firmware_password_require.yaml
+    - https://www.manpagez.com/man/8/firmwarepasswd/
+    - https://support.apple.com/guide/security/firmware-password-protection-sec28382c9ca/web
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection1:
+        Image: /usr/sbin/firmwarepasswd
+        CommandLine|contains:
+            - setpasswd
+            - full
+            - delete
+            - check
+    condition: selection1
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.782964+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.782964+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.782969+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.782972+00:00'

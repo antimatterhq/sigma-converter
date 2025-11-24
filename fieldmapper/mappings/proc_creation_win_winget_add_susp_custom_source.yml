@@ -1,0 +1,59 @@
+id: c15a46a0-07d4-4c87-b4b6-89207835a83b
+title: Add Potential Suspicious New Download Source To Winget
+status: test
+level: medium
+description: Detects usage of winget to add new potentially suspicious download sources
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-04-17'
+modified: '2023-12-04'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1059
+references:
+    - https://learn.microsoft.com/en-us/windows/package-manager/winget/source
+    - https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''05ebafc8-7aa2-4bcd-a269-2aec93f9e842''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''81a0ecb5-0a41-4ba1-b2ba-c944eb92bfa2''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \winget.exe
+        OriginalFileName: winget.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - 'source '
+            - 'add '
+    selection_source_direct_ip:
+        CommandLine|re: ://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.066706+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.066706+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.066712+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.066714+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.066716+00:00'

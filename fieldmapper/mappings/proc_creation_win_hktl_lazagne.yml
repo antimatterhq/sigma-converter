@@ -1,0 +1,154 @@
+id: c2b86e67-b880-4eec-b045-50bc98ef4844
+title: HackTool - LaZagne Execution
+status: experimental
+level: medium
+description: 'Detects the execution of the LaZagne. A utility used to retrieve multiple
+    types of passwords stored on a local computer.
+
+    LaZagne has been leveraged multiple times by threat actors in order to dump credentials.
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2024-06-24'
+modified: '2024-08-16'
+tags:
+    - attack.credential-access
+references:
+    - https://github.com/AlessandroZ/LaZagne/tree/master
+    - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
+    - https://cloud.google.com/blog/topics/threat-intelligence/alphv-ransomware-backup/
+    - https://securelist.com/defttorero-tactics-techniques-and-procedures/107610/
+    - https://github.com/CyberMonitor/APT_CyberCriminal_Campagin_Collections/raw/800c0e06571993a54e39571cf27fd474dcc5c0bc/2017/2017.11.14.Muddying_the_Water/muddying-the-water-targeted-attacks.pdf
+falsepositives:
+    - Some false positive is expected from tools with similar command line flags.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \lazagne.exe
+    selection_clionly:
+        Image|contains:
+            - :\PerfLogs\
+            - :\ProgramData\
+            - :\Temp\
+            - :\Tmp\
+            - :\Windows\Temp\
+            - \AppData\
+            - \Downloads\
+            - \Users\Public\
+        CommandLine|endswith:
+            - .exe all
+            - .exe browsers
+            - .exe chats
+            - .exe databases
+            - .exe games
+            - .exe git
+            - .exe mails
+            - .exe maven
+            - .exe memory
+            - .exe multimedia
+            - .exe sysadmin
+            - .exe unused
+            - .exe wifi
+            - .exe windows
+    selection_cli_modules:
+        CommandLine|contains:
+            - 'all '
+            - 'browsers '
+            - 'chats '
+            - 'databases '
+            - 'games '
+            - 'git '
+            - 'mails '
+            - 'maven '
+            - 'memory '
+            - 'multimedia '
+            - 'php '
+            - 'svn '
+            - 'sysadmin '
+            - 'unused '
+            - 'wifi '
+            - 'windows '
+    selection_cli_options:
+        CommandLine|contains:
+            - -oA
+            - -oJ
+            - -oN
+            - -output
+            - -password
+            - -1Password
+            - -apachedirectorystudio
+            - -autologon
+            - -ChromiumBased
+            - -composer
+            - -coreftp
+            - -credfiles
+            - -credman
+            - -cyberduck
+            - -dbvis
+            - -EyeCon
+            - -filezilla
+            - -filezillaserver
+            - -ftpnavigator
+            - -galconfusion
+            - -gitforwindows
+            - -hashdump
+            - -iisapppool
+            - -IISCentralCertP
+            - -kalypsomedia
+            - -keepass
+            - -keepassconfig
+            - -lsa_secrets
+            - -mavenrepositories
+            - -memory_dump
+            - -Mozilla
+            - -mRemoteNG
+            - -mscache
+            - -opensshforwindows
+            - -openvpn
+            - -outlook
+            - -pidgin
+            - -postgresql
+            - -psi-im
+            - -puttycm
+            - -pypykatz
+            - -Rclone
+            - -rdpmanager
+            - -robomongo
+            - -roguestale
+            - -skype
+            - -SQLDeveloper
+            - -squirrel
+            - -tortoise
+            - -turba
+            - -UCBrowser
+            - -unattended
+            - -vault
+            - -vaultfiles
+            - -vnc
+            - -windows
+            - -winscp
+            - -wsl
+    condition: selection_img or selection_clionly or (selection_cli_modules and selection_cli_options)
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:33.211606+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:33.211606+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:33.211628+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.211633+00:00'

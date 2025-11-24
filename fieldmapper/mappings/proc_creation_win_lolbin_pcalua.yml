@@ -1,0 +1,50 @@
+id: 0955e4e1-c281-4fb9-9ee1-5ee7b4b754d2
+title: Use of Pcalua For Execution
+status: test
+level: medium
+description: Detects execition of commands and binaries from the context of The program
+    compatibility assistant (Pcalua.exe). This can be used as a LOLBIN in order to
+    bypass application whitelisting.
+author: Nasreddine Bencherchali (Nextron Systems), E.M. Anhaus (originally from Atomic
+    Blue Detections, Endgame), oscd.community
+date: '2022-06-14'
+modified: '2023-01-04'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Pcalua/
+    - https://pentestlab.blog/2020/07/06/indirect-command-execution/
+falsepositives:
+    - Legitimate use by a via a batch script or by an administrator.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fa47597e-90e9-41cd-ab72-c3b74cfb0d02''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \pcalua.exe
+        CommandLine|contains: ' -a'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:57.136264+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:57.136264+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:57.136271+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:57.136273+00:00'

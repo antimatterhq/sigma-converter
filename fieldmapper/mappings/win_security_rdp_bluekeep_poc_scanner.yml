@@ -1,0 +1,47 @@
+id: 8400629e-79a9-4737-b387-5db940ab2367
+title: Scanner PoC for CVE-2019-0708 RDP RCE Vuln
+status: test
+level: high
+description: Detects the use of a scanner by zerosum0x0 that discovers targets vulnerable
+    to  CVE-2019-0708 RDP RCE aka BlueKeep
+author: Florian Roth (Nextron Systems), Adam Bradbury (idea)
+date: '2019-06-02'
+modified: '2022-12-25'
+tags:
+    - attack.lateral-movement
+    - attack.t1210
+    - car.2013-07-002
+references:
+    - https://twitter.com/AdamTheAnalyst/status/1134394070045003776
+    - https://web.archive.org/web/20190710034152/https://github.com/zerosum0x0/CVE-2019-0708
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4625
+        TargetUserName: AAAAAAA
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:06.273633+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:25:06.273633+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: account_change
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:06.273640+00:00'
+        -   source_field: TargetUserName
+            target_table: account_change
+            target_field: user.name
+            mapped_at: '2025-11-13T20:25:06.273641+00:00'

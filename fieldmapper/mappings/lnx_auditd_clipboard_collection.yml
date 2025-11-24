@@ -1,0 +1,72 @@
+id: 214e7e6c-f21b-47ff-bb6f-551b2d143fcf
+title: Clipboard Collection with Xclip Tool - Auditd
+status: test
+level: low
+description: 'Detects attempts to collect data stored in the clipboard from users
+    with the usage of xclip tool.
+
+    Xclip has to be installed.
+
+    Highly recommended using rule on servers, due to high usage of clipboard utilities
+    on user workstations.
+
+    '
+author: Pawel Mazur
+date: '2021-09-24'
+modified: '2022-11-26'
+tags:
+    - attack.collection
+    - attack.t1115
+references:
+    - https://linux.die.net/man/1/xclip
+    - https://www.cyberciti.biz/faq/xclip-linux-insert-files-command-output-intoclipboard/
+falsepositives:
+    - Legitimate usage of xclip tools
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: EXECVE
+        a0: xclip
+        a1:
+            - -selection
+            - -sel
+        a2:
+            - clipboard
+            - clip
+        a3: -o
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:18.037049+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:18.037049+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:18.906646+00:00'
+        -   source_field: a0
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:18.906655+00:00'
+        -   source_field: a1
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:18.906657+00:00'
+        -   source_field: a2
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:18.906659+00:00'
+        -   source_field: a3
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:18.906660+00:00'

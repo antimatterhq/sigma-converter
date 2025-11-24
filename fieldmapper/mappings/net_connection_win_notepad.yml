@@ -1,0 +1,57 @@
+id: e81528db-fc02-45e8-8e98-4e84aba1f10b
+title: Network Connection Initiated Via Notepad.EXE
+status: test
+level: high
+description: 'Detects a network connection that is initiated by the "notepad.exe"
+    process.
+
+    This might be a sign of process injection from a beacon process or something similar.
+
+    Notepad rarely initiates a network communication except when printing documents
+    for example.
+
+    '
+author: EagleEye Team
+date: '2020-05-14'
+modified: '2024-02-02'
+tags:
+    - attack.command-and-control
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1055
+references:
+    - https://web.archive.org/web/20200219102749/https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1492186586.pdf
+    - https://www.cobaltstrike.com/blog/why-is-notepad-exe-connecting-to-the-internet
+falsepositives:
+    - Printing documents via notepad might cause communication with the printer via
+        port 9100 or similar.
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: \notepad.exe
+    filter_optional_printing:
+        DestinationPort: 9100
+    condition: selection and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:23.331885+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:23.331885+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:23.331931+00:00'
+        -   source_field: DestinationPort
+            target_table: network_activity
+            target_field: dst_endpoint.port
+            mapped_at: '2025-11-13T20:21:23.331935+00:00'

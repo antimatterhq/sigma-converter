@@ -1,0 +1,58 @@
+id: 634b00d5-ccc3-4a06-ae3b-0ec8444dd51b
+title: Malicious Windows Script Components File Execution by TAEF Detection
+status: test
+level: low
+description: 'Windows Test Authoring and Execution Framework (TAEF) framework allows
+    you to run automation by executing tests files written on different languages
+    (C, C#, Microsoft COM Scripting interfaces
+
+    Adversaries may execute malicious code (such as WSC file with VBScript, dll and
+    so on) directly by running te.exe
+
+    '
+author: Agro (@agro_sev) oscd.community
+date: '2020-10-13'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Te/
+    - https://twitter.com/pabraeken/status/993298228840992768
+    - https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/
+falsepositives:
+    - It's not an uncommon to use te.exe directly to execute legal TAEF tests
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \te.exe
+        ParentImage|endswith: \te.exe
+        OriginalFileName: \te.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:09.485361+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:09.485361+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:09.485367+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:09.485369+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:09.485371+00:00'

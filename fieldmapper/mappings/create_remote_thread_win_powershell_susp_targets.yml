@@ -1,0 +1,53 @@
+id: 99b97608-3e21-4bfe-8217-2a127c396a0e
+title: Remote Thread Creation Via PowerShell In Uncommon Target
+status: test
+level: medium
+description: Detects the creation of a remote thread from a Powershell process in
+    an uncommon target process
+author: Florian Roth (Nextron Systems)
+date: '2018-06-25'
+modified: '2023-11-10'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218.011
+    - attack.t1059.001
+references:
+    - https://www.fireeye.com/blog/threat-research/2018/06/bring-your-own-land-novel-red-teaming-technique.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''eeb2e3dc-c1f4-40dd-9bd5-149ee465ad50''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    selection:
+        SourceImage|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        TargetImage|endswith:
+            - \rundll32.exe
+            - \regsvr32.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: create_remote_thread
+            mapped_at: '2025-11-13T20:19:42.879218+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:42.879218+00:00'
+    detection_fields:
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:42.879242+00:00'
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:42.879247+00:00'

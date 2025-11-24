@@ -1,0 +1,40 @@
+id: 5c82f0b9-3c6d-477f-a318-0e14a1df73e0
+title: Okta Security Threat Detected
+status: test
+level: medium
+description: Detects when an security threat is detected in Okta.
+author: Austin Songer @austinsonger
+date: '2021-09-12'
+modified: '2022-10-09'
+tags:
+    - attack.command-and-control
+references:
+    - https://okta.github.io/okta-help/en/prod/Content/Topics/Security/threat-insight/configure-threatinsight-system-log.htm
+    - https://developer.okta.com/docs/reference/api/system-log/
+    - https://developer.okta.com/docs/reference/api/event-types/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: okta
+    service: okta
+detection:
+    selection:
+        eventtype: security.threat.detected
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.110152+00:00'
+        service:
+            source_field: service
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.110152+00:00'
+    detection_fields:
+        -   source_field: eventtype
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:13.110170+00:00'

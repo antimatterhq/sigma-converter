@@ -1,0 +1,52 @@
+id: 949f1ffb-6e85-4f00-ae1e-c3c5b190d605
+title: Explorer Process Tree Break
+status: test
+level: medium
+description: 'Detects a command line process that uses explorer.exe to launch arbitrary
+    commands or binaries,
+
+    which is similar to cmd.exe /c, only it breaks the process tree and makes its
+    parent a new instance of explorer spawning from "svchost"
+
+    '
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
+    @gott_cyber
+date: '2019-06-29'
+modified: '2024-06-04'
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+references:
+    - https://twitter.com/CyberRaiju/status/1273597319322058752
+    - https://twitter.com/bohops/status/1276357235954909188?s=12
+    - https://twitter.com/nas_bench/status/1535322450858233858
+    - https://securityboulevard.com/2019/09/deobfuscating-ostap-trickbots-34000-line-javascript-downloader/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: /factory,{75dff2b7-6936-4c06-a8bb-676a7b00b24b}
+        CommandLine|contains|all|windash:
+            - explorer.exe
+            - ' /root,'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:52.662210+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:52.662210+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:52.662216+00:00'

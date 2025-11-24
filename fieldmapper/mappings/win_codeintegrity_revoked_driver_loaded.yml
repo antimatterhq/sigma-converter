@@ -1,0 +1,41 @@
+id: 320fccbf-5e32-4101-82b8-2679c5f007c6
+title: CodeIntegrity - Revoked Kernel Driver Loaded
+status: test
+level: high
+description: Detects the load of a revoked kernel driver
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-06'
+tags:
+    - attack.privilege-escalation
+references:
+    - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations
+    - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations
+    - Internal Research
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: windows
+    service: codeintegrity-operational
+detection:
+    selection:
+        EventID:
+            - 3021
+            - 3022
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:58.880288+00:00'
+        service:
+            source_field: service
+            source_value: codeintegrity-operational
+            mapped_at: '2025-11-13T20:24:58.880288+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:58.880296+00:00'

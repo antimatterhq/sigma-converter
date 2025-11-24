@@ -1,0 +1,60 @@
+id: 418a3163-3247-4b7b-9933-dcfcb7c52ea9
+title: Compressed File Creation Via Tar.EXE
+status: test
+level: low
+description: 'Detects execution of "tar.exe" in order to create a compressed file.
+
+    Adversaries may abuse various utilities to compress or encrypt data before exfiltration.
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems), AdmU3
+date: '2023-12-19'
+tags:
+    - attack.collection
+    - attack.exfiltration
+    - attack.t1560
+    - attack.t1560.001
+references:
+    - https://unit42.paloaltonetworks.com/chromeloader-malware/
+    - https://lolbas-project.github.io/lolbas/Binaries/Tar/
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/cicada-apt10-japan-espionage
+falsepositives:
+    - Likely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \tar.exe
+        OriginalFileName: bsdtar
+    selection_create:
+        CommandLine|contains:
+            - -c
+            - -r
+            - -u
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:44.291674+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:44.291674+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:44.291679+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:44.291681+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:44.291682+00:00'

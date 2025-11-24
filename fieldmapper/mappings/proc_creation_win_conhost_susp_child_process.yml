@@ -1,0 +1,56 @@
+id: 7dc2dedd-7603-461a-bc13-15803d132355
+title: Uncommon Child Process Of Conhost.EXE
+status: test
+level: medium
+description: Detects uncommon "conhost" child processes. This could be a sign of "conhost"
+    usage as a LOLBIN or potential process injection activity.
+author: omkar72
+date: '2020-10-25'
+modified: '2023-12-11'
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+references:
+    - http://www.hexacorn.com/blog/2020/05/25/how-to-con-your-host/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \conhost.exe
+    filter_main_conhost:
+        Image|endswith: :\Windows\System32\conhost.exe
+    filter_main_null:
+        Image: null
+    filter_main_empty:
+        Image: ''
+    filter_optional_provider:
+        Provider_Name: SystemTraceProvider-Process
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.069594+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.069594+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:37.069636+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.069641+00:00'
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:20:37.069645+00:00'

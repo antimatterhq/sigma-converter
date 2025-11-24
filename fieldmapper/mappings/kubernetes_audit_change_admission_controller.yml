@@ -1,0 +1,67 @@
+id: eed82177-38f5-4299-8a76-098d50d225ab
+title: Kubernetes Admission Controller Modification
+status: experimental
+level: medium
+description: 'Detects when a modification (create, update or replace) action is taken
+    that affects mutating or validating webhook configurations, as they can be used
+    by an adversary to achieve persistence or exfiltrate access credentials.
+
+    '
+author: kelnage
+date: '2024-07-11'
+tags:
+    - attack.persistence
+    - attack.t1078
+    - attack.credential-access
+    - attack.t1552
+    - attack.t1552.007
+references:
+    - https://kubernetes.io/docs/reference/config-api/apiserver-audit.v1/
+    - https://security.padok.fr/en/blog/kubernetes-webhook-attackers
+falsepositives:
+    - Modifying the Kubernetes Admission Controller may need to be done by a system
+        administrator.
+    - Automated processes may need to take these actions and may need to be filtered.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6ad91e31-53df-4826-bd27-0166171c8040''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: kubernetes
+    service: audit
+detection:
+    selection:
+        objectRef.apiGroup: admissionregistration.k8s.io
+        objectRef.resource:
+            - mutatingwebhookconfigurations
+            - validatingwebhookconfigurations
+        verb:
+            - create
+            - delete
+            - patch
+            - replace
+            - update
+    condition: selection
+ocsf_mapping:
+    class_name: scheduled_job_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: kubernetes
+            mapped_at: '2025-11-13T20:18:37.892447+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:18:37.892447+00:00'
+    detection_fields:
+        -   source_field: objectRef.apiGroup
+            target_table: scheduled_job_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:37.892460+00:00'
+        -   source_field: objectRef.resource
+            target_table: scheduled_job_activity
+            target_field: job.name
+            mapped_at: '2025-11-13T20:18:37.892461+00:00'
+        -   source_field: verb
+            target_table: scheduled_job_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:37.892463+00:00'

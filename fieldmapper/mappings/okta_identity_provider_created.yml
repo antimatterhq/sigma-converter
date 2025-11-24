@@ -1,0 +1,39 @@
+id: 969c7590-8c19-4797-8c1b-23155de6e7ac
+title: Okta Identity Provider Created
+status: test
+level: medium
+description: Detects when a new identity provider is created for Okta.
+author: kelnage
+date: '2023-09-07'
+tags:
+    - attack.persistence
+    - attack.t1098.001
+references:
+    - https://developer.okta.com/docs/reference/api/system-log/
+    - https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection
+falsepositives:
+    - When an admin creates a new, authorised identity provider.
+taxonomy: sigma
+logsource:
+    product: okta
+    service: okta
+detection:
+    selection:
+        eventtype: system.idp.lifecycle.create
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.122276+00:00'
+        service:
+            source_field: service
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.122276+00:00'
+    detection_fields:
+        -   source_field: eventtype
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:13.122288+00:00'

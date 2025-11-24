@@ -1,0 +1,70 @@
+id: ab6bffca-beff-4baa-af11-6733f296d57a
+title: Potential AD User Enumeration From Non-Machine Account
+status: test
+level: medium
+description: Detects read access to a domain user from a non-machine account
+author: Maxime Thiebaut (@0xThiebaut)
+date: '2020-03-30'
+modified: '2022-11-08'
+tags:
+    - attack.discovery
+    - attack.t1087.002
+references:
+    - https://www.specterops.io/assets/resources/an_ace_up_the_sleeve.pdf
+    - http://www.stuffithoughtiknew.com/2019/02/detecting-bloodhound.html
+    - https://learn.microsoft.com/en-us/windows/win32/adschema/attributes-all
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4662
+falsepositives:
+    - Administrators configuring new users.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: The "Read all properties" permission on the user object
+        needs to be audited for the "Everyone" principal'
+detection:
+    selection:
+        EventID: 4662
+        ObjectType|contains: bf967aba-0de6-11d0-a285-00aa003049e2
+        AccessMask|endswith:
+            - 1?
+            - 3?
+            - 4?
+            - 7?
+            - 9?
+            - B?
+            - D?
+            - F?
+    filter_main_machine_accounts:
+        SubjectUserName|endswith: $
+    filter_main_msql:
+        SubjectUserName|startswith: MSOL_
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: user_access
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:09.171163+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:24:09.171163+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: user_access
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:09.171205+00:00'
+        -   source_field: ObjectType
+            target_table: user_access
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:09.171209+00:00'
+        -   source_field: AccessMask
+            target_table: user_access
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:09.171213+00:00'
+        -   source_field: SubjectUserName
+            target_table: user_access
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:24:09.171216+00:00'

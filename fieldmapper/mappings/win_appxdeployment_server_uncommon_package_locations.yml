@@ -1,0 +1,61 @@
+id: c977cb50-3dff-4a9f-b873-9290f56132f1
+title: Uncommon AppX Package Locations
+status: test
+level: medium
+description: Detects an appx package added the pipeline of the "to be processed" packages
+    which is located in uncommon locations
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-11'
+modified: '2024-12-25'
+tags:
+    - attack.defense-evasion
+references:
+    - Internal Research
+    - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+    - https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting
+    - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    selection:
+        EventID: 854
+    filter_main_generic:
+        Path|contains:
+            - C:\Program Files\WindowsApps\
+            - C:\Program Files (x86)\
+            - C:\Windows\SystemApps\
+            - C:\Windows\PrintDialog\
+            - C:\Windows\ImmersiveControlPanel\
+            - x-windowsupdate://
+            - file:///C:/Program%20Files
+    filter_main_specific:
+        Path|contains:
+            - https://statics.teams.cdn.live.net/
+            - https://statics.teams.cdn.office.net/
+            - microsoft.com
+            - https://installer.teams.static.microsoft/
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: scheduled_job_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:50.528979+00:00'
+        service:
+            source_field: service
+            source_value: appxdeployment-server
+            mapped_at: '2025-11-13T20:24:50.528979+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: scheduled_job_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:50.528991+00:00'
+        -   source_field: Path
+            target_table: scheduled_job_activity
+            target_field: script.file.path
+            mapped_at: '2025-11-13T20:24:50.528993+00:00'

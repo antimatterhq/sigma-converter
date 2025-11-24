@@ -1,0 +1,55 @@
+id: a3f5c081-e75b-43a0-9f5b-51f26fe5dba2
+title: Potential Suspicious Winget Package Installation
+status: test
+level: high
+description: Detects potential suspicious winget package installation from a suspicious
+    source.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-04-18'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+references:
+    - https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: create_stream_hash
+    product: windows
+detection:
+    selection:
+        Contents|startswith: '[ZoneTransfer]  ZoneId=3'
+        Contents|contains:
+            - ://1
+            - ://2
+            - ://3
+            - ://4
+            - ://5
+            - ://6
+            - ://7
+            - ://8
+            - ://9
+        TargetFilename|endswith: :Zone.Identifier
+        TargetFilename|contains: \AppData\Local\Temp\WinGet\
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: create_stream_hash
+            mapped_at: '2025-11-13T20:21:32.668163+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:32.668163+00:00'
+    detection_fields:
+        -   source_field: Contents
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:32.668183+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:32.668186+00:00'

@@ -1,0 +1,66 @@
+id: f26307d8-14cd-47e3-a26b-4b4769f24af6
+title: HackTool - CrackMapExec Process Patterns
+status: test
+level: high
+description: Detects suspicious process patterns found in logs when CrackMapExec is
+    used
+author: Florian Roth (Nextron Systems)
+date: '2022-03-12'
+modified: '2023-02-13'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://mpgn.gitbook.io/crackmapexec/smb-protocol/obtaining-credentials/dump-lsass
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_lsass_dump1:
+        CommandLine|contains|all:
+            - 'tasklist /fi '
+            - Imagename eq lsass.exe
+        CommandLine|contains:
+            - 'cmd.exe /c '
+            - 'cmd.exe /r '
+            - 'cmd.exe /k '
+            - 'cmd /c '
+            - 'cmd /r '
+            - 'cmd /k '
+        User|contains:
+            - AUTHORI
+            - AUTORI
+    selection_lsass_dump2:
+        CommandLine|contains|all:
+            - do rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump
+            - \Windows\Temp\
+            - ' full'
+            - '%%B'
+    selection_procdump:
+        CommandLine|contains|all:
+            - tasklist /v /fo csv
+            - findstr /i "lsass"
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:43.571728+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:43.571728+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:43.571774+00:00'
+        -   source_field: User
+            target_table: process_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:20:43.571778+00:00'

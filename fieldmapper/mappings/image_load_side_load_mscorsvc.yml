@@ -1,0 +1,44 @@
+id: cdb15e19-c2d0-432a-928e-e49c8c60dcf2
+title: Potential DLL Sideloading Of MsCorSvc.DLL
+status: experimental
+level: medium
+description: Detects potential DLL sideloading of "mscorsvc.dll".
+author: Wietze Beukema
+date: '2024-07-11'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+references:
+    - https://hijacklibs.net/entries/microsoft/built-in/mscorsvc.html
+falsepositives:
+    - Legitimate applications loading their own versions of the DLL mentioned in this
+        rule.
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \mscorsvc.dll
+    filter_main_generic:
+        ImageLoaded|startswith:
+            - C:\Windows\Microsoft.NET\Framework\
+            - C:\Windows\Microsoft.NET\Framework64\
+            - C:\Windows\WinSxS\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: null
+            target_field: null
+            mapped_at: null

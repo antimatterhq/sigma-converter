@@ -1,0 +1,88 @@
+id: 5ef9853e-4d0e-4a70-846f-a9ca37d876da
+title: Potential Credential Dumping Activity Via LSASS
+status: test
+level: medium
+description: 'Detects process access requests to the LSASS process with specific call
+    trace calls and access masks.
+
+    This behaviour is expressed by many credential dumping tools such as Mimikatz,
+    NanoDump, Invoke-Mimikatz, Procdump and even the Taskmgr dumping feature.
+
+    '
+author: Samir Bousseaden, Michael Haag
+date: '2019-04-03'
+modified: '2024-03-02'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0002
+references:
+    - https://web.archive.org/web/20230329170326/https://blog.menasec.net/2019/02/threat-hunting-21-procdump-or-taskmgr.html
+    - https://web.archive.org/web/20230208123920/https://cyberwardog.blogspot.com/2017/03/chronicles-of-threat-hunter-hunting-for_22.html
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.001/T1003.001.md
+    - https://research.splunk.com/endpoint/windows_possible_credential_dumping/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: \lsass.exe
+        GrantedAccess|contains:
+            - '0x1038'
+            - '0x1438'
+            - '0x143a'
+            - '0x1fffff'
+        CallTrace|contains:
+            - dbgcore.dll
+            - dbghelp.dll
+            - kernel32.dll
+            - kernelbase.dll
+            - ntdll.dll
+    filter_main_system_user:
+        SourceUser|contains:
+            - AUTHORI
+            - AUTORI
+    filter_optional_thor:
+        CallTrace|contains|all:
+            - :\Windows\Temp\asgard2-agent\
+            - \thor\thor64.exe+
+            - '|UNKNOWN('
+        GrantedAccess: '0x103800'
+    filter_optional_sysmon:
+        SourceImage|endswith: :\Windows\Sysmon64.exe
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:18:59.594386+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:59.594386+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:00.935420+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:19:00.935436+00:00'
+        -   source_field: CallTrace
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:19:00.935439+00:00'
+        -   source_field: SourceUser
+            target_table: process_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:19:00.935442+00:00'
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:00.935444+00:00'

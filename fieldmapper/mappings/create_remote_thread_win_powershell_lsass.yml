@@ -1,0 +1,49 @@
+id: fb656378-f909-47c1-8747-278bf09f4f4f
+title: Potential Credential Dumping Attempt Via PowerShell Remote Thread
+status: test
+level: high
+description: Detects remote thread creation by PowerShell processes into "lsass.exe"
+author: oscd.community, Natalia Shornikova
+date: '2020-10-06'
+modified: '2022-12-18'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3f07b9d1-2082-4c56-9277-613a621983cc''),
+    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''0f920ebe-7aea-4c54-b202-9aa0c609cfe5''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    selection:
+        SourceImage|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        TargetImage|endswith: \lsass.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: create_remote_thread
+            mapped_at: '2025-11-13T20:19:43.694679+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:43.694679+00:00'
+    detection_fields:
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:43.694710+00:00'
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:43.694715+00:00'

@@ -1,0 +1,53 @@
+id: e92a4287-e072-4a40-9739-370c106bb750
+title: HackTool - SOAPHound Execution
+status: test
+level: high
+description: 'Detects the execution of SOAPHound, a .NET tool for collecting Active
+    Directory data, using specific command-line arguments that may indicate an attempt
+    to extract sensitive AD information.
+
+    '
+author: '@kostastsale'
+date: '2024-01-26'
+tags:
+    - attack.discovery
+    - attack.t1087
+references:
+    - https://github.com/FalconForceTeam/SOAPHound
+    - https://medium.com/falconforce/soaphound-tool-to-collect-active-directory-data-via-adws-165aca78288c
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_1:
+        CommandLine|contains:
+            - ' --buildcache '
+            - ' --bhdump '
+            - ' --certdump '
+            - ' --dnsdump '
+    selection_2:
+        CommandLine|contains:
+            - ' -c '
+            - ' --cachefilename '
+            - ' -o '
+            - ' --outputdirectory'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:44.277888+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:44.277888+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:44.277895+00:00'

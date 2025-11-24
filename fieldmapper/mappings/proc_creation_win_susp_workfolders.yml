@@ -1,0 +1,46 @@
+id: 0bbc6369-43e3-453d-9944-cae58821c173
+title: Execution via WorkFolders.exe
+status: test
+level: high
+description: Detects using WorkFolders.exe to execute an arbitrary control.exe
+author: Maxime Thiebaut (@0xThiebaut)
+date: '2021-10-21'
+modified: '2022-12-25'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://twitter.com/elliotkillick/status/1449812843772227588
+falsepositives:
+    - Legitimate usage of the uncommon Windows Work Folders feature.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \control.exe
+        ParentImage|endswith: \WorkFolders.exe
+    filter:
+        Image: C:\Windows\System32\control.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.083546+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.083546+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:59.083555+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:59.083557+00:00'

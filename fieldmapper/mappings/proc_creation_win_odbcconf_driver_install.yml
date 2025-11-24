@@ -1,0 +1,58 @@
+id: 3f5491e2-8db8-496b-9e95-1029fce852d4
+title: Driver/DLL Installation Via Odbcconf.EXE
+status: test
+level: medium
+description: Detects execution of "odbcconf" with "INSTALLDRIVER" which installs a
+    new ODBC driver. Attackers abuse this to install and run malicious DLLs.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-22'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.008
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
+    - https://web.archive.org/web/20191023232753/https://twitter.com/Hexacorn/status/1187143326673330176
+    - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
+falsepositives:
+    - Legitimate driver DLLs being registered via "odbcconf" will generate false positives.
+        Investigate the path of the DLL and its contents to determine if the action
+        is authorized.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cb0fe7c5-f3a3-484d-aa25-d350a7912729''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \odbcconf.exe
+        OriginalFileName: odbcconf.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - 'INSTALLDRIVER '
+            - .dll
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.288016+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.288016+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.288027+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:30.288029+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.288031+00:00'

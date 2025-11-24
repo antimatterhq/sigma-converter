@@ -1,0 +1,45 @@
+id: ea011323-7045-460b-b2d7-0f7442ea6b38
+title: Potential PsExec Remote Execution
+status: test
+level: high
+description: Detects potential psexec command that initiate execution on a remote
+    systems via common commandline flags used by the utility
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2023-02-28'
+tags:
+    - attack.resource-development
+    - attack.t1587.001
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
+    - https://www.poweradmin.com/paexec/
+    - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - accepteula
+            - ' -u '
+            - ' -p '
+            - ' \\'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:52.650128+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:52.650128+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:52.650137+00:00'

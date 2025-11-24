@@ -1,0 +1,95 @@
+id: c539afac-c12a-46ed-b1bd-5a5567c9f045
+title: Potential Remote PowerShell Session Initiated
+status: test
+level: high
+description: 'Detects a process that initiated a network connection over ports 5985
+    or 5986 from a non-network service account.
+
+    This could potentially indicates a remote PowerShell connection.
+
+    '
+author: Roberto Rodriguez @Cyb3rWard0g
+date: '2019-09-12'
+modified: '2024-02-02'
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.lateral-movement
+    - attack.t1021.006
+references:
+    - https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html
+falsepositives:
+    - Legitimate usage of remote PowerShell, e.g. remote administration and monitoring.
+    - Network Service user name of a not-covered localization
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        DestinationPort:
+            - 5985
+            - 5986
+        Initiated: 'true'
+        SourceIsIpv6: 'false'
+    filter_main_service_users:
+        User|contains:
+            - NETWORK SERVICE
+            - NETZWERKDIENST
+            - SERVICIO DE RED
+            - SERVIZIO DI RETE
+        User|contains|all:
+            - SERVICE R
+            - SEAU
+    filter_main_localhost:
+        SourceIp:
+            - ::1
+            - 127.0.0.1
+        DestinationIp:
+            - ::1
+            - 127.0.0.1
+    filter_optional_avast:
+        Image:
+            - C:\Program Files\Avast Software\Avast\AvastSvc.exe
+            - C:\Program Files (x86)\Avast Software\Avast\AvastSvc.exe
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:21.538597+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:21.538597+00:00'
+    detection_fields:
+        -   source_field: DestinationPort
+            target_table: network_activity
+            target_field: dst_endpoint.port
+            mapped_at: '2025-11-13T20:21:22.424897+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:22.424929+00:00'
+        -   source_field: SourceIsIpv6
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:22.424934+00:00'
+        -   source_field: User
+            target_table: network_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:21:22.424937+00:00'
+        -   source_field: SourceIp
+            target_table: network_activity
+            target_field: src_endpoint.ip
+            mapped_at: '2025-11-13T20:21:22.424942+00:00'
+        -   source_field: DestinationIp
+            target_table: network_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:21:22.424945+00:00'
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:22.424948+00:00'

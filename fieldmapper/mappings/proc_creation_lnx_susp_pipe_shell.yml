@@ -1,0 +1,53 @@
+id: 880973f3-9708-491c-a77b-2a35a1921158
+title: Linux Shell Pipe to Shell
+status: test
+level: medium
+description: Detects suspicious process command line that starts with a shell that
+    executes something and finally gets piped into another shell
+author: Florian Roth (Nextron Systems)
+date: '2022-03-14'
+modified: '2022-07-26'
+tags:
+    - attack.defense-evasion
+    - attack.t1140
+references:
+    - Internal Research
+falsepositives:
+    - Legitimate software that uses these patterns
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        CommandLine|startswith:
+            - 'sh -c '
+            - 'bash -c '
+    selection_exec:
+        CommandLine|contains:
+            - '| bash '
+            - '| sh '
+            - '|bash '
+            - '|sh '
+        CommandLine|endswith:
+            - '| bash'
+            - '| sh'
+            - '|bash'
+            - ' |sh'
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.896003+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.896003+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.896008+00:00'

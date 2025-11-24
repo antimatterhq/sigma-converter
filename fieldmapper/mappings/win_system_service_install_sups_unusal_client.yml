@@ -1,0 +1,52 @@
+id: 71c276aa-49cd-43d2-b920-2dcd3e6962d5
+title: Service Installed By Unusual Client - System
+status: test
+level: high
+description: Detects a service installed by a client which has PID 0 or whose parent
+    has PID 0
+author: Tim Rauch (Nextron Systems), Elastic (idea)
+date: '2022-09-15'
+modified: '2023-01-04'
+tags:
+    - attack.privilege-escalation
+    - attack.t1543
+references:
+    - https://www.elastic.co/guide/en/security/current/windows-service-installed-via-an-unusual-client.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c4e92a97-a9ff-4392-9d2d-7a4c642768ca''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+        ProcessId: 0
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:23.808946+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:23.808946+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:24.922219+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:24.922253+00:00'
+        -   source_field: ProcessId
+            target_table: process_activity
+            target_field: process.pid
+            mapped_at: '2025-11-13T20:25:24.922256+00:00'

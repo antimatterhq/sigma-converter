@@ -1,0 +1,68 @@
+id: 146aace8-9bd6-42ba-be7a-0070d8027b76
+title: Potentially Suspicious Child Process Of WinRAR.EXE
+status: test
+level: medium
+description: Detects potentially suspicious child processes of WinRAR.exe.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-08-31'
+tags:
+    - attack.execution
+    - attack.t1203
+references:
+    - https://www.group-ib.com/blog/cve-2023-38831-winrar-zero-day/
+    - https://github.com/knight0x07/WinRAR-Code-Execution-Vulnerability-CVE-2023-38831/blob/26ab6c40b6d2c09bb4fc60feaa4a3a90cfd20c23/Part-1-Overview.md
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ec3a3c2f-9bb0-4a9b-8f4b-5ec386544343''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith: \WinRAR.exe
+    selection_binaries:
+        Image|endswith:
+            - \cmd.exe
+            - \cscript.exe
+            - \mshta.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \regsvr32.exe
+            - \rundll32.exe
+            - \wscript.exe
+        OriginalFileName:
+            - Cmd.Exe
+            - cscript.exe
+            - mshta.exe
+            - PowerShell.EXE
+            - pwsh.dll
+            - regsvr32.exe
+            - RUNDLL32.EXE
+            - wscript.exe
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:40.524594+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:40.524594+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:40.524602+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:40.524604+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:40.524605+00:00'

@@ -1,0 +1,41 @@
+id: 805c55d9-31e6-4846-9878-c34c75054fe9
+title: Octopus Scanner Malware
+status: test
+level: high
+description: Detects Octopus Scanner Malware.
+author: NVISO
+date: '2020-06-09'
+modified: '2021-11-27'
+tags:
+    - attack.t1195
+    - attack.t1195.001
+references:
+    - https://securitylab.github.com/research/octopus-scanner-malware-open-source-supply-chain
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - \AppData\Local\Microsoft\Cache134.dat
+            - \AppData\Local\Microsoft\ExplorerSync.db
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.245478+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.245478+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.245489+00:00'

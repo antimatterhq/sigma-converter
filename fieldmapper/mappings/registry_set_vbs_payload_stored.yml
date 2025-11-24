@@ -1,0 +1,66 @@
+id: 46490193-1b22-4c29-bdd6-5bf63907216f
+title: VBScript Payload Stored in Registry
+status: test
+level: high
+description: Detects VBScript content stored into registry keys as seen being used
+    by UNC2452 group
+author: Florian Roth (Nextron Systems)
+date: '2021-03-05'
+modified: '2023-08-17'
+tags:
+    - attack.persistence
+    - attack.t1547.001
+references:
+    - https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: Software\Microsoft\Windows\CurrentVersion
+        Details|contains:
+            - 'vbscript:'
+            - 'jscript:'
+            - mshtml,
+            - RunHTMLApplication
+            - Execute(
+            - CreateObject
+            - window.close
+    filter:
+        TargetObject|contains: Software\Microsoft\Windows\CurrentVersion\Run
+    filter_dotnet:
+        Image|endswith: \msiexec.exe
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\
+        Details|contains:
+            - \Microsoft.NET\Primary Interop Assemblies\Microsoft.mshtml.dll
+            - <\Microsoft.mshtml,fileVersion=
+            - _mshtml_dll_
+            - <\Microsoft.mshtml,culture=
+    condition: selection and not 1 of filter*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:05.923332+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:05.923332+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:05.923340+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:05.923342+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:05.923344+00:00'

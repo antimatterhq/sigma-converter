@@ -1,0 +1,59 @@
+id: 2e4e488a-6164-4811-9ea1-f960c7359c40
+title: HackTool - CACTUSTORCH Remote Thread Creation
+status: test
+level: high
+description: Detects remote thread creation from CACTUSTORCH as described in references.
+author: '@SBousseaden (detection), Thomas Patzke (rule)'
+date: '2019-02-01'
+modified: '2023-05-05'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1055.012
+    - attack.t1059.005
+    - attack.t1059.007
+    - attack.t1218.005
+references:
+    - https://twitter.com/SBousseaden/status/1090588499517079552
+    - https://github.com/mdsecactivebreach/CACTUSTORCH
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    selection:
+        SourceImage|endswith:
+            - \System32\cscript.exe
+            - \System32\wscript.exe
+            - \System32\mshta.exe
+            - \winword.exe
+            - \excel.exe
+        TargetImage|contains: \SysWOW64\
+        StartModule: null
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: create_remote_thread
+            mapped_at: '2025-11-13T20:19:41.767728+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:41.767728+00:00'
+    detection_fields:
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:42.874066+00:00'
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:42.874094+00:00'
+        -   source_field: StartModule
+            target_table: process_activity
+            target_field: module.file.name
+            mapped_at: '2025-11-13T20:19:42.874098+00:00'

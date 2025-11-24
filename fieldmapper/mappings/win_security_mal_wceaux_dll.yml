@@ -1,0 +1,51 @@
+id: 1de68c67-af5c-4097-9c85-fe5578e09e67
+title: WCE wceaux.dll Access
+status: test
+level: critical
+description: Detects wceaux.dll access while WCE pass-the-hash remote command execution
+    on source host
+author: Thomas Patzke
+date: '2017-06-14'
+modified: '2021-11-27'
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.s0005
+references:
+    - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+    - https://jpcertcc.github.io/ToolAnalysisResultSheet
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID:
+            - 4656
+            - 4658
+            - 4660
+            - 4663
+        ObjectName|endswith: \wceaux.dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:53.282252+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:53.282252+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:53.282302+00:00'
+        -   source_field: ObjectName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:53.282307+00:00'

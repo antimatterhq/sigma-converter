@@ -1,0 +1,200 @@
+{
+  "uid": 6,
+  "caption": "Group Management",
+  "description": "Group Management events report management updates to a group, including updates to membership and permissions.",
+  "extends": "base_event",
+  "name": "group_management",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Assign Privileges",
+          "description": "Assign privileges to a group."
+        },
+        "2": {
+          "caption": "Revoke Privileges",
+          "description": "Revoke privileges from a group."
+        },
+        "3": {
+          "caption": "Add User",
+          "description": "Add user to a group."
+        },
+        "4": {
+          "caption": "Remove User",
+          "description": "Remove user from a group."
+        },
+        "5": {
+          "caption": "Delete",
+          "description": "A group was deleted."
+        },
+        "6": {
+          "caption": "Create",
+          "description": "A group was created."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "actor": {
+      "group": "context",
+      "requirement": "required",
+      "object": "actor",
+      "constraints": {
+        "at_least_one": [
+          "process",
+          "user",
+          "invoked_by",
+          "session",
+          "app_name",
+          "app_uid"
+        ]
+      }
+    },
+    "api": {
+      "group": "primary",
+      "requirement": "required",
+      "object": "api"
+    },
+    "class_uid": {
+      "description": "The class of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "3006": {
+          "caption": "Group Management",
+          "description": "Group Management events report management updates to a group, including updates to membership and permissions."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "cloud": {
+      "caption": "Cloud",
+      "description": "The Cloud object contains information about a cloud or Software-as-a-Service account or similar construct, such as AWS Account ID, regions, organizations, folders, compartments, tenants, etc.",
+      "object": "cloud"
+    },
+    "group": {
+      "description": "Group that was the target of the event.",
+      "group": "primary",
+      "requirement": "required",
+      "object": "group",
+      "constraints": {
+        "at_least_one": [
+          "name",
+          "uid"
+        ]
+      }
+    },
+    "privileges": {
+      "description": "A list of privileges assigned to the group.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "resource": {
+      "description": "Resource that the privileges give access to.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "resource_details",
+      "constraints": {
+        "at_least_one": [
+          "name",
+          "uid"
+        ]
+      }
+    },
+    "src_endpoint": {
+      "description": "The endpoint from which the privileges were granted.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "type_uid": {
+      "description": "The type of the event.",
+      "group": "primary",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "300600": {
+          "caption": "Unknown",
+          "description": "The activity type \"Group Management: Unknown\" is not further specified."
+        },
+        "300601": {
+          "caption": "Assign Privileges",
+          "description": "Assign privileges to a group."
+        },
+        "300602": {
+          "caption": "Revoke Privileges",
+          "description": "Revoke privileges from a group."
+        },
+        "300603": {
+          "caption": "Add User",
+          "description": "Add user to a group."
+        },
+        "300604": {
+          "caption": "Remove User",
+          "description": "Remove user from a group."
+        },
+        "300605": {
+          "caption": "Delete",
+          "description": "A group was deleted."
+        },
+        "300606": {
+          "caption": "Create",
+          "description": "A group was created."
+        },
+        "300699": {
+          "caption": "Other",
+          "description": "The activity type is not mapped."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "user": {
+      "description": "A user that was added to or removed from the group.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "user",
+      "constraints": {
+        "at_least_one": [
+          "name",
+          "uid",
+          "account"
+        ]
+      }
+    }
+  }
+}

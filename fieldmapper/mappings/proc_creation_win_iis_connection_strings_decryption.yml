@@ -1,0 +1,55 @@
+id: 97dbf6e2-e436-44d8-abee-4261b24d3e41
+title: Microsoft IIS Connection Strings Decryption
+status: test
+level: high
+description: Detects use of aspnet_regiis to decrypt Microsoft IIS connection strings.
+    An attacker with Microsoft IIS web server access via a webshell or alike can decrypt
+    and dump any hardcoded connection strings, such as the MSSQL service account password
+    using aspnet_regiis command.
+author: Tim Rauch, Elastic (idea)
+date: '2022-09-28'
+modified: '2022-12-30'
+tags:
+    - attack.credential-access
+    - attack.t1003
+references:
+    - https://www.elastic.co/guide/en/security/current/microsoft-iis-connection-strings-decryption.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_name:
+        Image|endswith: \aspnet_regiis.exe
+        OriginalFileName: aspnet_regiis.exe
+    selection_args:
+        CommandLine|contains|all:
+            - connectionStrings
+            - ' -pdf'
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.086835+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.086835+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.086841+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.086842+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.086844+00:00'

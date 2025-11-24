@@ -1,0 +1,60 @@
+id: b98a10af-1e1e-44a7-bab2-4cc026917648
+title: New PDQDeploy Service - Client Side
+status: test
+level: medium
+description: 'Detects PDQDeploy service installation on the target system.
+
+    When a package is deployed via PDQDeploy it installs a remote service on the target
+    machine with the name "PDQDeployRunner-X" where "X" is an integer starting from
+    1
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-22'
+tags:
+    - attack.privilege-escalation
+    - attack.t1543.003
+references:
+    - https://documentation.pdq.com/PDQDeploy/13.0.3.0/index.html?windows-services.htm
+falsepositives:
+    - Legitimate use of the tool
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_root:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+    selection_service:
+        ImagePath|contains: PDQDeployRunner-
+        ServiceName|startswith: PDQDeployRunner-
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:24.927681+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:24.927681+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:24.927689+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:24.927692+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:24.927693+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:24.927696+00:00'

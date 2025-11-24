@@ -1,0 +1,45 @@
+id: 908655e0-25cf-4ae1-b775-1c8ce9cf43d8
+title: Login to Disabled Account
+status: test
+level: medium
+description: Detect failed attempts to sign in to disabled accounts.
+author: AlertIQ
+date: '2021-10-10'
+modified: '2022-12-25'
+tags:
+    - attack.initial-access
+    - attack.t1078.004
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    selection:
+        ResultType: 50057
+        ResultDescription: User account is disabled. The account has been disabled
+            by an administrator.
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:22.614134+00:00'
+        service:
+            source_field: service
+            source_value: signinlogs
+            mapped_at: '2025-11-13T20:17:22.614134+00:00'
+    detection_fields:
+        -   source_field: ResultType
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:22.614145+00:00'
+        -   source_field: ResultDescription
+            target_table: authentication
+            target_field: status_detail
+            mapped_at: '2025-11-13T20:17:22.614147+00:00'

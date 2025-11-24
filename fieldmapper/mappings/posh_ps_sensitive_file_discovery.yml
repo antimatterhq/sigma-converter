@@ -1,0 +1,51 @@
+id: 7d416556-6502-45b2-9bad-9d2f05f38997
+title: Powershell Sensitive File Discovery
+status: test
+level: medium
+description: Detect adversaries enumerate sensitive files
+author: frack113
+date: '2022-09-16'
+tags:
+    - attack.discovery
+    - attack.t1083
+references:
+    - https://twitter.com/malmoeb/status/1570814999370801158
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d23f2ba5-9da0-4463-8908-8ee47f614bb9''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_action:
+        ScriptBlockText|contains:
+            - ls
+            - get-childitem
+            - gci
+    selection_recurse:
+        ScriptBlockText|contains: -recurse
+    selection_file:
+        ScriptBlockText|contains:
+            - .pass
+            - .kdbx
+            - .kdb
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.320170+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.320170+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.320175+00:00'

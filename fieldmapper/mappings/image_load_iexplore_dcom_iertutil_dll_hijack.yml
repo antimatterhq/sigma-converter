@@ -1,0 +1,49 @@
+id: f354eba5-623b-450f-b073-0b5b2773b6aa
+title: Potential DCOM InternetExplorer.Application DLL Hijack - Image Load
+status: test
+level: critical
+description: Detects potential DLL hijack of "iertutil.dll" found in the DCOM InternetExplorer.Application
+    Class
+author: Roberto Rodriguez @Cyb3rWard0g, Open Threat Research (OTR), wagga
+date: '2020-10-12'
+modified: '2022-12-18'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+    - attack.t1021.003
+references:
+    - https://threathunterplaybook.com/hunts/windows/201009-RemoteDCOMIErtUtilDLLHijack/notebook.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e554f142-5cf3-4e55-ace9-a1b59e0def65''),
+    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''2f7979ae-f82b-45af-ac1d-2b10e93b0baa''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: \Internet Explorer\iexplore.exe
+        ImageLoaded|endswith: \Internet Explorer\iertutil.dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:23.920124+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:23.920124+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:23.920135+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:23.920136+00:00'

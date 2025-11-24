@@ -1,0 +1,41 @@
+id: 881b7725-47cc-4055-8000-425823344c59
+title: CodeIntegrity - Revoked Image Loaded
+status: test
+level: high
+description: Detects image load events with revoked certificates by code integrity.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-06'
+tags:
+    - attack.privilege-escalation
+references:
+    - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations
+    - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations
+    - Internal Research
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: windows
+    service: codeintegrity-operational
+detection:
+    selection:
+        EventID:
+            - 3032
+            - 3035
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:58.878768+00:00'
+        service:
+            source_field: service
+            source_value: codeintegrity-operational
+            mapped_at: '2025-11-13T20:24:58.878768+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:58.878779+00:00'

@@ -1,0 +1,42 @@
+id: aff815cc-e400-4bf0-a47a-5d8a2407d4e1
+title: Use Get-NetTCPConnection - PowerShell Module
+status: test
+level: low
+description: Adversaries may attempt to get a listing of network connections to or
+    from the compromised system they are currently accessing or from remote systems
+    by querying for information over the network.
+author: frack113
+date: '2021-12-10'
+modified: '2022-12-02'
+tags:
+    - attack.discovery
+    - attack.t1049
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-2---system-network-connections-discovery-with-powershell
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection:
+        ContextInfo|contains: Get-NetTCPConnection
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_module
+            mapped_at: '2025-11-13T20:21:50.730008+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:50.730008+00:00'
+    detection_fields:
+        -   source_field: ContextInfo
+            target_table: script_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:50.730021+00:00'

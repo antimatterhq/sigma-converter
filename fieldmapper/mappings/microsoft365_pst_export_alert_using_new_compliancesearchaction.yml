@@ -1,0 +1,52 @@
+id: 6897cd82-6664-11ed-9022-0242ac120002
+title: PST Export Alert Using New-ComplianceSearchAction
+status: test
+level: medium
+description: Alert when a user has performed an export to a search using 'New-ComplianceSearchAction'
+    with the '-Export' flag. This detection will detect PST export even if the 'eDiscovery
+    search or exported' alert is disabled in the O365.This rule will apply to ExchangePowerShell
+    usage and from the cloud.
+author: Nikita Khalimonenkov
+date: '2022-11-17'
+tags:
+    - attack.collection
+    - attack.t1114
+references:
+    - https://learn.microsoft.com/en-us/powershell/module/exchange/new-compliancesearchaction?view=exchange-ps
+falsepositives:
+    - Exporting a PST can be done for legitimate purposes by legitimate sources, but
+        due to the sensitive nature of PST content, it must be monitored.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''18b88d08-d73e-4f21-bc25-4b9892a4fdd0''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    selection:
+        eventSource: SecurityComplianceCenter
+        Payload|contains|all:
+            - New-ComplianceSearchAction
+            - Export
+            - pst
+    condition: selection
+ocsf_mapping:
+    class_name: email_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: m365
+            mapped_at: '2025-11-13T20:17:46.790813+00:00'
+        service:
+            source_field: service
+            source_value: threat_management
+            mapped_at: '2025-11-13T20:17:46.790813+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: email_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:47.697617+00:00'
+        -   source_field: Payload
+            target_table: email_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:47.697645+00:00'

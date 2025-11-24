@@ -1,0 +1,56 @@
+id: a1b0ca4e-7835-413e-8471-3ff2b8a66be6
+title: Potential Remote Command Execution In Pod Container
+status: experimental
+level: medium
+description: 'Detects attempts to execute remote commands, within a Pod''s container
+    using e.g. the "kubectl exec" command.
+
+    '
+author: Leo Tsaousis (@laripping)
+date: '2024-03-26'
+tags:
+    - attack.t1609
+references:
+    - https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Exec%20into%20container/
+falsepositives:
+    - Legitimate debugging activity. Investigate the identity performing the requests
+        and their authorization.
+taxonomy: sigma
+logsource:
+    category: application
+    product: kubernetes
+    service: audit
+detection:
+    selection:
+        verb: create
+        objectRef.resource: pods
+        objectRef.subresource: exec
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: application
+            mapped_at: '2025-11-13T20:18:36.312039+00:00'
+        product:
+            source_field: product
+            source_value: kubernetes
+            mapped_at: '2025-11-13T20:18:36.312039+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:18:36.312039+00:00'
+    detection_fields:
+        -   source_field: verb
+            target_table: api_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:37.060314+00:00'
+        -   source_field: objectRef.resource
+            target_table: api_activity
+            target_field: job.name
+            mapped_at: '2025-11-13T20:18:37.060324+00:00'
+        -   source_field: objectRef.subresource
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:37.060327+00:00'

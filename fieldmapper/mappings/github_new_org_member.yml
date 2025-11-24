@@ -1,0 +1,43 @@
+id: 3908d64a-3c06-4091-b503-b3a94424533b
+title: New Github Organization Member Added
+status: test
+level: informational
+description: Detects when a new member is added or invited to a github organization.
+author: Muhammad Faisal (@faisalusuf)
+date: '2023-01-29'
+tags:
+    - attack.persistence
+    - attack.t1136.003
+references:
+    - https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#dependabot_alerts-category-actions
+falsepositives:
+    - Organization approved new members
+taxonomy: sigma
+logsource:
+    product: github
+    service: audit
+    definition: 'Requirements: The audit log streaming feature must be enabled to
+        be able to receive such logs. You can enable following the documentation here:
+        https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise#setting-up-audit-log-streaming'
+detection:
+    selection:
+        action:
+            - org.add_member
+            - org.invite_member
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: github
+            mapped_at: '2025-11-13T20:16:07.309753+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:16:07.309753+00:00'
+    detection_fields:
+        -   source_field: action
+            target_table: api_activity
+            target_field: action_id
+            mapped_at: '2025-11-13T20:16:07.309768+00:00'

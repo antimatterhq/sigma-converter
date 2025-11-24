@@ -1,0 +1,47 @@
+id: fa277e82-9b78-42dd-b05c-05555c7b6015
+title: Enable Local Manifest Installation With Winget
+status: test
+level: medium
+description: Detects changes to the AppInstaller (winget) policy. Specifically the
+    activation of the local manifest installation, which allows a user to install
+    new packages via custom manifests.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-04-17'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+references:
+    - https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget
+falsepositives:
+    - Administrators or developers might enable this for testing purposes or to install
+        custom private packages
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: \AppInstaller\EnableLocalManifestFiles
+        Details: DWORD (0x00000001)
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

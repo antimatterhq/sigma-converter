@@ -1,0 +1,41 @@
+id: 19aa4f58-94ca-45ff-bc34-92e533c0994a
+title: Suspicious User-Agents Related To Recon Tools
+status: test
+level: medium
+description: Detects known suspicious (default) user-agents related to scanning/recon
+    tools
+author: Nasreddine Bencherchali (Nextron Systems), Tim Shelton
+date: '2022-07-19'
+modified: '2023-01-02'
+tags:
+    - attack.initial-access
+    - attack.t1190
+references:
+    - https://github.com/wpscanteam/wpscan/blob/196fbab5b1ce3870a43515153d4f07878a89d410/lib/wpscan/browser.rb
+    - https://github.com/xmendez/wfuzz/blob/1b695ee9a87d66a7d7bf6cae70d60a33fae51541/docs/user/basicusage.rst
+    - https://github.com/lanmaster53/recon-ng/blob/9e907dfe09fce2997f0301d746796408e01a60b7/recon/core/base.py#L92
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: webserver
+detection:
+    selection:
+        cs-user-agent|contains:
+            - Wfuzz/
+            - WPScan v
+            - Recon-ng/v
+            - GIS - AppSec Team - Project Vision
+    condition: selection
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: webserver
+            mapped_at: '2025-11-13T20:14:31.127137+00:00'
+    detection_fields:
+        -   source_field: cs-user-agent
+            target_table: http_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:14:32.755545+00:00'

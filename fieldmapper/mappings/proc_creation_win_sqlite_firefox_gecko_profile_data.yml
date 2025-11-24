@@ -1,0 +1,58 @@
+id: 4833155a-4053-4c9c-a997-777fcea0baa7
+title: SQLite Firefox Profile Data DB Access
+status: test
+level: high
+description: Detect usage of the "sqlite" binary to query databases in Firefox and
+    other Gecko-based browsers for potential data stealing.
+author: frack113
+date: '2022-04-08'
+modified: '2023-01-19'
+tags:
+    - attack.credential-access
+    - attack.t1539
+    - attack.collection
+    - attack.t1005
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1539/T1539.md#atomic-test-1---steal-firefox-cookies-windows
+    - https://blog.cyble.com/2022/04/21/prynt-stealer-a-new-info-stealer-performing-clipper-and-keylogger-activities/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_sql:
+        Product: SQLite
+        Image|endswith:
+            - \sqlite.exe
+            - \sqlite3.exe
+    selection_firefox:
+        CommandLine|contains:
+            - cookies.sqlite
+            - places.sqlite
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.353696+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.353696+00:00'
+    detection_fields:
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:30.353701+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.353706+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.353707+00:00'

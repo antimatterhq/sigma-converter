@@ -1,0 +1,57 @@
+id: ec541962-c05a-4420-b9ea-84de072d18f4
+title: New AWS Lambda Function URL Configuration Created
+status: experimental
+level: medium
+description: 'Detects when a user creates a Lambda function URL configuration, which
+    could be used to expose the function to the internet and potentially allow unauthorized
+    access to the function''s IAM role for AWS API calls.
+
+    This could give an adversary access to the privileges associated with the Lambda
+    service role that is attached to that function.
+
+    '
+author: Ivan Saakov
+date: '2024-12-19'
+tags:
+    - attack.initial-access
+    - attack.privilege-escalation
+references:
+    - https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunctionUrlConfig.html
+    - https://cloud.hacktricks.xyz/pentesting-cloud/aws-security/aws-privilege-escalation/aws-lambda-privesc
+    - https://www.wiz.io/blog/how-to-set-secure-defaults-on-aws
+falsepositives:
+    - Creating a Lambda function URL configuration may be performed by a system administrator.
+        Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+    - Creating a Lambda function URL configuration from unfamiliar users should be
+        investigated. If known behavior is causing false positives, it can be exempted
+        from the rule.
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource: lambda.amazonaws.com
+        eventName: CreateFunctionUrlConfig
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:18:01.122303+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:18:01.122303+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: file_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:18:01.122312+00:00'
+        -   source_field: eventName
+            target_table: file_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:01.122315+00:00'

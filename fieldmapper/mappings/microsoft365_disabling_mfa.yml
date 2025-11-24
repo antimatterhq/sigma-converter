@@ -1,0 +1,39 @@
+id: 60de9b57-dc4d-48b9-a6a0-b39e0469f876
+title: Disabling Multi Factor Authentication
+status: test
+level: high
+description: Detects disabling of Multi Factor Authentication.
+author: Splunk Threat Research Team (original rule), Harjot Singh @cyb3rjy0t (sigma
+    rule)
+date: '2023-09-18'
+tags:
+    - attack.persistence
+    - attack.t1556
+references:
+    - https://research.splunk.com/cloud/c783dd98-c703-4252-9e8a-f19d9f5c949e/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: m365
+    service: audit
+detection:
+    selection:
+        Operation|contains: Disable Strong Authentication.
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: m365
+            mapped_at: '2025-11-13T20:17:48.284800+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:17:48.284800+00:00'
+    detection_fields:
+        -   source_field: Operation
+            target_table: authentication
+            target_field: api.operation
+            mapped_at: '2025-11-13T20:17:48.284855+00:00'

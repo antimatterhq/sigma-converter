@@ -1,0 +1,56 @@
+id: aa35a627-33fb-4d04-a165-d33b4afca3e8
+title: Remote LSASS Process Access Through Windows Remote Management
+status: stable
+level: high
+description: Detects remote access to the LSASS process via WinRM. This could be a
+    sign of credential dumping from tools like mimikatz.
+author: Patryk Prauze - ING Tech
+date: '2019-05-20'
+modified: '2023-11-29'
+tags:
+    - attack.credential-access
+    - attack.execution
+    - attack.t1003.001
+    - attack.t1059.001
+    - attack.lateral-movement
+    - attack.t1021.006
+    - attack.s0002
+references:
+    - https://pentestlab.blog/2018/05/15/lateral-movement-winrm/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: \lsass.exe
+        SourceImage|endswith: :\Windows\system32\wsmprovhost.exe
+    filter_main_access:
+        GrantedAccess: '0x80000000'
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:19:03.802629+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:03.802629+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:03.802650+00:00'
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:03.802654+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:19:03.802657+00:00'

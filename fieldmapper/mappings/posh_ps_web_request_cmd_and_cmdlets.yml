@@ -1,0 +1,61 @@
+id: 1139d2e2-84b1-4226-b445-354492eba8ba
+title: Usage Of Web Request Commands And Cmdlets - ScriptBlock
+status: test
+level: medium
+description: Detects the use of various web request commands with commandline tools
+    and Windows PowerShell cmdlets (including aliases) via PowerShell scriptblock
+    logs
+author: James Pemberton / @4A616D6573
+date: '2019-10-24'
+modified: '2023-01-10'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://4sysops.com/archives/use-powershell-to-download-a-file-with-http-https-and-ftp/
+    - https://blog.jourdant.me/post/3-ways-to-download-files-with-powershell
+falsepositives:
+    - Use of Get-Command and Get-Help modules to reference Invoke-WebRequest and Start-BitsTransfer.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9fc51a3c-81b3-4fa7-b35f-7c02cf10fd2d''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - '[System.Net.WebRequest]::create'
+            - 'curl '
+            - Invoke-RestMethod
+            - Invoke-WebRequest
+            - 'iwr '
+            - Net.WebClient
+            - Resume-BitsTransfer
+            - Start-BitsTransfer
+            - 'wget '
+            - WinHttp.WinHttpRequest
+    filter:
+        Path|startswith: C:\Packages\Plugins\Microsoft.GuestConfiguration.ConfigurationforWindows\
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.345940+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.345940+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.345946+00:00'
+        -   source_field: Path
+            target_table: script_activity
+            target_field: script.file.path
+            mapped_at: '2025-11-13T20:21:48.345947+00:00'

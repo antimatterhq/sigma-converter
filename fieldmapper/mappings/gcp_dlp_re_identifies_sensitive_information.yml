@@ -1,0 +1,39 @@
+id: 234f9f48-904b-4736-a34c-55d23919e4b7
+title: Google Cloud Re-identifies Sensitive Information
+status: test
+level: medium
+description: Identifies when sensitive information is re-identified in google Cloud.
+author: Austin Songer @austinsonger
+date: '2021-08-15'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+    - attack.t1565
+references:
+    - https://cloud.google.com/dlp/docs/reference/rest/v2/projects.content/reidentify
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    selection:
+        gcp.audit.method_name: projects.content.reidentify
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: gcp
+            mapped_at: '2025-11-13T20:17:38.654612+00:00'
+        service:
+            source_field: service
+            source_value: gcp.audit
+            mapped_at: '2025-11-13T20:17:38.654612+00:00'
+    detection_fields:
+        -   source_field: gcp.audit.method_name
+            target_table: dns_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:38.654622+00:00'

@@ -1,0 +1,48 @@
+id: 8a7e90c5-fe6e-45dc-889e-057fe4378bd9
+title: HackTool - SysmonEOP Execution
+status: test
+level: critical
+description: Detects the execution of the PoC that can be used to exploit Sysmon CVE-2022-41120
+author: Florian Roth (Nextron Systems)
+date: '2022-12-04'
+modified: '2024-11-23'
+tags:
+    - cve.2022-41120
+    - attack.t1068
+    - attack.privilege-escalation
+references:
+    - https://github.com/Wh04m1001/SysmonEoP
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \SysmonEOP.exe
+    selection_hash:
+        Hashes|contains:
+            - IMPHASH=22F4089EB8ABA31E1BB162C6D9BF72E5
+            - IMPHASH=5123FA4C4384D431CD0D893EEB49BBEC
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:03.213335+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:03.213335+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:03.213363+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:03.213367+00:00'

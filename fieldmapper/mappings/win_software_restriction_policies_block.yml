@@ -1,0 +1,50 @@
+id: b4c8da4a-1c12-46b0-8a2b-0a8521d03442
+title: Restricted Software Access By SRP
+status: test
+level: high
+description: Detects restricted access to applications by the Software Restriction
+    Policies (SRP) policy
+author: frack113
+date: '2023-01-12'
+tags:
+    - attack.defense-evasion
+    - attack.t1072
+references:
+    - https://learn.microsoft.com/en-us/windows-server/identity/software-restriction-policies/software-restriction-policies
+    - https://github.com/nasbench/EVTX-ETW-Resources/blob/7a806a148b3d9d381193d4a80356016e6e8b1ee8/ETWEventsList/CSV/Windows11/22H2/W11_22H2_Pro_20220920_22621.382/Providers/Microsoft-Windows-AppXDeployment-Server.csv
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: application
+detection:
+    selection:
+        Provider_Name: Microsoft-Windows-SoftwareRestrictionPolicies
+        EventID:
+            - 865
+            - 866
+            - 867
+            - 868
+            - 882
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:44.956521+00:00'
+        service:
+            source_field: service
+            source_value: application
+            mapped_at: '2025-11-13T20:25:44.956521+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:44.956553+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:44.956557+00:00'

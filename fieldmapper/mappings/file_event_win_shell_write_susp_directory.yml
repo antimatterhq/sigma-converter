@@ -1,0 +1,67 @@
+id: 1277f594-a7d1-4f28-a2d3-73af5cbeab43
+title: Windows Shell/Scripting Application File Write to Suspicious Folder
+status: test
+level: high
+description: Detects Windows shells and scripting applications that write files to
+    suspicious folders
+author: Florian Roth (Nextron Systems)
+date: '2021-11-20'
+modified: '2023-03-29'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_1:
+        Image|endswith:
+            - \bash.exe
+            - \cmd.exe
+            - \cscript.exe
+            - \msbuild.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \sh.exe
+            - \wscript.exe
+        TargetFilename|startswith:
+            - C:\PerfLogs\
+            - C:\Users\Public\
+    selection_2:
+        Image|endswith:
+            - \certutil.exe
+            - \forfiles.exe
+            - \mshta.exe
+            - \schtasks.exe
+            - \scriptrunner.exe
+            - \wmic.exe
+        TargetFilename|contains:
+            - C:\PerfLogs\
+            - C:\Users\Public\
+            - C:\Windows\Temp\
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.294279+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.294279+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:36.294284+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.294286+00:00'

@@ -1,0 +1,45 @@
+id: 30fc8de7-d833-40c4-96b6-28319fbc4f6c
+title: UAC Bypass Using Event Viewer RecentViews
+status: test
+level: high
+description: Detects the pattern of UAC Bypass using Event Viewer RecentViews
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-11-22'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+references:
+    - https://twitter.com/orange_8361/status/1518970259868626944
+    - https://lolbas-project.github.io/lolbas/Binaries/Eventvwr/#execute
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''63e4f530-65dc-49cc-8f80-ccfa95c69d43''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_path:
+        CommandLine|contains:
+            - \Event Viewer\RecentViews
+            - \EventV~1\RecentViews
+    selection_redirect:
+        CommandLine|contains: '>'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:03.228818+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:03.228818+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:03.228826+00:00'

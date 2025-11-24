@@ -1,0 +1,67 @@
+id: d29ada0f-af45-4f27-8f32-f7b77c3dbc4e
+title: HackTool - SysmonEnte Execution
+status: test
+level: high
+description: Detects the use of SysmonEnte, a tool to attack the integrity of Sysmon
+author: Florian Roth (Nextron Systems)
+date: '2022-09-07'
+modified: '2023-11-28'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://codewhitesec.blogspot.com/2022/09/attacks-on-sysmon-revisited-sysmonente.html
+    - https://github.com/codewhitesec/SysmonEnte/
+    - https://github.com/codewhitesec/SysmonEnte/blob/main/screens/1.png
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection_sysmon:
+        TargetImage|contains:
+            - :\Windows\Sysmon.exe
+            - :\Windows\Sysmon64.exe
+        GrantedAccess: '0x1400'
+    selection_calltrace:
+        CallTrace: Ente
+    filter_main_generic:
+        SourceImage|contains:
+            - :\Program Files (x86)\
+            - :\Program Files\
+            - :\Windows\System32\
+            - :\Windows\SysWOW64\
+    filter_main_msdefender:
+        SourceImage|contains: :\ProgramData\Microsoft\Windows Defender\Platform\
+        SourceImage|endswith: \MsMpEng.exe
+    condition: ( selection_sysmon and not 1 of filter_main_* ) or selection_calltrace
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:18:57.021861+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:57.021861+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:57.021896+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:18:57.021900+00:00'
+        -   source_field: CallTrace
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:57.021902+00:00'
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:57.021905+00:00'

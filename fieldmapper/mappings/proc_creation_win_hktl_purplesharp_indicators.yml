@@ -1,0 +1,52 @@
+id: ff23ffbc-3378-435e-992f-0624dcf93ab4
+title: HackTool - PurpleSharp Execution
+status: test
+level: critical
+description: Detects the execution of the PurpleSharp adversary simulation tool
+author: Florian Roth (Nextron Systems)
+date: '2021-06-18'
+modified: '2023-02-05'
+tags:
+    - attack.t1587
+    - attack.resource-development
+references:
+    - https://github.com/mvelazc0/PurpleSharp
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|contains: \purplesharp
+        OriginalFileName: PurpleSharp.exe
+    selection_cli:
+        CommandLine|contains:
+            - xyz123456.exe
+            - PurpleSharp
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.268330+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.268330+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.268341+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:30.268344+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.268347+00:00'

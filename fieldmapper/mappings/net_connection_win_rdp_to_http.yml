@@ -1,0 +1,61 @@
+id: b1e5da3b-ca8e-4adf-915c-9921f3d85481
+title: RDP to HTTP or HTTPS Target Ports
+status: test
+level: high
+description: Detects svchost hosting RDP termsvcs communicating to target systems
+    on TCP port 80 or 443
+author: Florian Roth (Nextron Systems)
+date: '2022-04-29'
+modified: '2022-07-14'
+tags:
+    - attack.command-and-control
+    - attack.t1572
+    - attack.lateral-movement
+    - attack.t1021.001
+    - car.2013-07-002
+references:
+    - https://twitter.com/tekdefense/status/1519711183162556416?s=12&t=OTsHCBkQOTNs1k3USz65Zg
+    - https://www.mandiant.com/resources/bypassing-network-restrictions-through-rdp-tunneling
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: \svchost.exe
+        Initiated: 'true'
+        SourcePort: 3389
+        DestinationPort:
+            - 80
+            - 443
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:12.404064+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:12.404064+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:12.404080+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:12.404082+00:00'
+        -   source_field: SourcePort
+            target_table: network_activity
+            target_field: src_endpoint.port
+            mapped_at: '2025-11-13T20:21:12.404084+00:00'
+        -   source_field: DestinationPort
+            target_table: network_activity
+            target_field: dst_endpoint.port
+            mapped_at: '2025-11-13T20:21:12.404086+00:00'

@@ -1,0 +1,65 @@
+id: ad9012a6-e518-4432-9890-f3b82b8fc71f
+title: Potential Sidecar Injection Into Running Deployment
+status: experimental
+level: medium
+description: 'Detects attempts to inject a sidecar container into a running deployment.
+
+    A sidecar container is an additional container within a pod, that resides alongside
+    the main container.
+
+    One way to add containers to running resources like Deployments/DeamonSets/StatefulSets,
+    is via a "kubectl patch" operation.
+
+    By injecting a new container within a legitimate pod, an attacker can run their
+    code and hide their activity, instead of running their own separated pod in the
+    cluster.
+
+    '
+author: Leo Tsaousis (@laripping)
+date: '2024-03-26'
+tags:
+    - attack.t1609
+references:
+    - https://kubernetes.io/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch
+    - https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Sidecar%20Injection/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: application
+    product: kubernetes
+    service: audit
+detection:
+    selection:
+        verb: patch
+        apiGroup: apps
+        objectRef.resource: deployments
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: application
+            mapped_at: '2025-11-13T20:18:28.268100+00:00'
+        product:
+            source_field: product
+            source_value: kubernetes
+            mapped_at: '2025-11-13T20:18:28.268100+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:18:28.268100+00:00'
+    detection_fields:
+        -   source_field: verb
+            target_table: api_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:29.113023+00:00'
+        -   source_field: apiGroup
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:29.113044+00:00'
+        -   source_field: objectRef.resource
+            target_table: api_activity
+            target_field: job.name
+            mapped_at: '2025-11-13T20:18:29.113049+00:00'

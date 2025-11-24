@@ -1,0 +1,60 @@
+id: b9f0e6f5-09b4-4358-bae4-08408705bd5c
+title: New User Created Via Net.EXE With Never Expire Option
+status: test
+level: high
+description: Detects creation of local users via the net.exe command with the option
+    "never expire"
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-12'
+modified: '2023-02-21'
+tags:
+    - attack.persistence
+    - attack.t1136.001
+references:
+    - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cd219ff3-fa99-45d4-8380-a7d15116c6dc''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \net.exe
+            - \net1.exe
+        OriginalFileName:
+            - net.exe
+            - net1.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - user
+            - add
+            - expires:never
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.143095+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.143095+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:59.143100+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:59.143102+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:59.143103+00:00'

@@ -1,0 +1,62 @@
+id: 2ea44a60-cfda-11ea-87d0-0242ac130003
+title: Webshell ReGeorg Detection Via Web Logs
+status: test
+level: high
+description: Certain strings in the uri_query field when combined with null referer
+    and null user agent can indicate activity associated with the webshell ReGeorg.
+author: Cian Heasley
+date: '2020-08-04'
+modified: '2023-01-02'
+tags:
+    - attack.persistence
+    - attack.t1505.003
+references:
+    - https://community.rsa.com/community/products/netwitness/blog/2019/02/19/web-shells-and-netwitness-part-3
+    - https://github.com/sensepost/reGeorg
+fields:
+    - cs-uri-query
+    - cs-referer
+    - cs-method
+    - cs-User-Agent
+falsepositives:
+    - Web applications that use the same URL parameters as ReGeorg
+taxonomy: sigma
+logsource:
+    category: webserver
+detection:
+    selection:
+        cs-uri-query|contains:
+            - cmd=read
+            - connect&target
+            - cmd=connect
+            - cmd=disconnect
+            - cmd=forward
+    filter:
+        cs-referer: null
+        cs-user-agent: null
+        cs-method: POST
+    condition: selection and filter
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: webserver
+            mapped_at: '2025-11-13T20:14:33.365140+00:00'
+    detection_fields:
+        -   source_field: cs-uri-query
+            target_table: http_activity
+            target_field: http_request.args
+            mapped_at: '2025-11-13T20:14:34.304672+00:00'
+        -   source_field: cs-referer
+            target_table: http_activity
+            target_field: http_request.referrer
+            mapped_at: '2025-11-13T20:14:34.304683+00:00'
+        -   source_field: cs-user-agent
+            target_table: http_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:14:34.304685+00:00'
+        -   source_field: cs-method
+            target_table: http_activity
+            target_field: http_request.http_method
+            mapped_at: '2025-11-13T20:14:34.304688+00:00'

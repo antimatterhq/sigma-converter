@@ -1,0 +1,47 @@
+id: 643bdcac-8b82-49f4-9fd9-25a90b929f3b
+title: Renamed MegaSync Execution
+status: test
+level: high
+description: Detects the execution of a renamed MegaSync.exe as seen used by ransomware
+    families like Nefilim, Sodinokibi, Pysa, and Conti.
+author: Sittikorn S
+date: '2021-06-22'
+modified: '2023-02-03'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://redcanary.com/blog/rclone-mega-extortion/
+falsepositives:
+    - Software that illegally integrates MegaSync in a renamed form
+    - Administrators that have renamed MegaSync
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: megasync.exe
+    filter:
+        Image|endswith: \megasync.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:22.289716+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:22.289716+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:22.289728+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:22.289731+00:00'

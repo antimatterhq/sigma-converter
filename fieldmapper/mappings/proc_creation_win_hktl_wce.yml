@@ -1,0 +1,59 @@
+id: 7aa7009a-28b9-4344-8c1f-159489a390df
+title: HackTool - Windows Credential Editor (WCE) Execution
+status: test
+level: critical
+description: Detects the use of Windows Credential Editor (WCE)
+author: Florian Roth (Nextron Systems)
+date: '2019-12-31'
+modified: '2024-11-23'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0005
+references:
+    - https://www.ampliasecurity.com/research/windows-credentials-editor/
+falsepositives:
+    - Another service that uses a single -s command line switch
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_1:
+        Hashes|contains:
+            - IMPHASH=a53a02b997935fd8eedcb5f7abab9b9f
+            - IMPHASH=e96a73c7bf33a464c510ede582318bf2
+    selection_2:
+        CommandLine|endswith: .exe -S
+        ParentImage|endswith: \services.exe
+    filter:
+        Image|endswith: \clussvc.exe
+    condition: 1 of selection_* and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:09.436851+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:09.436851+00:00'
+    detection_fields:
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:09.436891+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:09.436896+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:09.436900+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:09.436903+00:00'

@@ -1,0 +1,69 @@
+{
+  "caption": "Managed Entity",
+  "description": "The Managed Entity object describes the type and version of an entity, such as a user, device, or policy.  For types in the <code>type_id</code> enum list, an associated attribute should be populated.  If the type of entity is not in the <code>type_id</code> list, information can be put into the <code>data</code> attribute and the <code>type</code> attribute should identify the entity.",
+  "extends": "_entity",
+  "name": "managed_entity",
+  "attributes": {
+    "data": {
+      "description": "The managed entity content as a JSON object.",
+      "requirement": "optional",
+      "type": "variant_t"
+    },
+    "email": {
+      "description": "Email associated with the entity.",
+      "requirement": "optional"
+    },
+    "group": {
+      "description": "Array of groups associated with the entity.",
+      "requirement": "optional",
+      "is_array": true
+    },
+    "location": {
+      "requirement": "optional"
+    },
+    "name": {
+      "description": "The name of the managed entity.",
+      "type": "string_t"
+    },
+    "policies": {
+      "description": "Array of policies associated with the entity.",
+      "requirement": "optional",
+      "is_array": true
+    },
+    "type": {
+      "description": "The managed entity type.",
+      "requirement": "recommended",
+      "type": "string_t"
+    },
+    "type_id": {
+      "description": "The type of the Managed Entity.",
+      "requirement": "recommended",
+      "type": "integer_t"
+    },
+    "uid": {
+      "description": "The identifier of the managed entity.",
+      "type": "string_t"
+    },
+    "user": {
+      "description": "Array of users associated with the entity.",
+      "requirement": "optional",
+      "is_array": true
+    },
+    "version": {
+      "description": "The version of the managed entity.",
+      "requirement": "recommended",
+      "type": "string_t"
+    }
+  },
+  "constraints": {
+    "at_least_one": [
+      "name",
+      "uid",
+      "device",
+      "group",
+      "org",
+      "policy",
+      "user"
+    ]
+  }
+}

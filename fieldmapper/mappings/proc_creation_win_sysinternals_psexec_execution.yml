@@ -1,0 +1,45 @@
+id: 730fc21b-eaff-474b-ad23-90fd265d4988
+title: Psexec Execution
+status: test
+level: medium
+description: Detects user accept agreement execution in psexec commandline
+author: omkar72
+date: '2020-10-30'
+modified: '2023-02-28'
+tags:
+    - attack.execution
+    - attack.t1569
+    - attack.t1021
+references:
+    - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+falsepositives:
+    - Administrative scripts.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \psexec.exe
+        OriginalFileName: psexec.c
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:40.512864+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:40.512864+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:40.512870+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:40.512871+00:00'

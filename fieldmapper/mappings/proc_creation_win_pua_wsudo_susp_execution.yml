@@ -1,0 +1,68 @@
+id: bdeeabc9-ff2a-4a51-be59-bb253aac7891
+title: PUA - Wsudo Suspicious Execution
+status: test
+level: high
+description: Detects usage of wsudo (Windows Sudo Utility). Which is a tool that let
+    the user execute programs with different permissions (System, Trusted Installer,
+    Administrator...etc)
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-12-02'
+modified: '2023-02-14'
+tags:
+    - attack.execution
+    - attack.privilege-escalation
+    - attack.t1059
+references:
+    - https://github.com/M2Team/Privexec/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_metadata:
+        Image|endswith: \wsudo.exe
+        OriginalFileName: wsudo.exe
+        Description: Windows sudo utility
+        ParentImage|endswith: \wsudo-bridge.exe
+    selection_cli:
+        CommandLine|contains:
+            - -u System
+            - -uSystem
+            - -u TrustedInstaller
+            - -uTrustedInstaller
+            - ' --ti '
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:40.478163+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:40.478163+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:40.478196+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:40.478199+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:40.478203+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:40.478205+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:40.478207+00:00'

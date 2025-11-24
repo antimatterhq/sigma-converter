@@ -1,0 +1,56 @@
+id: 8cde342c-ba48-4b74-b615-172c330f2e93
+title: Suspicious Renamed Comsvcs DLL Loaded By Rundll32
+status: test
+level: high
+description: Detects rundll32 loading a renamed comsvcs.dll to dump process memory
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-14'
+modified: '2023-02-17'
+tags:
+    - attack.credential-access
+    - attack.defense-evasion
+    - attack.t1003.001
+references:
+    - https://twitter.com/sbousseaden/status/1555200155351228419
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: \rundll32.exe
+        Hashes|contains:
+            - IMPHASH=eed93054cb555f3de70eaa9787f32ebb
+            - IMPHASH=5e0dbdec1fce52daae251a110b4f309d
+            - IMPHASH=eadbccbb324829acb5f2bbe87e5549a8
+            - IMPHASH=407ca0f7b523319d758a40d7c0193699
+            - IMPHASH=281d618f4e6271e527e6386ea6f748de
+    filter:
+        ImageLoaded|endswith: \comsvcs.dll
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:27.646133+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:27.646133+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:28.788710+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:19:28.788733+00:00'
+        -   source_field: ImageLoaded
+            target_table: process_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:28.788737+00:00'

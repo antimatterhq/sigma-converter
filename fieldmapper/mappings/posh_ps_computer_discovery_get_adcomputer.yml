@@ -1,0 +1,52 @@
+id: db885529-903f-4c5d-9864-28fe199e6370
+title: Computer Discovery And Export Via Get-ADComputer Cmdlet - PowerShell
+status: test
+level: medium
+description: Detects usage of the Get-ADComputer cmdlet to collect computer information
+    and output it to a file
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-11-17'
+tags:
+    - attack.discovery
+    - attack.t1033
+references:
+    - http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html
+    - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
+    - https://www.cisa.gov/uscert/sites/default/files/publications/aa22-320a_joint_csa_iranian_government-sponsored_apt_actors_compromise_federal%20network_deploy_crypto%20miner_credential_harvester.pdf
+falsepositives:
+    - Legitimate admin scripts may use the same technique, it's better to exclude
+        specific computers or users who execute these commands or scripts often
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''435e10e4-992a-4281-96f3-38b11106adde''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'Get-ADComputer '
+            - ' -Filter \*'
+        ScriptBlockText|contains:
+            - ' | Select '
+            - Out-File
+            - Set-Content
+            - Add-Content
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.306321+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.306321+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.306325+00:00'

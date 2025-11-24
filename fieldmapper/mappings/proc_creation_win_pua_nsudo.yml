@@ -1,0 +1,71 @@
+id: 771d1eb5-9587-4568-95fb-9ec44153a012
+title: PUA - NSudo Execution
+status: test
+level: high
+description: Detects the use of NSudo tool for command execution
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali
+date: '2022-01-24'
+modified: '2023-02-13'
+tags:
+    - attack.execution
+    - attack.t1569.002
+    - attack.s0029
+references:
+    - https://web.archive.org/web/20221019044836/https://nsudo.m2team.org/en-us/
+    - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
+falsepositives:
+    - Legitimate use by administrators
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \NSudo.exe
+            - \NSudoLC.exe
+            - \NSudoLG.exe
+        OriginalFileName:
+            - NSudo.exe
+            - NSudoLC.exe
+            - NSudoLG.exe
+    selection_cli:
+        CommandLine|contains:
+            - '-U:S '
+            - '-U:T '
+            - '-U:E '
+            - '-P:E '
+            - '-M:S '
+            - '-M:H '
+            - '-U=S '
+            - '-U=T '
+            - '-U=E '
+            - '-P=E '
+            - '-M=S '
+            - '-M=H '
+            - -ShowWindowMode:Hide
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:05.009331+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:05.009331+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:05.009337+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:05.009339+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:05.009340+00:00'

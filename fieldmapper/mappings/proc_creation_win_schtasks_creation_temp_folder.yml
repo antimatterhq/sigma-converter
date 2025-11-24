@@ -1,0 +1,50 @@
+id: 39019a4e-317f-4ce3-ae63-309a8c6b53c5
+title: Suspicious Scheduled Task Creation Involving Temp Folder
+status: test
+level: high
+description: Detects the creation of scheduled tasks that involves a temporary folder
+    and runs only once
+author: Florian Roth (Nextron Systems)
+date: '2021-03-11'
+modified: '2022-10-09'
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1053.005
+references:
+    - https://discuss.elastic.co/t/detection-and-response-for-hafnium-activity/266289/3
+falsepositives:
+    - Administrative activity
+    - Software installation
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \schtasks.exe
+        CommandLine|contains|all:
+            - ' /create '
+            - ' /sc once '
+            - \Temp\
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.463980+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.463980+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:14.463984+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:14.463986+00:00'

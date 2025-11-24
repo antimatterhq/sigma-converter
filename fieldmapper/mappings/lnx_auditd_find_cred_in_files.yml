@@ -1,0 +1,43 @@
+id: df3fcaea-2715-4214-99c5-0056ea59eb35
+title: Credentials In Files - Linux
+status: test
+level: high
+description: Detecting attempts to extract passwords with grep
+author: Igor Fits, oscd.community
+date: '2020-10-15'
+modified: '2023-04-30'
+tags:
+    - attack.credential-access
+    - attack.t1552.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.001/T1552.001.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: EXECVE
+    keywords:
+        '|all':
+            - grep
+            - password
+    condition: selection and keywords
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:49.913782+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:49.913782+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.913790+00:00'

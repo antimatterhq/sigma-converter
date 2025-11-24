@@ -1,0 +1,61 @@
+id: 24549159-ac1b-479c-8175-d42aea947cae
+title: Hacktool Ruler
+status: test
+level: high
+description: This events that are generated when using the hacktool Ruler by Sensepost
+author: Florian Roth (Nextron Systems)
+date: '2017-05-31'
+modified: '2022-10-09'
+tags:
+    - attack.discovery
+    - attack.execution
+    - attack.t1087
+    - attack.t1114
+    - attack.t1059
+    - attack.t1550.002
+references:
+    - https://github.com/sensepost/ruler
+    - https://github.com/sensepost/ruler/issues/47
+    - https://github.com/staaldraad/go-ntlm/blob/cd032d41aa8ce5751c07cb7945400c0f5c81e2eb/ntlm/ntlmv1.go#L427
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4776
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4624
+falsepositives:
+    - Go utilities that use staaldraad awesome NTLM library
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection1:
+        EventID: 4776
+        Workstation: RULER
+    selection2:
+        EventID:
+            - 4624
+            - 4625
+        WorkstationName: RULER
+    condition: (1 of selection*)
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:22.329768+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:22.329768+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:22.329802+00:00'
+        -   source_field: Workstation
+            target_table: process_activity
+            target_field: src_endpoint.hostname
+            mapped_at: '2025-11-13T20:23:22.329805+00:00'
+        -   source_field: WorkstationName
+            target_table: process_activity
+            target_field: src_endpoint.hostname
+            mapped_at: '2025-11-13T20:23:22.329807+00:00'

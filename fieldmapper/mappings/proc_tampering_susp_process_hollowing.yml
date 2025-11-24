@@ -1,0 +1,57 @@
+id: c4b890e5-8d8c-4496-8c66-c805753817cd
+title: Potential Process Hollowing Activity
+status: test
+level: medium
+description: Detects when a memory process image does not match the disk image, indicative
+    of process hollowing.
+author: Christopher Peacock '@securepeacock', SCYTHE '@scythe_io', Sittikorn S
+date: '2022-01-25'
+modified: '2023-11-28'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055.012
+references:
+    - https://twitter.com/SecurePeacock/status/1486054048390332423?s=20
+    - https://www.bleepingcomputer.com/news/microsoft/microsoft-sysmon-now-detects-malware-process-tampering-attempts/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_tampering
+    product: windows
+detection:
+    selection:
+        Type: Image is replaced
+    filter_main_generic:
+        Image|contains:
+            - :\Program Files (x86)
+            - :\Program Files\
+            - :\Windows\System32\wbem\WMIADAP.exe
+            - :\Windows\SysWOW64\wbem\WMIADAP.exe
+    filter_optional_opera:
+        Image|contains: \AppData\Local\Programs\Opera\
+        Image|endswith: \opera.exe
+    filter_optional_edge:
+        Image|endswith: \WindowsApps\MicrosoftEdge.exe
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_tampering
+            mapped_at: '2025-11-13T20:18:43.129583+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:43.129583+00:00'
+    detection_fields:
+        -   source_field: Type
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:44.424178+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:18:44.424204+00:00'

@@ -1,0 +1,49 @@
+id: e49b5745-1064-4ac1-9a2e-f687bc2dd37e
+title: Potential DLL Sideloading Of Libcurl.DLL Via GUP.EXE
+status: test
+level: medium
+description: Detects potential DLL sideloading of "libcurl.dll" by the "gup.exe" process
+    from an uncommon location
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-05'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: \gup.exe
+        ImageLoaded|endswith: \libcurl.dll
+    filter_main_notepad_plusplus:
+        Image|endswith: \Notepad++\updater\GUP.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:25.875814+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:25.875814+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:25.875821+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:25.875823+00:00'

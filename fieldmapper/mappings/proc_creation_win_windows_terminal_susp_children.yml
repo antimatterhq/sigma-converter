@@ -1,0 +1,88 @@
+id: 8de89e52-f6e1-4b5b-afd1-41ecfa300d48
+title: Suspicious WindowsTerminal Child Processes
+status: test
+level: medium
+description: Detects suspicious children spawned via the Windows Terminal application
+    which could be a sign of persistence via WindowsTerminal (see references section)
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-25'
+modified: '2023-02-14'
+tags:
+    - attack.execution
+    - attack.persistence
+references:
+    - https://persistence-info.github.io/Data/windowsterminalprofile.html
+    - https://twitter.com/nas_bench/status/1550836225652686848
+falsepositives:
+    - Other legitimate "Windows Terminal" profiles
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - \WindowsTerminal.exe
+            - \wt.exe
+    selection_susp:
+        Image|endswith:
+            - \rundll32.exe
+            - \regsvr32.exe
+            - \certutil.exe
+            - \cscript.exe
+            - \wscript.exe
+            - \csc.exe
+        Image|contains:
+            - C:\Users\Public\
+            - \Downloads\
+            - \Desktop\
+            - \AppData\Local\Temp\
+            - \Windows\TEMP\
+        CommandLine|contains:
+            - ' iex '
+            - ' icm'
+            - Invoke-
+            - 'Import-Module '
+            - 'ipmo '
+            - DownloadString(
+            - ' /c '
+            - ' /k '
+            - ' /r '
+    filter_builtin_visual_studio_shell:
+        CommandLine|contains|all:
+            - Import-Module
+            - Microsoft.VisualStudio.DevShell.dll
+            - Enter-VsDevShell
+    filter_open_settings:
+        CommandLine|contains|all:
+            - \AppData\Local\Packages\Microsoft.WindowsTerminal_
+            - \LocalState\settings.json
+    filter_vsdevcmd:
+        CommandLine|contains|all:
+            - C:\Program Files\Microsoft Visual Studio\
+            - \Common7\Tools\VsDevCmd.bat
+    condition: all of selection_* and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.450180+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.450180+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:14.450185+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:14.450186+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:14.450187+00:00'

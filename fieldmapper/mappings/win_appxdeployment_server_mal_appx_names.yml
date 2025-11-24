@@ -1,0 +1,49 @@
+id: 09d3b48b-be17-47f5-bf4e-94e7e75d09ce
+title: Potential Malicious AppX Package Installation Attempts
+status: test
+level: medium
+description: Detects potential installation or installation attempts of known malicious
+    appx packages
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-11'
+modified: '2023-01-12'
+tags:
+    - attack.defense-evasion
+references:
+    - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+    - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+    - https://forensicitguy.github.io/analyzing-magnitude-magniber-appx/
+falsepositives:
+    - Rare occasions where a malicious package uses the exact same name and version
+        as a legtimate application
+taxonomy: sigma
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    selection:
+        EventID:
+            - 400
+            - 401
+        PackageFullName|contains: 3669e262-ec02-4e9d-bcb4-3d008b4afac9
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:51.053046+00:00'
+        service:
+            source_field: service
+            source_value: appxdeployment-server
+            mapped_at: '2025-11-13T20:24:51.053046+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:52.198946+00:00'
+        -   source_field: PackageFullName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:52.198966+00:00'

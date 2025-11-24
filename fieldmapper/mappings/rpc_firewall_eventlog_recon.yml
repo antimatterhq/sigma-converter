@@ -1,0 +1,54 @@
+id: 2053961f-44c7-4a64-b62d-f6e72800af0d
+title: Remote Event Log Recon
+status: test
+level: high
+description: Detects remote RPC calls to get event log information via EVEN or EVEN6
+author: Sagie Dulce, Dekel Paz
+date: '2022-01-01'
+modified: '2022-01-01'
+tags:
+    - attack.discovery
+references:
+    - https://github.com/zeronetworks/rpcfirewall
+    - https://zeronetworks.com/blog/stopping-lateral-movement-via-the-rpc-firewall/
+falsepositives:
+    - Remote administrative tasks on Windows Events
+taxonomy: sigma
+logsource:
+    category: application
+    product: rpc_firewall
+    definition: 'Requirements: install and apply the RPC Firewall to all processes
+        with "audit:true action:block uuid:82273fdc-e32a-18c3-3f78-827929dc23ea and
+        uuid:f6beaff7-1e19-4fbb-9f8f-b89e2018337c"'
+detection:
+    selection:
+        EventLog: RPCFW
+        EventID: 3
+        InterfaceUuid:
+            - 82273fdc-e32a-18c3-3f78-827929dc23ea
+            - f6beaff7-1e19-4fbb-9f8f-b89e2018337c
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: application
+            mapped_at: '2025-11-13T20:18:21.582376+00:00'
+        product:
+            source_field: product
+            source_value: rpc_firewall
+            mapped_at: '2025-11-13T20:18:21.582376+00:00'
+    detection_fields:
+        -   source_field: EventLog
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:22.793048+00:00'
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:18:22.793088+00:00'
+        -   source_field: InterfaceUuid
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:22.793091+00:00'

@@ -1,0 +1,46 @@
+id: 999c3b12-0a8c-40b6-8e13-dd7d62b75c7a
+title: Potentially Suspicious Named Pipe Created Via Mkfifo
+status: test
+level: medium
+description: Detects the creation of a new named pipe using the "mkfifo" utility in
+    a potentially suspicious location
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-16'
+tags:
+    - attack.execution
+references:
+    - https://dev.to/0xbf/use-mkfifo-to-create-named-pipe-linux-tips-5bbk
+    - https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9d779ce8-5256-4b13-8b6f-b91c602b43f4''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /mkfifo
+        CommandLine|contains: ' /tmp/'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.271364+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.271364+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.271378+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.271381+00:00'

@@ -1,0 +1,40 @@
+id: 0922467f-db53-4348-b7bf-dee8d0d348c6
+title: New CA Policy by Non-approved Actor
+status: test
+level: medium
+description: Monitor and alert on conditional access changes.
+author: Corissa Koopmans, '@corissalea'
+date: '2022-07-18'
+tags:
+    - attack.defense-evasion
+    - attack.t1548
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-infrastructure
+falsepositives:
+    - Misconfigured role permissions
+    - Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        properties.message: Add conditional access policy
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:30.275931+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:30.275931+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:16:30.275947+00:00'

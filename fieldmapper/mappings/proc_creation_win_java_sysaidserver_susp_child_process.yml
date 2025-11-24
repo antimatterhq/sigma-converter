@@ -1,0 +1,46 @@
+id: 60bfeac3-0d35-4302-8efb-1dd16f715bc6
+title: Suspicious SysAidServer Child
+status: test
+level: medium
+description: Detects suspicious child processes of SysAidServer (as seen in MERCURY
+    threat actor intrusions)
+author: Florian Roth (Nextron Systems)
+date: '2022-08-26'
+tags:
+    - attack.lateral-movement
+    - attack.t1210
+references:
+    - https://www.microsoft.com/security/blog/2022/08/25/mercury-leveraging-log4j-2-vulnerabilities-in-unpatched-systems-to-target-israeli-organizations/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith:
+            - \java.exe
+            - \javaw.exe
+        ParentCommandLine|contains: SysAidServer
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:54.979738+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:54.979738+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:54.979751+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:54.979754+00:00'

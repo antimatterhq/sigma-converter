@@ -1,0 +1,48 @@
+id: 6f3e2987-db24-4c78-a860-b4f4095a7095
+title: Files Added To An Archive Using Rar.EXE
+status: test
+level: low
+description: Detects usage of "rar" to add files to an archive for potential compression.
+    An adversary may compress data (e.g. sensitive documents) that is collected prior
+    to exfiltration in order to make it portable and minimize the amount of data sent
+    over the network.
+author: Timur Zinniatullin, E.M. Anhaus, oscd.community
+date: '2019-10-21'
+modified: '2023-02-05'
+tags:
+    - attack.collection
+    - attack.t1560.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1560.001/T1560.001.md
+    - https://eqllib.readthedocs.io/en/latest/analytics/1ec33c93-3d0b-4a28-8014-dbdaae5c60ae.html
+falsepositives:
+    - Highly likely if rar is a default archiver in the monitored environment.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \rar.exe
+        CommandLine|contains: ' a '
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:56.572275+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:56.572275+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:56.572297+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:56.572299+00:00'

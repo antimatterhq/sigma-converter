@@ -1,0 +1,54 @@
+id: d2eb17db-1d39-41dc-b57f-301f6512fa75
+title: Potentially Suspicious Command Targeting Teams Sensitive Files
+status: test
+level: medium
+description: 'Detects a commandline containing references to the Microsoft Teams database
+    or cookies files from a process other than Teams.
+
+    The database might contain authentication tokens and other sensitive information
+    about the logged in accounts.
+
+    '
+author: '@SerkinValery'
+date: '2022-09-16'
+modified: '2023-12-18'
+tags:
+    - attack.credential-access
+    - attack.t1528
+references:
+    - https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/
+    - https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - \Microsoft\Teams\Cookies
+            - \Microsoft\Teams\Local Storage\leveldb
+    filter_main_legit_locations:
+        Image|endswith: \Microsoft\Teams\current\Teams.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.335037+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.335037+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.335049+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.335051+00:00'

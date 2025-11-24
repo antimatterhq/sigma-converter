@@ -1,0 +1,58 @@
+id: cb7c4a03-2871-43c0-9bbb-18bbdb079896
+title: Unmount Share Via Net.EXE
+status: test
+level: low
+description: Detects when when a mounted share is removed. Adversaries may remove
+    share connections that are no longer useful in order to clean up traces of their
+    operation
+author: oscd.community, @redcanary, Zach Stanford @svch0st
+date: '2020-10-08'
+modified: '2023-02-21'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.005
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.005/T1070.005.md
+falsepositives:
+    - Administrators or Power users may remove their shares via cmd line
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \net.exe
+            - \net1.exe
+        OriginalFileName:
+            - net.exe
+            - net1.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - share
+            - /delete
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:21:00.872074+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:00.872074+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:00.872083+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:21:00.872084+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:00.872086+00:00'

@@ -1,0 +1,72 @@
+id: a07f0359-4c90-4dc4-a681-8ffea40b4f47
+title: Service Binary in Suspicious Folder
+status: test
+level: high
+description: Detect the creation of a service with a service binary located in a suspicious
+    directory
+author: Florian Roth (Nextron Systems), frack113
+date: '2022-05-02'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c0abc838-36b0-47c9-b3b3-a90c39455382''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_1:
+        TargetObject|startswith: HKLM\System\CurrentControlSet\Services\
+        TargetObject|endswith: \Start
+        Image|contains:
+            - \Users\Public\
+            - \Perflogs\
+            - \ADMIN$\
+            - \Temp\
+        Details:
+            - DWORD (0x00000000)
+            - DWORD (0x00000001)
+            - DWORD (0x00000002)
+    selection_2:
+        TargetObject|startswith: HKLM\System\CurrentControlSet\Services\
+        TargetObject|endswith: \ImagePath
+        Details|contains:
+            - \Users\Public\
+            - \Perflogs\
+            - \ADMIN$\
+            - \Temp\
+    filter_1:
+        Image|contains|all:
+            - \Common Files\
+            - \Temp\
+    condition: 1 of selection_* and not 1 of filter_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:05.979289+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:05.979289+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:05.979298+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:05.979299+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:05.979301+00:00'

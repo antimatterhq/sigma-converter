@@ -1,0 +1,40 @@
+id: afd3df04-948d-46f6-ae44-25966c44b97f
+title: PSAsyncShell - Asynchronous TCP Reverse Shell
+status: test
+level: high
+description: Detects the use of PSAsyncShell an Asynchronous TCP Reverse Shell written
+    in powershell
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-10-04'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/JoelGMSec/PSAsyncShell
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains: PSAsyncShell
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.319651+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.319651+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.319655+00:00'

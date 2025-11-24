@@ -1,0 +1,57 @@
+id: 47b3bbd4-1bf7-48cc-84ab-995362aaa75a
+title: Shell Execution via Git - Linux
+status: experimental
+level: high
+description: 'Detects the use of the "git" utility to execute a shell. Such behavior
+    may be associated with privilege escalation, unauthorized command execution, or
+    to break out from restricted environments.
+
+    '
+author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
+date: '2024-09-02'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://gtfobins.github.io/gtfobins/git/#shell
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        ParentImage|endswith: /git
+        ParentCommandLine|contains|all:
+            - ' -p '
+            - help
+        CommandLine|contains:
+            - bash 0<&1
+            - dash 0<&1
+            - sh 0<&1
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.856433+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.856433+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:15:55.856446+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.856448+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.856449+00:00'

@@ -1,0 +1,52 @@
+id: bb09dd3e-2b78-4819-8e35-a7c1b874e449
+title: HackTool - Inveigh Execution Artefacts
+status: test
+level: critical
+description: Detects the presence and execution of Inveigh via dropped artefacts
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-10-24'
+modified: '2024-06-27'
+tags:
+    - attack.command-and-control
+    - attack.t1219
+references:
+    - https://github.com/Kevin-Robertson/Inveigh/blob/29d9e3c3a625b3033cdaf4683efaafadcecb9007/Inveigh/Support/Output.cs
+    - https://github.com/Kevin-Robertson/Inveigh/blob/29d9e3c3a625b3033cdaf4683efaafadcecb9007/Inveigh/Support/Control.cs
+    - https://thedfirreport.com/2020/11/23/pysa-mespinoza-ransomware/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - \Inveigh-Log.txt
+            - \Inveigh-Cleartext.txt
+            - \Inveigh-NTLMv1Users.txt
+            - \Inveigh-NTLMv2Users.txt
+            - \Inveigh-NTLMv1.txt
+            - \Inveigh-NTLMv2.txt
+            - \Inveigh-FormInput.txt
+            - \Inveigh.dll
+            - \Inveigh.exe
+            - \Inveigh.ps1
+            - \Inveigh-Relay.ps1
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.236440+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.236440+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.236447+00:00'

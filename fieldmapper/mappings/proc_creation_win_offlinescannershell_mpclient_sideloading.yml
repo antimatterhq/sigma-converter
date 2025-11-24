@@ -1,0 +1,60 @@
+id: 02b18447-ea83-4b1b-8805-714a8a34546a
+title: Potential Mpclient.DLL Sideloading Via OfflineScannerShell.EXE Execution
+status: test
+level: medium
+description: 'Detects execution of Windows Defender "OfflineScannerShell.exe" from
+    its non standard directory.
+
+    The "OfflineScannerShell.exe" binary is vulnerable to DLL side loading and will
+    load any DLL named "mpclient.dll" from the current working directory.
+
+    '
+author: frack113
+date: '2022-03-06'
+modified: '2023-08-03'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/OfflineScannerShell/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \OfflineScannerShell.exe
+        OriginalFileName: OfflineScannerShell.exe
+    filter_main_legit_dir:
+        CurrentDirectory: C:\Program Files\Windows Defender\Offline\
+    filter_main_empty:
+        CurrentDirectory: ''
+    filter_main_null:
+        CurrentDirectory: null
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:24.773548+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:24.773548+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:24.773572+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:24.773574+00:00'
+        -   source_field: CurrentDirectory
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:20:24.773576+00:00'

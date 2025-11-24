@@ -1,0 +1,62 @@
+id: a746c9b8-a2fb-4ee5-a428-92bee9e99060
+title: SQL Client Tools PowerShell Session Detection
+status: test
+level: medium
+description: 'This rule detects execution of a PowerShell code through the sqltoolsps.exe
+    utility, which is included in the standard set of utilities supplied with the
+    Microsoft SQL Server Management studio.
+
+    Script blocks are not logged in this case, so this utility helps to bypass protection
+    mechanisms based on the analysis of these logs.
+
+    '
+author: Agro (@agro_sev) oscd.communitly
+date: '2020-10-13'
+modified: '2022-02-25'
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1127
+references:
+    - https://github.com/LOLBAS-Project/LOLBAS/blob/8283d8d91552213ded165fd36deb6cb9534cb443/yml/OtherMSBinaries/Sqltoolsps.yml
+    - https://twitter.com/pabraeken/status/993298228840992768
+falsepositives:
+    - Direct PS command execution through SQLToolsPS.exe is uncommon, childprocess
+        sqltoolsps.exe spawned by smss.exe is a legitimate action.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \sqltoolsps.exe
+        ParentImage|endswith: \sqltoolsps.exe
+        OriginalFileName: \sqltoolsps.exe
+    filter:
+        ParentImage|endswith: \smss.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:12.451742+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:12.451742+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:12.451756+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:12.451758+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:12.451759+00:00'

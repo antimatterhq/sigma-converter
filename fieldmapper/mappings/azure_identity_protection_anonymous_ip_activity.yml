@@ -1,0 +1,44 @@
+id: be4d9c86-d702-4030-b52e-c7859110e5e8
+title: Activity From Anonymous IP Address
+status: test
+level: high
+description: Identifies that users were active from an IP address that has been identified
+    as an anonymous proxy IP address.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-03'
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.initial-access
+references:
+    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#activity-from-anonymous-ip-address
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
+falsepositives:
+    - We recommend investigating the sessions flagged by this detection in the context
+        of other sign-ins from the user.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    selection:
+        riskEventType: riskyIPAddress
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.452329+00:00'
+        service:
+            source_field: service
+            source_value: riskdetection
+            mapped_at: '2025-11-13T20:16:23.452329+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.452334+00:00'

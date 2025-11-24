@@ -1,0 +1,43 @@
+id: 20d96d95-5a20-4cf1-a483-f3bda8a7c037
+title: Add or Remove Computer from DC
+status: test
+level: low
+description: Detects the creation or removal of a computer. Can be used to detect
+    attacks such as DCShadow via the creation of a new SPN.
+author: frack113
+date: '2022-10-14'
+tags:
+    - attack.defense-evasion
+    - attack.t1207
+references:
+    - https://github.com/Yamato-Security/EnableWindowsLogSettings/blob/7f6d755d45ac7cc9fc35b0cbf498e6aa4ef19def/ConfiguringSecurityLogAuditPolicies.md
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4741
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4743
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID:
+            - 4741
+            - 4743
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:52.343574+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:52.343574+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:52.343583+00:00'

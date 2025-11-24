@@ -1,0 +1,66 @@
+id: 05c36dd6-79d6-4a9a-97da-3db20298ab2d
+title: XSL Script Execution Via WMIC.EXE
+status: test
+level: medium
+description: 'Detects the execution of WMIC with the "format" flag to potentially
+    load XSL files.
+
+    Adversaries abuse this functionality to execute arbitrary files while potentially
+    bypassing application whitelisting defenses.
+
+    Extensible Stylesheet Language (XSL) files are commonly used to describe the processing
+    and rendering of data within XML files.
+
+    '
+author: Timur Zinniatullin, oscd.community, Swachchhanda Shrawan Poudel
+date: '2019-10-21'
+modified: '2024-03-05'
+tags:
+    - attack.defense-evasion
+    - attack.t1220
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1220/T1220.md
+falsepositives:
+    - WMIC.exe FP depend on scripts and administrative methods used in the monitored
+        environment.
+    - Static format arguments - https://petri.com/command-line-wmi-part-3
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \wmic.exe
+        CommandLine|contains|windash: -format
+    filter_main_known_format:
+        CommandLine|contains:
+            - Format:List
+            - Format:htable
+            - Format:hform
+            - Format:table
+            - Format:mof
+            - Format:value
+            - Format:rawxml
+            - Format:xml
+            - Format:csv
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:36.487598+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:36.487598+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:36.487604+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:36.487606+00:00'

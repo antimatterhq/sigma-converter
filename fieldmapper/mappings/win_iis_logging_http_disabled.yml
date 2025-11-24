@@ -1,0 +1,52 @@
+id: e8ebd53a-30c2-45bd-81bb-74befba07bdb
+title: HTTP Logging Disabled On IIS Server
+status: experimental
+level: high
+description: Detects changes to of the IIS server configuration in order to disable
+    HTTP logging for successful requests.
+author: frack113
+date: '2024-10-06'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+    - attack.t1505.004
+references:
+    - https://learn.microsoft.com/en-us/iis/manage/provisioning-and-managing-iis/configure-logging-in-iis
+    - https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/
+    - https://learn.microsoft.com/en-us/iis/configuration/system.webserver/httplogging
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: iis-configuration
+detection:
+    selection:
+        EventID: 29
+        Configuration: /system.webServer/httpLogging/@dontLog
+        NewValue: 'true'
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:21.486178+00:00'
+        service:
+            source_field: service
+            source_value: iis-configuration
+            mapped_at: '2025-11-13T20:24:21.486178+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:21.486186+00:00'
+        -   source_field: Configuration
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:21.486188+00:00'
+        -   source_field: NewValue
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:21.486189+00:00'

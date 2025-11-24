@@ -1,0 +1,57 @@
+id: c4568f5d-131f-4e78-83d4-45b2da0ec4f1
+title: Communication To LocaltoNet Tunneling Service Initiated - Linux
+status: experimental
+level: high
+description: 'Detects an executable initiating a network connection to "LocaltoNet"
+    tunneling sub-domains.
+
+    LocaltoNet is a reverse proxy that enables localhost services to be exposed to
+    the Internet.
+
+    Attackers have been seen to use this service for command-and-control activities
+    to bypass MFA and perimeter controls.
+
+    '
+author: Andreas Braathen (mnemonic.io)
+date: '2024-06-17'
+tags:
+    - attack.command-and-control
+    - attack.t1572
+    - attack.t1090
+    - attack.t1102
+references:
+    - https://localtonet.com/documents/supported-tunnels
+    - https://cloud.google.com/blog/topics/threat-intelligence/unc3944-targets-saas-applications
+falsepositives:
+    - Legitimate use of the LocaltoNet service.
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: linux
+detection:
+    selection:
+        DestinationHostname|endswith:
+            - .localto.net
+            - .localtonet.com
+        Initiated: 'true'
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:15:57.405219+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:57.405219+00:00'
+    detection_fields:
+        -   source_field: DestinationHostname
+            target_table: network_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:15:59.256276+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:59.256308+00:00'

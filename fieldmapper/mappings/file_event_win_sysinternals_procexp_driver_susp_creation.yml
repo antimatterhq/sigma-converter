@@ -1,0 +1,58 @@
+id: de46c52b-0bf8-4936-a327-aace94f94ac6
+title: Process Explorer Driver Creation By Non-Sysinternals Binary
+status: test
+level: high
+description: 'Detects creation of the Process Explorer drivers by processes other
+    than Process Explorer (procexp) itself.
+
+    Hack tools or malware may use the Process Explorer driver to elevate privileges,
+    drops it to disk for a few moments, runs a service using that driver and removes
+    it afterwards.
+
+    '
+author: Florian Roth (Nextron Systems)
+date: '2023-05-05'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1068
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer
+    - https://github.com/Yaxser/Backstab
+    - https://www.elastic.co/security-labs/stopping-vulnerable-driver-attacks
+    - https://news.sophos.com/en-us/2023/04/19/aukill-edr-killer-malware-abuses-process-explorer-driver/
+falsepositives:
+    - Some false positives may occur with legitimate renamed process explorer binaries
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: \PROCEXP
+        TargetFilename|endswith: .sys
+    filter_main_process_explorer:
+        Image|endswith:
+            - \procexp.exe
+            - \procexp64.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.331374+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.331374+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.331378+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:36.331380+00:00'

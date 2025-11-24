@@ -1,0 +1,43 @@
+id: 40b19fa6-d835-400c-b301-41f3a2baacaf
+title: VolumeShadowCopy Symlink Creation Via Mklink
+status: stable
+level: high
+description: Shadow Copies storage symbolic link creation using operating systems
+    utilities
+author: Teymur Kheirkhabarov, oscd.community
+date: '2019-10-22'
+modified: '2023-03-06'
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+    - attack.t1003.003
+references:
+    - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+falsepositives:
+    - Legitimate administrator working with shadow copies, access for backup purposes
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - mklink
+            - HarddiskVolumeShadowCopy
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:15.025370+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:15.025370+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:15.025375+00:00'

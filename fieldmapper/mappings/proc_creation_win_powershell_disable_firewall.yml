@@ -1,0 +1,66 @@
+id: 12f6b752-042d-483e-bf9c-915a6d06ad75
+title: Windows Firewall Disabled via PowerShell
+status: test
+level: medium
+description: Detects attempts to disable the Windows Firewall using PowerShell
+author: Tim Rauch, Elastic (idea)
+date: '2022-09-14'
+modified: '2023-02-13'
+tags:
+    - attack.defense-evasion
+    - attack.t1562
+references:
+    - https://www.elastic.co/guide/en/security/current/windows-firewall-disabled-via-powershell.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''488b44e7-3781-4a71-888d-c95abfacf44d''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_name:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+            - \powershell_ise.exe
+        OriginalFileName:
+            - PowerShell.EXE
+            - pwsh.dll
+    selection_args:
+        CommandLine|contains|all:
+            - 'Set-NetFirewallProfile '
+            - ' -Enabled '
+            - ' False'
+    selection_opt:
+        CommandLine|contains:
+            - ' -All '
+            - Public
+            - Domain
+            - Private
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.309061+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.309061+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.309066+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:58.309067+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.309069+00:00'

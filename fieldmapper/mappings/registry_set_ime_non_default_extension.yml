@@ -1,0 +1,60 @@
+id: b888e3f2-224d-4435-b00b-9dd66e9ea1f1
+title: Uncommon Extension In Keyboard Layout IME File Registry Value
+status: test
+level: high
+description: 'Detects usage of Windows Input Method Editor (IME) keyboard layout feature,
+    which allows an attacker to load a DLL into the process after sending the WM_INPUTLANGCHANGEREQUEST
+    message.
+
+    Before doing this, the client needs to register the DLL in a special registry
+    key that is assumed to implement this keyboard layout. This registry key should
+    store a value named "Ime File" with a DLL path.
+
+    IMEs are essential for languages that have more characters than can be represented
+    on a standard keyboard, such as Chinese, Japanese, and Korean.
+
+    '
+author: X__Junior (Nextron Systems)
+date: '2023-11-21'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://www.linkedin.com/pulse/guntior-story-advanced-bootkit-doesnt-rely-windows-disk-baranov-wue8e/
+falsepositives:
+    - IMEs are essential for languages that have more characters than can be represented
+        on a standard keyboard, such as Chinese, Japanese, and Korean.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9d8f9bb8-01af-4e15-a3a2-349071530530''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains|all:
+            - \Control\Keyboard Layouts\
+            - Ime File
+    filter_main_known_extension:
+        Details|endswith: .ime
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

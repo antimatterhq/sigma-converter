@@ -1,0 +1,64 @@
+id: 02f7c9c1-1ae8-4c6a-8add-04693807f92f
+title: Potential Access Token Abuse
+status: test
+level: medium
+description: Detects potential token impersonation and theft. Example, when using
+    "DuplicateToken(Ex)" and "ImpersonateLoggedOnUser" with the "LOGON32_LOGON_NEW_CREDENTIALS
+    flag".
+author: Michaela Adams, Zach Mathis
+date: '2022-11-06'
+modified: '2023-04-26'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1134.001
+    - stp.4u
+references:
+    - https://www.elastic.co/fr/blog/how-attackers-abuse-access-token-manipulation
+    - https://www.manageengine.com/log-management/cyber-security/access-token-manipulation.html
+falsepositives:
+    - Anti-Virus
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 9
+        LogonProcessName: Advapi
+        AuthenticationPackageName: Negotiate
+        ImpersonationLevel: '%%1833'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:09.981350+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:25:09.981350+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:11.581138+00:00'
+        -   source_field: LogonType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:11.581170+00:00'
+        -   source_field: LogonProcessName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:11.581174+00:00'
+        -   source_field: AuthenticationPackageName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:11.581178+00:00'
+        -   source_field: ImpersonationLevel
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:11.581181+00:00'

@@ -1,0 +1,44 @@
+id: 30aed7b6-d2c1-4eaf-9382-b6bc43e50c57
+title: File Deletion
+status: stable
+level: informational
+description: Detects file deletion using "rm", "shred" or "unlink" commands which
+    are used often by adversaries to delete files left behind by the actions of their
+    intrusion activity
+author: Ömer Günal, oscd.community
+date: '2020-10-07'
+modified: '2022-09-15'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.004
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.004/T1070.004.md
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith:
+            - /rm
+            - /shred
+            - /unlink
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.732734+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.732734+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:51.732746+00:00'

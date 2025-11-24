@@ -1,0 +1,40 @@
+id: 27e4f1d6-ae72-4ea0-8a67-77a73a289c3d
+title: Suspicious Inbox Forwarding Identity Protection
+status: test
+level: high
+description: Indicates suspicious rules such as an inbox rule that forwards a copy
+    of all emails to an external address
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-03'
+tags:
+    - attack.t1140
+    - attack.defense-evasion
+references:
+    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#suspicious-inbox-forwarding
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
+falsepositives:
+    - A legitimate forwarding rule.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    selection:
+        riskEventType: suspiciousInboxForwarding
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.424333+00:00'
+        service:
+            source_field: service
+            source_value: riskdetection
+            mapped_at: '2025-11-13T20:16:23.424333+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.424351+00:00'

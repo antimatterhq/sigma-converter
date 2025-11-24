@@ -1,0 +1,55 @@
+id: 34aa0252-6039-40ff-951f-939fd6ce47d8
+title: Suspicious Keyboard Layout Load
+status: test
+level: medium
+description: Detects the keyboard preload installation with a suspicious keyboard
+    layout, e.g. Chinese, Iranian or Vietnamese layout load in user session on systems
+    maintained by US staff only
+author: Florian Roth (Nextron Systems)
+date: '2019-10-12'
+modified: '2023-08-17'
+tags:
+    - attack.resource-development
+    - attack.t1588.002
+references:
+    - https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/Keyboard-Layout/Preload/index
+    - https://github.com/SwiftOnSecurity/sysmon-config/pull/92/files
+falsepositives:
+    - Administrators or users that actually use the selected keyboard layouts (heavily
+        depends on the organisation's user base)
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+    definition: 'Requirements: Sysmon config that monitors \Keyboard Layout\Preload
+        subkey of the HKLU hives - see https://github.com/SwiftOnSecurity/sysmon-config/pull/92/files'
+detection:
+    selection_registry:
+        TargetObject|contains:
+            - \Keyboard Layout\Preload\
+            - \Keyboard Layout\Substitutes\
+        Details|contains:
+            - 00000429
+            - 00050429
+            - 0000042a
+    condition: selection_registry
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

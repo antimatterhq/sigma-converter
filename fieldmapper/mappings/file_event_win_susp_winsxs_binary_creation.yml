@@ -1,0 +1,49 @@
+id: 34746e8c-5fb8-415a-b135-0abc167e912a
+title: WinSxS Executable File Creation By Non-System Process
+status: test
+level: medium
+description: Detects the creation of binaries in the WinSxS folder by non-system processes
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-11'
+tags:
+    - attack.execution
+references:
+    - https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''64827580-e4c3-4c64-97eb-c72325d45399''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|startswith: C:\Windows\WinSxS\
+        TargetFilename|endswith: .exe
+    filter_main_system_location:
+        Image|startswith:
+            - C:\Windows\Systems32\
+            - C:\Windows\SysWOW64\
+            - C:\Windows\WinSxS\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.636487+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.636487+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.636494+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:34.636496+00:00'

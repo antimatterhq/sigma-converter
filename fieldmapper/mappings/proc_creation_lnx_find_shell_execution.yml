@@ -1,0 +1,57 @@
+id: 6adfbf8f-52be-4444-9bac-81b539624146
+title: Shell Execution via Find - Linux
+status: experimental
+level: high
+description: 'Detects the use of the find command to execute a shell. Such behavior
+    may be associated with privilege escalation, unauthorized command execution, or
+    exploitation attempt.
+
+    '
+author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
+date: '2024-09-02'
+tags:
+    - attack.discovery
+    - attack.t1083
+references:
+    - https://gtfobins.github.io/gtfobins/find/#shell
+    - https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_img:
+        Image|endswith: /find
+        CommandLine|contains|all:
+            - ' . '
+            - -exec
+    selection_cli:
+        CommandLine|contains:
+            - /bin/bash
+            - /bin/dash
+            - /bin/fish
+            - /bin/sh
+            - /bin/zsh
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:49.947713+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:49.947713+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:49.947720+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:49.947722+00:00'

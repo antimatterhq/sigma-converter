@@ -1,0 +1,48 @@
+id: e36941d0-c0f0-443f-bc6f-cb2952eb69ea
+title: PowerShell Module File Created
+status: test
+level: low
+description: Detects the creation of a new PowerShell module ".psm1", ".psd1", ".dll",
+    ".ps1", etc.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-09'
+tags:
+    - attack.persistence
+references:
+    - Internal Research
+    - https://learn.microsoft.com/en-us/powershell/scripting/developer/module/understanding-a-windows-powershell-module?view=powershell-7.3
+falsepositives:
+    - Likely
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        TargetFilename|contains:
+            - \WindowsPowerShell\Modules\
+            - \PowerShell\7\Modules\
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.306983+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.306983+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:36.306987+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.306989+00:00'

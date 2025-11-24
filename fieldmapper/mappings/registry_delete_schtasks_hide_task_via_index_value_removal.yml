@@ -1,0 +1,51 @@
+id: 526cc8bc-1cdc-48ad-8b26-f19bff969cec
+title: Removal Of Index Value to Hide Schedule Task - Registry
+status: test
+level: medium
+description: Detects when the "index" value of a scheduled task is removed or deleted
+    from the registry. Which effectively hides it from any tooling such as "schtasks
+    /query"
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-26'
+modified: '2023-02-08'
+tags:
+    - attack.defense-evasion
+    - attack.t1562
+references:
+    - https://blog.qualys.com/vulnerabilities-threat-research/2022/06/20/defending-against-scheduled-task-attacks-in-windows-environments
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''acd74772-5f88-45c7-956b-6a7b36c294d2''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''5b16df71-8615-4f7f-ac9b-6c43c0509e61''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: registry_delete
+    product: windows
+detection:
+    selection:
+        EventType: DeleteKey
+        TargetObject|contains|all:
+            - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\
+            - Index
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_delete
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: EventType
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

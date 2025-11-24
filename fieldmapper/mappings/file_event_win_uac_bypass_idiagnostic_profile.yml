@@ -1,0 +1,47 @@
+id: 48ea844d-19b1-4642-944e-fe39c2cc1fec
+title: UAC Bypass Using IDiagnostic Profile - File
+status: test
+level: high
+description: Detects the creation of a file by "dllhost.exe" in System32 directory
+    part of "IDiagnosticProfileUAC" UAC bypass technique
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-03'
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+references:
+    - https://github.com/Wh04m1001/IDiagnosticProfileUAC
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|endswith: \DllHost.exe
+        TargetFilename|startswith: C:\Windows\System32\
+        TargetFilename|endswith: .dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.266495+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.266495+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:36.266502+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.266503+00:00'

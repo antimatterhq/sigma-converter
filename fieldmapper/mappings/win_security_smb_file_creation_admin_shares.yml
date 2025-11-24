@@ -1,0 +1,57 @@
+id: b210394c-ba12-4f89-9117-44a2464b9511
+title: SMB Create Remote File Admin Share
+status: test
+level: high
+description: Look for non-system accounts SMB accessing a file with write (0x2) access
+    mask via administrative share (i.e C$).
+author: Jose Rodriguez (@Cyb3rPandaH), OTR (Open Threat Research)
+date: '2020-08-06'
+modified: '2021-11-27'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+references:
+    - https://github.com/OTRF/ThreatHunter-Playbook/blob/f7a58156dbfc9b019f17f638b8c62d22e557d350/playbooks/WIN-201012004336.yaml
+    - https://securitydatasets.com/notebooks/atomic/windows/lateral_movement/SDWIN-200806015757.html?highlight=create%20file
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 5145
+        ShareName|endswith: C$
+        AccessMask: '0x2'
+    filter:
+        SubjectUserName|endswith: $
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:52.336980+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:52.336980+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:52.337014+00:00'
+        -   source_field: ShareName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:52.337018+00:00'
+        -   source_field: AccessMask
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:52.337021+00:00'
+        -   source_field: SubjectUserName
+            target_table: file_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:22:52.337023+00:00'

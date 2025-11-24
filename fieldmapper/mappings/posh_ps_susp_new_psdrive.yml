@@ -1,0 +1,47 @@
+id: 1c563233-030e-4a07-af8c-ee0490a66d3a
+title: Suspicious New-PSDrive to Admin Share
+status: test
+level: medium
+description: Adversaries may use to interact with a remote network share using Server
+    Message Block (SMB). The adversary may then perform actions as the logged-on user.
+author: frack113
+date: '2022-08-13'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.002/T1021.002.md#atomic-test-2---map-admin-share-powershell
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-psdrive?view=powershell-7.2
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - New-PSDrive
+            - '-psprovider '
+            - filesystem
+            - '-root '
+            - \\
+            - $
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.248792+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.248792+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.248799+00:00'

@@ -1,0 +1,51 @@
+id: 0e6a9e62-627e-496c-aef5-bfa39da29b5e
+title: MaxMpxCt Registry Value Changed
+status: experimental
+level: low
+description: 'Detects changes to the "MaxMpxCt" registry value.
+
+    MaxMpxCt specifies the maximum outstanding network requests for the server per
+    client, which is used when negotiating a Server Message Block (SMB) connection
+    with a client. Note if the value is set beyond 125 older Windows 9x clients will
+    fail to negotiate.
+
+    Ransomware threat actors and operators (specifically BlackCat) were seen increasing
+    this value in order to handle a higher volume of traffic.
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2024-03-19'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.005
+references:
+    - https://www.huntress.com/blog/blackcat-ransomware-affiliate-ttps
+    - https://securityscorecard.com/research/deep-dive-into-alphv-blackcat-ransomware
+    - https://www.intrinsec.com/alphv-ransomware-gang-analysis/?cn-reloaded=1
+    - https://www.sentinelone.com/labs/blackcat-ransomware-highly-configurable-rust-driven-raas-on-the-prowl-for-victims/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: \Services\LanmanServer\Parameters\MaxMpxCt
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

@@ -1,0 +1,58 @@
+id: 1ce8c8a3-2723-48ed-8246-906ac91061a6
+title: Possible PetitPotam Coerce Authentication Attempt
+status: test
+level: high
+description: Detect PetitPotam coerced authentication activity.
+author: Mauricio Velazco, Michael Haag
+date: '2021-09-02'
+modified: '2022-08-11'
+tags:
+    - attack.credential-access
+    - attack.t1187
+references:
+    - https://github.com/topotam/PetitPotam
+    - https://github.com/splunk/security_content/blob/0dd6de32de2118b2818550df9e65255f4109a56d/detections/endpoint/petitpotam_network_share_access_request.yml
+falsepositives:
+    - Unknown. Feedback welcomed.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The advanced audit policy setting "Object Access > Detailed File Share"
+        must be configured for Success/Failure
+detection:
+    selection:
+        EventID: 5145
+        ShareName|startswith: \\
+        ShareName|endswith: \IPC$
+        RelativeTargetName: lsarpc
+        SubjectUserName: ANONYMOUS LOGON
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:23.484110+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:23.484110+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:23.484128+00:00'
+        -   source_field: ShareName
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:23.484130+00:00'
+        -   source_field: RelativeTargetName
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:23.484131+00:00'
+        -   source_field: SubjectUserName
+            target_table: network_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:23:23.484132+00:00'

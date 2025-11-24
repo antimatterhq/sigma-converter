@@ -1,0 +1,40 @@
+id: 00eee2a5-fdb0-4746-a21d-e43fbdea5681
+title: Linux Doas Conf File Creation
+status: stable
+level: medium
+description: Detects the creation of doas.conf file in linux host platform.
+author: Sittikorn S, Teoderick Contreras
+date: '2022-01-20'
+modified: '2022-12-31'
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+references:
+    - https://research.splunk.com/endpoint/linux_doas_conf_file_creation/
+    - https://www.makeuseof.com/how-to-install-and-use-doas/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: linux
+detection:
+    selection:
+        TargetFilename|endswith: /etc/doas.conf
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:15:12.197716+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:12.197716+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:15:12.197723+00:00'

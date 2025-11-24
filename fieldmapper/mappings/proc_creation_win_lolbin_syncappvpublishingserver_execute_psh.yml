@@ -1,0 +1,58 @@
+id: fbd7c32d-db2a-4418-b92c-566eb8911133
+title: SyncAppvPublishingServer Execute Arbitrary PowerShell Code
+status: test
+level: medium
+description: Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe.
+author: frack113
+date: '2021-07-12'
+modified: '2022-10-04'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+    - https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - App-V clients
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fde7929d-8beb-4a4c-b922-be9974671667''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \SyncAppvPublishingServer.exe
+        OriginalFileName: syncappvpublishingserver.exe
+    selection_cli:
+        CommandLine|contains: '"n; '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.311000+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.311000+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.311006+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:30.311007+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.311009+00:00'

@@ -1,0 +1,53 @@
+id: 9c8acf1a-cbf9-4db6-b63c-74baabe03e59
+title: NTLM Brute Force
+status: test
+level: medium
+description: Detects common NTLM brute force device names
+author: Jerry Shockley '@jsh0x'
+date: '2022-02-02'
+tags:
+    - attack.credential-access
+    - attack.t1110
+references:
+    - https://www.varonis.com/blog/investigate-ntlm-brute-force
+falsepositives:
+    - Systems with names equal to the spoofed ones used by the brute force tools
+taxonomy: sigma
+logsource:
+    product: windows
+    service: ntlm
+    definition: Requires events from Microsoft-Windows-NTLM/Operational
+detection:
+    selection:
+        EventID: 8004
+    devicename:
+        WorkstationName:
+            - Rdesktop
+            - Remmina
+            - Freerdp
+            - Windows7
+            - Windows8
+            - Windows2012
+            - Windows2016
+            - Windows2019
+    condition: selection and devicename
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:24.193848+00:00'
+        service:
+            source_field: service
+            source_value: ntlm
+            mapped_at: '2025-11-13T20:24:24.193848+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:24.193874+00:00'
+        -   source_field: WorkstationName
+            target_table: authentication
+            target_field: src_endpoint.hostname
+            mapped_at: '2025-11-13T20:24:24.193877+00:00'

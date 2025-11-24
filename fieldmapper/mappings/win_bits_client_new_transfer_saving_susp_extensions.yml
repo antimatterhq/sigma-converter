@@ -1,0 +1,63 @@
+id: b85e5894-9b19-4d86-8c87-a2f3b81f0521
+title: BITS Transfer Job Downloading File Potential Suspicious Extension
+status: test
+level: medium
+description: Detects new BITS transfer job saving local files with potential suspicious
+    extensions
+author: frack113
+date: '2022-03-01'
+modified: '2023-03-27'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+falsepositives:
+    - While the file extensions in question can be suspicious at times. It's best
+        to add filters according to your environment to avoid large amount false positives
+taxonomy: sigma
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    selection:
+        EventID: 16403
+        LocalName|endswith:
+            - .bat
+            - .dll
+            - .exe
+            - .hta
+            - .ps1
+            - .psd1
+            - .sh
+            - .vbe
+            - .vbs
+    filter_optional_generic:
+        LocalName|contains: \AppData\
+        RemoteName|contains: .com
+    condition: selection and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: scheduled_job_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:14.631033+00:00'
+        service:
+            source_field: service
+            source_value: bits-client
+            mapped_at: '2025-11-13T20:24:14.631033+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: scheduled_job_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:15.877397+00:00'
+        -   source_field: LocalName
+            target_table: scheduled_job_activity
+            target_field: job.name
+            mapped_at: '2025-11-13T20:24:15.877422+00:00'
+        -   source_field: RemoteName
+            target_table: scheduled_job_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:15.877426+00:00'

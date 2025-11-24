@@ -1,0 +1,54 @@
+id: dfe8b941-4e54-4242-b674-6b613d521962
+title: Startup Item File Created - MacOS
+status: test
+level: low
+description: 'Detects the creation of a startup item plist file, that automatically
+    get executed at boot initialization to establish persistence.
+
+    Adversaries may use startup items automatically executed at boot initialization
+    to establish persistence.
+
+    Startup items execute during the final phase of the boot process and contain shell
+    scripts or other executable files along with configuration information used by
+    the system to determine the execution order for all startup items.
+
+    '
+author: Alejandro Ortuno, oscd.community
+date: '2020-10-14'
+modified: '2024-08-11'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1037.005
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1037.005/T1037.005.md
+    - https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/StartupItems.html
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: macos
+detection:
+    selection:
+        TargetFilename|startswith:
+            - /Library/StartupItems/
+            - /System/Library/StartupItems
+        TargetFilename|endswith: .plist
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:14:25.754375+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.754375+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:14:25.754383+00:00'

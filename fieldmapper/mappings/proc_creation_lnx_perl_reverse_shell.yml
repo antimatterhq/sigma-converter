@@ -1,0 +1,52 @@
+id: 259df6bc-003f-4306-9f54-4ff1a08fa38e
+title: Potential Perl Reverse Shell Execution
+status: test
+level: high
+description: Detects execution of the perl binary with the "-e" flag and common strings
+    related to potential reverse shell activity
+author: '@d4ns4n_, Nasreddine Bencherchali (Nextron Systems)'
+date: '2023-04-07'
+tags:
+    - attack.execution
+references:
+    - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+    - https://www.revshells.com/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_img:
+        Image|endswith: /perl
+        CommandLine|contains: ' -e '
+    selection_content:
+        CommandLine|contains|all:
+            - fdopen(
+            - ::Socket::INET
+            - Socket
+            - connect
+            - open
+            - exec
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:49.937373+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:49.937373+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:49.937381+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:49.937383+00:00'

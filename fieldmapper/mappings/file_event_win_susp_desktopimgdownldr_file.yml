@@ -1,0 +1,57 @@
+id: fc4f4817-0c53-4683-a4ee-b17a64bc1039
+title: Suspicious Desktopimgdownldr Target File
+status: test
+level: high
+description: Detects a suspicious Microsoft desktopimgdownldr file creation that stores
+    a file to a suspicious location or contains a file with a suspicious extension
+author: Florian Roth (Nextron Systems)
+date: '2020-07-03'
+modified: '2022-06-02'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/
+    - https://twitter.com/SBousseaden/status/1278977301745741825
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored
+        environment
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|endswith: \svchost.exe
+        TargetFilename|contains: \Personalization\LockScreenImage\
+    filter1:
+        TargetFilename|contains: C:\Windows\
+    filter2:
+        TargetFilename|contains:
+            - .jpg
+            - .jpeg
+            - .png
+    condition: selection and not filter1 and not filter2
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.582955+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.582955+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:34.582962+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.582965+00:00'

@@ -1,0 +1,46 @@
+id: a861d835-af37-4930-bcd6-5b178bfb54df
+title: Request A Single Ticket via PowerShell
+status: test
+level: high
+description: 'utilize native PowerShell Identity modules to query the domain to extract
+    the Service Principal Names for a single computer.
+
+    This behavior is typically used during a kerberos or silver ticket attack.
+
+    A successful execution will output the SPNs for the endpoint in question.
+
+    '
+author: frack113
+date: '2021-12-28'
+tags:
+    - attack.credential-access
+    - attack.t1558.003
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1558.003/T1558.003.md#atomic-test-4---request-a-single-ticket-via-powershell
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains: System.IdentityModel.Tokens.KerberosRequestorSecurityToken
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.297783+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.297783+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.297787+00:00'

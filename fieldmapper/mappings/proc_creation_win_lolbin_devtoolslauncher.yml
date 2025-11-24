@@ -1,0 +1,45 @@
+id: cc268ac1-42d9-40fd-9ed3-8c4e1a5b87e6
+title: Devtoolslauncher.exe Executes Specified Binary
+status: test
+level: high
+description: The Devtoolslauncher.exe executes other binary
+author: Beyu Denis, oscd.community (rule), @_felamos (idea)
+date: '2019-10-12'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Devtoolslauncher/
+    - https://twitter.com/_felamos/status/1179811992841797632
+falsepositives:
+    - Legitimate use of devtoolslauncher.exe by legitimate user
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \devtoolslauncher.exe
+        CommandLine|contains: LaunchForDeploy
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:55.131291+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:55.131291+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:55.131296+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:55.131298+00:00'

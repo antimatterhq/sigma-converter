@@ -1,0 +1,55 @@
+id: c3d76afc-93df-461e-8e67-9b2bad3f2ac4
+title: File Explorer Folder Opened Using Explorer Folder Shortcut Via Shell
+status: experimental
+level: high
+description: 'Detects the initial execution of "cmd.exe" which spawns "explorer.exe"
+    with the appropriate command line arguments for opening the "My Computer" folder.
+
+    '
+author: '@Kostastsale'
+date: '2022-12-22'
+modified: '2024-08-23'
+tags:
+    - attack.discovery
+    - attack.t1135
+references:
+    - https://ss64.com/nt/shell.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith:
+            - \cmd.exe
+            - \powershell.exe
+            - \pwsh.exe
+        Image|endswith: \explorer.exe
+        CommandLine|contains: shell:mycomputerfolder
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.892732+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.892732+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:46.892737+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.892739+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.892741+00:00'

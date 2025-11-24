@@ -1,0 +1,69 @@
+id: 9c7e131a-0f2c-4ae0-9d43-b04f4e266d43
+title: Uncommon Child Process Of Appvlp.EXE
+status: test
+level: medium
+description: 'Detects uncommon child processes of Appvlp.EXE
+
+    Appvlp or the Application Virtualization Utility is included with Microsoft Office.
+    Attackers are able to abuse "AppVLP" to execute shell commands.
+
+    Normally, this binary is used for Application Virtualization, but it can also
+    be abused to circumvent the ASR file path rule folder
+
+    or to mark a file as a system file.
+
+    '
+author: Sreeman
+date: '2020-03-13'
+modified: '2023-11-09'
+tags:
+    - attack.t1218
+    - attack.defense-evasion
+    - attack.execution
+references:
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Appvlp/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \appvlp.exe
+    filter_main_generic:
+        Image|endswith:
+            - :\Windows\SysWOW64\rundll32.exe
+            - :\Windows\System32\rundll32.exe
+    filter_optional_office_msoasb:
+        Image|contains: :\Program Files\Microsoft Office
+        Image|endswith: \msoasb.exe
+    filter_optional_office_skype:
+        Image|contains|all:
+            - :\Program Files\Microsoft Office
+            - \SkypeSrv\
+        Image|endswith: \SKYPESERVER.EXE
+    filter_optional_office_msouc:
+        Image|contains: :\Program Files\Microsoft Office
+        Image|endswith: \MSOUC.EXE
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:56.565531+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:56.565531+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:56.565543+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:56.565546+00:00'

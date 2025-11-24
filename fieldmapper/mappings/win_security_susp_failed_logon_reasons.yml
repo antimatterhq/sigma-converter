@@ -1,0 +1,63 @@
+id: 9eb99343-d336-4020-a3cd-67f3819e68ee
+title: Account Tampering - Suspicious Failed Logon Reasons
+status: test
+level: medium
+description: This method uses uncommon error codes on failed logons to determine suspicious
+    activity and tampering with accounts that have been disabled or somehow restricted.
+author: Florian Roth (Nextron Systems)
+date: '2017-02-19'
+modified: '2022-06-29'
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.initial-access
+    - attack.t1078
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625
+    - https://twitter.com/SBousseaden/status/1101431884540710913
+falsepositives:
+    - User using a disabled account
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID:
+            - 4625
+            - 4776
+        Status:
+            - '0xC0000072'
+            - '0xC000006F'
+            - '0xC0000070'
+            - '0xC0000413'
+            - '0xC000018C'
+            - '0xC000015B'
+    filter:
+        SubjectUserSid: S-1-0-0
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:22.883352+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:22.883352+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:22.883388+00:00'
+        -   source_field: Status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:23:22.883392+00:00'
+        -   source_field: SubjectUserSid
+            target_table: authentication
+            target_field: actor.user.uid
+            mapped_at: '2025-11-13T20:23:22.883395+00:00'

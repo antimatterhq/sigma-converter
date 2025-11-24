@@ -1,0 +1,55 @@
+id: 6c304b02-06e6-402d-8be4-d5833cdf8198
+title: Potential SentinelOne Shell Context Menu Scan Command Tampering
+status: test
+level: medium
+description: Detects potentially suspicious changes to the SentinelOne context menu
+    scan command by a process other than SentinelOne.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2024-03-06'
+tags:
+    - attack.persistence
+references:
+    - https://mrd0x.com/sentinelone-persistence-via-menu-context/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: \shell\SentinelOneScan\command\
+    filter_main_sentinelone_default_scan_binary:
+        Details|startswith:
+            - C:\Program Files\SentinelOne\Sentinel Agent
+            - C:\Program Files (x86)\SentinelOne\Sentinel Agent
+        Details|contains: \SentinelScanFromContextMenu.exe
+    filter_main_sentinelone_binary:
+        Image|endswith:
+            - C:\Program Files\SentinelOne\
+            - C:\Program Files (x86)\SentinelOne\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:05.833016+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:05.833016+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:05.833021+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:05.833023+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:05.833024+00:00'

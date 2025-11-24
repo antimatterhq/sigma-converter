@@ -1,0 +1,45 @@
+id: 1a41023f-1e70-4026-921a-4d9341a9038e
+title: Atypical Travel
+status: test
+level: high
+description: Identifies two sign-ins originating from geographically distant locations,
+    where at least one of the locations may also be atypical for the user, given past
+    behavior.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-03'
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.initial-access
+references:
+    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#atypical-travel
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
+falsepositives:
+    - We recommend investigating the sessions flagged by this detection in the context
+        of other sign-ins from the user.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    selection:
+        riskEventType: unlikelyTravel
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.445022+00:00'
+        service:
+            source_field: service
+            source_value: riskdetection
+            mapped_at: '2025-11-13T20:16:23.445022+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.445034+00:00'

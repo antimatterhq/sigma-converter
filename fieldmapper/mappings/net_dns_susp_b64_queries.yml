@@ -1,0 +1,36 @@
+id: 4153a907-2451-4e4f-a578-c52bb6881432
+title: Suspicious DNS Query with B64 Encoded String
+status: test
+level: medium
+description: Detects suspicious DNS queries using base64 encoding
+author: Florian Roth (Nextron Systems)
+date: '2018-05-10'
+modified: '2022-10-09'
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+    - attack.command-and-control
+    - attack.t1071.004
+references:
+    - https://github.com/krmaxwell/dns-exfiltration
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: dns
+detection:
+    selection:
+        query|contains: ==.
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns
+            mapped_at: '2025-11-13T20:15:12.179795+00:00'
+    detection_fields:
+        -   source_field: query
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:15:12.179825+00:00'

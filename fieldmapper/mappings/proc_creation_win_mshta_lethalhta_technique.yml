@@ -1,0 +1,45 @@
+id: ed5d72a6-f8f4-479d-ba79-02f6a80d7471
+title: Potential LethalHTA Technique Execution
+status: test
+level: high
+description: Detects potential LethalHTA technique where the "mshta.exe" is spawned
+    by an "svchost.exe" process
+author: Markus Neis
+date: '2018-06-07'
+modified: '2023-02-07'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.005
+references:
+    - https://codewhitesec.blogspot.com/2018/07/lethalhta.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \svchost.exe
+        Image|endswith: \mshta.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:33.223003+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:33.223003+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:33.223018+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:33.223022+00:00'

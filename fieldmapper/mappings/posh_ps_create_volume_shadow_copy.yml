@@ -1,0 +1,44 @@
+id: afd12fed-b0ec-45c9-a13d-aa86625dac81
+title: Create Volume Shadow Copy with Powershell
+status: test
+level: high
+description: Adversaries may attempt to access or create a copy of the Active Directory
+    domain database in order to steal credential information
+author: frack113
+date: '2022-01-12'
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+references:
+    - https://attack.mitre.org/datasources/DS0005/
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1&viewFallbackFrom=powershell-7
+falsepositives:
+    - Legitimate PowerShell scripts
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - Win32_ShadowCopy
+            - ).Create(
+            - ClientAccessible
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.245132+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.245132+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.245137+00:00'

@@ -1,0 +1,52 @@
+id: 0f2468a2-5055-4212-a368-7321198ee706
+title: Activity from Infrequent Country
+status: test
+level: medium
+description: Detects when a Microsoft Cloud App Security reported when an activity
+    occurs from a location that wasn't recently or never visited by any user in the
+    organization.
+author: Austin Songer @austinsonger
+date: '2021-08-23'
+modified: '2022-10-09'
+tags:
+    - attack.command-and-control
+    - attack.t1573
+references:
+    - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
+    - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    selection:
+        eventSource: SecurityComplianceCenter
+        eventName: Activity from infrequent country
+        status: success
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: m365
+            mapped_at: '2025-11-13T20:17:47.720535+00:00'
+        service:
+            source_field: service
+            source_value: threat_management
+            mapped_at: '2025-11-13T20:17:47.720535+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: authentication
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:47.720549+00:00'
+        -   source_field: eventName
+            target_table: authentication
+            target_field: action
+            mapped_at: '2025-11-13T20:17:47.720552+00:00'
+        -   source_field: status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:17:47.720554+00:00'

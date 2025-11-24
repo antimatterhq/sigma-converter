@@ -1,0 +1,57 @@
+id: f8748f2c-89dc-4d95-afb0-5a2dfdbad332
+title: SAM Registry Hive Handle Request
+status: test
+level: high
+description: Detects handles requested to SAM registry hive
+author: Roberto Rodriguez @Cyb3rWard0g
+date: '2019-08-12'
+modified: '2021-11-27'
+tags:
+    - attack.discovery
+    - attack.t1012
+    - attack.credential-access
+    - attack.t1552.002
+references:
+    - https://threathunterplaybook.com/hunts/windows/190725-SAMRegistryHiveHandleRequest/notebook.html
+fields:
+    - ComputerName
+    - SubjectDomainName
+    - SubjectUserName
+    - ProcessName
+    - ObjectName
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4656
+        ObjectType: Key
+        ObjectName|endswith: \SAM
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:35.823378+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:35.823378+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:35.823392+00:00'
+        -   source_field: ObjectType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:35.823395+00:00'
+        -   source_field: ObjectName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:35.823397+00:00'

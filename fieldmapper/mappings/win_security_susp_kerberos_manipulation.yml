@@ -1,0 +1,79 @@
+id: f7644214-0eb0-4ace-9455-331ec4c09253
+title: Kerberos Manipulation
+status: test
+level: high
+description: Detects failed Kerberos TGT issue operation. This can be a sign of manipulations
+    of TGT messages by an attacker.
+author: Florian Roth (Nextron Systems)
+date: '2017-02-10'
+modified: '2024-01-16'
+tags:
+    - attack.credential-access
+    - attack.t1212
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4771
+falsepositives:
+    - Faulty legacy applications
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID:
+            - 675
+            - 4768
+            - 4769
+            - 4771
+        Status:
+            - '0x9'
+            - '0xA'
+            - '0xB'
+            - '0xF'
+            - '0x10'
+            - '0x11'
+            - '0x13'
+            - '0x14'
+            - '0x1A'
+            - '0x1F'
+            - '0x21'
+            - '0x22'
+            - '0x23'
+            - '0x24'
+            - '0x26'
+            - '0x27'
+            - '0x28'
+            - '0x29'
+            - '0x2C'
+            - '0x2D'
+            - '0x2E'
+            - '0x2F'
+            - '0x31'
+            - '0x32'
+            - '0x3E'
+            - '0x3F'
+            - '0x40'
+            - '0x41'
+            - '0x43'
+            - '0x44'
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:38.895849+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:38.895849+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:38.895895+00:00'
+        -   source_field: Status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:23:38.895899+00:00'

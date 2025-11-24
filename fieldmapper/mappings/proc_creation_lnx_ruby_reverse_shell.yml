@@ -1,0 +1,57 @@
+id: b8bdac18-c06e-4016-ac30-221553e74f59
+title: Potential Ruby Reverse Shell
+status: test
+level: medium
+description: Detects execution of ruby with the "-e" flag and calls to "socket" related
+    functions. This could be an indication of a potential attempt to setup a reverse
+    shell
+author: '@d4ns4n_'
+date: '2023-04-07'
+tags:
+    - attack.execution
+references:
+    - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+    - https://www.revshells.com/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|contains: ruby
+        CommandLine|contains|all:
+            - ' -e'
+            - rsocket
+            - TCPSocket
+        CommandLine|contains:
+            - ' ash'
+            - ' bash'
+            - ' bsh'
+            - ' csh'
+            - ' ksh'
+            - ' pdksh'
+            - ' sh'
+            - ' tcsh'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.276441+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.276441+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.276448+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.276451+00:00'

@@ -1,0 +1,53 @@
+id: 81bcb81b-5b1f-474b-b373-52c871aaa7b1
+title: Stop Windows Service Via Sc.EXE
+status: test
+level: low
+description: Detects the stopping of a Windows service via the "sc.exe" utility
+author: Jakob Weinzettl, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+date: '2023-03-05'
+modified: '2024-01-18'
+tags:
+    - attack.impact
+    - attack.t1489
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc742107(v=ws.11)
+falsepositives:
+    - There are many legitimate reasons to stop a service. This rule isn't looking
+        for any suspicious behavior in particular. Filter legitimate activity accordingly
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''eb87818d-db5d-49cc-a987-d5da331fbd90''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        OriginalFileName: sc.exe
+        Image|endswith: \sc.exe
+    selection_cli:
+        CommandLine|contains: ' stop '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:47.783387+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:47.783387+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:47.783393+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:47.783395+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:47.783396+00:00'

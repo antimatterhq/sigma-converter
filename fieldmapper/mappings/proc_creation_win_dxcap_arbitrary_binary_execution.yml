@@ -1,0 +1,55 @@
+id: 60f16a96-db70-42eb-8f76-16763e333590
+title: New Capture Session Launched Via DXCap.EXE
+status: test
+level: medium
+description: 'Detects the execution of "DXCap.EXE" with the "-c" flag, which allows
+    a user to launch any arbitrary binary or windows package through DXCap itself.
+    This can be abused to potentially bypass application whitelisting.
+
+    '
+author: Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+date: '2019-10-26'
+modified: '2022-06-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dxcap/
+    - https://twitter.com/harr0ey/status/992008180904419328
+falsepositives:
+    - Legitimate execution of dxcap.exe by legitimate user
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \DXCap.exe
+        OriginalFileName: DXCap.exe
+    selection_cli:
+        CommandLine|contains: ' -c '
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:21:00.200407+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:00.200407+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:00.200422+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:21:00.200426+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:00.200428+00:00'

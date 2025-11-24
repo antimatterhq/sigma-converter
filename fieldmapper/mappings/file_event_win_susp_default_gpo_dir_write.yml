@@ -1,0 +1,42 @@
+id: 5f87308a-0a5b-4623-ae15-d8fa1809bc60
+title: Suspicious Files in Default GPO Folder
+status: test
+level: medium
+description: Detects the creation of copy of suspicious files (EXE/DLL) to the default
+    GPO storage folder
+author: elhoim
+date: '2022-04-28'
+tags:
+    - attack.t1036.005
+    - attack.defense-evasion
+references:
+    - https://redcanary.com/blog/intelligence-insights-november-2021/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: \Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\
+        TargetFilename|endswith:
+            - .dll
+            - .exe
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:35.656151+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:35.656151+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:35.656173+00:00'

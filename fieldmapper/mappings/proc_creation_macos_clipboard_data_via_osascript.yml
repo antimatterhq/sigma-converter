@@ -1,0 +1,48 @@
+id: 7794fa3c-edea-4cff-bec7-267dd4770fd7
+title: Clipboard Data Collection Via OSAScript
+status: test
+level: high
+description: Detects possible collection of data from the clipboard via execution
+    of the osascript binary
+author: Sohan G (D4rkCiph3r)
+date: '2023-01-31'
+tags:
+    - attack.collection
+    - attack.execution
+    - attack.t1115
+    - attack.t1059.002
+references:
+    - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
+fields:
+    - CommandLine
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1bc2e6c5-0885-472b-bed6-be5ea8eace55''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection:
+        CommandLine|contains|all:
+            - osascript
+            - ' -e '
+            - clipboard
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.839095+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.839095+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.839103+00:00'

@@ -1,0 +1,48 @@
+id: bf241472-f014-4f01-a869-96f99330ca8c
+title: Disk Image Mounting Via Hdiutil - MacOS
+status: experimental
+level: medium
+description: Detects the execution of the hdiutil utility in order to mount disk images.
+author: Omar Khaled (@beacon_exe)
+date: '2024-08-10'
+tags:
+    - attack.initial-access
+    - attack.t1566.001
+    - attack.t1560.001
+references:
+    - https://www.loobins.io/binaries/hdiutil/
+    - https://www.sentinelone.com/blog/from-the-front-linesunsigned-macos-orat-malware-gambles-for-the-win/
+    - https://ss64.com/mac/hdiutil.html
+falsepositives:
+    - Legitimate usage of hdiutil by administrators and users.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection:
+        Image|endswith: /hdiutil
+        CommandLine|contains:
+            - 'attach '
+            - 'mount '
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.798477+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.798477+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.798483+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.798485+00:00'

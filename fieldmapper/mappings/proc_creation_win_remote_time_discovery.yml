@@ -1,0 +1,53 @@
+id: b243b280-65fe-48df-ba07-6ddea7646427
+title: Discovery of a System Time
+status: test
+level: low
+description: Identifies use of various commands to query a systems time. This technique
+    may be used before executing a scheduled task or to discover the time zone of
+    a target system.
+author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
+date: '2019-10-24'
+modified: '2022-06-28'
+tags:
+    - attack.discovery
+    - attack.t1124
+references:
+    - https://eqllib.readthedocs.io/en/latest/analytics/fcdb99c2-ac3c-4bde-b664-4b336329bed2.html
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1124/T1124.md
+falsepositives:
+    - Legitimate use of the system utilities to discover system time for legitimate
+        reason
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_time:
+        Image|endswith:
+            - \net.exe
+            - \net1.exe
+        CommandLine|contains: time
+    selection_w32tm:
+        Image|endswith: \w32tm.exe
+        CommandLine|contains: tz
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:20.244483+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:20.244483+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:20.244489+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:20.244490+00:00'

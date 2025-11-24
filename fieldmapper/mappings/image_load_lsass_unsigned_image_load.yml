@@ -1,0 +1,44 @@
+id: 857c8db3-c89b-42fb-882b-f681c7cf4da2
+title: Unsigned Image Loaded Into LSASS Process
+status: test
+level: medium
+description: Loading unsigned image (DLL, EXE) into LSASS process
+author: Teymur Kheirkhabarov, oscd.community
+date: '2019-10-22'
+modified: '2021-11-27'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+falsepositives:
+    - Valid user connecting using RDP
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: \lsass.exe
+        Signed: 'false'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:32.506108+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:32.506108+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:32.506145+00:00'
+        -   source_field: Signed
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:19:32.506149+00:00'

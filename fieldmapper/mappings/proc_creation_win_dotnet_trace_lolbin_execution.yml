@@ -1,0 +1,52 @@
+id: 9257c05b-4a4a-48e5-a670-b7b073cf401b
+title: Binary Proxy Execution Via Dotnet-Trace.EXE
+status: test
+level: medium
+description: Detects commandline arguments for executing a child process via dotnet-trace.exe
+author: Jimmy Bayne (@bohops)
+date: '2024-01-02'
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://twitter.com/bohops/status/1740022869198037480
+falsepositives:
+    - Legitimate usage of the utility in order to debug and trace a program.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \dotnet-trace.exe
+        OriginalFileName: dotnet-trace.dll
+    selection_cli:
+        CommandLine|contains|all:
+            - '-- '
+            - collect
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:51.930419+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:51.930419+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:51.930430+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:51.930432+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:51.930433+00:00'

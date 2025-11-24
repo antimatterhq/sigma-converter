@@ -1,0 +1,45 @@
+id: 3236fcd0-b7e3-4433-b4f8-86ad61a9af2d
+title: Suspicious PowerShell Download
+status: test
+level: medium
+description: Detects suspicious PowerShell download command
+author: Florian Roth (Nextron Systems)
+date: '2017-03-05'
+modified: '2023-10-27'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://www.trendmicro.com/en_us/research/22/j/lv-ransomware-exploits-proxyshell-in-attack.html
+falsepositives:
+    - PowerShell scripts that download content from the Internet
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''65531a81-a694-4e31-ae04-f8ba5bc33759''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    selection_webclient:
+        Data|contains: Net.WebClient
+    selection_download:
+        Data|contains:
+            - .DownloadFile(
+            - .DownloadString(
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_classic_start
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: Data
+            target_table: null
+            target_field: null
+            mapped_at: null

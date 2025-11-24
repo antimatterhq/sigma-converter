@@ -1,0 +1,83 @@
+id: b5de2919-b74a-4805-91a7-5049accbaefe
+title: Download From Suspicious TLD - Whitelist
+status: test
+level: low
+description: Detects executable downloads from suspicious remote systems
+author: Florian Roth (Nextron Systems)
+date: '2017-03-13'
+modified: '2023-05-18'
+tags:
+    - attack.initial-access
+    - attack.t1566
+    - attack.execution
+    - attack.t1203
+    - attack.t1204.002
+references:
+    - Internal Research
+fields:
+    - ClientIP
+    - c-uri
+falsepositives:
+    - All kind of software downloads
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''00d0b5ab-1f55-4120-8e83-487c0a7baf19''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection:
+        c-uri-extension:
+            - exe
+            - vbs
+            - bat
+            - rar
+            - ps1
+            - doc
+            - docm
+            - xls
+            - xlsm
+            - pptm
+            - rtf
+            - hta
+            - dll
+            - ws
+            - wsf
+            - sct
+            - zip
+    filter:
+        cs-host|endswith:
+            - .com
+            - .org
+            - .net
+            - .edu
+            - .gov
+            - .uk
+            - .ca
+            - .de
+            - .jp
+            - .fr
+            - .au
+            - .us
+            - .ch
+            - .it
+            - .nl
+            - .se
+            - .no
+            - .es
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:25.872158+00:00'
+    detection_fields:
+        -   source_field: c-uri-extension
+            target_table: http_activity
+            target_field: http_request.url
+            mapped_at: '2025-11-13T20:14:25.872163+00:00'
+        -   source_field: cs-host
+            target_table: http_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:14:25.872165+00:00'

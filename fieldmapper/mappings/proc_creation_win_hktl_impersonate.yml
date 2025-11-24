@@ -1,0 +1,57 @@
+id: cf0c254b-22f1-4b2b-8221-e137b3c0af94
+title: HackTool - Impersonate Execution
+status: test
+level: medium
+description: Detects execution of the Impersonate tool. Which can be used to manipulate
+    tokens on a Windows computers remotely (PsExec/WmiExec) or interactively
+author: Sai Prashanth Pulisetti @pulisettis
+date: '2022-12-21'
+modified: '2024-11-23'
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1134.001
+    - attack.t1134.003
+references:
+    - https://sensepost.com/blog/2022/abusing-windows-tokens-to-compromise-active-directory-without-touching-lsass/
+    - https://github.com/sensepost/impersonate
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_commandline_exe:
+        CommandLine|contains: impersonate.exe
+    selection_commandline_opt:
+        CommandLine|contains:
+            - ' list '
+            - ' exec '
+            - ' adduser '
+    selection_hash:
+        Hashes|contains:
+            - MD5=9520714AB576B0ED01D1513691377D01
+            - SHA256=E81CC96E2118DC4FBFE5BAD1604E0AC7681960143E2101E1A024D52264BB0A8A
+            - IMPHASH=0A358FFC1697B7A07D0E817AC740DF62
+    condition: all of selection_commandline_* or selection_hash
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:28.714066+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:28.714066+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:28.714087+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:28.714089+00:00'

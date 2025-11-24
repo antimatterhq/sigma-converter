@@ -1,0 +1,50 @@
+id: ccd55945-badd-4bae-936b-823a735d37dd
+title: Github Push Protection Disabled
+status: test
+level: high
+description: Detects if the push protection feature is disabled for an organization,
+    enterprise, repositories or custom pattern rules.
+author: Muhammad Faisal (@faisalusuf)
+date: '2024-03-07'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/push-protection-for-repositories-and-organizations
+    - https://thehackernews.com/2024/03/github-rolls-out-default-secret.html
+falsepositives:
+    - Allowed administrative activities.
+taxonomy: sigma
+logsource:
+    product: github
+    service: audit
+    definition: 'Requirements: The audit log streaming feature must be enabled to
+        be able to receive such logs. You can enable following the documentation here:
+        https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise#setting-up-audit-log-streaming'
+detection:
+    selection:
+        action:
+            - business_secret_scanning_custom_pattern_push_protection.disabled
+            - business_secret_scanning_push_protection.disable
+            - business_secret_scanning_push_protection.disabled_for_new_repos
+            - org.secret_scanning_custom_pattern_push_protection_disabled
+            - org.secret_scanning_push_protection_disable
+            - org.secret_scanning_push_protection_new_repos_disable
+            - repository_secret_scanning_custom_pattern_push_protection.disabled
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: github
+            mapped_at: '2025-11-13T20:16:07.312623+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:16:07.312623+00:00'
+    detection_fields:
+        -   source_field: action
+            target_table: api_activity
+            target_field: action_id
+            mapped_at: '2025-11-13T20:16:07.312637+00:00'

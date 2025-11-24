@@ -1,0 +1,62 @@
+id: aa2efee7-34dd-446e-8a37-40790a66efd7
+title: Recon Information for Export with Command Prompt
+status: test
+level: medium
+description: Once established within a system or network, an adversary may use automated
+    techniques for collecting internal data.
+author: frack113
+date: '2021-07-30'
+modified: '2022-09-13'
+tags:
+    - attack.collection
+    - attack.t1119
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8e0bb260-d4b2-4fff-bb8d-3f82118e6892''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        Image|endswith:
+            - \tree.com
+            - \WMIC.exe
+            - \doskey.exe
+            - \sc.exe
+        OriginalFileName:
+            - wmic.exe
+            - DOSKEY.EXE
+            - sc.exe
+    selection_redirect:
+        ParentCommandLine|contains:
+            - ' > %TEMP%\'
+            - ' > %TMP%\'
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:21:00.865951+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:00.865951+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:00.865969+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:21:00.865971+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:21:00.865973+00:00'

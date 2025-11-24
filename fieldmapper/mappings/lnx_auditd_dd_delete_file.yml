@@ -1,0 +1,51 @@
+id: 37222991-11e9-4b6d-8bdf-60fbe48f753e
+title: Overwriting the File with Dev Zero or Null
+status: stable
+level: low
+description: Detects overwriting (effectively wiping/deleting) of a file.
+author: Jakob Weinzettl, oscd.community
+date: '2019-10-23'
+tags:
+    - attack.impact
+    - attack.t1485
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md
+falsepositives:
+    - Appending null bytes to files.
+    - Legitimate overwrite of files.
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: EXECVE
+        a0|contains: dd
+        a1|contains:
+            - if=/dev/null
+            - if=/dev/zero
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:19.976098+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:19.976098+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:19.976156+00:00'
+        -   source_field: a0
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:19.976161+00:00'
+        -   source_field: a1
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:19.976185+00:00'

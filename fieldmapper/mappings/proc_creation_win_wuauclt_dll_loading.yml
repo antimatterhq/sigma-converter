@@ -1,0 +1,71 @@
+id: af77cf95-c469-471c-b6a0-946c685c4798
+title: Proxy Execution Via Wuauclt.EXE
+status: test
+level: high
+description: Detects the use of the Windows Update Client binary (wuauclt.exe) for
+    proxy execution.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), Florian Roth
+    (Nextron Systems), Sreeman, FPT.EagleEye Team
+date: '2020-10-12'
+modified: '2023-11-11'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.execution
+references:
+    - https://dtm.uk/wuauclt/
+    - https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ba1bb0cb-73da-42de-ad3a-de10c643a5d0''),
+    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''d7825193-b70a-48a4-b992-8b5b3015cc11''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \wuauclt.exe
+        OriginalFileName: wuauclt.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - UpdateDeploymentProvider
+            - RunHandlerComServer
+    filter_main_generic:
+        CommandLine|contains: ' /UpdateDeploymentProvider UpdateDeploymentProvider.dll '
+    filter_main_wuaueng:
+        CommandLine|contains: ' wuaueng.dll '
+    filter_main_uus:
+        CommandLine|contains:
+            - :\Windows\UUS\Packages\Preview\amd64\updatedeploy.dll /ClassId
+            - :\Windows\UUS\amd64\UpdateDeploy.dll /ClassId
+    filter_main_winsxs:
+        CommandLine|contains|all:
+            - :\Windows\WinSxS\
+            - '\UpdateDeploy.dll /ClassId '
+    condition: all of selection_* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:56.555081+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:56.555081+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:56.555107+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:56.555111+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:56.555114+00:00'

@@ -1,0 +1,42 @@
+id: 411742ad-89b0-49cb-a7b0-3971b5c1e0a4
+title: Locked Workstation
+status: stable
+level: informational
+description: Detects locked workstation session events that occur automatically after
+    a standard period of inactivity.
+author: Alexandr Yampolskyi, SOC Prime
+date: '2019-03-26'
+modified: '2023-12-11'
+tags:
+    - attack.impact
+references:
+    - https://www.cisecurity.org/controls/cis-controls-list/
+    - https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf
+    - https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf
+    - https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=4800
+falsepositives:
+    - Likely
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4800
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:39.830588+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:39.830588+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:39.830600+00:00'

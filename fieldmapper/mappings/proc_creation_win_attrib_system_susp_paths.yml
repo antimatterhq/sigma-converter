@@ -1,0 +1,80 @@
+id: efec536f-72e8-4656-8960-5e85d091345b
+title: Set Suspicious Files as System Files Using Attrib.EXE
+status: test
+level: high
+description: 'Detects the usage of attrib with the "+s" option to set scripts or executables
+    located in suspicious locations as system files to hide them from users and make
+    them unable to be deleted with simple rights. The rule limits the search to specific
+    extensions and directories to avoid FPs
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-06-28'
+modified: '2023-03-14'
+tags:
+    - attack.defense-evasion
+    - attack.t1564.001
+references:
+    - https://app.any.run/tasks/c28cabc8-a19f-40f3-a78b-cae506a5c0d4
+    - https://app.any.run/tasks/cfc8870b-ccd7-4210-88cf-a8087476a6d0
+    - https://unit42.paloaltonetworks.com/unit42-sure-ill-take-new-combojack-malware-alters-clipboards-steal-cryptocurrency/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''bb19e94c-59ae-4c15-8c12-c563d23fe52b''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \attrib.exe
+        OriginalFileName: ATTRIB.EXE
+    selection_cli:
+        CommandLine|contains: ' +s'
+    selection_paths:
+        CommandLine|contains:
+            - ' %'
+            - \Users\Public\
+            - \AppData\Local\
+            - \ProgramData\
+            - \Downloads\
+            - \Windows\Temp\
+    selection_ext:
+        CommandLine|contains:
+            - .bat
+            - .dll
+            - .exe
+            - .hta
+            - .ps1
+            - .vbe
+            - .vbs
+    filter_optional_installer:
+        CommandLine|contains|all:
+            - \Windows\TEMP\
+            - .exe
+    condition: all of selection* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.100984+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.100984+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.100989+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:37.100991+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:37.100992+00:00'

@@ -1,0 +1,45 @@
+id: 844f8eb2-610b-42c8-89a4-47596e089663
+title: Potential ShellDispatch.DLL Sideloading
+status: test
+level: medium
+description: Detects potential DLL sideloading of "ShellDispatch.dll"
+author: X__Junior (Nextron Systems)
+date: '2023-06-20'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://www.hexacorn.com/blog/2023/06/07/this-lolbin-doesnt-exist/
+falsepositives:
+    - Some installers may trigger some false positives
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \ShellDispatch.dll
+    filter_main_legit_path:
+        ImageLoaded|contains|all:
+            - :\Users\
+            - \AppData\Local\Temp\
+        ImageLoaded|contains: :\Windows\Temp\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: null
+            target_field: null
+            mapped_at: null

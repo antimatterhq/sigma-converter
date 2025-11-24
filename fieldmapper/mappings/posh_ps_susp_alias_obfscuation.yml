@@ -1,0 +1,46 @@
+id: e8314f79-564d-4f79-bc13-fbc0bf2660d8
+title: Potential PowerShell Obfuscation Using Character Join
+status: test
+level: low
+description: Detects specific techniques often seen used inside of PowerShell scripts
+    to obfscuate Alias creation
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-09'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1027
+    - attack.t1059.001
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''96cd126d-f970-49c4-848a-da3a09f55c55''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - -Alias
+            - ' -Value (-join('
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.267347+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.267347+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.267355+00:00'

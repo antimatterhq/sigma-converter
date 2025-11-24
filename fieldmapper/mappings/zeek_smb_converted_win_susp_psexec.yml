@@ -1,0 +1,55 @@
+id: f1b3a22a-45e6-4004-afb5-4291f9c21166
+title: Suspicious PsExec Execution - Zeek
+status: test
+level: high
+description: detects execution of psexec or paexec with renamed service name, this
+    rule helps to filter out the noise if psexec is used for legit purposes or if
+    attacker uses a different psexec client other than sysinternal one
+author: Samir Bousseaden, @neu5ron, Tim Shelton
+date: '2020-04-02'
+modified: '2022-12-27'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+references:
+    - https://web.archive.org/web/20230329171218/https://blog.menasec.net/2019/02/threat-hunting-3-detecting-psexec.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c462f537-a1e3-41a6-b5fc-b2c2cef9bf82''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: zeek
+    service: smb_files
+detection:
+    selection:
+        path|contains|all:
+            - \
+            - \IPC$
+        name|endswith:
+            - -stdin
+            - -stdout
+            - -stderr
+    filter:
+        name|startswith: PSEXESVC
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: zeek
+            mapped_at: '2025-11-13T20:15:07.238300+00:00'
+        service:
+            source_field: service
+            source_value: smb_files
+            mapped_at: '2025-11-13T20:15:07.238300+00:00'
+    detection_fields:
+        -   source_field: path
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:07.238318+00:00'
+        -   source_field: name
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:15:07.238322+00:00'

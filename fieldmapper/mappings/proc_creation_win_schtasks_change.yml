@@ -1,0 +1,97 @@
+id: 1c0e41cd-21bb-4433-9acc-4a2cd6367b9b
+title: Suspicious Modification Of Scheduled Tasks
+status: test
+level: high
+description: 'Detects when an attacker tries to modify an already existing scheduled
+    tasks to run from a suspicious location
+
+    Attackers can create a simple looking task in order to avoid detection on creation
+    as it''s often the most focused on
+
+    Instead they modify the task after creation to include their malicious payload
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-28'
+modified: '2022-11-18'
+tags:
+    - attack.execution
+    - attack.t1053.005
+references:
+    - Internal Research
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''614cf376-6651-47c4-9dcc-6b9527f749f4''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_schtasks:
+        Image|endswith: \schtasks.exe
+        CommandLine|contains|all:
+            - ' /Change '
+            - ' /TN '
+    selection_susp_locations:
+        CommandLine|contains:
+            - \AppData\Local\Temp
+            - \AppData\Roaming\
+            - \Users\Public\
+            - \WINDOWS\Temp\
+            - \Desktop\
+            - \Downloads\
+            - \Temporary Internet
+            - C:\ProgramData\
+            - C:\Perflogs\
+            - '%ProgramData%'
+            - '%appdata%'
+            - '%comspec%'
+            - '%localappdata%'
+    selection_susp_images:
+        CommandLine|contains:
+            - regsvr32
+            - rundll32
+            - 'cmd /c '
+            - 'cmd /k '
+            - 'cmd /r '
+            - 'cmd.exe /c '
+            - 'cmd.exe /k '
+            - 'cmd.exe /r '
+            - powershell
+            - mshta
+            - wscript
+            - cscript
+            - certutil
+            - bitsadmin
+            - bash.exe
+            - 'bash '
+            - scrcons
+            - 'wmic '
+            - wmic.exe
+            - forfiles
+            - scriptrunner
+            - hh.exe
+            - 'hh '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:40.504221+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:40.504221+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:40.504228+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:40.504230+00:00'

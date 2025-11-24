@@ -1,0 +1,56 @@
+id: 7aa4e81a-a65c-4e10-9f81-b200eb229d7d
+title: Potential Persistence Via VMwareToolBoxCmd.EXE VM State Change Script
+status: test
+level: medium
+description: Detects execution of the "VMwareToolBoxCmd.exe" with the "script" and
+    "set" flag to setup a specific script to run for a specific VM state
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-14'
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1059
+references:
+    - https://bohops.com/2021/10/08/analyzing-and-detecting-a-vmtools-persistence-technique/
+    - https://www.hexacorn.com/blog/2017/01/14/beyond-good-ol-run-key-part-53/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''236d8e89-ed95-4789-a982-36f4643738ba''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \VMwareToolBoxCmd.exe
+        OriginalFileName: toolbox-cmd.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - ' script '
+            - ' set '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.454318+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.454318+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:49.454328+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:49.454331+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.454333+00:00'

@@ -1,0 +1,47 @@
+id: 570ae5ec-33dc-427c-b815-db86228ad43e
+title: Application Uninstalled
+status: test
+level: low
+description: An application has been removed. Check if it is critical.
+author: frack113
+date: '2022-01-28'
+modified: '2022-09-17'
+tags:
+    - attack.impact
+    - attack.t1489
+references:
+    - https://github.com/nasbench/EVTX-ETW-Resources/blob/f1b010ce0ee1b71e3024180de1a3e67f99701fe4/ETWProvidersManifests/Windows11/22H2/W11_22H2_Pro_20221220_22621.963/WEPExplorer/Microsoft-Windows-MsiServer.xml
+    - https://learn.microsoft.com/en-us/windows/win32/msi/event-logging
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: application
+detection:
+    selection:
+        Provider_Name: MsiInstaller
+        EventID:
+            - 1034
+            - 11724
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:47.317802+00:00'
+        service:
+            source_field: service
+            source_value: application
+            mapped_at: '2025-11-13T20:25:47.317802+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:47.317809+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:47.317811+00:00'

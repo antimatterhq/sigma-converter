@@ -1,0 +1,49 @@
+id: 060c3ef1-fd0a-4091-bf46-e7d625f60b73
+title: Suspicious Get-ADReplAccount
+status: test
+level: medium
+description: 'The DSInternals PowerShell Module exposes several internal features
+    of Active Directory and Azure Active Directory.
+
+    These include FIDO2 and NGC key auditing, offline ntds.dit file manipulation,
+    password auditing, DC recovery from IFM backups and password hash calculation.
+
+    '
+author: frack113
+date: '2022-02-06'
+tags:
+    - attack.credential-access
+    - attack.t1003.006
+references:
+    - https://www.powershellgallery.com/packages/DSInternals
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.006/T1003.006.md#atomic-test-2---run-dsinternals-get-adreplaccount
+falsepositives:
+    - Legitimate PowerShell scripts
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - Get-ADReplAccount
+            - '-All '
+            - '-Server '
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.336671+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.336671+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.336675+00:00'

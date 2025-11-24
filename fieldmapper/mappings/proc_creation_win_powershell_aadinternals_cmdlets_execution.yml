@@ -1,0 +1,82 @@
+id: c86500e9-a645-4680-98d7-f882c70c1ea3
+title: AADInternals PowerShell Cmdlets Execution - ProccessCreation
+status: test
+level: high
+description: Detects ADDInternals Cmdlet execution. A tool for administering Azure
+    AD and Office 365. Which can be abused by threat actors to attack Azure AD or
+    Office 365.
+author: Austin Songer (@austinsonger), Nasreddine Bencherchali (Nextron Systems)
+date: '2022-12-23'
+tags:
+    - attack.execution
+    - attack.reconnaissance
+    - attack.discovery
+    - attack.credential-access
+    - attack.impact
+references:
+    - https://o365blog.com/aadinternals/
+    - https://github.com/Gerenios/AADInternals
+falsepositives:
+    - Legitimate use of the library for administrative activity
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''91e69562-2426-42ce-a647-711b8152ced6''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        OriginalFileName:
+            - PowerShell.Exe
+            - pwsh.dll
+    selection_cli:
+        CommandLine|contains:
+            - Add-AADInt
+            - ConvertTo-AADInt
+            - Disable-AADInt
+            - Enable-AADInt
+            - Export-AADInt
+            - Get-AADInt
+            - Grant-AADInt
+            - Install-AADInt
+            - Invoke-AADInt
+            - Join-AADInt
+            - New-AADInt
+            - Open-AADInt
+            - Read-AADInt
+            - Register-AADInt
+            - Remove-AADInt
+            - Restore-AADInt
+            - Search-AADInt
+            - Send-AADInt
+            - Set-AADInt
+            - Start-AADInt
+            - Update-AADInt
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:33.271708+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:33.271708+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:33.271716+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:33.271718+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.271719+00:00'

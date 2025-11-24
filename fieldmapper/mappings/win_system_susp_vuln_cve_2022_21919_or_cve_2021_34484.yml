@@ -1,0 +1,46 @@
+id: 52a85084-6989-40c3-8f32-091e12e17692
+title: Suspicious Usage of CVE_2021_34484 or CVE 2022_21919
+status: test
+level: low
+description: During exploitation of this vulnerability, two logs (Provider_Name:Microsoft-Windows-User
+    Profiles Service) with EventID 1511 and 1515 (maybe lot of false positives with
+    this event) are created. Moreover, it appears the directory \Users\TEMP is created
+    may be created during the exploitation. Viewed on 2008 Server
+author: Cybex
+date: '2022-08-16'
+modified: '2023-05-02'
+tags:
+    - attack.execution
+references:
+    - https://packetstormsecurity.com/files/166692/Windows-User-Profile-Service-Privlege-Escalation.html
+falsepositives:
+    - Corrupted user profiles - https://social.technet.microsoft.com/wiki/contents/articles/3571.windows-user-profiles-service-event-1511-windows-cannot-find-the-local-profile-and-is-logging-you-on-with-a-temporary-profile.aspx
+taxonomy: sigma
+logsource:
+    product: windows
+    service: application
+detection:
+    selection:
+        EventID: 1511
+        Provider_Name: Microsoft-Windows-User Profiles Service
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:25.449767+00:00'
+        service:
+            source_field: service
+            source_value: application
+            mapped_at: '2025-11-13T20:25:25.449767+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:25.449772+00:00'
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:25.449773+00:00'

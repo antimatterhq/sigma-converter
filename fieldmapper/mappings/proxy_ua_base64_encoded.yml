@@ -1,0 +1,39 @@
+id: d443095b-a221-4957-a2c4-cd1756c9b747
+title: Suspicious Base64 Encoded User-Agent
+status: test
+level: medium
+description: Detects suspicious encoded User-Agent strings, as seen used by some malware.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-04'
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+references:
+    - https://deviceatlas.com/blog/list-of-user-agent-strings#desktop
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''894a8613-cf12-48b3-8e57-9085f54aa0c3''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection:
+        c-useragent|startswith:
+            - Q2hyb21l
+            - QXBwbGVXZWJLaX
+            - RGFsdmlr
+            - TW96aWxsY
+    condition: selection
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:26.770632+00:00'
+    detection_fields:
+        -   source_field: c-useragent
+            target_table: http_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:14:26.770640+00:00'

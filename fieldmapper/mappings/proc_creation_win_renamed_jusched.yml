@@ -1,0 +1,49 @@
+id: edd8a48c-1b9f-4ba1-83aa-490338cd1ccb
+title: Renamed Jusched.EXE Execution
+status: test
+level: high
+description: Detects the execution of a renamed "jusched.exe" as seen used by the
+    cobalt group
+author: Markus Neis, Swisscom
+date: '2019-06-04'
+modified: '2023-02-03'
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1036.003
+references:
+    - https://www.bitdefender.com/files/News/CaseStudies/study/262/Bitdefender-WhitePaper-An-APT-Blueprint-Gaining-New-Visibility-into-Financial-Threats-interactive.pdf
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Description:
+            - Java Update Scheduler
+            - Java(TM) Update Scheduler
+    filter:
+        Image|endswith: \jusched.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.425203+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.425203+00:00'
+    detection_fields:
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:14.425229+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:14.425232+00:00'

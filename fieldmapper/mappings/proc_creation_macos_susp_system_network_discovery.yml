@@ -1,0 +1,59 @@
+id: 58800443-f9fc-4d55-ae0c-98a3966dfb97
+title: System Network Discovery - macOS
+status: test
+level: informational
+description: Detects enumeration of local network configuration
+author: remotephone, oscd.community
+date: '2020-10-06'
+modified: '2024-08-29'
+tags:
+    - attack.discovery
+    - attack.t1016
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1016/T1016.md
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection_1:
+        Image|endswith:
+            - /arp
+            - /ifconfig
+            - /netstat
+            - /networksetup
+            - /socketfilterfw
+    selection_2:
+        Image: /usr/bin/defaults
+        CommandLine|contains|all:
+            - /Library/Preferences/com.apple.alf
+            - read
+    filter_main_wifivelocityd:
+        ParentImage|endswith: /wifivelocityd
+    condition: 1 of selection_* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.788742+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.788742+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.788749+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.788750+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:14:25.788751+00:00'

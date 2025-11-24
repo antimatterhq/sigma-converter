@@ -1,0 +1,54 @@
+id: bedfc8ad-d1c7-4e37-a20e-e2b0dbee759c
+title: HackTool - SharpEvtMute Execution
+status: test
+level: high
+description: Detects the use of SharpEvtHook, a tool that tampers with the Windows
+    event logs
+author: Florian Roth (Nextron Systems)
+date: '2022-09-07'
+modified: '2023-02-14'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://github.com/bats3c/EvtMute
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''49329257-089d-46e6-af37-4afce4290685''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \SharpEvtMute.exe
+        Description: SharpEvtMute
+        CommandLine|contains:
+            - '--Filter "rule '
+            - --Encoded --Filter \"
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:50.283917+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:50.283917+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:50.283923+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:50.283925+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:50.283927+00:00'

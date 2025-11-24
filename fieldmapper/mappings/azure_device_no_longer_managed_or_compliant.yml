@@ -1,0 +1,40 @@
+id: 542b9912-c01f-4e3f-89a8-014c48cdca7d
+title: Azure Device No Longer Managed or Compliant
+status: test
+level: medium
+description: Identifies when a device in azure is no longer managed or compliant
+author: Austin Songer @austinsonger
+date: '2021-09-03'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+references:
+    - https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities#core-directory
+falsepositives:
+    - Administrator may have forgotten to review the device.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    selection:
+        properties.message:
+            - Device no longer compliant
+            - Device no longer managed
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:25.064974+00:00'
+        service:
+            source_field: service
+            source_value: activitylogs
+            mapped_at: '2025-11-13T20:17:25.064974+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:17:25.065000+00:00'

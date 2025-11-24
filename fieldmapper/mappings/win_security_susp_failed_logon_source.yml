@@ -1,0 +1,60 @@
+id: f88e112a-21aa-44bd-9b01-6ee2a2bbbed1
+title: Failed Logon From Public IP
+status: test
+level: medium
+description: Detects a failed logon attempt from a public IP. A login from a public
+    IP can indicate a misconfigured firewall or network boundary.
+author: NVISO
+date: '2020-05-06'
+modified: '2024-03-11'
+tags:
+    - attack.initial-access
+    - attack.persistence
+    - attack.t1078
+    - attack.t1190
+    - attack.t1133
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625
+falsepositives:
+    - Legitimate logon attempts over the internet
+    - IPv4-to-IPv6 mapped IPs
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4625
+    filter_main_ip_unknown:
+        IpAddress|contains: '-'
+    filter_main_local_ranges:
+        IpAddress|cidr:
+            - ::1/128
+            - 10.0.0.0/8
+            - 127.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 169.254.0.0/16
+            - fc00::/7
+            - fe80::/10
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:06.943220+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:25:06.943220+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:06.943241+00:00'
+        -   source_field: IpAddress
+            target_table: authentication
+            target_field: src_endpoint.ip
+            mapped_at: '2025-11-13T20:25:06.943243+00:00'

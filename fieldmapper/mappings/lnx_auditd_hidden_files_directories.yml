@@ -1,0 +1,63 @@
+id: d08722cd-3d09-449a-80b4-83ea2d9d4616
+title: Hidden Files and Directories
+status: test
+level: low
+description: Detects adversary creating hidden file or directory, by detecting directories
+    or files with . as the first character
+author: Pawel Mazur
+date: '2021-09-06'
+modified: '2022-10-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1564.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    commands:
+        type: EXECVE
+        a0:
+            - mkdir
+            - touch
+            - vim
+            - nano
+            - vi
+    arguments:
+        a1|contains: /.
+        a1|startswith: .
+        a2|contains: /.
+        a2|startswith: .
+    condition: commands and arguments
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:49.918990+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:49.918990+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.918999+00:00'
+        -   source_field: a0
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.919001+00:00'
+        -   source_field: a1
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.919003+00:00'
+        -   source_field: a2
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.919005+00:00'

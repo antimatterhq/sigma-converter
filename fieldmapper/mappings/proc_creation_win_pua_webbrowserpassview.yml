@@ -1,0 +1,47 @@
+id: d0dae994-26c6-4d2d-83b5-b3c8b79ae513
+title: PUA - WebBrowserPassView Execution
+status: test
+level: medium
+description: Detects the execution of WebBrowserPassView.exe. A password recovery
+    tool that reveals the passwords stored by the following Web browsers, Internet
+    Explorer (Version 4.0 - 11.0), Mozilla Firefox (All Versions), Google Chrome,
+    Safari, and Opera
+author: frack113
+date: '2022-08-20'
+modified: '2023-02-14'
+tags:
+    - attack.credential-access
+    - attack.t1555.003
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1555.003/T1555.003.md
+falsepositives:
+    - Legitimate use
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Description: Web Browser Password Viewer
+        Image|endswith: \WebBrowserPassView.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:50.267106+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:50.267106+00:00'
+    detection_fields:
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:50.267122+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:50.267125+00:00'

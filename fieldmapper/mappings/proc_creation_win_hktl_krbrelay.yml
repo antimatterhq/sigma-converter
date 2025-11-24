@@ -1,0 +1,63 @@
+id: e96253b8-6b3b-4f90-9e59-3b24b99cf9b4
+title: HackTool - KrbRelay Execution
+status: test
+level: high
+description: Detects the use of KrbRelay, a Kerberos relaying tool
+author: Florian Roth (Nextron Systems)
+date: '2022-04-27'
+modified: '2023-02-04'
+tags:
+    - attack.credential-access
+    - attack.t1558.003
+references:
+    - https://github.com/cube0x0/KrbRelay
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \KrbRelay.exe
+        OriginalFileName: KrbRelay.exe
+    selection_cli_1:
+        CommandLine|contains|all:
+            - ' -spn '
+            - ' -clsid '
+            - ' -rbcd '
+    selection_cli_2:
+        CommandLine|contains|all:
+            - shadowcred
+            - clsid
+            - spn
+    selection_cli_3:
+        CommandLine|contains|all:
+            - 'spn '
+            - 'session '
+            - 'clsid '
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:47.787905+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:47.787905+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:47.787916+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:47.787917+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:47.787918+00:00'

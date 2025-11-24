@@ -1,0 +1,51 @@
+id: 58f50261-c53b-4c88-bd12-1d71f12eda4c
+title: Windows Credential Manager Access via VaultCmd
+status: test
+level: medium
+description: List credentials currently stored in Windows Credential Manager via the
+    native Windows utility vaultcmd.exe
+author: frack113
+date: '2022-04-08'
+modified: '2022-05-13'
+tags:
+    - attack.credential-access
+    - attack.t1555.004
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.004/T1555.004.md#atomic-test-1---access-saved-credentials-via-vaultcmd
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \VaultCmd.exe
+        OriginalFileName: VAULTCMD.EXE
+    selection_cli:
+        CommandLine|contains: '/listcreds:'
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.941087+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.941087+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.941098+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:46.941099+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.941100+00:00'

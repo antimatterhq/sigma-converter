@@ -1,0 +1,45 @@
+id: 2dad0cba-c62a-4a4f-949f-5f6ecd619769
+title: Split A File Into Pieces - Linux
+status: test
+level: low
+description: Detection use of the command "split" to split files into parts and possible
+    transfer.
+author: Igor Fits, oscd.community
+date: '2020-10-15'
+modified: '2022-11-28'
+tags:
+    - attack.exfiltration
+    - attack.t1030
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1030/T1030.md
+falsepositives:
+    - Legitimate administrative activity
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: SYSCALL
+        comm: split
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:47.743126+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:47.743126+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:47.743148+00:00'
+        -   source_field: comm
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:47.743152+00:00'

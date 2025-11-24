@@ -1,0 +1,50 @@
+id: ca9bf243-465e-494a-9e54-bf9fc239057d
+title: Azure Subscription Permission Elevation Via AuditLogs
+status: test
+level: high
+description: 'Detects when a user has been elevated to manage all Azure Subscriptions.
+
+    This change should be investigated immediately if it isn''t planned.
+
+    This setting could allow an attacker access to Azure subscriptions in your environment.
+
+    '
+author: Austin Songer @austinsonger
+date: '2021-11-26'
+modified: '2022-12-25'
+tags:
+    - attack.initial-access
+    - attack.t1078
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts#assignment-and-elevation
+falsepositives:
+    - If this was approved by System Administrator.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        Category: Administrative
+        OperationName: Assigns the caller to user access admin
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:47.333793+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:47.333793+00:00'
+    detection_fields:
+        -   source_field: Category
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:47.333841+00:00'
+        -   source_field: OperationName
+            target_table: authentication
+            target_field: api.operation
+            mapped_at: '2025-11-13T20:16:47.333846+00:00'

@@ -1,0 +1,46 @@
+id: caf02a0a-1e1c-4552-9b48-5e070bd88d11
+title: Suspicious Creation TXT File in User Desktop
+status: test
+level: high
+description: Ransomware create txt file in the user Desktop
+author: frack113
+date: '2021-12-26'
+tags:
+    - attack.impact
+    - attack.t1486
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1486/T1486.md#atomic-test-5---purelocker-ransom-note
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|endswith: \cmd.exe
+        TargetFilename|contains|all:
+            - \Users\
+            - \Desktop\
+        TargetFilename|endswith: .txt
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.301332+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.301332+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:36.301337+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.301339+00:00'

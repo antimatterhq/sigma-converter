@@ -1,0 +1,46 @@
+id: e97d9903-53b2-41fc-8cb9-889ed4093e80
+title: KrbRelayUp Service Installation
+status: test
+level: high
+description: Detects service creation from KrbRelayUp tool used for privilege escalation
+    in Windows domain environments where LDAP signing is not enforced (the default
+    settings)
+author: Sittikorn S, Tim Shelton
+date: '2022-05-11'
+modified: '2022-10-05'
+tags:
+    - attack.privilege-escalation
+    - attack.t1543
+references:
+    - https://github.com/Dec0ne/KrbRelayUp
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        EventID: 7045
+        ServiceName: KrbSCM
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:24.934679+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:24.934679+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:24.934693+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:24.934696+00:00'

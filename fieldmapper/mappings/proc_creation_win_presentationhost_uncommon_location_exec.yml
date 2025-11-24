@@ -1,0 +1,59 @@
+id: d22e2925-cfd8-463f-96f6-89cec9d9bc5f
+title: XBAP Execution From Uncommon Locations Via PresentationHost.EXE
+status: test
+level: medium
+description: 'Detects the execution of ".xbap" (Browser Applications) files via PresentationHost.EXE
+    from an uncommon location. These files can be abused to run malicious ".xbap"
+    files any bypass AWL
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-01'
+modified: '2023-11-09'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Presentationhost/
+falsepositives:
+    - Legitimate ".xbap" being executed via "PresentationHost"
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \presentationhost.exe
+        OriginalFileName: PresentationHost.exe
+    selection_cli:
+        CommandLine|contains: .xbap
+    filter_main_generic:
+        CommandLine|contains:
+            - ' C:\Windows\'
+            - ' C:\Program Files'
+    condition: all of selection* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:47.791808+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:47.791808+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:47.791817+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:47.791818+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:47.791819+00:00'

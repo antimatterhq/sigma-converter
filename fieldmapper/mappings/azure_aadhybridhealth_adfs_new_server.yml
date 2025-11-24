@@ -1,0 +1,64 @@
+id: 288a39fc-4914-4831-9ada-270e9dc12cb4
+title: Azure Active Directory Hybrid Health AD FS New Server
+status: test
+level: medium
+description: 'This detection uses azureactivity logs (Administrative category) to
+    identify the creation or update of a server instance in an Azure AD Hybrid health
+    AD FS service.
+
+    A threat actor can create a new AD Health ADFS service and create a fake server
+    instance to spoof AD FS signing logs. There is no need to compromise an on-prem
+    AD FS server.
+
+    This can be done programmatically via HTTP requests to Azure.
+
+    '
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
+date: '2021-08-26'
+modified: '2023-10-11'
+tags:
+    - attack.defense-evasion
+    - attack.t1578
+references:
+    - https://o365blog.com/post/hybridhealthagent/
+falsepositives:
+    - Legitimate AD FS servers added to an AAD Health AD FS service instance
+taxonomy: sigma
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    selection:
+        CategoryValue: Administrative
+        ResourceProviderValue: Microsoft.ADHybridHealthService
+        ResourceId|contains: AdFederationService
+        OperationNameValue: Microsoft.ADHybridHealthService/services/servicemembers/action
+    condition: selection
+ocsf_mapping:
+    class_name: entity_management
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:27.656463+00:00'
+        service:
+            source_field: service
+            source_value: activitylogs
+            mapped_at: '2025-11-13T20:17:27.656463+00:00'
+    detection_fields:
+        -   source_field: CategoryValue
+            target_table: entity_management
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:29.472990+00:00'
+        -   source_field: ResourceProviderValue
+            target_table: entity_management
+            target_field: cloud.provider
+            mapped_at: '2025-11-13T20:17:29.473014+00:00'
+        -   source_field: ResourceId
+            target_table: entity_management
+            target_field: entity.uid
+            mapped_at: '2025-11-13T20:17:29.473017+00:00'
+        -   source_field: OperationNameValue
+            target_table: entity_management
+            target_field: api.operation
+            mapped_at: '2025-11-13T20:17:29.473021+00:00'

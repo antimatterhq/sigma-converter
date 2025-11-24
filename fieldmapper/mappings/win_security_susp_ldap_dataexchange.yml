@@ -1,0 +1,64 @@
+id: d00a9a72-2c09-4459-ad03-5e0a23351e36
+title: Suspicious LDAP-Attributes Used
+status: test
+level: high
+description: Detects the usage of particular AttributeLDAPDisplayNames, which are
+    known for data exchange via LDAP by the tool LDAPFragger and are additionally
+    not commonly used in companies.
+author: xknow @xknow_infosec
+date: '2019-03-24'
+modified: '2022-10-05'
+tags:
+    - attack.t1001.003
+    - attack.command-and-control
+references:
+    - https://medium.com/@ivecodoe/detecting-ldapfragger-a-newly-released-cobalt-strike-beacon-using-ldap-for-c2-communication-c274a7f00961
+    - https://blog.fox-it.com/2020/03/19/ldapfragger-command-and-control-over-ldap-attributes/
+    - https://github.com/fox-it/LDAPFragger
+falsepositives:
+    - Companies, who may use these default LDAP-Attributes for personal information
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The "Audit Directory Service Changes" logging policy must be configured
+        in order to receive events. Audit events are generated only for objects with
+        configured system access control lists (SACLs). Audit events are generated
+        only for objects with configured system access control lists (SACLs) and only
+        when accessed in a manner that matches their SACL settings. This policy covers
+        the following events ids - 5136, 5137, 5138, 5139, 5141. Note that the default
+        policy does not cover User objects. For that a custom AuditRule need to be
+        setup (See https://github.com/OTRF/Set-AuditRule)
+detection:
+    selection:
+        EventID: 5136
+        AttributeValue|contains: '*'
+        AttributeLDAPDisplayName:
+            - primaryInternationalISDNNumber
+            - otherFacsimileTelephoneNumber
+            - primaryTelexNumber
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:16.669505+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:16.669505+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: account_change
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:16.669517+00:00'
+        -   source_field: AttributeValue
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:16.669520+00:00'
+        -   source_field: AttributeLDAPDisplayName
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:16.669522+00:00'

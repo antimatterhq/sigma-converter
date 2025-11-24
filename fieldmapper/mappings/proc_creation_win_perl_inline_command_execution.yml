@@ -1,0 +1,51 @@
+id: f426547a-e0f7-441a-b63e-854ac5bdf54d
+title: Perl Inline Command Execution
+status: test
+level: medium
+description: Detects execution of perl using the "-e"/"-E" flags. This is could be
+    used as a way to launch a reverse shell or execute live perl code.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-02'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+    - https://www.revshells.com/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \perl.exe
+        OriginalFileName: perl.exe
+    selection_cli:
+        CommandLine|contains: ' -e'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:22.252907+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:22.252907+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:22.252922+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:22.252925+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:22.252928+00:00'

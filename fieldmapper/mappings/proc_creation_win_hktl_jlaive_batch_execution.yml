@@ -1,0 +1,69 @@
+id: 0a99eb3e-1617-41bd-b095-13dc767f3def
+title: HackTool - Jlaive In-Memory Assembly Execution
+status: test
+level: medium
+description: Detects the use of Jlaive to execute assemblies in a copied PowerShell
+author: Jose Luis Sanchez Martinez (@Joseliyo_Jstnk)
+date: '2022-05-24'
+modified: '2023-02-22'
+tags:
+    - attack.execution
+    - attack.t1059.003
+references:
+    - https://jstnk9.github.io/jstnk9/research/Jlaive-Antivirus-Evasion-Tool
+    - https://web.archive.org/web/20220514073704/https://github.com/ch2sh/Jlaive
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    parent_selection:
+        ParentImage|endswith: \cmd.exe
+        ParentCommandLine|endswith: .bat
+    selection1:
+        Image|endswith: \xcopy.exe
+        CommandLine|contains|all:
+            - powershell.exe
+            - .bat.exe
+    selection2:
+        Image|endswith: \xcopy.exe
+        CommandLine|contains|all:
+            - pwsh.exe
+            - .bat.exe
+    selection3:
+        Image|endswith: \attrib.exe
+        CommandLine|contains|all:
+            - +s
+            - +h
+            - .bat.exe
+    condition: parent_selection and (1 of selection*)
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:55.506482+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:55.506482+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:55.506513+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:55.506516+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:55.506519+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:55.506522+00:00'

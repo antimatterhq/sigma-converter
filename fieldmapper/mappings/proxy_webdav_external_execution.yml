@@ -1,0 +1,80 @@
+id: 1ae64f96-72b6-48b3-ad3d-e71dff6c6398
+title: Suspicious External WebDAV Execution
+status: experimental
+level: high
+description: 'Detects executables launched from external WebDAV shares using the WebDAV
+    Explorer integration, commonly seen in initial access campaigns.
+
+    '
+author: Ahmed Farouk
+date: '2024-05-10'
+tags:
+    - attack.initial-access
+    - attack.t1584
+    - attack.t1566
+references:
+    - https://dear-territory-023.notion.site/WebDav-Share-Testing-e4950fa0c00149c3aa430d779b9b1d0f?pvs=4
+    - https://micahbabinski.medium.com/search-ms-webdav-and-chill-99c5b23ac462
+    - https://www.trendmicro.com/en_no/research/24/b/cve202421412-water-hydra-targets-traders-with-windows-defender-s.html
+    - https://www.trellix.com/en-us/about/newsroom/stories/research/beyond-file-search-a-novel-method.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4c55738d-72d8-490e-a2db-7969654e375f''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection_webdav:
+        c-useragent|startswith: Microsoft-WebDAV-MiniRedir/
+        cs-method: GET
+    selection_execution:
+        c-uri|endswith:
+            - .7z
+            - .bat
+            - .dat
+            - .cmd
+            - .exe
+            - .js
+            - .lnk
+            - .ps1
+            - .rar
+            - .url
+            - .vbe
+            - .vbs
+            - .zip
+    filter_main_local_ips:
+        dst_ip|cidr:
+            - 127.0.0.0/8
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 169.254.0.0/16
+            - ::1/128
+            - fe80::/10
+            - fc00::/7
+    condition: all of selection_* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:25.884442+00:00'
+    detection_fields:
+        -   source_field: c-useragent
+            target_table: http_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:14:25.884449+00:00'
+        -   source_field: cs-method
+            target_table: http_activity
+            target_field: http_request.http_method
+            mapped_at: '2025-11-13T20:14:25.884450+00:00'
+        -   source_field: c-uri
+            target_table: http_activity
+            target_field: http_request.url
+            mapped_at: '2025-11-13T20:14:25.884452+00:00'
+        -   source_field: dst_ip
+            target_table: http_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:14:25.884453+00:00'

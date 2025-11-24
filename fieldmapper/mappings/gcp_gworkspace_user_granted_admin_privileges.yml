@@ -1,0 +1,47 @@
+id: 2d1b83e4-17c6-4896-a37b-29140b40a788
+title: Google Workspace User Granted Admin Privileges
+status: test
+level: medium
+description: Detects when an Google Workspace user is granted admin privileges.
+author: Austin Songer
+date: '2021-08-23'
+modified: '2023-10-11'
+tags:
+    - attack.persistence
+    - attack.t1098
+references:
+    - https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3
+    - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-user-settings#GRANT_ADMIN_PRIVILEGE
+falsepositives:
+    - Google Workspace admin role privileges, may be modified by system administrators.
+taxonomy: sigma
+logsource:
+    product: gcp
+    service: google_workspace.admin
+detection:
+    selection:
+        eventService: admin.googleapis.com
+        eventName:
+            - GRANT_DELEGATED_ADMIN_PRIVILEGES
+            - GRANT_ADMIN_PRIVILEGE
+    condition: selection
+ocsf_mapping:
+    class_name: entity_management
+    logsource:
+        product:
+            source_field: product
+            source_value: gcp
+            mapped_at: '2025-11-13T20:17:42.514119+00:00'
+        service:
+            source_field: service
+            source_value: google_workspace.admin
+            mapped_at: '2025-11-13T20:17:42.514119+00:00'
+    detection_fields:
+        -   source_field: eventService
+            target_table: entity_management
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:42.514156+00:00'
+        -   source_field: eventName
+            target_table: entity_management
+            target_field: action
+            mapped_at: '2025-11-13T20:17:42.514163+00:00'

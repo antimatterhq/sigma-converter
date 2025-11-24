@@ -1,0 +1,59 @@
+id: 7a2a22ea-a203-4cd3-9abf-20eb1c5c6cd2
+title: Access To Windows Credential History File By Uncommon Applications
+status: experimental
+level: medium
+description: 'Detects file access requests to the Windows Credential History File
+    by an uncommon application.
+
+    This can be a sign of credential stealing. Example case would be usage of mimikatz
+    "dpapi::credhist" function
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-10-17'
+modified: '2024-07-29'
+tags:
+    - attack.credential-access
+    - attack.t1555.004
+references:
+    - https://tools.thehacker.recipes/mimikatz/modules/dpapi/credhist
+    - https://www.passcape.com/windows_password_recovery_dpapi_credhist
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_access
+    product: windows
+    definition: 'Requirements: Microsoft-Windows-Kernel-File ETW provider'
+detection:
+    selection:
+        FileName|endswith: \Microsoft\Protect\CREDHIST
+    filter_main_system_folders:
+        Image|startswith:
+            - C:\Program Files\
+            - C:\Program Files (x86)\
+            - C:\Windows\system32\
+            - C:\Windows\SysWOW64\
+    filter_main_explorer:
+        Image: C:\Windows\explorer.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_access
+            mapped_at: '2025-11-13T20:21:41.340074+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:41.340074+00:00'
+    detection_fields:
+        -   source_field: FileName
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:21:41.340081+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:41.340083+00:00'

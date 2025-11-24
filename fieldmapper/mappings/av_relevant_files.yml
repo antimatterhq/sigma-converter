@@ -1,0 +1,95 @@
+id: c9a88268-0047-4824-ba6e-4d81ce0b907c
+title: Antivirus Relevant File Paths Alerts
+status: test
+level: high
+description: 'Detects an Antivirus alert in a highly relevant file path or with a
+    relevant file name.
+
+    This event must not be ignored just because the AV has blocked the malware but
+    investigate, how it came there in the first place.
+
+    '
+author: Florian Roth (Nextron Systems), Arnim Rupp
+date: '2018-09-09'
+modified: '2024-11-02'
+tags:
+    - attack.resource-development
+    - attack.t1588
+references:
+    - https://www.nextron-systems.com/?s=antivirus
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: antivirus
+detection:
+    selection_path:
+        Filename|contains:
+            - :\PerfLogs\
+            - :\Temp\
+            - :\Users\Default\
+            - :\Users\Public\
+            - :\Windows\
+            - /www/
+            - \inetpub\
+            - \tsclient\
+            - apache
+            - nginx
+            - tomcat
+            - weblogic
+    selection_ext:
+        Filename|endswith:
+            - .asax
+            - .ashx
+            - .asmx
+            - .asp
+            - .aspx
+            - .bat
+            - .cfm
+            - .cgi
+            - .chm
+            - .cmd
+            - .dat
+            - .ear
+            - .gif
+            - .hta
+            - .jpeg
+            - .jpg
+            - .jsp
+            - .jspx
+            - .lnk
+            - .msc
+            - .php
+            - .pl
+            - .png
+            - .ps1
+            - .psm1
+            - .py
+            - .pyc
+            - .rb
+            - .scf
+            - .sct
+            - .sh
+            - .svg
+            - .txt
+            - .vbe
+            - .vbs
+            - .war
+            - .wll
+            - .wsf
+            - .wsh
+            - .xll
+            - .xml
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: antivirus
+            mapped_at: '2025-11-13T20:14:25.855337+00:00'
+    detection_fields:
+        -   source_field: Filename
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:14:25.855342+00:00'

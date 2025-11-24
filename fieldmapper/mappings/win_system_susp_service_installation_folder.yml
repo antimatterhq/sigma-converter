@@ -1,0 +1,61 @@
+id: 5e993621-67d4-488a-b9ae-b420d08b96cb
+title: Service Installation in Suspicious Folder
+status: test
+level: medium
+description: Detects service installation in suspicious folder appdata
+author: pH-T (Nextron Systems)
+date: '2022-03-18'
+modified: '2024-01-18'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - car.2013-09-005
+    - attack.t1543.003
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+        ImagePath|contains:
+            - \AppData\
+            - \\127.0.0.1
+            - \\localhost
+    filter_optional_zoom:
+        ServiceName: Zoom Sharing Service
+        ImagePath|contains: :\Program Files\Common Files\Zoom\Support\CptService.exe
+    condition: selection and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:18.942290+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:18.942290+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:18.942301+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:18.942302+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:18.942304+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:18.942305+00:00'

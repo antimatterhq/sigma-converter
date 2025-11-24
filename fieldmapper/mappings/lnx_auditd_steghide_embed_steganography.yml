@@ -1,0 +1,64 @@
+id: ce446a9e-30b9-4483-8e38-d2c9ad0a2280
+title: Steganography Hide Files with Steghide
+status: test
+level: low
+description: Detects embedding of files with usage of steghide binary, the adversaries
+    may use this technique to prevent the detection of hidden information.
+author: Pawel Mazur
+date: '2021-09-11'
+modified: '2022-10-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1027.003
+references:
+    - https://vitux.com/how-to-hide-confidential-files-in-images-on-debian-using-steganography/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: EXECVE
+        a0: steghide
+        a1: embed
+        a2:
+            - -cf
+            - -ef
+        a4:
+            - -cf
+            - -ef
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:21.960775+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:21.960775+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:23.614802+00:00'
+        -   source_field: a0
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:23.614819+00:00'
+        -   source_field: a1
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:23.614821+00:00'
+        -   source_field: a2
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:23.614828+00:00'
+        -   source_field: a4
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:23.614830+00:00'

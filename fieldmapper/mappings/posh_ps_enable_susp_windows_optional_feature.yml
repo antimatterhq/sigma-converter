@@ -1,0 +1,60 @@
+id: 55c925c1-7195-426b-a136-a9396800e29b
+title: Potential Suspicious Windows Feature Enabled
+status: test
+level: medium
+description: 'Detects usage of the built-in PowerShell cmdlet "Enable-WindowsOptionalFeature"
+    used as a Deployment Image Servicing and Management tool.
+
+    Similar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure,
+    and update features and packages in Windows images
+
+    '
+author: frack113
+date: '2022-09-10'
+modified: '2022-12-29'
+tags:
+    - attack.defense-evasion
+references:
+    - https://learn.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature?view=windowsserver2022-ps
+    - https://learn.microsoft.com/en-us/windows/win32/projfs/enabling-windows-projected-file-system
+    - https://learn.microsoft.com/en-us/windows/wsl/install-on-server
+falsepositives:
+    - Legitimate usage of the features listed in the rule.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c740d4cf-a1e9-41de-bb16-8a46a4f57918''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_cmd:
+        ScriptBlockText|contains|all:
+            - Enable-WindowsOptionalFeature
+            - -Online
+            - -FeatureName
+    selection_feature:
+        ScriptBlockText|contains:
+            - TelnetServer
+            - Internet-Explorer-Optional-amd64
+            - TFTP
+            - SMB1Protocol
+            - Client-ProjFS
+            - Microsoft-Windows-Subsystem-Linux
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.301623+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.301623+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.301626+00:00'

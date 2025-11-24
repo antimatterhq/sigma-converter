@@ -1,0 +1,45 @@
+id: 4c21b805-4dd7-469f-b47d-7383a8fcb437
+title: Potential Iviewers.DLL Sideloading
+status: test
+level: high
+description: Detects potential DLL sideloading of "iviewers.dll" (OLE/COM Object Interface
+    Viewer)
+author: X__Junior (Nextron Systems)
+date: '2023-03-21'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://www.secureworks.com/research/shadowpad-malware-analysis
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \iviewers.dll
+    filter:
+        ImageLoaded|startswith:
+            - C:\Program Files (x86)\Windows Kits\
+            - C:\Program Files\Windows Kits\
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: null
+            target_field: null
+            mapped_at: null

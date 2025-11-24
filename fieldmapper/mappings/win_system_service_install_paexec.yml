@@ -1,0 +1,54 @@
+id: de7ce410-b3fb-4e8a-b38c-3b999e2c3420
+title: PAExec Service Installation
+status: test
+level: medium
+description: Detects PAExec service installation
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-10-26'
+tags:
+    - attack.execution
+    - attack.t1569.002
+references:
+    - https://www.poweradmin.com/paexec/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_eid:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+    selection_image:
+        ServiceName|startswith: PAExec-
+        ImagePath|startswith: C:\WINDOWS\PAExec-
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:23.244916+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:23.244916+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:23.244930+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:23.244933+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:23.244934+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:23.244936+00:00'

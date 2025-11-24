@@ -1,0 +1,52 @@
+id: 6daac7fc-77d1-449a-a71a-e6b4d59a0e54
+title: User Couldn't Call a Privileged Service 'LsaRegisterLogonProcess'
+status: test
+level: high
+description: The 'LsaRegisterLogonProcess' function verifies that the application
+    making the function call is a logon process by checking that it has the SeTcbPrivilege
+    privilege set. Possible Rubeus tries to get a handle to LSA.
+author: Roberto Rodriguez (source), Ilyas Ochkov (rule), oscd.community
+date: '2019-10-24'
+modified: '2022-12-25'
+tags:
+    - attack.lateral-movement
+    - attack.privilege-escalation
+    - attack.t1558.003
+references:
+    - https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4673
+        Service: LsaRegisterLogonProcess()
+        Keywords: '0x8010000000000000'
+    condition: selection
+ocsf_mapping:
+    class_name: user_access
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:51.798157+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:51.798157+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: user_access
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:52.644660+00:00'
+        -   source_field: Service
+            target_table: user_access
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:52.644686+00:00'
+        -   source_field: Keywords
+            target_table: user_access
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:52.644690+00:00'

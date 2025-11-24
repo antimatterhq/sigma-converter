@@ -1,0 +1,58 @@
+id: b45ab1d2-712f-4f01-a751-df3826969807
+title: AWS STS GetSessionToken Misuse
+status: test
+level: low
+description: Identifies the suspicious use of GetSessionToken. Tokens could be created
+    and used by attackers to move laterally and escalate privileges.
+author: Austin Songer @austinsonger
+date: '2021-07-24'
+modified: '2022-10-09'
+tags:
+    - attack.lateral-movement
+    - attack.privilege-escalation
+    - attack.t1548
+    - attack.t1550
+    - attack.t1550.001
+references:
+    - https://github.com/elastic/detection-rules/pull/1213
+    - https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html
+falsepositives:
+    - GetSessionToken may be done by a system or network administrator. Verify whether
+        the user identity, user agent, and/or hostname should be making changes in
+        your environment. GetSessionToken from unfamiliar users or hosts should be
+        investigated. If known behavior is causing false positives, it can be exempted
+        from the rule.
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource: sts.amazonaws.com
+        eventName: GetSessionToken
+        userIdentity.type: IAMUser
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:18:09.268524+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:18:09.268524+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: api_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:18:09.268534+00:00'
+        -   source_field: eventName
+            target_table: api_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:09.268536+00:00'
+        -   source_field: userIdentity.type
+            target_table: api_activity
+            target_field: actor.user.type
+            mapped_at: '2025-11-13T20:18:09.268539+00:00'

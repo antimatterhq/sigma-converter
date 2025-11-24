@@ -1,0 +1,61 @@
+id: 021310d9-30a6-480a-84b7-eaa69aeb92bb
+title: First Time Seen Remote Named Pipe - Zeek
+status: test
+level: high
+description: This detection excludes known namped pipes accessible remotely and notify
+    on newly observed ones, may help to detect lateral movement and remote exec using
+    named pipes
+author: Samir Bousseaden, @neu5ron, Tim Shelton
+date: '2020-04-02'
+modified: '2022-12-27'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+references:
+    - https://twitter.com/menasec1/status/1104489274387451904
+falsepositives:
+    - Update the excluded named pipe to filter out any newly observed legit named
+        pipe
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''52d8b0c6-53d6-439a-9e41-52ad442ad9ad''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: zeek
+    service: smb_files
+detection:
+    selection:
+        path: \\\*\IPC$
+    filter_keywords:
+        - samr
+        - lsarpc
+        - winreg
+        - netlogon
+        - srvsvc
+        - protected_storage
+        - wkssvc
+        - browser
+        - netdfs
+        - svcctl
+        - spoolss
+        - ntsvcs
+        - LSM_API_service
+        - HydraLsPipe
+        - TermSrv_API_service
+        - MsFteWds
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: zeek
+            mapped_at: '2025-11-13T20:14:40.719234+00:00'
+        service:
+            source_field: service
+            source_value: smb_files
+            mapped_at: '2025-11-13T20:14:40.719234+00:00'
+    detection_fields:
+        -   source_field: path
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:14:42.172809+00:00'

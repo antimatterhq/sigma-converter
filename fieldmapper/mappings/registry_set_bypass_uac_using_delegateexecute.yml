@@ -1,0 +1,47 @@
+id: 46dd5308-4572-4d12-aa43-8938f0184d4f
+title: Bypass UAC Using DelegateExecute
+status: test
+level: high
+description: Bypasses User Account Control using a fileless method
+author: frack113
+date: '2022-01-05'
+modified: '2023-08-17'
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1548.002
+references:
+    - https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-iexecutecommand
+    - https://devblogs.microsoft.com/oldnewthing/20100312-01/?p=14623
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1548.002/T1548.002.md#atomic-test-7---bypass-uac-using-sdclt-delegateexecute
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: \open\command\DelegateExecute
+        Details: (Empty)
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

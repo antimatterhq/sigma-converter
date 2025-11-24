@@ -1,0 +1,76 @@
+id: 6fb63b40-e02a-403e-9ffd-3bcc1d749442
+title: Metasploit Or Impacket Service Installation Via SMB PsExec
+status: test
+level: high
+description: Detects usage of Metasploit SMB PsExec (exploit/windows/smb/psexec) and
+    Impacket psexec.py by triggering on specific service installation
+author: Bartlomiej Czyz, Relativity
+date: '2021-01-21'
+modified: '2022-10-05'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+    - attack.t1570
+    - attack.execution
+    - attack.t1569.002
+references:
+    - https://bczyz1.github.io/2021/01/30/psexec.html
+fields:
+    - ComputerName
+    - SubjectDomainName
+    - SubjectUserName
+    - ServiceName
+    - ServiceFileName
+falsepositives:
+    - Possible, different agents with a 8 character binary and a 4, 8 or 16 character
+        service name
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1a17ce75-ff0d-4f02-9709-2b7bb5618cf0''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    selection:
+        EventID: 4697
+        ServiceFileName|re: ^%systemroot%\\[a-zA-Z]{8}\.exe$
+        ServiceName|re: (^[a-zA-Z]{4}$)|(^[a-zA-Z]{8}$)|(^[a-zA-Z]{16}$)
+        ServiceStartType: 3
+        ServiceType: '0x10'
+    filter:
+        ServiceName: PSEXESVC
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:05.882907+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:05.882907+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:06.986317+00:00'
+        -   source_field: ServiceFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:23:06.986343+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:06.986349+00:00'
+        -   source_field: ServiceStartType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:06.986353+00:00'
+        -   source_field: ServiceType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:06.986357+00:00'

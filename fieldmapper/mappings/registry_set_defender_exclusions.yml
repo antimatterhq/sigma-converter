@@ -1,0 +1,41 @@
+id: a982fc9c-6333-4ffb-a51d-addb04e8b529
+title: Windows Defender Exclusions Added - Registry
+status: test
+level: medium
+description: Detects the Setting of Windows Defender Exclusions
+author: Christian Burkard (Nextron Systems)
+date: '2021-07-06'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://twitter.com/_nullbind/status/1204923340810543109
+falsepositives:
+    - Administrator actions
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1321dc4e-a1fe-481d-a016-52c45f0c8b4f''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection2:
+        TargetObject|contains: \Microsoft\Windows Defender\Exclusions
+    condition: selection2
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

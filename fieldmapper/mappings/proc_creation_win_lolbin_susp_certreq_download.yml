@@ -1,0 +1,58 @@
+id: 4480827a-9799-4232-b2c4-ccc6c4e9e12b
+title: Suspicious Certreq Command to Download
+status: test
+level: high
+description: Detects a suspicious certreq execution taken from the LOLBAS examples,
+    which can be abused to download (small) files
+author: Christian Burkard (Nextron Systems)
+date: '2021-11-24'
+modified: '2022-06-13'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Certreq/
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \certreq.exe
+        OriginalFileName: CertReq.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - ' -Post '
+            - ' -config '
+            - ' http'
+            - ' C:\windows\win.ini '
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.652642+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.652642+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.652647+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.652648+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.652649+00:00'

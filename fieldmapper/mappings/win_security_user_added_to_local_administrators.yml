@@ -1,0 +1,60 @@
+id: c265cf08-3f99-46c1-8d59-328247057d57
+title: User Added to Local Administrator Group
+status: stable
+level: medium
+description: Detects the addition of a new member to the local administrator group,
+    which could be legitimate activity or a sign of privilege escalation activity
+author: Florian Roth (Nextron Systems)
+date: '2017-03-14'
+modified: '2021-01-17'
+tags:
+    - attack.privilege-escalation
+    - attack.t1078
+    - attack.persistence
+    - attack.t1098
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4732
+    - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers
+falsepositives:
+    - Legitimate administrative activity
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection_eid:
+        EventID: 4732
+    selection_group:
+        TargetUserName|startswith: Administr
+        TargetSid: S-1-5-32-544
+    filter_main_computer_accounts:
+        SubjectUserName|endswith: $
+    condition: all of selection_* and not 1 of filter_*
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:29.444857+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:29.444857+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: account_change
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:30.990108+00:00'
+        -   source_field: TargetUserName
+            target_table: account_change
+            target_field: user.name
+            mapped_at: '2025-11-13T20:22:30.990132+00:00'
+        -   source_field: TargetSid
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:30.990135+00:00'
+        -   source_field: SubjectUserName
+            target_table: account_change
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:22:30.990138+00:00'

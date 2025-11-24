@@ -1,0 +1,40 @@
+id: 94a66f46-5b64-46ce-80b2-75dcbe627cc0
+title: Roles Activation Doesn't Require MFA
+status: test
+level: high
+description: Identifies when a privilege role can be activated without performing
+    mfa.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-14'
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.privilege-escalation
+references:
+    - https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-configure-security-alerts#roles-dont-require-multi-factor-authentication-for-activation
+falsepositives:
+    - Investigate if user is performing MFA at sign-in.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: pim
+detection:
+    selection:
+        riskEventType: noMfaOnRoleActivationAlertIncident
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.458345+00:00'
+        service:
+            source_field: service
+            source_value: pim
+            mapped_at: '2025-11-13T20:16:23.458345+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.458353+00:00'

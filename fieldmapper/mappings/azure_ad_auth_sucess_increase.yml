@@ -1,0 +1,44 @@
+id: 67d5f8fc-8325-44e4-8f5f-7c0ac07cb5ae
+title: Measurable Increase Of Successful Authentications
+status: test
+level: low
+description: Detects when successful sign-ins increased by 10% or greater.
+author: Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1', Tim Shelton
+date: '2022-08-11'
+modified: '2022-08-18'
+tags:
+    - attack.defense-evasion
+    - attack.t1078
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#monitoring-for-successful-unusual-sign-ins
+falsepositives:
+    - Increase of users in the environment
+taxonomy: sigma
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    selection:
+        Status: Success
+        Count: <10%
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:05.048496+00:00'
+        service:
+            source_field: service
+            source_value: signinlogs
+            mapped_at: '2025-11-13T20:17:05.048496+00:00'
+    detection_fields:
+        -   source_field: Status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:17:05.048528+00:00'
+        -   source_field: Count
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:05.048533+00:00'

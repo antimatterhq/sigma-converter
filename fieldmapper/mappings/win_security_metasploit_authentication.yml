@@ -1,0 +1,63 @@
+id: 72124974-a68b-4366-b990-d30e0b2a190d
+title: Metasploit SMB Authentication
+status: test
+level: high
+description: Alerts on Metasploit host's authentications on the domain.
+author: Chakib Gzenayi (@Chak092), Hosni Mribah
+date: '2020-05-06'
+modified: '2024-01-25'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+references:
+    - https://github.com/rapid7/metasploit-framework/blob/1416b5776d963f21b7b5b45d19f3e961201e0aed/lib/rex/proto/smb/client.rb
+falsepositives:
+    - Linux hostnames composed of 16 characters.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection1:
+        EventID:
+            - 4625
+            - 4624
+        LogonType: 3
+        AuthenticationPackageName: NTLM
+        WorkstationName|re: ^[A-Za-z0-9]{16}$
+    selection2:
+        EventID: 4776
+        Workstation|re: ^[A-Za-z0-9]{16}$
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:41.643420+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:41.643420+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:43.769270+00:00'
+        -   source_field: LogonType
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:43.769290+00:00'
+        -   source_field: AuthenticationPackageName
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:43.769293+00:00'
+        -   source_field: WorkstationName
+            target_table: network_activity
+            target_field: src_endpoint.hostname
+            mapped_at: '2025-11-13T20:22:43.769295+00:00'
+        -   source_field: Workstation
+            target_table: network_activity
+            target_field: src_endpoint.hostname
+            mapped_at: '2025-11-13T20:22:43.769297+00:00'

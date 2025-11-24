@@ -1,0 +1,54 @@
+id: 9b8d9203-4e0f-4cd9-bb06-4cc4ea6d0e9a
+title: Invoke-Obfuscation Via Use MSHTA - Security
+status: test
+level: high
+description: Detects Obfuscated Powershell via use MSHTA in Scripts
+author: Nikita Nazarov, oscd.community
+date: '2020-10-09'
+modified: '2022-11-29'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7e9c7999-0f9b-4d4a-a6ed-af6d553d4af4''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    selection:
+        EventID: 4697
+        ServiceFileName|contains|all:
+            - mshta
+            - vbscript:createobject
+            - .run
+            - window.close
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:09.176131+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:24:09.176131+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:09.176148+00:00'
+        -   source_field: ServiceFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:24:09.176151+00:00'

@@ -1,0 +1,48 @@
+id: ec1d5e28-8f3b-4188-a6f8-6e8df81dc28e
+title: WMI Persistence - Script Event Consumer
+status: test
+level: medium
+description: Detects WMI script event consumers
+author: Thomas Patzke
+date: '2018-03-07'
+modified: '2022-10-11'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1546.003
+references:
+    - https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/
+falsepositives:
+    - Legitimate event consumers
+    - Dell computers on some versions register an event consumer that is known to
+        cause false positives when brightness is changed by the corresponding keyboard
+        button
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image: C:\WINDOWS\system32\wbem\scrcons.exe
+        ParentImage: C:\Windows\System32\svchost.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.256019+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.256019+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.256028+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:58.256030+00:00'

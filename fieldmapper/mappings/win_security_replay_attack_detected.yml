@@ -1,0 +1,40 @@
+id: 5a44727c-3b85-4713-8c44-4401d5499629
+title: Replay Attack Detected
+status: test
+level: high
+description: Detects possible Kerberos Replay Attack on the domain controllers when
+    "KRB_AP_ERR_REPEAT" Kerberos response is sent to the client
+author: frack113
+date: '2022-10-14'
+tags:
+    - attack.credential-access
+    - attack.t1558
+references:
+    - https://github.com/Yamato-Security/EnableWindowsLogSettings/blob/7f6d755d45ac7cc9fc35b0cbf498e6aa4ef19def/ConfiguringSecurityLogAuditPolicies.md
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4649
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4649
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:37.751484+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:37.751484+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:37.751498+00:00'

@@ -1,0 +1,73 @@
+id: 904e8e61-8edf-4350-b59c-b905fc8e810c
+title: Security Software Discovery Via Powershell Script
+status: test
+level: medium
+description: 'Detects calls to "get-process" where the output is piped to a "where-object"
+    filter to search for security solution processes.
+
+    Adversaries may attempt to get a listing of security software, configurations,
+    defensive tools, and sensors that are installed on a system or in a cloud environment.
+    This may include things such as firewall rules and anti-virus
+
+    '
+author: frack113, Anish Bogati, Nasreddine Bencherchali (Nextron Systems)
+date: '2021-12-16'
+modified: '2023-10-24'
+tags:
+    - attack.discovery
+    - attack.t1518.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md#atomic-test-2---security-software-discovery---powershell
+falsepositives:
+    - False positives might occur due to the nature of the ScriptBlock being ingested
+        as a big blob. Initial tuning is required.
+    - As the "selection_cmdlet" is common in scripts the matching engine might slow
+        down the search. Change into regex or a more accurate string to avoid heavy
+        resource consumption if experienced
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_cmdlet:
+        ScriptBlockText|contains:
+            - get-process | \?
+            - get-process | where
+            - gps | \?
+            - gps | where
+    selection_field:
+        ScriptBlockText|contains:
+            - Company -like
+            - Description -like
+            - Name -like
+            - Path -like
+            - Product -like
+    selection_keywords:
+        ScriptBlockText|contains:
+            - \*avira\*
+            - \*carbonblack\*
+            - \*cylance\*
+            - \*defender\*
+            - \*kaspersky\*
+            - \*malware\*
+            - \*sentinel\*
+            - \*symantec\*
+            - \*virus\*
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.272006+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.272006+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.272010+00:00'

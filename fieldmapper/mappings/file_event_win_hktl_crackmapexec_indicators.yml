@@ -1,0 +1,49 @@
+id: 736ffa74-5f6f-44ca-94ef-1c0df4f51d2a
+title: HackTool - CrackMapExec File Indicators
+status: experimental
+level: high
+description: Detects file creation events with filename patterns used by CrackMapExec.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2024-03-11'
+modified: '2024-06-27'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://github.com/byt3bl33d3r/CrackMapExec/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9433ff9c-5d3f-4269-99f8-95fc826ea489''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|startswith: C:\Windows\Temp\
+    selection_names_str:
+        TargetFilename|endswith:
+            - \temp.ps1
+            - \msol.ps1
+    selection_names_re:
+        TargetFilename|re|all:
+            - \\[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.txt$
+            - \\[a-zA-Z]{8}\.tmp$
+    condition: selection_path and 1 of selection_names_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.291543+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.291543+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.291553+00:00'

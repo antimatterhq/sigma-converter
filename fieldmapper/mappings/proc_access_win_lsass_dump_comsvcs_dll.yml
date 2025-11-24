@@ -1,0 +1,51 @@
+id: a49fa4d5-11db-418c-8473-1e014a8dd462
+title: Lsass Memory Dump via Comsvcs DLL
+status: test
+level: high
+description: Detects adversaries leveraging the MiniDump export function from comsvcs.dll
+    via rundll32 to perform a memory dump from lsass.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+date: '2020-10-20'
+modified: '2023-11-29'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://twitter.com/shantanukhande/status/1229348874298388484
+    - https://modexp.wordpress.com/2019/08/30/minidumpwritedump-via-com-services-dll/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: \lsass.exe
+        SourceImage|endswith: \rundll32.exe
+        CallTrace|contains: comsvcs.dll
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:18:50.441570+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:50.441570+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:51.341002+00:00'
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:51.341018+00:00'
+        -   source_field: CallTrace
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:51.341021+00:00'

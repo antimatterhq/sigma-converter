@@ -1,0 +1,51 @@
+id: a29808fd-ef50-49ff-9c7a-59a9b040b404
+title: HackTool - Pypykatz Credentials Dumping Activity
+status: test
+level: high
+description: Detects the usage of "pypykatz" to obtain stored credentials. Adversaries
+    may attempt to extract credential material from the Security Account Manager (SAM)
+    database through Windows registry where the SAM database is stored
+author: frack113
+date: '2022-01-05'
+modified: '2023-02-05'
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+references:
+    - https://github.com/skelsec/pypykatz
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-2---registry-parse-with-pypykatz
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \pypykatz.exe
+            - \python.exe
+        CommandLine|contains|all:
+            - live
+            - registry
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:55.129954+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:55.129954+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:55.129959+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:55.129961+00:00'

@@ -1,0 +1,44 @@
+id: 155dbf56-e0a4-4dd0-8905-8a98705045e8
+title: UAC Bypass Abusing Winsat Path Parsing - File
+status: test
+level: high
+description: Detects the pattern of UAC Bypass using a path parsing issue in winsat.exe
+    (UACMe 52)
+author: Christian Burkard (Nextron Systems)
+date: '2021-08-30'
+modified: '2022-10-09'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+references:
+    - https://github.com/hfiref0x/UACME
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|startswith: C:\Users\
+        TargetFilename|endswith:
+            - \AppData\Local\Temp\system32\winsat.exe
+            - \AppData\Local\Temp\system32\winmm.dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.235057+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.235057+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.235067+00:00'

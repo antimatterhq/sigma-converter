@@ -1,0 +1,53 @@
+id: c420410f-c2d8-4010-856b-dffe21866437
+title: Enable LM Hash Storage
+status: test
+level: high
+description: 'Detects changes to the "NoLMHash" registry value in order to allow Windows
+    to store LM Hashes.
+
+    By setting this registry value to "0" (DWORD), Windows will be allowed to store
+    a LAN manager hash of your password in Active Directory and local SAM databases.
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-12-15'
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+references:
+    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-347a
+    - https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/prevent-windows-store-lm-hash-password
+    - https://www.sans.org/blog/protecting-privileged-domain-accounts-lm-hashes-the-good-the-bad-and-the-ugly/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''98dedfdd-8333-49d4-9f23-d7018cccae53''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: System\CurrentControlSet\Control\Lsa\NoLMHash
+        Details: DWORD (0x00000000)
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

@@ -1,0 +1,61 @@
+id: f8103686-e3e8-46f3-be72-65f7fcb4aa53
+title: AWS Console GetSigninToken Potential Abuse
+status: test
+level: medium
+description: 'Detects potentially suspicious events involving "GetSigninToken".
+
+    An adversary using the "aws_consoler" tool can leverage this console API to create
+    temporary federated credential that help obfuscate which AWS credential is compromised
+    (the original access key) and enables the adversary to pivot from the AWS CLI
+    to console sessions without the need for MFA using the new access key issued in
+    this request.
+
+    '
+author: Chester Le Bron (@123Le_Bron)
+date: '2024-02-26'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.007
+    - attack.t1550.001
+references:
+    - https://github.com/NetSPI/aws_consoler
+    - https://www.crowdstrike.com/blog/analysis-of-intrusion-campaign-targeting-telecom-and-bpo-companies/
+falsepositives:
+    - GetSigninToken events will occur when using AWS SSO portal to login and will
+        generate false positives if you do not filter for the expected user agent(s),
+        see filter. Non-SSO configured roles would be abnormal and should be investigated.
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource: signin.amazonaws.com
+        eventName: GetSigninToken
+    filter_main_console_ua:
+        userAgent|contains: Jersey/${project.version}
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:17:50.351081+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:17:50.351081+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: api_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:50.351093+00:00'
+        -   source_field: eventName
+            target_table: api_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:17:50.351096+00:00'
+        -   source_field: userAgent
+            target_table: api_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:17:50.351098+00:00'

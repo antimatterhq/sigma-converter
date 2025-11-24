@@ -1,0 +1,92 @@
+id: 5b768e71-86f2-4879-b448-81061cbae951
+title: Suspicious Manipulation Of Default Accounts Via Net.EXE
+status: test
+level: high
+description: Detects suspicious manipulations of default accounts such as 'administrator'
+    and 'guest'. For example 'enable' or 'disable' accounts or change the password...etc
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-01'
+modified: '2023-02-21'
+tags:
+    - attack.collection
+    - attack.t1560.001
+references:
+    - https://www.trellix.com/en-sg/about/newsroom/stories/threat-labs/lockergoga-ransomware-family-used-in-targeted-attacks.html
+    - https://redacted.com/blog/bianlian-ransomware-gang-gives-it-a-go/
+    - https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/
+falsepositives:
+    - Some false positives could occur with the admin or guest account. It depends
+        on the scripts being used by the admins in your env. If you experience a lot
+        of FP you could reduce the level to medium
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \net.exe
+            - \net1.exe
+        OriginalFileName:
+            - net.exe
+            - net1.exe
+    selection_user_option:
+        CommandLine|contains: ' user '
+    selection_username:
+        CommandLine|contains:
+            - ' Järjestelmänvalvoja '
+            - ' Rendszergazda '
+            - ' Администратор '
+            - ' Administrateur '
+            - ' Administrador '
+            - ' Administratör '
+            - ' Administrator '
+            - ' guest '
+            - ' DefaultAccount '
+            - ' "Järjestelmänvalvoja" '
+            - ' "Rendszergazda" '
+            - ' "Администратор" '
+            - ' "Administrateur" '
+            - ' "Administrador" '
+            - ' "Administratör" '
+            - ' "Administrator" '
+            - ' "guest" '
+            - ' "DefaultAccount" '
+            - ' ''Järjestelmänvalvoja'' '
+            - ' ''Rendszergazda'' '
+            - ' ''Администратор'' '
+            - ' ''Administrateur'' '
+            - ' ''Administrador'' '
+            - ' ''Administratör'' '
+            - ' ''Administrator'' '
+            - ' ''guest'' '
+            - ' ''DefaultAccount'' '
+    filter:
+        CommandLine|contains|all:
+            - guest
+            - /active no
+    condition: all of selection_* and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.443393+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.443393+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:14.443400+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:14.443402+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:14.443403+00:00'

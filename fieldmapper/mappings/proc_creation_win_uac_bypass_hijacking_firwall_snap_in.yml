@@ -1,0 +1,50 @@
+id: e52cb31c-10ed-4aea-bcb7-593c9f4a315b
+title: UAC Bypass via Windows Firewall Snap-In Hijack
+status: test
+level: medium
+description: Detects attempts to bypass User Account Control (UAC) by hijacking the
+    Microsoft Management Console (MMC) Windows Firewall snap-in
+author: Tim Rauch, Elastic (idea)
+date: '2022-09-27'
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+references:
+    - https://www.elastic.co/guide/en/security/current/uac-bypass-via-windows-firewall-snap-in-hijack.html#uac-bypass-via-windows-firewall-snap-in-hijack
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \mmc.exe
+        ParentCommandLine|contains: WF.msc
+    filter:
+        Image|endswith: \WerFault.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:15.709504+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:15.709504+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:15.709518+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:15.709519+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:15.709521+00:00'

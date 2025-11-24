@@ -1,0 +1,48 @@
+id: de25eeb8-3655-4643-ac3a-b662d3f26b6b
+title: Disable Or Stop Services
+status: test
+level: medium
+description: Detects the usage of utilities such as 'systemctl', 'service'...etc to
+    stop or disable tools and services
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-15'
+tags:
+    - attack.defense-evasion
+references:
+    - https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith:
+            - /service
+            - /systemctl
+            - /chkconfig
+        CommandLine|contains:
+            - stop
+            - disable
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.699575+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.699575+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:51.699588+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:51.699591+00:00'

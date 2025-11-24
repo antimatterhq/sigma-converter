@@ -1,0 +1,62 @@
+id: 39f919f3-980b-4e6f-a975-8af7e507ef2b
+title: Critical Hive In Suspicious Location Access Bits Cleared
+status: test
+level: high
+description: 'Detects events from the Kernel-General ETW indicating that the access
+    bits of a hive with a system like hive name located in the temp directory have
+    been reset.
+
+    This occurs when an application tries to access a hive and the hive has not be
+    recognized since the last 7 days (by default).
+
+    Registry hive dumping utilities such as QuarksPwDump were seen emitting this behavior.
+
+    '
+author: Florian Roth (Nextron Systems)
+date: '2017-05-15'
+modified: '2024-01-18'
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+references:
+    - https://github.com/nasbench/Misc-Research/blob/b20da2336de0f342d31ef4794959d28c8d3ba5ba/ETW/Microsoft-Windows-Kernel-General.md
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''839dd1e8-eda8-4834-8145-01beeee33acd''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        EventID: 16
+        Provider_Name: Microsoft-Windows-Kernel-General
+        HiveName|contains:
+            - \Temp\SAM
+            - \Temp\SECURITY
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:32.816543+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:32.816543+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:33.753053+00:00'
+        -   source_field: Provider_Name
+            target_table: file_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:33.753062+00:00'
+        -   source_field: HiveName
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:33.753065+00:00'

@@ -1,0 +1,58 @@
+id: a5b40a90-baf5-4bf7-a6f7-373494881d22
+title: ETW Logging/Processing Option Disabled On IIS Server
+status: experimental
+level: medium
+description: Detects changes to of the IIS server configuration in order to disable/remove
+    the ETW logging/processing option.
+author: frack113, Nasreddine Bencherchali
+date: '2024-10-06'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+    - attack.t1505.004
+references:
+    - https://learn.microsoft.com/en-us/iis/manage/provisioning-and-managing-iis/configure-logging-in-iis
+    - https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/
+    - https://learn.microsoft.com/en-us/iis/configuration/system.applicationhost/sites/sitedefaults/logfile/
+falsepositives:
+    - Legitimate administrator activity
+taxonomy: sigma
+logsource:
+    product: windows
+    service: iis-configuration
+detection:
+    selection:
+        EventID: 29
+        Configuration|endswith: '@logTargetW3C'
+        OldValue|contains: ETW
+    filter_main_etw_added:
+        NewValue|contains: ETW
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:22.196701+00:00'
+        service:
+            source_field: service
+            source_value: iis-configuration
+            mapped_at: '2025-11-13T20:24:22.196701+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: file_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:23.080622+00:00'
+        -   source_field: Configuration
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:23.080644+00:00'
+        -   source_field: OldValue
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:23.080648+00:00'
+        -   source_field: NewValue
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:23.080652+00:00'

@@ -1,0 +1,51 @@
+id: 023c654f-8f16-44d9-bb2b-00ff36a62af9
+title: Python Function Execution Security Warning Disabled In Excel
+status: test
+level: high
+description: 'Detects changes to the registry value "PythonFunctionWarnings" that
+    would prevent any warnings or alerts from showing when Python functions are about
+    to be executed.
+
+    Threat actors could run malicious code through the new Microsoft Excel feature
+    that allows Python to run within the spreadsheet.
+
+    '
+author: '@Kostastsale'
+date: '2023-08-22'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://support.microsoft.com/en-us/office/data-security-and-python-in-excel-33cc88a4-4a87-485e-9ff9-f35958278327
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''17e53739-a1fc-4a62-b1b9-87711c2d5e44''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - \Microsoft\Office\
+            - \Excel\Security
+            - PythonFunctionWarnings
+        CommandLine|contains: ' 0'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.499679+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.499679+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.499684+00:00'

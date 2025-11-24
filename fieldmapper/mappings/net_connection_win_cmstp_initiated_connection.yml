@@ -1,0 +1,63 @@
+id: efafe0bf-4238-479e-af8f-797bd3490d2d
+title: Outbound Network Connection Initiated By Cmstp.EXE
+status: test
+level: high
+description: 'Detects a network connection initiated by Cmstp.EXE
+
+    Its uncommon for "cmstp.exe" to initiate an outbound network connection. Investigate
+    the source of such requests to determine if they are malicious.
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-30'
+modified: '2024-05-31'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.003
+references:
+    - https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: \cmstp.exe
+        Initiated: 'true'
+    filter_main_local_ranges:
+        DestinationIp|cidr:
+            - 127.0.0.0/8
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 169.254.0.0/16
+            - ::1/128
+            - fe80::/10
+            - fc00::/7
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:08.437742+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:08.437742+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:08.437789+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:08.437794+00:00'
+        -   source_field: DestinationIp
+            target_table: network_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:21:08.437797+00:00'

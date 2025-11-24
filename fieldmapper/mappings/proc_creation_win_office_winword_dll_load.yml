@@ -1,0 +1,55 @@
+id: f7375e28-5c14-432f-b8d1-1db26c832df3
+title: Potential Arbitrary DLL Load Using Winword
+status: test
+level: medium
+description: Detects potential DLL sideloading using the Microsoft Office winword
+    process via the '/l' flag.
+author: Victor Sergeev, oscd.community
+date: '2020-10-09'
+modified: '2023-03-29'
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+references:
+    - https://github.com/D4Vinci/One-Lin3r/blob/9fdfa5f0b9c698dfbd4cdfe7d2473192777ae1c6/one_lin3r/core/liners/windows/cmd/dll_loader_word.py
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''2621b3a6-3840-4810-ac14-a02426086171''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \WINWORD.exe
+        OriginalFileName: WinWord.exe
+    selection_dll:
+        CommandLine|contains|all:
+            - '/l '
+            - .dll
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:21:00.886589+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:00.886589+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:00.886594+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:21:00.886595+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:00.886596+00:00'

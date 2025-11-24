@@ -1,0 +1,41 @@
+id: 72f4ab3f-787d-495d-a55d-68c2ff46cf4c
+title: Connection Proxy
+status: test
+level: low
+description: Detects setting proxy configuration
+author: Ömer Günal
+date: '2020-06-17'
+modified: '2022-10-05'
+tags:
+    - attack.defense-evasion
+    - attack.t1090
+references:
+    - https://attack.mitre.org/techniques/T1090/
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        CommandLine|contains:
+            - http_proxy=
+            - https_proxy=
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.904734+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.904734+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.904737+00:00'

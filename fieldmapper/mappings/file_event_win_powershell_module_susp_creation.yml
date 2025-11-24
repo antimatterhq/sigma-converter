@@ -1,0 +1,44 @@
+id: e8a52bbd-bced-459f-bd93-64db45ce7657
+title: Potential Suspicious PowerShell Module File Created
+status: test
+level: medium
+description: Detects the creation of a new PowerShell module in the first folder of
+    the module directory structure "\WindowsPowerShell\Modules\malware\malware.psm1".
+    This is somewhat an uncommon practice as legitimate modules often includes a version
+    folder.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-09'
+tags:
+    - attack.persistence
+references:
+    - Internal Research
+    - https://learn.microsoft.com/en-us/powershell/scripting/developer/module/understanding-a-windows-powershell-module?view=powershell-7.3
+falsepositives:
+    - False positive rate will vary depending on the environments. Additional filters
+        might be required to make this logic usable in production.
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - \WindowsPowerShell\Modules\*\.ps
+            - \WindowsPowerShell\Modules\*\.dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.255403+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.255403+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.255408+00:00'

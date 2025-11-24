@@ -1,0 +1,62 @@
+id: 4a2a2c3e-209f-4d01-b513-4155a540b469
+title: Suspicious MsiExec Embedding Parent
+status: test
+level: medium
+description: Adversaries may abuse msiexec.exe to proxy the execution of malicious
+    payloads
+author: frack113
+date: '2022-04-16'
+modified: '2022-07-14'
+tags:
+    - attack.t1218.007
+    - attack.defense-evasion
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+            - \cmd.exe
+        ParentCommandLine|contains|all:
+            - MsiExec.exe
+            - '-Embedding '
+    filter_splunk_ufw:
+        Image|endswith: :\Windows\System32\cmd.exe
+        CommandLine|contains: C:\Program Files\SplunkUniversalForwarder\bin\
+    filter_vs:
+        CommandLine|contains: \DismFoDInstall.cmd
+        ParentCommandLine|contains|all:
+            - '\MsiExec.exe -Embedding '
+            - Global\MSI0000
+    condition: selection and not 1 of filter*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.469447+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.469447+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:49.469454+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.469456+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.469458+00:00'

@@ -1,0 +1,55 @@
+id: 4bb79b62-ef12-4861-981d-2aab43fab642
+title: TacticalRMM Service Installation
+status: test
+level: medium
+description: Detects a TacticalRMM service installation. Tactical RMM is a remote
+    monitoring & management tool.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-11-28'
+tags:
+    - attack.command-and-control
+    - attack.t1219
+references:
+    - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
+falsepositives:
+    - Legitimate use of the tool
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_root:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+    selection_service:
+        ImagePath|contains: tacticalrmm.exe
+        ServiceName|contains: TacticalRMM Agent Service
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:25.435219+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:25.435219+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:25.435225+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:25.435227+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:25.435228+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:25.435230+00:00'

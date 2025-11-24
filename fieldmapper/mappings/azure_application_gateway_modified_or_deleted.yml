@@ -1,0 +1,45 @@
+id: ad87d14e-7599-4633-ba81-aeb60cfe8cd6
+title: Azure Application Gateway Modified or Deleted
+status: test
+level: medium
+description: Identifies when a application gateway is modified or deleted.
+author: Austin Songer
+date: '2021-08-16'
+modified: '2022-08-23'
+tags:
+    - attack.impact
+references:
+    - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
+falsepositives:
+    - Application gateway being modified or deleted may be performed by a system administrator.
+    - Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+    - Application gateway modified or deleted from unfamiliar users should be investigated.
+        If known behavior is causing false positives, it can be exempted from the
+        rule.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    selection:
+        operationName:
+            - MICROSOFT.NETWORK/APPLICATIONGATEWAYS/WRITE
+            - MICROSOFT.NETWORK/APPLICATIONGATEWAYS/DELETE
+    condition: selection
+ocsf_mapping:
+    class_name: entity_management
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:32.215391+00:00'
+        service:
+            source_field: service
+            source_value: activitylogs
+            mapped_at: '2025-11-13T20:17:32.215391+00:00'
+    detection_fields:
+        -   source_field: operationName
+            target_table: entity_management
+            target_field: api.operation
+            mapped_at: '2025-11-13T20:17:32.215397+00:00'

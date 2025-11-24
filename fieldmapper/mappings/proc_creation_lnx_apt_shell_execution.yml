@@ -1,0 +1,53 @@
+id: bb382fd5-b454-47ea-a264-1828e4c766d6
+title: Shell Invocation via Apt - Linux
+status: test
+level: medium
+description: 'Detects the use of the "apt" and "apt-get" commands to execute a shell
+    or proxy commands.
+
+    Such behavior may be associated with privilege escalation, unauthorized command
+    execution, or to break out from restricted environments.
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-12-28'
+modified: '2024-09-02'
+tags:
+    - attack.discovery
+    - attack.t1083
+references:
+    - https://gtfobins.github.io/gtfobins/apt/
+    - https://gtfobins.github.io/gtfobins/apt-get/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith:
+            - /apt
+            - /apt-get
+        CommandLine|contains: APT::Update::Pre-Invoke::=
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.694672+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.694672+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:51.694693+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:51.694696+00:00'

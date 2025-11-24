@@ -1,0 +1,55 @@
+id: 7f103213-a04e-4d59-8261-213dddf22314
+title: MSSQL XPCmdshell Suspicious Execution
+status: test
+level: high
+description: Detects when the MSSQL "xp_cmdshell" stored procedure is used to execute
+    commands
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-12'
+modified: '2024-06-26'
+tags:
+    - attack.execution
+references:
+    - https://www.netspi.com/blog/technical/network-penetration-testing/sql-server-persistence-part-1-startup-stored-procedures/
+    - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: application
+    definition: 'Requirements: MSSQL audit policy to monitor for "xp_cmdshell" must
+        be enabled in order to receive this event in the application log (Follow this
+        tutorial https://dba.stackexchange.com/questions/103183/is-there-any-way-to-monitor-execution-of-xp-cmdshell-in-sql-server-2012)'
+detection:
+    selection:
+        Provider_Name|contains: MSSQL
+        EventID: 33205
+        Data|contains|all:
+            - object_name:xp_cmdshell
+            - statement:EXEC
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:47.332286+00:00'
+        service:
+            source_field: service
+            source_value: application
+            mapped_at: '2025-11-13T20:25:47.332286+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:47.332291+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:47.332293+00:00'
+        -   source_field: Data
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:47.332294+00:00'

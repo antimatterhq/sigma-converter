@@ -1,0 +1,55 @@
+id: b593fd50-7335-4682-a36c-4edcb68e4641
+title: Monero Crypto Coin Mining Pool Lookup
+status: stable
+level: high
+description: Detects suspicious DNS queries to Monero mining pools
+author: Florian Roth (Nextron Systems)
+date: '2021-10-24'
+tags:
+    - attack.impact
+    - attack.t1496
+    - attack.exfiltration
+    - attack.t1567
+references:
+    - https://www.nextron-systems.com/2021/10/24/monero-mining-pool-fqdns/
+falsepositives:
+    - Legitimate crypto coin mining
+taxonomy: sigma
+logsource:
+    category: dns
+detection:
+    selection:
+        query|contains:
+            - pool.minexmr.com
+            - fr.minexmr.com
+            - de.minexmr.com
+            - sg.minexmr.com
+            - ca.minexmr.com
+            - us-west.minexmr.com
+            - pool.supportxmr.com
+            - mine.c3pool.com
+            - xmr-eu1.nanopool.org
+            - xmr-eu2.nanopool.org
+            - xmr-us-east1.nanopool.org
+            - xmr-us-west1.nanopool.org
+            - xmr-asia1.nanopool.org
+            - xmr-jp1.nanopool.org
+            - xmr-au1.nanopool.org
+            - xmr.2miners.com
+            - xmr.hashcity.org
+            - xmr.f2pool.com
+            - xmrpool.eu
+            - pool.hashvault.pro
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns
+            mapped_at: '2025-11-13T20:15:12.190834+00:00'
+    detection_fields:
+        -   source_field: query
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:15:12.190855+00:00'

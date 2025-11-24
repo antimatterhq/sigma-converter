@@ -1,0 +1,69 @@
+id: 654fcc6d-840d-4844-9b07-2c3300e54a26
+title: Legitimate Application Dropped Archive
+status: test
+level: high
+description: Detects programs on a Windows system that should not write an archive
+    to disk
+author: frack113, Florian Roth
+date: '2022-08-21'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://github.com/Neo23x0/sysmon-config/blob/3f808d9c022c507aae21a9346afba4a59dd533b9/sysmonconfig-export-block.xml#L1326
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \winword.exe
+            - \excel.exe
+            - \powerpnt.exe
+            - \msaccess.exe
+            - \mspub.exe
+            - \eqnedt32.exe
+            - \visio.exe
+            - \wordpad.exe
+            - \wordview.exe
+            - \certutil.exe
+            - \certoc.exe
+            - \CertReq.exe
+            - \Desktopimgdownldr.exe
+            - \esentutl.exe
+            - \finger.exe
+            - \notepad.exe
+            - \AcroRd32.exe
+            - \RdrCEF.exe
+            - \mshta.exe
+            - \hh.exe
+        TargetFilename|endswith:
+            - .zip
+            - .rar
+            - .7z
+            - .diagcab
+            - .appx
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.639654+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.639654+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:34.639659+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.639661+00:00'

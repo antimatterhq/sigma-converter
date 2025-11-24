@@ -1,0 +1,47 @@
+id: b1decb61-ed83-4339-8e95-53ea51901720
+title: TeamViewer Log File Deleted
+status: test
+level: low
+description: Detects the deletion of the TeamViewer log files which may indicate an
+    attempt to destroy forensic evidence
+author: frack113
+date: '2022-01-16'
+modified: '2023-02-15'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.004
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.004/T1070.004.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_delete
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: \TeamViewer_
+        TargetFilename|endswith: .log
+    filter:
+        Image: C:\Windows\system32\svchost.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_delete
+            mapped_at: '2025-11-13T20:21:38.788757+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:38.788757+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:38.788767+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:38.788769+00:00'
