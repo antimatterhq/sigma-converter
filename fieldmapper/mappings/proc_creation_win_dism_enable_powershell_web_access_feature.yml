@@ -1,0 +1,55 @@
+id: 7e8f2d3b-9c1a-4f67-b9e8-8d9006e0e51f
+title: PowerShell Web Access Feature Enabled Via DISM
+status: test
+level: high
+description: Detects the use of DISM to enable the PowerShell Web Access feature,
+    which could be used for remote access and potential abuse
+author: Michael Haag
+date: '2024-09-03'
+tags:
+    - attack.persistence
+    - attack.t1548.002
+references:
+    - https://docs.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature
+    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-241a
+    - https://gist.github.com/MHaggis/7e67b659af9148fa593cf2402edebb41
+falsepositives:
+    - Legitimate PowerShell Web Access installations by administrators
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \dism.exe
+        OriginalFileName: DISM.EXE
+    selection_cli:
+        CommandLine|contains|all:
+            - WindowsPowerShellWebAccess
+            - /online
+            - /enable-feature
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:09.457773+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:09.457773+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:09.457782+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:09.457784+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:09.457786+00:00'

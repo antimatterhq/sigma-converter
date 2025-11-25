@@ -1,0 +1,61 @@
+id: 1543ae20-cbdf-4ec1-8d12-7664d667a825
+title: Suspicious Commands Linux
+status: test
+level: medium
+description: Detects relevant commands often related to malware or hacking activity
+author: Florian Roth (Nextron Systems)
+date: '2017-12-12'
+modified: '2022-10-05'
+tags:
+    - attack.execution
+    - attack.t1059.004
+references:
+    - Internal Research - mostly derived from exploit code including code in MSF
+falsepositives:
+    - Admin activity
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    cmd1:
+        type: EXECVE
+        a0: chmod
+        a1: 777
+    cmd2:
+        type: EXECVE
+        a0: chmod
+        a1: u+s
+    cmd3:
+        type: EXECVE
+        a0: cp
+        a1: /bin/ksh
+    cmd4:
+        type: EXECVE
+        a0: cp
+        a1: /bin/sh
+    condition: 1 of cmd*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:33.304897+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:33.304897+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:33.304915+00:00'
+        -   source_field: a0
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:33.304918+00:00'
+        -   source_field: a1
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:33.304920+00:00'

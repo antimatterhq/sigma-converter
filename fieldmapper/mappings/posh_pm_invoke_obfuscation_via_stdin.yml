@@ -1,0 +1,44 @@
+id: c72aca44-8d52-45ad-8f81-f96c4d3c755e
+title: Invoke-Obfuscation Via Stdin - PowerShell Module
+status: test
+level: high
+description: Detects Obfuscated Powershell via Stdin in Scripts
+author: Nikita Nazarov, oscd.community
+date: '2020-10-12'
+modified: '2024-04-05'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''86b896ba-ffa1-4fea-83e3-ee28a4c915c7''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection_4103:
+        Payload|re: (?i)(set).*&&\s?set.*(environment|invoke|\$?\{?input).*&&.*"
+    condition: selection_4103
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_module
+            mapped_at: '2025-11-13T20:21:51.367380+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:51.367380+00:00'
+    detection_fields:
+        -   source_field: Payload
+            target_table: script_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.367384+00:00'

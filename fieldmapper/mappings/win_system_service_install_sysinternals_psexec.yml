@@ -1,0 +1,57 @@
+id: 42c575ea-e41e-41f1-b248-8093c3e82a28
+title: PsExec Service Installation
+status: test
+level: medium
+description: Detects PsExec service installation and execution events
+author: Thomas Patzke
+date: '2017-06-12'
+modified: '2023-08-04'
+tags:
+    - attack.execution
+    - attack.t1569.002
+    - attack.s0029
+references:
+    - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+    - https://jpcertcc.github.io/ToolAnalysisResultSheet
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_eid:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+    selection_service:
+        ServiceName: PSEXESVC
+        ImagePath|endswith: \PSEXESVC.exe
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:18.950259+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:18.950259+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:18.950271+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:18.950272+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:18.950274+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:18.950275+00:00'

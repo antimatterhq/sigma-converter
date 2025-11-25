@@ -1,0 +1,67 @@
+id: 4931188c-178e-4ee7-a348-39e8a7a56821
+title: Filter Driver Unloaded Via Fltmc.EXE
+status: test
+level: medium
+description: Detect filter driver unloading activity via fltmc.exe
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-02-13'
+modified: '2024-06-24'
+tags:
+    - attack.defense-evasion
+    - attack.t1070
+    - attack.t1562
+    - attack.t1562.002
+references:
+    - https://www.darkoperator.com/blog/2018/10/5/operating-offensively-against-sysmon
+    - https://www.cybereason.com/blog/threat-analysis-report-lockbit-2.0-all-paths-lead-to-ransom
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4d7cda18-1b12-4e52-b45c-d28653210df8''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \fltMC.exe
+        OriginalFileName: fltMC.exe
+    selection_cli:
+        CommandLine|contains: unload
+    filter_optional_avira:
+        ParentImage|startswith: C:\Users\
+        ParentImage|contains: \AppData\Local\Temp\
+        ParentImage|endswith: \endpoint-protection-installer-x64.tmp
+        CommandLine|endswith: unload rtp_filesystem_filter
+    filter_optional_manageengine:
+        ParentImage: C:\Program Files (x86)\ManageEngine\uems_agent\bin\dcfaservice64.exe
+        CommandLine|endswith: unload DFMFilter
+    condition: all of selection_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.445522+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.445522+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:14.445530+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:14.445531+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:14.445532+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:14.445534+00:00'

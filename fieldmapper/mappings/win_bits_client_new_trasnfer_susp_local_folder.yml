@@ -1,0 +1,49 @@
+id: f8a56cb7-a363-44ed-a82f-5926bb44cd05
+title: BITS Transfer Job Download To Potential Suspicious Folder
+status: test
+level: high
+description: Detects new BITS transfer job where the LocalName/Saved file is stored
+    in a potentially suspicious location
+author: Florian Roth (Nextron Systems)
+date: '2022-06-28'
+modified: '2023-03-27'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    selection:
+        EventID: 16403
+        LocalName|contains:
+            - \Desktop\
+            - C:\Users\Public\
+            - C:\PerfLogs\
+    condition: selection
+ocsf_mapping:
+    class_name: scheduled_job_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:16.401169+00:00'
+        service:
+            source_field: service
+            source_value: bits-client
+            mapped_at: '2025-11-13T20:24:16.401169+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: scheduled_job_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:16.401201+00:00'
+        -   source_field: LocalName
+            target_table: scheduled_job_activity
+            target_field: job.name
+            mapped_at: '2025-11-13T20:24:16.401205+00:00'

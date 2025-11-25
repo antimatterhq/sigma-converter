@@ -1,0 +1,47 @@
+id: 9292293b-8496-4715-9db6-37028dcda4b3
+title: Replace.exe Usage
+status: test
+level: medium
+description: Detects the use of Replace.exe which can be used to replace file with
+    another file
+author: frack113
+date: '2022-03-06'
+modified: '2024-03-13'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Replace/
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/replace
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \replace.exe
+    argument:
+        CommandLine|contains|windash: -a
+    condition: selection and argument
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.010813+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.010813+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.010819+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.010821+00:00'

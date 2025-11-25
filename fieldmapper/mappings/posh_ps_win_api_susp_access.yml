@@ -1,0 +1,63 @@
+id: 03d83090-8cba-44a0-b02f-0b756a050306
+title: Potential WinAPI Calls Via PowerShell Scripts
+status: test
+level: high
+description: Detects use of WinAPI functions in PowerShell scripts
+author: Nasreddine Bencherchali (Nextron Systems), Nikita Nazarov, oscd.community
+date: '2020-10-06'
+modified: '2023-06-20'
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.t1106
+references:
+    - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ba3f5c1b-6272-4119-9dbd-0bc8d21c2702''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_injection:
+        ScriptBlockText|contains|all:
+            - VirtualAlloc
+            - OpenProcess
+            - WriteProcessMemory
+            - CreateRemoteThread
+    selection_token_steal:
+        ScriptBlockText|contains|all:
+            - OpenProcessToken
+            - LookupPrivilegeValue
+            - AdjustTokenPrivileges
+    selection_duplicate_token:
+        ScriptBlockText|contains|all:
+            - OpenProcessToken
+            - DuplicateTokenEx
+            - CloseHandle
+    selection_process_write_read:
+        ScriptBlockText|contains|all:
+            - WriteProcessMemory
+            - VirtualAlloc
+            - ReadProcessMemory
+            - VirtualFree
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.225271+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.225271+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.225281+00:00'

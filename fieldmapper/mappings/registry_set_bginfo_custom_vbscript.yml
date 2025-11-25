@@ -1,0 +1,51 @@
+id: 992dd79f-dde8-4bb0-9085-6350ba97cfb3
+title: New BgInfo.EXE Custom VBScript Registry Configuration
+status: test
+level: medium
+description: Detects setting of a new registry value related to BgInfo configuration,
+    which can be abused to execute custom VBScript via "BgInfo.exe"
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-08-16'
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+references:
+    - Internal Research
+falsepositives:
+    - Legitimate VBScript
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cd277474-5c52-4423-a52b-ac2d7969902f''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        EventType: SetValue
+        TargetObject|contains: \Software\Winternals\BGInfo\UserFields\
+        Details|startswith: '4'
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: EventType
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

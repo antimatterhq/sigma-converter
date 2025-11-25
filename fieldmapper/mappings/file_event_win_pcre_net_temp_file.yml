@@ -1,0 +1,40 @@
+id: 6e90ae7a-7cd3-473f-a035-4ebb72d961da
+title: PCRE.NET Package Temp Files
+status: test
+level: high
+description: Detects processes creating temp files related to PCRE.NET package
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+date: '2020-10-29'
+modified: '2022-10-09'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://twitter.com/rbmaslen/status/1321859647091970051
+    - https://twitter.com/tifkin_/status/1321916444557365248
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: \AppData\Local\Temp\ba9ea7344a4a5f591d6e5dc32a13494b\
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.269241+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.269241+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.269245+00:00'

@@ -1,0 +1,51 @@
+id: 48437c39-9e5f-47fb-af95-3d663c3f2919
+title: UAC Disabled
+status: stable
+level: medium
+description: 'Detects when an attacker tries to disable User Account Control (UAC)
+    by setting the registry value "EnableLUA" to 0.
+
+    '
+author: frack113
+date: '2022-01-05'
+modified: '2024-05-10'
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1548.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/7e11e9b79583545f208a6dc3fa062f2ed443d999/atomics/T1548.002/T1548.002.md
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c5f6a85d-b647-40f7-bbad-c10b66bab038''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''0d7ceeef-3539-4392-8953-3dc664912714''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: \Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA
+        Details: DWORD (0x00000000)
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

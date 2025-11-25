@@ -1,0 +1,67 @@
+id: 0ea52357-cd59-4340-9981-c46c7e900428
+title: Potentially Suspicious Rundll32.EXE Execution of UDL File
+status: experimental
+level: medium
+description: 'Detects the execution of rundll32.exe with the oledb32.dll library to
+    open a UDL file.
+
+    Threat actors can abuse this technique as a phishing vector to capture authentication
+    credentials or other sensitive data.
+
+    '
+author: '@kostastsale'
+date: '2024-08-16'
+tags:
+    - attack.execution
+    - attack.t1218.011
+    - attack.t1071
+references:
+    - https://trustedsec.com/blog/oops-i-udld-it-again
+falsepositives:
+    - UDL files serve as a convenient and flexible tool for managing and testing database
+        connections in various development and administrative scenarios.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith: \explorer.exe
+    selection_img:
+        Image|endswith: \rundll32.exe
+        OriginalFileName: RUNDLL32.EXE
+    selection_cli:
+        CommandLine|contains|all:
+            - oledb32.dll
+            - ',OpenDSLFile '
+            - \Users\*\Downloads\
+        CommandLine|endswith: .udl
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:47.745874+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:47.745874+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:47.745887+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:47.745890+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:47.745892+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:47.745894+00:00'

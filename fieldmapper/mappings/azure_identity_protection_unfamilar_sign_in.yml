@@ -1,0 +1,43 @@
+id: 128faeef-79dd-44ca-b43c-a9e236a60f49
+title: Unfamiliar Sign-In Properties
+status: test
+level: high
+description: Detects sign-in with properties that are unfamiliar to the user. The
+    detection considers past sign-in history to look for anomalous sign-ins.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-03'
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.initial-access
+references:
+    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#unfamiliar-sign-in-properties
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
+falsepositives:
+    - User changing to a new device, location, browser, etc.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    selection:
+        riskEventType: unfamiliarFeatures
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.433365+00:00'
+        service:
+            source_field: service
+            source_value: riskdetection
+            mapped_at: '2025-11-13T20:16:23.433365+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.433376+00:00'

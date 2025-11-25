@@ -1,0 +1,58 @@
+id: 37e8d358-6408-4853-82f4-98333fca7014
+title: Remote Access Tool - NetSupport Execution From Unusual Location
+status: test
+level: medium
+description: Detects execution of client32.exe (NetSupport RAT) from an unusual location
+    (outside of 'C:\Program Files')
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-19'
+modified: '2024-11-23'
+tags:
+    - attack.defense-evasion
+references:
+    - https://redcanary.com/blog/misbehaving-rats/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \client32.exe
+        Product|contains: NetSupport Remote Control
+        OriginalFileName|contains: client32.exe
+        Hashes|contains: IMPHASH=a9d50692e95b79723f3e76fcf70d023e
+    filter:
+        Image|startswith:
+            - C:\Program Files\
+            - C:\Program Files (x86)\
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:02.446230+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:02.446230+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:02.446289+00:00'
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:02.446294+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:02.446297+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:02.446299+00:00'

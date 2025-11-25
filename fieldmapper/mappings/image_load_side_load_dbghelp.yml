@@ -1,0 +1,60 @@
+id: 6414b5cd-b19d-447e-bb5e-9f03940b5784
+title: Potential DLL Sideloading Of DBGHELP.DLL
+status: test
+level: medium
+description: Detects potential DLL sideloading of "dbghelp.dll"
+author: Nasreddine Bencherchali (Nextron Systems), Wietze Beukema (project and research)
+date: '2022-10-25'
+modified: '2023-05-05'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://hijacklibs.net/
+falsepositives:
+    - Legitimate applications loading their own versions of the DLL mentioned in this
+        rule
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \dbghelp.dll
+    filter_main_generic:
+        ImageLoaded|startswith:
+            - C:\Program Files (x86)\
+            - C:\Program Files\
+            - C:\Windows\SoftwareDistribution\
+            - C:\Windows\System32\
+            - C:\Windows\SystemTemp\
+            - C:\Windows\SysWOW64\
+            - C:\Windows\WinSxS\
+    filter_optional_anaconda:
+        ImageLoaded|endswith:
+            - \Anaconda3\Lib\site-packages\vtrace\platforms\windll\amd64\dbghelp.dll
+            - \Anaconda3\Lib\site-packages\vtrace\platforms\windll\i386\dbghelp.dll
+    filter_optional_epicgames:
+        ImageLoaded|endswith:
+            - \Epic Games\Launcher\Engine\Binaries\ThirdParty\DbgHelp\dbghelp.dll
+            - \Epic Games\MagicLegends\x86\dbghelp.dll
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: null
+            target_field: null
+            mapped_at: null

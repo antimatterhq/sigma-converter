@@ -1,0 +1,53 @@
+id: 8289bf8c-4aca-4f5a-9db3-dc3d7afe5c10
+title: Unsigned Binary Loaded From Suspicious Location
+status: test
+level: high
+description: Detects Code Integrity (CI) engine blocking processes from loading unsigned
+    DLLs residing in suspicious locations
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-03'
+modified: '2022-09-28'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+references:
+    - https://github.com/nasbench/EVTX-ETW-Resources/blob/45fd5be71a51aa518b1b36d4e1f36af498084e27/ETWEventsList/CSV/Windows11/21H2/W11_21H2_Pro_20220719_22000.795/Providers/Microsoft-Windows-Security-Mitigations.csv
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security-mitigations
+detection:
+    selection:
+        EventID:
+            - 11
+            - 12
+        ImageName|contains:
+            - \Users\Public\
+            - \PerfLogs\
+            - \Desktop\
+            - \Downloads\
+            - \AppData\Local\Temp\
+            - C:\Windows\TEMP\
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:32.444421+00:00'
+        service:
+            source_field: service
+            source_value: security-mitigations
+            mapped_at: '2025-11-13T20:24:32.444421+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:33.751374+00:00'
+        -   source_field: ImageName
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:24:33.751410+00:00'

@@ -1,0 +1,48 @@
+id: 457df417-8b9d-4912-85f3-9dbda39c3645
+title: Suspicious Nohup Execution
+status: test
+level: high
+description: Detects execution of binaries located in potentially suspicious locations
+    via "nohup"
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+date: '2023-06-02'
+tags:
+    - attack.execution
+references:
+    - https://blogs.jpcert.or.jp/en/2023/05/gobrat.html
+    - https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/
+    - https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection
+    - https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e4ffe466-6ff8-48d4-94bd-e32d1a6061e2''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /nohup
+        CommandLine|contains: /tmp/
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.255153+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.255153+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.255173+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.255176+00:00'

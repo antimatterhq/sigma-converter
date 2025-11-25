@@ -1,0 +1,42 @@
+id: 065cceea-77ec-4030-9052-fc0affea7110
+title: DNS Query for Anonfiles.com Domain - Sysmon
+status: test
+level: high
+description: Detects DNS queries for "anonfiles.com", which is an anonymous file upload
+    platform often used for malicious purposes
+author: pH-T (Nextron Systems)
+date: '2022-07-15'
+modified: '2023-01-16'
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+references:
+    - https://www.trendmicro.com/vinfo/us/security/news/ransomware-spotlight/ransomware-spotlight-blackbyte
+falsepositives:
+    - Rare legitimate access to anonfiles.com
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''29f171d7-aa47-42c7-9c7b-3c87938164d9''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    selection:
+        QueryName|contains: .anonfiles.com
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns_query
+            mapped_at: '2025-11-13T20:21:06.387236+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:06.387236+00:00'
+    detection_fields:
+        -   source_field: QueryName
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:21:06.387242+00:00'

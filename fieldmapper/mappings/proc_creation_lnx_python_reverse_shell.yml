@@ -1,0 +1,54 @@
+id: 32e62bc7-3de0-4bb1-90af-532978fe42c0
+title: Python Reverse Shell Execution Via PTY And Socket Modules
+status: test
+level: high
+description: 'Detects the execution of python with calls to the socket and pty module
+    in order to connect and spawn a potential reverse shell.
+
+    '
+author: '@d4ns4n_, Nasreddine Bencherchali (Nextron Systems)'
+date: '2023-04-24'
+modified: '2024-11-04'
+tags:
+    - attack.execution
+references:
+    - https://www.revshells.com/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c4042d54-110d-45dd-a0e1-05c47822c937''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|contains: python
+        CommandLine|contains|all:
+            - ' -c '
+            - import
+            - pty
+            - socket
+            - spawn
+            - .connect
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.727106+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.727106+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:51.727112+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:51.727114+00:00'

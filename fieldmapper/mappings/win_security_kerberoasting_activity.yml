@@ -1,0 +1,72 @@
+id: d04ae2b8-ad54-4de0-bd87-4bc1da66aa59
+title: Kerberoasting Activity - Initial Query
+status: test
+level: medium
+description: 'This rule will collect the data needed to start looking into possible
+    kerberoasting activity.
+
+    Further analysis or computation within the query is needed focusing on requests
+    from one specific host/IP towards multiple service names within a time period
+    of 5 seconds.
+
+    You can then set a threshold for the number of requests and time between the requests
+    to turn this into an alert.
+
+    '
+author: '@kostastsale'
+date: '2022-01-21'
+tags:
+    - attack.credential-access
+    - attack.t1558.003
+references:
+    - https://www.trustedsec.com/blog/art_of_kerberoast/
+    - https://adsecurity.org/?p=3513
+falsepositives:
+    - Legacy applications.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4769
+        Status: '0x0'
+        TicketEncryptionType: '0x17'
+    filter_main_:
+        ServiceName|endswith:
+            - krbtgt
+            - $
+        TargetUserName|contains: $@
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:38.335476+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:38.335476+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:38.335536+00:00'
+        -   source_field: Status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:23:38.335541+00:00'
+        -   source_field: TicketEncryptionType
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:38.335544+00:00'
+        -   source_field: ServiceName
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:38.335546+00:00'
+        -   source_field: TargetUserName
+            target_table: authentication
+            target_field: user.name
+            mapped_at: '2025-11-13T20:23:38.335549+00:00'

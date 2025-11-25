@@ -1,0 +1,51 @@
+id: d13c43f0-f66b-4279-8b2c-5912077c1780
+title: CLR DLL Loaded Via Office Applications
+status: test
+level: medium
+description: Detects CLR DLL being loaded by an Office Product
+author: Antonlovesdnb
+date: '2020-02-19'
+modified: '2023-03-29'
+tags:
+    - attack.execution
+    - attack.t1204.002
+references:
+    - https://medium.com/threatpunter/detecting-adversary-tradecraft-with-image-load-event-logging-and-eql-8de93338c16
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \excel.exe
+            - \mspub.exe
+            - \outlook.exe
+            - \onenote.exe
+            - \onenoteim.exe
+            - \powerpnt.exe
+            - \winword.exe
+        ImageLoaded|contains: \clr.dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:35.726413+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:35.726413+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:35.726424+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:35.726425+00:00'

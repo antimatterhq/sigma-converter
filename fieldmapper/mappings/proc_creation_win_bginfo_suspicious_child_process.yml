@@ -1,0 +1,68 @@
+id: 811f459f-9231-45d4-959a-0266c6311987
+title: Suspicious Child Process Of BgInfo.EXE
+status: test
+level: high
+description: Detects suspicious child processes of "BgInfo.exe" which could be a sign
+    of potential abuse of the binary to proxy execution via external VBScript
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-08-16'
+tags:
+    - attack.execution
+    - attack.t1059.005
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.t1202
+references:
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Bginfo/
+    - https://oddvar.moe/2017/05/18/bypassing-application-whitelisting-with-bginfo/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''aaf46cdc-934e-4284-b329-34aa701e3771''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - \bginfo.exe
+            - \bginfo64.exe
+    selection_child:
+        Image|endswith:
+            - \calc.exe
+            - \cmd.exe
+            - \cscript.exe
+            - \mshta.exe
+            - \notepad.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \wscript.exe
+        Image|contains:
+            - \AppData\Local\
+            - \AppData\Roaming\
+            - :\Users\Public\
+            - :\Temp\
+            - :\Windows\Temp\
+            - :\PerfLogs\
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:54.584409+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:54.584409+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:19:54.584421+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:54.584424+00:00'

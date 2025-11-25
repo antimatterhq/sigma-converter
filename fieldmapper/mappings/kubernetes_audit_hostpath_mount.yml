@@ -1,0 +1,61 @@
+id: 402b955c-8fe0-4a8c-b635-622b4ac5f902
+title: Container With A hostPath Mount Created
+status: experimental
+level: low
+description: 'Detects creation of a container with a hostPath mount.
+
+    A hostPath volume mounts a directory or a file from the node to the container.
+
+    Attackers who have permissions to create a new pod in the cluster may create one
+    with a writable hostPath volume and chroot to escape to the underlying node.
+
+    '
+author: Leo Tsaousis (@laripping)
+date: '2024-03-26'
+tags:
+    - attack.t1611
+references:
+    - https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Writable%20hostPath%20mount/
+    - https://blog.appsecco.com/kubernetes-namespace-breakout-using-insecure-host-path-volume-part-1-b382f2a6e216
+falsepositives:
+    - The DaemonSet controller creates pods with hostPath volumes within the kube-system
+        namespace.
+taxonomy: sigma
+logsource:
+    category: application
+    product: kubernetes
+    service: audit
+detection:
+    selection:
+        verb: create
+        objectRef.resource: pods
+        hostPath: '*'
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: application
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: kubernetes
+            mapped_at: null
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: null
+    detection_fields:
+        -   source_field: verb
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: objectRef.resource
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: hostPath
+            target_table: null
+            target_field: null
+            mapped_at: null

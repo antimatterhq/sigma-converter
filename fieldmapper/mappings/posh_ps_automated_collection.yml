@@ -1,0 +1,55 @@
+id: c1dda054-d638-4c16-afc8-53e007f3fbc5
+title: Automated Collection Command PowerShell
+status: test
+level: medium
+description: Once established within a system or network, an adversary may use automated
+    techniques for collecting internal data.
+author: frack113
+date: '2021-07-28'
+modified: '2022-12-25'
+tags:
+    - attack.collection
+    - attack.t1119
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_ext:
+        ScriptBlockText|contains:
+            - .doc
+            - .docx
+            - .xls
+            - .xlsx
+            - .ppt
+            - .pptx
+            - .rtf
+            - .pdf
+            - .txt
+    selection_cmd:
+        ScriptBlockText|contains|all:
+            - Get-ChildItem
+            - ' -Recurse '
+            - ' -Include '
+    condition: all of selection*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.216473+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.216473+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.216477+00:00'

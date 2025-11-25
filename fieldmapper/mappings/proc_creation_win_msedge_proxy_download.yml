@@ -1,0 +1,52 @@
+id: e84d89c4-f544-41ca-a6af-4b92fd38b023
+title: Arbitrary File Download Via MSEDGE_PROXY.EXE
+status: test
+level: medium
+description: Detects usage of "msedge_proxy.exe" to download arbitrary files
+author: Swachchhanda Shrawan Poudel
+date: '2023-11-09'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/msedge_proxy/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \msedge_proxy.exe
+        OriginalFileName: msedge_proxy.exe
+    selection_cli:
+        CommandLine|contains:
+            - http://
+            - https://
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:54.976568+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:54.976568+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:54.976594+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:54.976597+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:54.976600+00:00'

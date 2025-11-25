@@ -1,0 +1,43 @@
+id: 5b40a734-99b6-4b98-a1d0-1cea51a08ab2
+title: Suspicious Interactive PowerShell as SYSTEM
+status: test
+level: high
+description: Detects the creation of files that indicator an interactive use of PowerShell
+    in the SYSTEM user context
+author: Florian Roth (Nextron Systems)
+date: '2021-12-07'
+modified: '2022-08-13'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://jpcertcc.github.io/ToolAnalysisResultSheet/details/PowerSploit_Invoke-Mimikatz.htm
+falsepositives:
+    - Administrative activity
+    - PowerShell scripts running as SYSTEM user
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename:
+            - C:\Windows\System32\config\systemprofile\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+            - C:\Windows\System32\config\systemprofile\AppData\Local\Microsoft\Windows\PowerShell\StartupProfileData-Interactive
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.261817+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.261817+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.261821+00:00'

@@ -1,0 +1,45 @@
+id: bd1c6866-65fc-44b2-be51-5588fcff82b9
+title: Renamed Msdt.EXE Execution
+status: test
+level: high
+description: Detects the execution of a renamed "Msdt.exe" binary
+author: pH-T (Nextron Systems)
+date: '2022-06-03'
+modified: '2023-02-03'
+tags:
+    - attack.defense-evasion
+    - attack.t1036.003
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Msdt/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: msdt.exe
+    filter:
+        Image|endswith: \msdt.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.319586+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.319586+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:58.319593+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.319594+00:00'

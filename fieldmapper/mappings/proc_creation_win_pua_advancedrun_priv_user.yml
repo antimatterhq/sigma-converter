@@ -1,0 +1,59 @@
+id: fa00b701-44c6-4679-994d-5a18afa8a707
+title: PUA - AdvancedRun Suspicious Execution
+status: test
+level: high
+description: Detects the execution of AdvancedRun utility in the context of the TrustedInstaller,
+    SYSTEM, Local Service or Network Service accounts
+author: Florian Roth (Nextron Systems)
+date: '2022-01-20'
+modified: '2023-02-21'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1134.002
+references:
+    - https://twitter.com/splinter_code/status/1483815103279603714
+    - https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3
+    - https://www.elastic.co/security-labs/operation-bleeding-bear
+    - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d2b749ee-4225-417e-b20e-a8d2193cbb84''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - /EXEFilename
+            - /CommandLine
+    selection_runas:
+        CommandLine|contains:
+            - ' /RunAs 8 '
+            - ' /RunAs 4 '
+            - ' /RunAs 10 '
+            - ' /RunAs 11 '
+        CommandLine|endswith:
+            - /RunAs 8
+            - /RunAs 4
+            - /RunAs 10
+            - /RunAs 11
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.287445+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.287445+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.287450+00:00'

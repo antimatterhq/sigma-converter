@@ -1,0 +1,57 @@
+id: f459ccb4-9805-41ea-b5b2-55e279e2424a
+title: Remote Access Tool - Team Viewer Session Started On MacOS Host
+status: experimental
+level: low
+description: 'Detects the command line executed when TeamViewer starts a session started
+    by a remote host.
+
+    Once a connection has been started, an investigator can verify the connection
+    details by viewing the "incoming_connections.txt" log file in the TeamViewer folder.
+
+    '
+author: Josh Nickels, Qi Nan
+date: '2024-03-11'
+tags:
+    - attack.initial-access
+    - attack.t1133
+references:
+    - Internal Research
+falsepositives:
+    - Legitimate usage of TeamViewer
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ab70c354-d9ac-4e11-bbb6-ec8e3b153357''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''1f6b8cd4-3e60-47cc-b282-5aa1cbc9182d''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection:
+        ParentImage|endswith: /TeamViewer_Service
+        Image|endswith: /TeamViewer_Desktop
+        CommandLine|endswith: /TeamViewer_Desktop --IPCport 5939 --Module 1
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.845546+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.845546+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:14:25.845551+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.845553+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.845554+00:00'

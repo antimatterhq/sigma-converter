@@ -1,0 +1,89 @@
+id: cdc8da7d-c303-42f8-b08c-b4ab47230263
+title: Rundll32 Internet Connection
+status: test
+level: medium
+description: Detects a rundll32 that communicates with public IP addresses
+author: Florian Roth (Nextron Systems)
+date: '2017-11-04'
+modified: '2024-03-13'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+    - attack.execution
+references:
+    - https://www.hybrid-analysis.com/sample/759fb4c0091a78c5ee035715afe3084686a8493f39014aea72dae36869de9ff6?environmentId=100
+falsepositives:
+    - Communication to other corporate systems that use IP addresses from public address
+        spaces
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: \rundll32.exe
+        Initiated: 'true'
+    filter_main_local_ranges:
+        DestinationIp|cidr:
+            - 127.0.0.0/8
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 169.254.0.0/16
+            - ::1/128
+            - fe80::/10
+            - fc00::/7
+    filter_main_ms_ranges:
+        DestinationIp|cidr:
+            - 20.0.0.0/8
+            - 51.103.0.0/16
+            - 51.104.0.0/16
+            - 51.105.0.0/16
+    filter_main_app_sdb:
+        CommandLine|endswith: \system32\PcaSvc.dll,PcaPatchSdbTask
+    filter_main_azure_managed:
+        SourceHostname|endswith: .internal.cloudapp.net
+    filter_main_svchost_update_processes:
+        ParentImage: C:\Windows\System32\svchost.exe
+        DestinationPort: 443
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:24.130836+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:24.130836+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:25.874864+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:25.874890+00:00'
+        -   source_field: DestinationIp
+            target_table: network_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:21:25.874895+00:00'
+        -   source_field: CommandLine
+            target_table: network_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:25.874898+00:00'
+        -   source_field: SourceHostname
+            target_table: network_activity
+            target_field: src_endpoint.hostname
+            mapped_at: '2025-11-13T20:21:25.874901+00:00'
+        -   source_field: ParentImage
+            target_table: network_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:21:25.874904+00:00'
+        -   source_field: DestinationPort
+            target_table: network_activity
+            target_field: dst_endpoint.port
+            mapped_at: '2025-11-13T20:21:25.874907+00:00'

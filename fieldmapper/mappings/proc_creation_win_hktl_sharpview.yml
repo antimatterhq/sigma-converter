@@ -1,0 +1,140 @@
+id: b2317cfa-4a47-4ead-b3ff-297438c0bc2d
+title: HackTool - SharpView Execution
+status: test
+level: high
+description: Adversaries may look for details about the network configuration and
+    settings of systems they access or through information discovery of remote systems
+author: frack113
+date: '2021-12-10'
+modified: '2023-02-14'
+tags:
+    - attack.discovery
+    - attack.t1049
+    - attack.t1069.002
+    - attack.t1482
+    - attack.t1135
+    - attack.t1033
+references:
+    - https://github.com/tevora-threat/SharpView/
+    - https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-4---system-discovery-using-sharpview
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''dcd74b95-3f36-4ed9-9598-0490951643aa''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: SharpView.exe
+        Image|endswith: \SharpView.exe
+        CommandLine|contains:
+            - Add-RemoteConnection
+            - Convert-ADName
+            - ConvertFrom-SID
+            - ConvertFrom-UACValue
+            - Convert-SidToName
+            - Export-PowerViewCSV
+            - Find-DomainObjectPropertyOutlier
+            - Find-DomainProcess
+            - Find-DomainShare
+            - Find-DomainUserEvent
+            - Find-DomainUserLocation
+            - Find-ForeignGroup
+            - Find-ForeignUser
+            - Find-GPOComputerAdmin
+            - Find-GPOLocation
+            - Find-Interesting
+            - Find-LocalAdminAccess
+            - Find-ManagedSecurityGroups
+            - Get-CachedRDPConnection
+            - Get-DFSshare
+            - Get-DomainComputer
+            - Get-DomainController
+            - Get-DomainDFSShare
+            - Get-DomainDNSRecord
+            - Get-DomainFileServer
+            - Get-DomainForeign
+            - Get-DomainGPO
+            - Get-DomainGroup
+            - Get-DomainGUIDMap
+            - Get-DomainManagedSecurityGroup
+            - Get-DomainObject
+            - Get-DomainOU
+            - Get-DomainPolicy
+            - Get-DomainSID
+            - Get-DomainSite
+            - Get-DomainSPNTicket
+            - Get-DomainSubnet
+            - Get-DomainTrust
+            - Get-DomainUserEvent
+            - Get-ForestDomain
+            - Get-ForestGlobalCatalog
+            - Get-ForestTrust
+            - Get-GptTmpl
+            - Get-GroupsXML
+            - Get-LastLoggedOn
+            - Get-LoggedOnLocal
+            - Get-NetComputer
+            - Get-NetDomain
+            - Get-NetFileServer
+            - Get-NetForest
+            - Get-NetGPO
+            - Get-NetGroupMember
+            - Get-NetLocalGroup
+            - Get-NetLoggedon
+            - Get-NetOU
+            - Get-NetProcess
+            - Get-NetRDPSession
+            - Get-NetSession
+            - Get-NetShare
+            - Get-NetSite
+            - Get-NetSubnet
+            - Get-NetUser
+            - Get-PathAcl
+            - Get-PrincipalContext
+            - Get-RegistryMountedDrive
+            - Get-RegLoggedOn
+            - Get-WMIRegCachedRDPConnection
+            - Get-WMIRegLastLoggedOn
+            - Get-WMIRegMountedDrive
+            - Get-WMIRegProxy
+            - Invoke-ACLScanner
+            - Invoke-CheckLocalAdminAccess
+            - Invoke-Kerberoast
+            - Invoke-MapDomainTrust
+            - Invoke-RevertToSelf
+            - Invoke-Sharefinder
+            - Invoke-UserImpersonation
+            - Remove-DomainObjectAcl
+            - Remove-RemoteConnection
+            - Request-SPNTicket
+            - Set-DomainObject
+            - Test-AdminAccess
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.472147+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.472147+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:49.472157+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:49.472159+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.472161+00:00'

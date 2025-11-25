@@ -1,0 +1,64 @@
+id: ea5c131b-380d-49f9-aeb3-920694da4d4b
+title: Suspicious Unsigned Thor Scanner Execution
+status: stable
+level: high
+description: Detects loading and execution of an unsigned thor scanner binary.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-10-29'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+references:
+    - Internal Research
+falsepositives:
+    - Other legitimate binaries named "thor.exe" that aren't published by Nextron
+        Systems
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \thor.exe
+            - \thor64.exe
+        ImageLoaded|endswith:
+            - \thor.exe
+            - \thor64.exe
+    filter_main:
+        Signed: 'true'
+        SignatureStatus: valid
+        Signature: Nextron Systems GmbH
+    condition: selection and not filter_main
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:14.873993+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:14.873993+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:15.705907+00:00'
+        -   source_field: ImageLoaded
+            target_table: process_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:15.705934+00:00'
+        -   source_field: Signed
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:19:15.705938+00:00'
+        -   source_field: SignatureStatus
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:19:15.705940+00:00'
+        -   source_field: Signature
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:19:15.705943+00:00'

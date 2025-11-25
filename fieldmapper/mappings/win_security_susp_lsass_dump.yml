@@ -1,0 +1,55 @@
+id: aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c
+title: Password Dumper Activity on LSASS
+status: test
+level: high
+description: Detects process handle on LSASS process with certain access mask and
+    object type SAM_DOMAIN
+author: sigma
+date: '2017-02-12'
+modified: '2022-10-09'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://twitter.com/jackcr/status/807385668833968128
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4656
+        ProcessName|endswith: \lsass.exe
+        AccessMask: '0x705'
+        ObjectType: SAM_DOMAIN
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:02.317320+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:02.317320+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:02.317349+00:00'
+        -   source_field: ProcessName
+            target_table: process_activity
+            target_field: actor.process.name
+            mapped_at: '2025-11-13T20:23:02.317353+00:00'
+        -   source_field: AccessMask
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:02.317355+00:00'
+        -   source_field: ObjectType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:02.317358+00:00'

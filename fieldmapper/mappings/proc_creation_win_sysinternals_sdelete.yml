@@ -1,0 +1,54 @@
+id: a4824fca-976f-4964-b334-0621379e84c4
+title: Potential File Overwrite Via Sysinternals SDelete
+status: test
+level: high
+description: Detects the use of SDelete to erase a file not the free space
+author: frack113
+date: '2021-06-03'
+modified: '2023-02-28'
+tags:
+    - attack.impact
+    - attack.t1485
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: sdelete.exe
+    filter:
+        CommandLine|contains:
+            - ' -h'
+            - ' -c'
+            - ' -z'
+            - ' /\?'
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.036377+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.036377+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.036383+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.036384+00:00'

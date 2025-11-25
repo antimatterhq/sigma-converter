@@ -1,0 +1,66 @@
+id: 90d6bd71-dffb-4989-8d86-a827fedd6624
+title: Visual Studio Code Tunnel Execution
+status: test
+level: medium
+description: Detects Visual Studio Code tunnel execution. Attackers can abuse this
+    functionality to establish a C2 channel
+author: Nasreddine Bencherchali (Nextron Systems), citron_ninja
+date: '2023-10-25'
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+references:
+    - https://ipfyx.fr/post/visual-studio-code-tunnel/
+    - https://badoption.eu/blog/2023/01/31/code_c2.html
+    - https://code.visualstudio.com/docs/remote/tunnels
+falsepositives:
+    - Legitimate use of Visual Studio Code tunnel
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_only_tunnel:
+        OriginalFileName: null
+        CommandLine|endswith: .exe tunnel
+    selection_tunnel_args:
+        CommandLine|contains|all:
+            - .exe tunnel
+            - '--name '
+            - --accept-server-license-terms
+    selection_parent_tunnel:
+        ParentCommandLine|endswith: ' tunnel'
+        Image|endswith: \cmd.exe
+        CommandLine|contains|all:
+            - '/d /c '
+            - \servers\Stable-
+            - code-server.cmd
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.068313+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.068313+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.068321+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.068323+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.068324+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.068325+00:00'

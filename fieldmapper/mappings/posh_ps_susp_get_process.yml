@@ -1,0 +1,40 @@
+id: af4c87ce-bdda-4215-b998-15220772e993
+title: Suspicious Process Discovery With Get-Process
+status: test
+level: low
+description: Get the processes that are running on the local computer.
+author: frack113
+date: '2022-03-17'
+tags:
+    - attack.discovery
+    - attack.t1057
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1057/T1057.md#atomic-test-3---process-discovery---get-process
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-process?view=powershell-7.4
+falsepositives:
+    - Legitimate PowerShell scripts
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains: Get-Process
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.289387+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.289387+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.289393+00:00'

@@ -1,0 +1,60 @@
+id: 7fb14105-530e-4e2e-8cfb-99f7d8700b66
+title: Atlassian Confluence CVE-2022-26134
+status: test
+level: high
+description: Detects spawning of suspicious child processes by Atlassian Confluence
+    server which may indicate successful exploitation of CVE-2022-26134
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-06-03'
+tags:
+    - attack.initial-access
+    - attack.execution
+    - attack.t1190
+    - attack.t1059
+    - cve.2022-26134
+references:
+    - https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''245f92e3-c4da-45f1-9070-bc552e06db11''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        ParentImage|startswith: /opt/atlassian/confluence/
+        ParentImage|endswith: /java
+        CommandLine|contains:
+            - /bin/sh
+            - bash
+            - dash
+            - ksh
+            - zsh
+            - csh
+            - fish
+            - curl
+            - wget
+            - python
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.750809+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.750809+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:15:51.750815+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:51.750817+00:00'

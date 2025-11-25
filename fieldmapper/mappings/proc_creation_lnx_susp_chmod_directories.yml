@@ -1,0 +1,48 @@
+id: 6419afd1-3742-47a5-a7e6-b50386cd15f8
+title: Chmod Suspicious Directory
+status: test
+level: medium
+description: Detects chmod targeting files in abnormal directory paths.
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+date: '2022-06-03'
+tags:
+    - attack.defense-evasion
+    - attack.t1222.002
+references:
+    - https://www.intezer.com/blog/malware-analysis/new-backdoor-sysjoker/
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md
+falsepositives:
+    - Admin changing file permissions.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /chmod
+        CommandLine|contains:
+            - /tmp/
+            - /.Library/
+            - /etc/
+            - /opt/
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.914388+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.914388+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.914394+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.914396+00:00'

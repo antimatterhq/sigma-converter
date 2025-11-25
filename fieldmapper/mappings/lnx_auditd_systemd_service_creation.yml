@@ -1,0 +1,55 @@
+id: 1bac86ba-41aa-4f62-9d6b-405eac99b485
+title: Systemd Service Creation
+status: test
+level: medium
+description: Detects a creation of systemd services which could be used by adversaries
+    to execute malicious code.
+author: Pawel Mazur
+date: '2022-02-03'
+modified: '2022-02-06'
+tags:
+    - attack.persistence
+    - attack.t1543.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.002/T1543.002.md
+falsepositives:
+    - Admin work like legit service installs.
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    path:
+        type: PATH
+        nametype: CREATE
+    name_1:
+        name|startswith:
+            - /usr/lib/systemd/system/
+            - /etc/systemd/system/
+    name_2:
+        name|contains: /.config/systemd/user/
+    condition: path and 1 of name_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:32.446694+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:32.446694+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:33.294125+00:00'
+        -   source_field: nametype
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:33.294137+00:00'
+        -   source_field: name
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:15:33.294139+00:00'

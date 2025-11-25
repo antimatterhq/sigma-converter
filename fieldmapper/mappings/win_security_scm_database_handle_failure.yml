@@ -1,0 +1,60 @@
+id: 13addce7-47b2-4ca0-a98f-1de964d1d669
+title: SCM Database Handle Failure
+status: test
+level: medium
+description: Detects non-system users failing to get a handle of the SCM database.
+author: Roberto Rodriguez @Cyb3rWard0g
+date: '2019-08-12'
+modified: '2022-07-11'
+tags:
+    - attack.discovery
+    - attack.t1010
+references:
+    - https://threathunterplaybook.com/hunts/windows/190826-RemoteSCMHandle/notebook.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4656
+        ObjectType: SC_MANAGER OBJECT
+        ObjectName: ServicesActive
+        AccessMask: '0xf003f'
+    filter:
+        SubjectLogonId: '0x3e4'
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:58.528060+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:58.528060+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:59.487952+00:00'
+        -   source_field: ObjectType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:59.487965+00:00'
+        -   source_field: ObjectName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:59.487968+00:00'
+        -   source_field: AccessMask
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:59.487970+00:00'
+        -   source_field: SubjectLogonId
+            target_table: process_activity
+            target_field: actor.process.session.uid
+            mapped_at: '2025-11-13T20:22:59.487972+00:00'

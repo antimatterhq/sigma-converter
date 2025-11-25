@@ -1,0 +1,45 @@
+id: 7d995e63-ec83-4aa3-89d5-8a17b5c87c86
+title: Scripted Diagnostics Turn Off Check Enabled - Registry
+status: test
+level: medium
+description: Detects enabling TurnOffCheck which can be used to bypass defense of
+    MSDT Follina vulnerability
+author: Christopher Peacock @securepeacock, SCYTHE @scythe_io
+date: '2022-06-15'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://twitter.com/wdormann/status/1537075968568877057?s=20&t=0lr18OAnmAGoGpma6grLUw
+falsepositives:
+    - Administrator actions
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: \Policies\Microsoft\Windows\ScriptedDiagnostics\TurnOffCheck
+        Details: DWORD (0x00000001)
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

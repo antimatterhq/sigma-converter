@@ -1,0 +1,48 @@
+id: 980a7598-1e7f-4962-9372-2d754c930d0e
+title: Google Full Network Traffic Packet Capture
+status: test
+level: medium
+description: Identifies potential full network packet capture in gcp. This feature
+    can potentially be abused to read sensitive data from unencrypted internal traffic.
+author: Austin Songer @austinsonger
+date: '2021-08-13'
+modified: '2022-10-09'
+tags:
+    - attack.collection
+    - attack.t1074
+references:
+    - https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging
+    - https://developers.google.com/resources/api-libraries/documentation/compute/v1/java/latest/com/google/api/services/compute/Compute.PacketMirrorings.html
+falsepositives:
+    - Full Network Packet Capture may be done by a system or network administrator.
+    - If known behavior is causing false positives, it can be exempted from the rule.
+taxonomy: sigma
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    selection:
+        gcp.audit.method_name:
+            - v*.Compute.PacketMirrorings.Get
+            - v*.Compute.PacketMirrorings.Delete
+            - v*.Compute.PacketMirrorings.Insert
+            - v*.Compute.PacketMirrorings.Patch
+            - v*.Compute.PacketMirrorings.List
+            - v*.Compute.PacketMirrorings.aggregatedList
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: gcp
+            mapped_at: '2025-11-13T20:17:41.071948+00:00'
+        service:
+            source_field: service
+            source_value: gcp.audit
+            mapped_at: '2025-11-13T20:17:41.071948+00:00'
+    detection_fields:
+        -   source_field: gcp.audit.method_name
+            target_table: dns_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:41.071956+00:00'

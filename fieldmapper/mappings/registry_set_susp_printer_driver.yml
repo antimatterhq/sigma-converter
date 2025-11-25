@@ -1,0 +1,57 @@
+id: e0813366-0407-449a-9869-a2db1119dc41
+title: Suspicious Printer Driver Empty Manufacturer
+status: test
+level: high
+description: Detects a suspicious printer driver installation with an empty Manufacturer
+    value
+author: Florian Roth (Nextron Systems)
+date: '2020-07-01'
+modified: '2023-08-17'
+tags:
+    - attack.privilege-escalation
+    - attack.t1574
+    - cve.2021-1675
+references:
+    - https://twitter.com/SBousseaden/status/1410545674773467140
+falsepositives:
+    - Alerts on legitimate printer drivers that do not set any more details in the
+        Manufacturer value
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains|all:
+            - \Control\Print\Environments\Windows x64\Drivers
+            - \Manufacturer
+        Details: (Empty)
+    filter_cutepdf:
+        TargetObject|contains: \CutePDF Writer v4.0\
+    filter_vnc:
+        TargetObject|contains:
+            - \VNC Printer (PS)\
+            - \VNC Printer (UD)\
+    filter_pdf24:
+        TargetObject|contains: \Version-3\PDF24\
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

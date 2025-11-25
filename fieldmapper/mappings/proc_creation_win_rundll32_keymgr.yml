@@ -1,0 +1,53 @@
+id: a4694263-59a8-4608-a3a0-6f8d3a51664c
+title: Suspicious Key Manager Access
+status: test
+level: high
+description: Detects the invocation of the Stored User Names and Passwords dialogue
+    (Key Manager)
+author: Florian Roth (Nextron Systems)
+date: '2022-04-21'
+modified: '2023-02-09'
+tags:
+    - attack.credential-access
+    - attack.t1555.004
+references:
+    - https://twitter.com/NinjaParanoid/status/1516442028963659777
+falsepositives:
+    - Administrative activity
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \rundll32.exe
+        OriginalFileName: RUNDLL32.EXE
+    selection_cli:
+        CommandLine|contains|all:
+            - keymgr
+            - KRShowKeyMgr
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:07.874492+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:07.874492+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:07.874499+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:07.874501+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:07.874502+00:00'

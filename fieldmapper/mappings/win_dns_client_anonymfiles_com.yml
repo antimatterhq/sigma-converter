@@ -1,0 +1,48 @@
+id: 29f171d7-aa47-42c7-9c7b-3c87938164d9
+title: DNS Query for Anonfiles.com Domain - DNS Client
+status: test
+level: high
+description: Detects DNS queries for anonfiles.com, which is an anonymous file upload
+    platform often used for malicious purposes
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-16'
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+references:
+    - https://www.trendmicro.com/vinfo/us/security/news/ransomware-spotlight/ransomware-spotlight-blackbyte
+falsepositives:
+    - Rare legitimate access to anonfiles.com
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''065cceea-77ec-4030-9052-fc0affea7110''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: dns-client
+    definition: 'Requirements: Microsoft-Windows-DNS Client Events/Operational Event
+        Log must be enabled/collected in order to receive the events.'
+detection:
+    selection:
+        EventID: 3008
+        QueryName|contains: .anonfiles.com
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:50.501820+00:00'
+        service:
+            source_field: service
+            source_value: dns-client
+            mapped_at: '2025-11-13T20:24:50.501820+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: dns_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:50.501835+00:00'
+        -   source_field: QueryName
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:24:50.501839+00:00'

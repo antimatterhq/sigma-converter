@@ -1,0 +1,42 @@
+id: e94b9ddc-eec5-4bb8-8a58-b9dc5f4e185f
+title: UEFI Persistence Via Wpbbin - FileCreation
+status: test
+level: high
+description: Detects creation of a file named "wpbbin" in the "%systemroot%\system32\"
+    directory. Which could be indicative of UEFI based persistence method
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-18'
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.t1542.001
+references:
+    - https://grzegorztworek.medium.com/using-uefi-to-inject-executable-files-into-bitlocker-protected-drives-8ff4ca59c94c
+    - https://persistence-info.github.io/Data/wpbbin.html
+falsepositives:
+    - Legitimate usage of the file by hardware manufacturer such as lenovo (Thanks
+        @0gtweet for the tip)
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename: C:\Windows\System32\wpbbin.exe
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.252196+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.252196+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.252201+00:00'

@@ -1,0 +1,54 @@
+id: 78aa1347-1517-4454-9982-b338d6df8343
+title: Powershell MsXml COM Object
+status: test
+level: medium
+description: 'Adversaries may abuse PowerShell commands and scripts for execution.
+
+    PowerShell is a powerful interactive command-line interface and scripting environment
+    included in the Windows operating system. (Citation: TechNet PowerShell)
+
+    Adversaries can use PowerShell to perform a number of actions, including discovery
+    of information and execution of code
+
+    '
+author: frack113, MatilJ
+date: '2022-01-19'
+modified: '2022-05-19'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.001/T1059.001.md#atomic-test-7---powershell-msxml-com-object---with-prompt
+    - https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms766431(v=vs.85)
+    - https://www.trendmicro.com/en_id/research/22/e/uncovering-a-kingminer-botnet-attack-using-trend-micro-managed-x.html
+falsepositives:
+    - Legitimate administrative script
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - New-Object
+            - -ComObject
+            - MsXml2.
+            - XmlHttp
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.304489+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.304489+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.304493+00:00'

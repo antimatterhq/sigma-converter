@@ -1,0 +1,59 @@
+id: b655a06a-31c0-477a-95c2-3726b83d649d
+title: Suspicious Userinit Child Process
+status: test
+level: medium
+description: Detects a suspicious child process of userinit
+author: Florian Roth (Nextron Systems), Samir Bousseaden (idea)
+date: '2019-06-17'
+modified: '2022-12-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1055
+references:
+    - https://twitter.com/SBousseaden/status/1139811587760562176
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Administrative scripts
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \userinit.exe
+    filter1:
+        CommandLine|contains: \netlogon\
+    filter2:
+        Image|endswith: \explorer.exe
+        OriginalFileName: explorer.exe
+    condition: selection and not 1 of filter*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:06.197967+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:06.197967+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:06.197978+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:06.197981+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:06.197983+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:06.197984+00:00'

@@ -1,0 +1,54 @@
+id: c31364f7-8be6-4b77-8483-dd2b5a7b69a3
+title: Import PowerShell Modules From Suspicious Directories - ProcCreation
+status: test
+level: medium
+description: Detects powershell scripts that import modules from suspicious directories
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-10'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''21f9162c-5f5d-4b01-89a8-b705bd7d10ab''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - Import-Module "$Env:Temp\
+            - Import-Module '$Env:Temp\
+            - Import-Module $Env:Temp\
+            - Import-Module "$Env:Appdata\
+            - Import-Module '$Env:Appdata\
+            - Import-Module $Env:Appdata\
+            - Import-Module C:\Users\Public\
+            - ipmo "$Env:Temp\
+            - ipmo '$Env:Temp\
+            - ipmo $Env:Temp\
+            - ipmo "$Env:Appdata\
+            - ipmo '$Env:Appdata\
+            - ipmo $Env:Appdata\
+            - ipmo C:\Users\Public\
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:03.220236+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:03.220236+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:03.220249+00:00'

@@ -1,0 +1,44 @@
+id: 3ec9a16d-0b4f-4967-9542-ebf38ceac7dd
+title: OpenCanary - MSSQL Login Attempt Via SQLAuth
+status: experimental
+level: high
+description: 'Detects instances where an MSSQL service on an OpenCanary node has had
+    a login attempt using SQLAuth.
+
+    '
+author: Security Onion Solutions
+date: '2024-03-08'
+tags:
+    - attack.credential-access
+    - attack.collection
+    - attack.t1003
+    - attack.t1213
+references:
+    - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration
+    - https://github.com/thinkst/opencanary/blob/a0896adfcaf0328cfd5829fe10d2878c7445138e/opencanary/logger.py#L52
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: application
+    product: opencanary
+detection:
+    selection:
+        logtype: 9001
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: application
+            mapped_at: '2025-11-13T20:18:24.517348+00:00'
+        product:
+            source_field: product
+            source_value: opencanary
+            mapped_at: '2025-11-13T20:18:24.517348+00:00'
+    detection_fields:
+        -   source_field: logtype
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:24.517352+00:00'

@@ -1,0 +1,133 @@
+{
+  "uid": 9,
+  "caption": "Script Activity",
+  "description": "Script Activity events report when a process executes a script.",
+  "extends": "base_event",
+  "name": "script_activity",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Execute"
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "actor": {
+      "group": "context",
+      "description": "The actor that performed the activity on the target process. For example, the process that started a new process or injected code into another process.",
+      "requirement": "required",
+      "object": "actor",
+      "constraints": {
+        "at_least_one": [
+          "process",
+          "user",
+          "invoked_by",
+          "session",
+          "app_name",
+          "app_uid"
+        ]
+      }
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "System Activity",
+          "description": "System Activity events."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1009": {
+          "caption": "Script Activity",
+          "description": "Script Activity events report when a process executes a script."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "device": {
+      "description": "An addressable device, computer system or host.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "device",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "script": {
+      "description": "The script that was the target of the activity.",
+      "group": "primary",
+      "requirement": "required",
+      "object": "script"
+    },
+    "type_name": {
+      "description": "The name of the script type.",
+      "requirement": "recommended"
+    },
+    "type_uid": {
+      "description": "The resulting script object when the activity was allowed and successful.",
+      "group": "primary",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "100900": {
+          "caption": "Unknown"
+        },
+        "100901": {
+          "caption": "Execute"
+        },
+        "100999": {
+          "caption": "Other"
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    }
+  }
+}

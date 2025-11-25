@@ -1,0 +1,65 @@
+id: 95d61234-7f56-465c-6f2d-b562c6fedbc4
+title: Linux Package Uninstall
+status: test
+level: low
+description: Detects linux package removal using builtin tools such as "yum", "apt",
+    "apt-get" or "dpkg".
+author: Tuan Le (NCSGroup), Nasreddine Bencherchali (Nextron Systems)
+date: '2023-03-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1070
+references:
+    - https://sysdig.com/blog/mitre-defense-evasion-falco
+    - https://www.tutorialspoint.com/how-to-install-a-software-on-linux-using-yum-command
+    - https://linuxhint.com/uninstall_yum_package/
+    - https://linuxhint.com/uninstall-debian-packages/
+falsepositives:
+    - Administrator or administrator scripts might delete packages for several reasons
+        (debugging, troubleshooting).
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_yum:
+        Image|endswith: /yum
+        CommandLine|contains:
+            - erase
+            - remove
+    selection_apt:
+        Image|endswith:
+            - /apt
+            - /apt-get
+        CommandLine|contains:
+            - remove
+            - purge
+    selection_dpkg:
+        Image|endswith: /dpkg
+        CommandLine|contains:
+            - '--remove '
+            - ' -r '
+    selection_rpm:
+        Image|endswith: /rpm
+        CommandLine|contains: ' -e '
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.891130+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.891130+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.891135+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.891137+00:00'

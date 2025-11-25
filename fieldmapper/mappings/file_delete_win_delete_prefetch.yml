@@ -1,0 +1,55 @@
+id: 0a1f9d29-6465-4776-b091-7f43b26e4c89
+title: Prefetch File Deleted
+status: test
+level: high
+description: Detects the deletion of a prefetch file which may indicate an attempt
+    to destroy forensic evidence
+author: Cedric MAURUGEON
+date: '2021-09-29'
+modified: '2024-01-25'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.004
+references:
+    - Internal Research
+    - https://www.group-ib.com/blog/hunting-for-ttps-with-prefetch-files/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_delete
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: :\Windows\Prefetch\
+        TargetFilename|endswith: .pf
+    filter_main_svchost:
+        Image|endswith: :\windows\system32\svchost.exe
+        User|contains:
+            - AUTHORI
+            - AUTORI
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_delete
+            mapped_at: '2025-11-13T20:21:39.641214+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:39.641214+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:39.641247+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:39.641250+00:00'
+        -   source_field: User
+            target_table: file_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:21:39.641252+00:00'

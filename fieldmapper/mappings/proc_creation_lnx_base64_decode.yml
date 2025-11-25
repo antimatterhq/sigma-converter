@@ -1,0 +1,44 @@
+id: e2072cab-8c9a-459b-b63c-40ae79e27031
+title: Decode Base64 Encoded Text
+status: test
+level: low
+description: Detects usage of base64 utility to decode arbitrary base64-encoded text
+author: Daniil Yugoslavskiy, oscd.community
+date: '2020-10-19'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027/T1027.md
+falsepositives:
+    - Legitimate activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /base64
+        CommandLine|contains: -d
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.902281+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.902281+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.902287+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.902289+00:00'

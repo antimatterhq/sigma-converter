@@ -1,0 +1,44 @@
+id: 1f2b5353-573f-4880-8e33-7d04dcf97744
+title: Sysmon Configuration Modification
+status: test
+level: high
+description: Detects when an attacker tries to hide from Sysmon by disabling or stopping
+    it
+author: frack113
+date: '2021-06-04'
+modified: '2022-08-02'
+tags:
+    - attack.defense-evasion
+    - attack.t1564
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+    - https://talesfrominfosec.blogspot.com/2017/12/killing-sysmon-silently.html
+falsepositives:
+    - Legitimate administrative action
+taxonomy: sigma
+logsource:
+    category: sysmon_status
+    product: windows
+detection:
+    selection_stop:
+        State: Stopped
+    selection_conf: Sysmon config state changed
+    filter:
+        State: Started
+    condition: 1 of selection_* and not filter
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: sysmon_status
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: State
+            target_table: null
+            target_field: null
+            mapped_at: null

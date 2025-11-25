@@ -1,0 +1,57 @@
+id: b3503044-60ce-4bf4-bbcb-e3db98788823
+title: DLL Load via LSASS
+status: test
+level: high
+description: Detects a method to load DLL via LSASS process using an undocumented
+    Registry key
+author: Florian Roth (Nextron Systems)
+date: '2019-10-16'
+modified: '2022-04-21'
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1547.008
+references:
+    - https://blog.xpnsec.com/exploring-mimikatz-part-1/
+    - https://twitter.com/SBousseaden/status/1183745981189427200
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|contains:
+            - \CurrentControlSet\Services\NTDS\DirectoryServiceExtPt
+            - \CurrentControlSet\Services\NTDS\LsaDbExtPt
+    filter_domain_controller:
+        Image: C:\Windows\system32\lsass.exe
+        Details:
+            - '%%systemroot%%\system32\ntdsa.dll'
+            - '%%systemroot%%\system32\lsadb.dll'
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_event
+            mapped_at: '2025-11-13T20:22:10.937768+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:10.937768+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:10.937783+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:10.937786+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:10.937788+00:00'

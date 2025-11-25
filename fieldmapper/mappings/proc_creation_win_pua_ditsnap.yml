@@ -1,0 +1,46 @@
+id: d3b70aad-097e-409c-9df2-450f80dc476b
+title: PUA - DIT Snapshot Viewer
+status: test
+level: high
+description: Detects the use of Ditsnap tool, an inspection tool for Active Directory
+    database, ntds.dit.
+author: Furkan Caliskan (@caliskanfurkan_)
+date: '2020-07-04'
+modified: '2023-02-21'
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+references:
+    - https://thedfirreport.com/2020/06/21/snatch-ransomware/
+    - https://web.archive.org/web/20201124182207/https://github.com/yosqueoy/ditsnap
+falsepositives:
+    - Legitimate admin usage
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \ditsnap.exe
+        CommandLine|contains: ditsnap.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:22.268523+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:22.268523+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:22.268533+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:22.268535+00:00'

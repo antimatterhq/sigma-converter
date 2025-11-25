@@ -1,0 +1,80 @@
+id: 646ea171-dded-4578-8a4d-65e9822892e3
+title: Process Memory Dump Via Comsvcs.DLL
+status: test
+level: high
+description: Detects a process memory dump via "comsvcs.dll" using rundll32, covering
+    multiple different techniques (ordinal, minidump function, etc.)
+author: Florian Roth (Nextron Systems), Modexp, Nasreddine Bencherchali (Nextron Systems)
+date: '2020-02-18'
+modified: '2023-05-16'
+tags:
+    - attack.defense-evasion
+    - attack.credential-access
+    - attack.t1036
+    - attack.t1003.001
+    - car.2013-05-009
+references:
+    - https://twitter.com/shantanukhande/status/1229348874298388484
+    - https://twitter.com/pythonresponder/status/1385064506049630211?s=21
+    - https://twitter.com/Hexacorn/status/1224848930795552769
+    - https://modexp.wordpress.com/2019/08/30/minidumpwritedump-via-com-services-dll/
+    - https://twitter.com/SBousseaden/status/1167417096374050817
+    - https://twitter.com/Wietze/status/1542107456507203586
+    - https://github.com/Hackndo/lsassy/blob/14d8f8ae596ecf22b449bfe919829173b8a07635/lsassy/dumpmethod/comsvcs.py
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''09e6d5c0-05b8-4ff8-9eeb-043046ec774c''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \rundll32.exe
+        OriginalFileName: RUNDLL32.EXE
+        CommandLine|contains: rundll32
+    selection_cli_1:
+        CommandLine|contains|all:
+            - comsvcs
+            - full
+        CommandLine|contains:
+            - '#-'
+            - '#+'
+            - '#24'
+            - '24 '
+            - MiniDump
+    selection_generic:
+        CommandLine|contains|all:
+            - '24'
+            - comsvcs
+            - full
+        CommandLine|contains:
+            - ' #'
+            - ',#'
+            - ', #'
+    condition: (selection_img and 1 of selection_cli_*) or selection_generic
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.337506+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.337506+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.337518+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:46.337520+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.337522+00:00'

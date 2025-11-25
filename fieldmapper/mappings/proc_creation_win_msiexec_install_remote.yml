@@ -1,0 +1,62 @@
+id: 8150732a-0c9d-4a99-82b9-9efb9b90c40c
+title: Suspicious Msiexec Quiet Install From Remote Location
+status: test
+level: medium
+description: Detects usage of Msiexec.exe to install packages hosted remotely quietly
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-10-28'
+modified: '2024-03-13'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.007
+references:
+    - https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f7b5f842-a6af-4da5-9e95-e32478f3cd2f''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \msiexec.exe
+        OriginalFileName: msiexec.exe
+    selection_cli:
+        CommandLine|contains|windash:
+            - -i
+            - -package
+            - -a
+            - -j
+    selection_quiet:
+        CommandLine|contains|windash: -q
+    selection_remote:
+        CommandLine|contains:
+            - http
+            - \\
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.294850+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.294850+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.294861+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:30.294863+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.294865+00:00'

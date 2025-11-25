@@ -1,0 +1,44 @@
+id: 05936ce2-ee05-4dae-9d03-9a391cf2d2c6
+title: WMI Persistence - Command Line Event Consumer
+status: test
+level: high
+description: Detects WMI command line event consumers
+author: Thomas Patzke
+date: '2018-03-07'
+modified: '2021-11-27'
+tags:
+    - attack.t1546.003
+    - attack.persistence
+references:
+    - https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/
+falsepositives:
+    - Unknown (data set is too small; further testing needed)
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image: C:\Windows\System32\wbem\WmiPrvSE.exe
+        ImageLoaded|endswith: \wbemcons.dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:30.808183+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:30.808183+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:30.808190+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:30.808192+00:00'

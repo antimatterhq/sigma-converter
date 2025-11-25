@@ -1,0 +1,39 @@
+id: 693a44e9-7f26-4cb6-b787-214867672d3a
+title: Sysmon File Executable Creation Detected
+status: test
+level: medium
+description: Triggers on any Sysmon "FileExecutableDetected" event, which triggers
+    every time a PE that is monitored by the config is created.
+author: frack113
+date: '2023-07-20'
+tags:
+    - attack.defense-evasion
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+    - https://medium.com/@olafhartong/sysmon-15-0-file-executable-detected-40fd64349f36
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 29
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:02.134045+00:00'
+        service:
+            source_field: service
+            source_value: sysmon
+            mapped_at: '2025-11-13T20:21:02.134045+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:21:02.134057+00:00'

@@ -1,0 +1,61 @@
+id: 4c54ba8f-73d2-4d40-8890-d9cf1dca3d30
+title: Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION - Security
+status: test
+level: high
+description: Detects Obfuscated Powershell via VAR++ LAUNCHER
+author: Timur Zinniatullin, oscd.community
+date: '2020-10-13'
+modified: '2022-11-29'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''14bcba49-a428-42d9-b943-e2ce0f0f7ae6''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    selection:
+        EventID: 4697
+        ServiceFileName|contains|all:
+            - '&&set'
+            - cmd
+            - /c
+            - -f
+        ServiceFileName|contains:
+            - '{0}'
+            - '{1}'
+            - '{2}'
+            - '{3}'
+            - '{4}'
+            - '{5}'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:35.829217+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:35.829217+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:35.829227+00:00'
+        -   source_field: ServiceFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:23:35.829229+00:00'

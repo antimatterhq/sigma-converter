@@ -1,0 +1,54 @@
+id: e2e01011-5910-4267-9c3b-4149ed5479cf
+title: Potential WWlib.DLL Sideloading
+status: test
+level: medium
+description: Detects potential DLL sideloading of "wwlib.dll"
+author: X__Junior (Nextron Systems)
+date: '2023-05-18'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://twitter.com/WhichbufferArda/status/1658829954182774784
+    - https://news.sophos.com/en-us/2022/11/03/family-tree-dll-sideloading-cases-may-be-related/
+    - https://securelist.com/apt-luminousmoth/103332/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \wwlib.dll
+    filter_main_path:
+        Image|startswith:
+            - C:\Program Files (x86)\Microsoft Office\
+            - C:\Program Files\Microsoft Office\
+        Image|endswith: \winword.exe
+        ImageLoaded|startswith:
+            - C:\Program Files (x86)\Microsoft Office\
+            - C:\Program Files\Microsoft Office\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:31.515853+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:31.515853+00:00'
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:31.515861+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:31.515863+00:00'

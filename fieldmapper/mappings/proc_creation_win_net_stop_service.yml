@@ -1,0 +1,56 @@
+id: 88872991-7445-4a22-90b2-a3adadb0e827
+title: Stop Windows Service Via Net.EXE
+status: test
+level: low
+description: Detects the stopping of a Windows service via the "net" utility.
+author: Jakob Weinzettl, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+date: '2023-03-05'
+tags:
+    - attack.impact
+    - attack.t1489
+references:
+    - https://ss64.com/nt/net-service.html
+falsepositives:
+    - There are many legitimate reasons to stop a service. This rule isn't looking
+        for any suspicious behaviour in particular. Filter legitimate activity accordingly
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''eb87818d-db5d-49cc-a987-d5da331fbd90''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        OriginalFileName:
+            - net.exe
+            - net1.exe
+        Image|endswith:
+            - \net.exe
+            - \net1.exe
+    selection_cli:
+        CommandLine|contains: ' stop '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.290655+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.290655+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:58.290661+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.290662+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.290664+00:00'

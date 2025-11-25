@@ -1,0 +1,40 @@
+id: 8c6ec464-4ae4-43ac-936a-291da66ed13d
+title: Roles Are Not Being Used
+status: test
+level: high
+description: Identifies when a user has been assigned a privilege role and are not
+    using that role.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+date: '2023-09-14'
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.privilege-escalation
+references:
+    - https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-configure-security-alerts#administrators-arent-using-their-privileged-roles
+falsepositives:
+    - Investigate if potential generic account that cannot be removed.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: pim
+detection:
+    selection:
+        riskEventType: redundantAssignmentAlertIncident
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:23.461563+00:00'
+        service:
+            source_field: service
+            source_value: pim
+            mapped_at: '2025-11-13T20:16:23.461563+00:00'
+    detection_fields:
+        -   source_field: riskEventType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:23.461569+00:00'

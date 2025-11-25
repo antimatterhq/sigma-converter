@@ -1,0 +1,62 @@
+id: 6c0a7755-6d31-44fa-80e1-133e57752680
+title: Windows Defender Threat Detection Service Disabled
+status: stable
+level: medium
+description: Detects when the "Windows Defender Threat Protection" service is disabled.
+author: Ján Trenčanský, frack113
+date: '2020-07-28'
+modified: '2024-07-02'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+falsepositives:
+    - Administrator actions
+    - Auto updates of Windows Defender causes restarts
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fe34868f-6e0e-4882-81f6-c43aa8f15b62''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        EventID: 7036
+        Provider_Name: Service Control Manager
+        param1:
+            - Windows Defender Antivirus Service
+            - Service antivirus Microsoft Defender
+        param2:
+            - stopped
+            - arrêté
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:15.589988+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:15.589988+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:17.612012+00:00'
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:17.612033+00:00'
+        -   source_field: param1
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:17.612037+00:00'
+        -   source_field: param2
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:17.612040+00:00'

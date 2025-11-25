@@ -1,0 +1,53 @@
+id: 3ce8e9a4-bc61-4c9b-8e69-d7e2492a8781
+title: OpenSSH Server Listening On Socket
+status: test
+level: medium
+description: Detects scenarios where an attacker enables the OpenSSH server and server
+    starts to listening on SSH socket.
+author: mdecrevoisier
+date: '2022-10-25'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.004
+references:
+    - https://github.com/mdecrevoisier/EVTX-to-MITRE-Attack/tree/master/TA0008-Lateral%20Movement/T1021.004-Remote%20Service%20SSH
+    - https://winaero.com/enable-openssh-server-windows-10/
+    - https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse
+    - https://virtualizationreview.com/articles/2020/05/21/ssh-server-on-windows-10.aspx
+    - https://medium.com/threatpunter/detecting-adversary-tradecraft-with-image-load-event-logging-and-eql-8de93338c16
+falsepositives:
+    - Legitimate administrator activity
+taxonomy: sigma
+logsource:
+    product: windows
+    service: openssh
+detection:
+    selection:
+        EventID: 4
+        process: sshd
+        payload|startswith: 'Server listening on '
+    condition: selection
+ocsf_mapping:
+    class_name: ssh_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:28.359526+00:00'
+        service:
+            source_field: service
+            source_value: openssh
+            mapped_at: '2025-11-13T20:24:28.359526+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: ssh_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:29.654864+00:00'
+        -   source_field: process
+            target_table: ssh_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:29.654886+00:00'
+        -   source_field: payload
+            target_table: ssh_activity
+            target_field: raw_data
+            mapped_at: '2025-11-13T20:24:29.654889+00:00'

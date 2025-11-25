@@ -1,0 +1,68 @@
+id: 9976fa64-2804-423c-8a5b-646ade840773
+title: Suspicious Outbound SMTP Connections
+status: test
+level: medium
+description: 'Adversaries may steal data by exfiltrating it over an un-encrypted network
+    protocol other than that of the existing command and control channel.
+
+    The data may also be sent to an alternate network location from the main command
+    and control server.
+
+    '
+author: frack113
+date: '2022-01-07'
+modified: '2022-09-21'
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1048.003/T1048.003.md#atomic-test-5---exfiltration-over-alternative-protocol---smtp
+    - https://www.ietf.org/rfc/rfc2821.txt
+falsepositives:
+    - Other SMTP tools
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        DestinationPort:
+            - 25
+            - 587
+            - 465
+            - 2525
+        Initiated: 'true'
+    filter_clients:
+        Image|endswith:
+            - \thunderbird.exe
+            - \outlook.exe
+    filter_mailserver:
+        Image|startswith: C:\Program Files\Microsoft\Exchange Server\
+    filter_outlook:
+        Image|startswith: C:\Program Files\WindowsApps\microsoft.windowscommunicationsapps_
+        Image|endswith: \HxTsr.exe
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:22.432107+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:22.432107+00:00'
+    detection_fields:
+        -   source_field: DestinationPort
+            target_table: network_activity
+            target_field: dst_endpoint.port
+            mapped_at: '2025-11-13T20:21:22.432133+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:22.432137+00:00'
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:22.432140+00:00'

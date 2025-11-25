@@ -1,0 +1,52 @@
+id: 953945c5-22fe-4a92-9f8a-a9edc1e522da
+title: Abuse of Service Permissions to Hide Services Via Set-Service - PS
+status: test
+level: high
+description: Detects usage of the "Set-Service" powershell cmdlet to configure a new
+    SecurityDescriptor that allows a service to be hidden from other utilities such
+    as "sc.exe", "Get-Service"...etc. (Works only in powershell 7)
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-10-17'
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.011
+references:
+    - https://twitter.com/Alh4zr3d/status/1580925761996828672
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2
+falsepositives:
+    - Rare intended use of hidden services
+    - Rare FP could occur due to the non linearity of the ScriptBlockText log
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''514e4c3a-c77d-4cde-a00f-046425e2301e''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'Set-Service '
+            - DCLCWPDTSD
+        ScriptBlockText|contains:
+            - '-SecurityDescriptorSddl '
+            - '-sd '
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.230627+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.230627+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.230632+00:00'

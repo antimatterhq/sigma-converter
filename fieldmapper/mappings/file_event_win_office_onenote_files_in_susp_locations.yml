@@ -1,0 +1,54 @@
+id: 7fd164ba-126a-4d9c-9392-0d4f7c243df0
+title: OneNote Attachment File Dropped In Suspicious Location
+status: test
+level: medium
+description: Detects creation of files with the ".one"/".onepkg" extension in suspicious
+    or uncommon locations. This could be a sign of attackers abusing OneNote attachments
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-22'
+modified: '2023-09-19'
+tags:
+    - attack.defense-evasion
+references:
+    - https://www.bleepingcomputer.com/news/security/hackers-now-use-microsoft-onenote-attachments-to-spread-malware/
+    - https://blog.osarmor.com/319/onenote-attachment-delivers-asyncrat-malware/
+falsepositives:
+    - Legitimate usage of ".one" or ".onepkg" files from those locations
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains:
+            - \AppData\Local\Temp\
+            - \Users\Public\
+            - \Windows\Temp\
+            - :\Temp\
+        TargetFilename|endswith:
+            - .one
+            - .onepkg
+    filter_main_onenote:
+        Image|contains: :\Program Files\Microsoft Office\
+        Image|endswith: \ONENOTE.EXE
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.253664+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.253664+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.253671+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:36.253673+00:00'

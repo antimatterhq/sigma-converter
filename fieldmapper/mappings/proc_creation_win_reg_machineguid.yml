@@ -1,0 +1,46 @@
+id: f5240972-3938-4e56-8e4b-e33893176c1f
+title: Suspicious Query of MachineGUID
+status: test
+level: low
+description: Use of reg to get MachineGuid information
+author: frack113
+date: '2022-01-01'
+tags:
+    - attack.discovery
+    - attack.t1082
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1082/T1082.md#atomic-test-8---windows-machineguid-discovery
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \reg.exe
+        CommandLine|contains|all:
+            - SOFTWARE\Microsoft\Cryptography
+            - '/v '
+            - MachineGuid
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.986337+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.986337+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:34.986349+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:34.986352+00:00'

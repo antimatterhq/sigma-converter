@@ -1,0 +1,53 @@
+id: 8344c0e5-5783-47cc-9cf9-a0f7fd03e6cf
+title: Potential Discovery Activity Using Find - Linux
+status: test
+level: medium
+description: Detects usage of "find" binary in a suspicious manner to perform discovery
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-12-28'
+tags:
+    - attack.discovery
+    - attack.t1083
+references:
+    - https://github.com/SaiSathvik1/Linux-Privilege-Escalation-Notes
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''85de3a19-b675-4a51-bfc6-b11a5186c971''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /find
+        CommandLine|contains:
+            - -perm -4000
+            - -perm -2000
+            - -perm 0777
+            - -perm -222
+            - -perm -o w
+            - -perm -o x
+            - -perm -u=s
+            - -perm -g=s
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.273974+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.273974+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.273986+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.273989+00:00'

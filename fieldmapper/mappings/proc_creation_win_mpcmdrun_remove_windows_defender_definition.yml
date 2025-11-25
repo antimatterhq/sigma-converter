@@ -1,0 +1,59 @@
+id: 9719a8aa-401c-41af-8108-ced7ec9cd75c
+title: Windows Defender Definition Files Removed
+status: test
+level: high
+description: Adversaries may disable security tools to avoid possible detection of
+    their tools and activities by removing Windows Defender Definition Files
+author: frack113
+date: '2021-07-07'
+modified: '2023-07-18'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+    - https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \MpCmdRun.exe
+        OriginalFileName: MpCmdRun.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - ' -RemoveDefinitions'
+            - ' -All'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.083286+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.083286+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.083298+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:37.083300+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:37.083303+00:00'

@@ -1,0 +1,64 @@
+id: d88d0ab2-e696-4d40-a2ed-9790064e66b3
+title: Modification of IE Registry Settings
+status: test
+level: low
+description: Detects modification of the registry settings used for Internet Explorer
+    and other Windows components that use these settings. An attacker can abuse this
+    registry key to add a domain to the trusted sites Zone or insert javascript for
+    persistence
+author: frack113
+date: '2022-01-22'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-4---add-domain-to-trusted-sites-zone
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-5---javascript-in-registry
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_domains:
+        TargetObject|contains: \Software\Microsoft\Windows\CurrentVersion\Internet
+            Settings
+    filter_dword:
+        Details|startswith: DWORD
+    filter_office:
+        Details:
+            - 'Cookie:'
+            - 'Visited:'
+            - (Empty)
+    filter_path:
+        TargetObject|contains:
+            - \Cache
+            - \ZoneMap
+            - \WpadDecision
+    filter_binary:
+        Details: Binary Data
+    filter_accepted_documents:
+        TargetObject|contains: \Accepted Documents\
+    condition: selection_domains and not 1 of filter_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

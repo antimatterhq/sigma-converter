@@ -1,0 +1,96 @@
+id: f674e36a-4b91-431e-8aef-f8a96c2aca35
+title: CurrentControlSet Autorun Keys Modification
+status: test
+level: medium
+description: Detects modification of autostart extensibility point (ASEP) in registry.
+author: Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin,
+    oscd.community, Tim Shelton, frack113 (split)
+date: '2019-10-25'
+modified: '2023-08-17'
+tags:
+    - attack.persistence
+    - attack.t1547.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns
+    - https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d
+fields:
+    - SecurityID
+    - ObjectName
+    - OldValueType
+    - NewValueType
+falsepositives:
+    - Legitimate software automatically (mostly, during installation) sets up autorun
+        keys for legitimate reason
+    - Legitimate administrator sets up autorun keys for legitimate reason
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''17f878b8-9968-4578-b814-c4217fc5768c''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    system_control_base:
+        TargetObject|contains: \SYSTEM\CurrentControlSet\Control
+    system_control_keys:
+        TargetObject|contains:
+            - \Terminal Server\WinStations\RDP-Tcp\InitialProgram
+            - \Terminal Server\Wds\rdpwd\StartupPrograms
+            - \SecurityProviders\SecurityProviders
+            - \SafeBoot\AlternateShell
+            - \Print\Providers
+            - \Print\Monitors
+            - \NetworkProvider\Order
+            - \Lsa\Notification Packages
+            - \Lsa\Authentication Packages
+            - \BootVerificationProgram\ImagePath
+    filter_empty:
+        Details: (Empty)
+    filter_cutepdf:
+        Image: C:\Windows\System32\spoolsv.exe
+        TargetObject|contains: \Print\Monitors\CutePDF Writer Monitor
+        Details:
+            - cpwmon64_v40.dll
+            - CutePDF Writer
+    filter_onenote:
+        Image: C:\Windows\System32\spoolsv.exe
+        TargetObject|contains: Print\Monitors\Appmon\Ports\Microsoft.Office.OneNote_
+        User|contains:
+            - AUTHORI
+            - AUTORI
+    filter_poqexec:
+        Image: C:\Windows\System32\poqexec.exe
+        TargetObject|endswith: \NetworkProvider\Order\ProviderOrder
+    filter_realvnc:
+        Image: C:\Windows\System32\spoolsv.exe
+        TargetObject|endswith: \Print\Monitors\MONVNC\Driver
+        Details: VNCpm.dll
+    condition: all of system_control_* and not 1 of filter_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:04.781826+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:04.781826+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:04.781866+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:04.781871+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:04.781874+00:00'
+        -   source_field: User
+            target_table: file_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:22:04.781877+00:00'

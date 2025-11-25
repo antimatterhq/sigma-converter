@@ -1,0 +1,48 @@
+id: a0edd39f-a0c6-4c17-8141-261f958e8d8f
+title: PowerShell Remote Session Creation
+status: test
+level: medium
+description: 'Adversaries may abuse PowerShell commands and scripts for execution.
+
+    PowerShell is a powerful interactive command-line interface and scripting environment
+    included in the Windows operating system
+
+    '
+author: frack113
+date: '2022-01-06'
+modified: '2023-01-02'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.001/T1059.001.md#atomic-test-10---powershell-invoke-downloadcradle
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/new-pssession?view=powershell-7.4
+falsepositives:
+    - Legitimate administrative script
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - New-PSSession
+            - '-ComputerName '
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.309197+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.309197+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.309201+00:00'

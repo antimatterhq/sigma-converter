@@ -1,0 +1,76 @@
+id: 9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3
+title: Potential Credential Dumping Via WER
+status: test
+level: high
+description: Detects potential credential dumping via Windows Error Reporting LSASS
+    Shtinkering technique which uses the Windows Error Reporting to dump lsass
+author: '@pbssubhash , Nasreddine Bencherchali'
+date: '2022-12-08'
+modified: '2022-12-09'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://github.com/deepinstinct/Lsass-Shtinkering
+    - https://media.defcon.org/DEF%20CON%2030/DEF%20CON%2030%20presentations/Asaf%20Gilboa%20-%20LSASS%20Shtinkering%20Abusing%20Windows%20Error%20Reporting%20to%20Dump%20LSASS.pdf
+falsepositives:
+    - Windows Error Reporting might produce similar behavior. In that case, check
+        the PID associated with the "-p" parameter in the CommandLine.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \Werfault.exe
+        OriginalFileName: WerFault.exe
+    selection_cli:
+        ParentUser|contains:
+            - AUTHORI
+            - AUTORI
+        User|contains:
+            - AUTHORI
+            - AUTORI
+        CommandLine|contains|all:
+            - ' -u -p '
+            - ' -ip '
+            - ' -s '
+    filter_lsass:
+        ParentImage: C:\Windows\System32\lsass.exe
+    condition: all of selection_* and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:39.699552+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:39.699552+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:39.699573+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:39.699579+00:00'
+        -   source_field: ParentUser
+            target_table: process_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:20:39.699581+00:00'
+        -   source_field: User
+            target_table: process_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:20:39.699583+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:39.699585+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:39.699586+00:00'

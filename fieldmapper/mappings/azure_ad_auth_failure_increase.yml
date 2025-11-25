@@ -1,0 +1,43 @@
+id: e1d02b53-c03c-4948-b11d-4d00cca49d03
+title: Increased Failed Authentications Of Any Type
+status: test
+level: medium
+description: Detects when sign-ins increased by 10% or greater.
+author: Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1'
+date: '2022-08-11'
+tags:
+    - attack.defense-evasion
+    - attack.t1078
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#monitoring-for-failed-unusual-sign-ins
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    selection:
+        Status: failure
+        Count: <10%
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:03.868057+00:00'
+        service:
+            source_field: service
+            source_value: signinlogs
+            mapped_at: '2025-11-13T20:17:03.868057+00:00'
+    detection_fields:
+        -   source_field: Status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:17:05.043466+00:00'
+        -   source_field: Count
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:05.043505+00:00'

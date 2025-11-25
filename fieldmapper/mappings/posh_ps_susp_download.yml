@@ -1,0 +1,49 @@
+id: 403c2cc0-7f6b-4925-9423-bfa573bed7eb
+title: Suspicious PowerShell Download - Powershell Script
+status: test
+level: medium
+description: Detects suspicious PowerShell download command
+author: Florian Roth (Nextron Systems)
+date: '2017-03-05'
+modified: '2022-12-02'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadstring?view=net-8.0
+    - https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadfile?view=net-8.0
+falsepositives:
+    - PowerShell scripts that download content from the Internet
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''65531a81-a694-4e31-ae04-f8ba5bc33759''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    webclient:
+        ScriptBlockText|contains: System.Net.WebClient
+    download:
+        ScriptBlockText|contains:
+            - .DownloadFile(
+            - .DownloadFileAsync(
+            - .DownloadString(
+            - .DownloadStringAsync(
+    condition: webclient and download
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.201071+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.201071+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.201077+00:00'

@@ -1,0 +1,57 @@
+id: 85b0b087-eddf-4a2b-b033-d771fa2b9775
+title: PowerShell Download and Execution Cradles
+status: test
+level: high
+description: Detects PowerShell download and execution cradles.
+author: Florian Roth (Nextron Systems)
+date: '2022-03-24'
+modified: '2023-05-04'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://github.com/VirtualAlllocEx/Payload-Download-Cradles/blob/88e8eca34464a547c90d9140d70e9866dcbc6a12/Download-Cradles.cmd
+    - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+falsepositives:
+    - Some PowerShell installers were seen using similar combinations. Apply filters
+        accordingly
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_download:
+        CommandLine|contains:
+            - .DownloadString(
+            - .DownloadFile(
+            - 'Invoke-WebRequest '
+            - 'iwr '
+    selection_iex:
+        CommandLine|contains:
+            - ;iex $
+            - '| IEX'
+            - '|IEX '
+            - I`E`X
+            - I`EX
+            - IE`X
+            - 'iex '
+            - IEX (
+            - IEX(
+            - Invoke-Expression
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:56.651153+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:56.651153+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:56.651160+00:00'

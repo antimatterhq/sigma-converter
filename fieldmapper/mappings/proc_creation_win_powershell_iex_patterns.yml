@@ -1,0 +1,65 @@
+id: 09576804-7a05-458e-a817-eb718ca91f54
+title: Suspicious PowerShell IEX Execution Patterns
+status: test
+level: high
+description: Detects suspicious ways to run Invoke-Execution using IEX alias
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2022-03-24'
+modified: '2022-11-28'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.2
+    - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
+falsepositives:
+    - Legitimate scripts that use IEX
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_combined_1:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        CommandLine|contains:
+            - ' | iex;'
+            - ' | iex '
+            - ' | iex}'
+            - ' | IEX ;'
+            - ' | IEX -Error'
+            - ' | IEX (new'
+            - ');IEX '
+    selection_combined_2:
+        CommandLine|contains:
+            - ::FromBase64String
+            - '.GetString([System.Convert]::'
+    selection_standalone:
+        CommandLine|contains:
+            - )|iex;$
+            - );iex($
+            - );iex $
+            - ' | IEX | '
+            - ' | iex\"'
+    condition: all of selection_combined_* or selection_standalone
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:33.231050+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:33.231050+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:33.231061+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.231063+00:00'

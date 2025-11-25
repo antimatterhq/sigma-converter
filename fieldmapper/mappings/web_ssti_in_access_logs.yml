@@ -1,0 +1,54 @@
+id: ada3bc4f-f0fd-42b9-ba91-e105e8af7342
+title: Server Side Template Injection Strings
+status: test
+level: high
+description: Detects SSTI attempts sent via GET requests in access logs
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-06-14'
+tags:
+    - attack.defense-evasion
+    - attack.t1221
+references:
+    - https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection
+    - https://github.com/payloadbox/ssti-payloads
+falsepositives:
+    - User searches in search boxes of the respective website
+    - Internal vulnerability scanners can cause some serious FPs when used, if you
+        experience a lot of FPs due to this think of adding more filters such as "User
+        Agent" strings and more response codes
+taxonomy: sigma
+logsource:
+    category: webserver
+detection:
+    select_method:
+        cs-method: GET
+    keywords:
+        - ={{
+        - =%7B%7B
+        - =${
+        - =$%7B
+        - =<%=
+        - =%3C%25=
+        - =@(
+        - freemarker.template.utility.Execute
+        - .getClass().forName('javax.script.ScriptEngineManager')
+        - T(org.apache.commons.io.IOUtils)
+    filter:
+        sc-status: 404
+    condition: select_method and keywords and not filter
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: webserver
+            mapped_at: '2025-11-13T20:14:35.034948+00:00'
+    detection_fields:
+        -   source_field: cs-method
+            target_table: http_activity
+            target_field: http_request.http_method
+            mapped_at: '2025-11-13T20:14:35.838844+00:00'
+        -   source_field: sc-status
+            target_table: http_activity
+            target_field: http_response.status
+            mapped_at: '2025-11-13T20:14:35.838853+00:00'

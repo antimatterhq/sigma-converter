@@ -1,0 +1,62 @@
+id: 1e53dd56-8d83-4eb4-a43e-b790a05510aa
+title: Always Install Elevated MSI Spawned Cmd And Powershell
+status: test
+level: medium
+description: Detects Windows Installer service (msiexec.exe) spawning "cmd" or "powershell"
+author: Teymur Kheirkhabarov (idea), Mangatas Tondang (rule), oscd.community
+date: '2020-10-13'
+modified: '2022-10-20'
+tags:
+    - attack.privilege-escalation
+    - attack.t1548.002
+references:
+    - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-50-638.jpg
+fields:
+    - Image
+    - ParentImage
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \cmd.exe
+            - \powershell.exe
+            - \pwsh.exe
+        OriginalFileName:
+            - Cmd.Exe
+            - PowerShell.EXE
+            - pwsh.dll
+    selection_parent:
+        ParentImage|contains|all:
+            - \Windows\Installer\
+            - msi
+        ParentImage|endswith: tmp
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.889727+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.889727+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.889737+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:46.889739+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:46.889740+00:00'

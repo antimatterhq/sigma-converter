@@ -1,0 +1,78 @@
+id: bef0bc5a-b9ae-425d-85c6-7b2d705980c6
+title: Python Initiated Connection
+status: test
+level: medium
+description: Detects a Python process initiating a network connection. While this
+    often relates to package installation, it can also indicate a potential malicious
+    script communicating with a C&C server.
+author: frack113
+date: '2021-12-10'
+modified: '2023-09-07'
+tags:
+    - attack.discovery
+    - attack.t1046
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md#atomic-test-4---port-scan-using-python
+    - https://pypi.org/project/scapy/
+falsepositives:
+    - Legitimate python scripts using the socket library or similar will trigger this.
+        Apply additional filters and perform an initial baseline before deploying.
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+    definition: 'Requirements: Field enrichment is required for the filters to work.
+        As field such as CommandLine and ParentImage are not available by default
+        on this event type'
+detection:
+    selection:
+        Initiated: 'true'
+        Image|contains: python
+    filter_optional_conda:
+        ParentImage: C:\ProgramData\Anaconda3\Scripts\conda.exe
+        CommandLine|contains|all:
+            - :\ProgramData\Anaconda3\Scripts\conda-script.py
+            - update
+    filter_optional_conda_jupyter_notebook:
+        ParentImage: C:\ProgramData\Anaconda3\python.exe
+        CommandLine|contains: C:\ProgramData\Anaconda3\Scripts\jupyter-notebook-script.py
+    filter_main_local_communication:
+        DestinationIp: 127.0.0.1
+        SourceIp: 127.0.0.1
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:16.628286+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:16.628286+00:00'
+    detection_fields:
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:18.032355+00:00'
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:18.032392+00:00'
+        -   source_field: ParentImage
+            target_table: network_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:21:18.032397+00:00'
+        -   source_field: CommandLine
+            target_table: network_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:18.032400+00:00'
+        -   source_field: DestinationIp
+            target_table: network_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:21:18.032403+00:00'
+        -   source_field: SourceIp
+            target_table: network_activity
+            target_field: src_endpoint.ip
+            mapped_at: '2025-11-13T20:21:18.032406+00:00'

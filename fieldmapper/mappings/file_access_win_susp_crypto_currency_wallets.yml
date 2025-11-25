@@ -1,0 +1,75 @@
+id: f41b0311-44f9-44f0-816d-dd45e39d4bc8
+title: Access To Crypto Currency Wallets By Uncommon Applications
+status: experimental
+level: medium
+description: 'Detects file access requests to crypto currency files by uncommon processes.
+
+    Could indicate potential attempt of crypto currency wallet stealing.
+
+    '
+author: X__Junior (Nextron Systems)
+date: '2024-07-29'
+tags:
+    - attack.t1003
+    - attack.credential-access
+references:
+    - Internal Research
+falsepositives:
+    - Antivirus, Anti-Spyware, Anti-Malware Software
+    - Backup software
+    - Legitimate software installed on partitions other than "C:\"
+    - Searching software such as "everything.exe"
+taxonomy: sigma
+logsource:
+    category: file_access
+    product: windows
+    definition: 'Requirements: Microsoft-Windows-Kernel-File ETW provider'
+detection:
+    selection:
+        FileName|contains:
+            - \AppData\Roaming\Ethereum\keystore\
+            - \AppData\Roaming\EthereumClassic\keystore\
+            - \AppData\Roaming\monero\wallets\
+        FileName|endswith:
+            - \AppData\Roaming\Bitcoin\wallet.dat
+            - \AppData\Roaming\BitcoinABC\wallet.dat
+            - \AppData\Roaming\BitcoinSV\wallet.dat
+            - \AppData\Roaming\DashCore\wallet.dat
+            - \AppData\Roaming\DogeCoin\wallet.dat
+            - \AppData\Roaming\Litecoin\wallet.dat
+            - \AppData\Roaming\Ripple\wallet.dat
+            - \AppData\Roaming\Zcash\wallet.dat
+    filter_main_system:
+        Image: System
+    filter_main_generic:
+        Image|startswith:
+            - C:\Program Files (x86)\
+            - C:\Program Files\
+            - C:\Windows\system32\
+            - C:\Windows\SysWOW64\
+    filter_optional_defender:
+        Image|startswith: C:\ProgramData\Microsoft\Windows Defender\
+        Image|endswith:
+            - \MpCopyAccelerator.exe
+            - \MsMpEng.exe
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_access
+            mapped_at: '2025-11-13T20:21:40.350151+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:40.350151+00:00'
+    detection_fields:
+        -   source_field: FileName
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:21:41.320555+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:41.320593+00:00'

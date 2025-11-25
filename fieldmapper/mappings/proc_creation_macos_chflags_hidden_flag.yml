@@ -1,0 +1,55 @@
+id: 3b2c1059-ae5f-40b6-b5d4-6106d3ac20fe
+title: Hidden Flag Set On File/Directory Via Chflags - MacOS
+status: experimental
+level: medium
+description: 'Detects the execution of the "chflags" utility with the "hidden" flag,
+    in order to hide files on MacOS.
+
+    When a file or directory has this hidden flag set, it becomes invisible to the
+    default file listing commands and in graphical file browsers.
+
+    '
+author: Omar Khaled (@beacon_exe)
+date: '2024-08-21'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.t1564.004
+    - attack.t1552.001
+    - attack.t1105
+references:
+    - https://www.sentinelone.com/labs/apt32-multi-stage-macos-trojan-innovates-on-crimeware-scripting-technique/
+    - https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
+    - https://www.paloaltonetworks.com/content/dam/pan/en_US/assets/pdf/reports/Unit_42/unit42-wirelurker.pdf
+    - https://ss64.com/mac/chflags.html
+falsepositives:
+    - Legitimate usage of chflags by administrators and users.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection:
+        Image|endswith: /chflags
+        CommandLine|contains: 'hidden '
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.803992+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.803992+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.804000+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.804002+00:00'

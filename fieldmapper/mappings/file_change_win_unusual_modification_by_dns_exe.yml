@@ -1,0 +1,48 @@
+id: 9f383dc0-fdeb-4d56-acbc-9f9f4f8f20f3
+title: Unusual File Modification by dns.exe
+status: test
+level: high
+description: Detects an unexpected file being modified by dns.exe which my indicate
+    activity related to remote code execution or other forms of exploitation as seen
+    in CVE-2020-1350 (SigRed)
+author: Tim Rauch (Nextron Systems), Elastic (idea)
+date: '2022-09-27'
+tags:
+    - attack.initial-access
+    - attack.t1133
+references:
+    - https://www.elastic.co/guide/en/security/current/unusual-file-modification-by-dns-exe.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8f0b1fb1-9bd4-4e74-8cdf-a8de4d2adfd0''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: file_change
+    product: windows
+detection:
+    selection:
+        Image|endswith: \dns.exe
+    filter:
+        TargetFilename|endswith: \dns.log
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_change
+            mapped_at: '2025-11-13T20:21:43.777115+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:43.777115+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:43.777133+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:43.777138+00:00'

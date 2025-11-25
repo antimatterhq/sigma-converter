@@ -1,0 +1,45 @@
+id: 34979410-e4b5-4e5d-8cfb-389fdff05c12
+title: Remove Immutable File Attribute
+status: test
+level: medium
+description: Detects usage of the 'chattr' utility to remove immutable file attribute.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-15'
+tags:
+    - attack.defense-evasion
+    - attack.t1222.002
+references:
+    - https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html
+falsepositives:
+    - Administrator interacting with immutable files (e.g. for instance backups).
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a5b977d6-8a81-4475-91b9-49dbfcd941f7''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /chattr
+        CommandLine|contains: ' -i '
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.872559+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.872559+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.872566+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.872568+00:00'

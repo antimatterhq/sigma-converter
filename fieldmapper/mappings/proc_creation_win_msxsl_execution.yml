@@ -1,0 +1,47 @@
+id: 9e50a8b3-dd05-4eb8-9153-bdb6b79d50b0
+title: Msxsl.EXE Execution
+status: test
+level: medium
+description: 'Detects the execution of the MSXSL utility. This can be used to execute
+    Extensible Stylesheet Language (XSL) files. These files are commonly used to describe
+    the processing and rendering of data within XML files.
+
+    Adversaries can abuse this functionality to execute arbitrary files while potentially
+    bypassing application whitelisting defenses.
+
+    '
+author: Timur Zinniatullin, oscd.community
+date: '2019-10-21'
+modified: '2023-11-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1220
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1220/T1220.md
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Msxsl/
+falsepositives:
+    - Msxsl is not installed by default and is deprecated, so unlikely on most systems.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \msxsl.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:55.125104+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:55.125104+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:55.125126+00:00'

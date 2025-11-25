@@ -1,0 +1,55 @@
+id: 729ce0ea-5d8f-4769-9762-e35de441586d
+title: MpiExec Lolbin
+status: test
+level: high
+description: Detects a certain command line flag combination used by mpiexec.exe LOLBIN
+    from HPC pack that can be used to execute any other binary
+author: Florian Roth (Nextron Systems)
+date: '2022-01-11'
+modified: '2024-11-23'
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://twitter.com/mrd0x/status/1465058133303246867
+    - https://learn.microsoft.com/en-us/powershell/high-performance-computing/mpiexec?view=hpc19-ps
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_binary:
+        Image|endswith: \mpiexec.exe
+        Hashes|contains: IMPHASH=d8b52ef6aaa3a81501bdfff9dbb96217
+    selection_flags:
+        CommandLine|contains:
+            - ' /n 1 '
+            - ' -n 1 '
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:44.274560+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:44.274560+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:44.274564+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:44.274565+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:44.274567+00:00'

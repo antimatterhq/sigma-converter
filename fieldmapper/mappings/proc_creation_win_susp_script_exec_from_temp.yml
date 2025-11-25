@@ -1,0 +1,63 @@
+id: a6a39bdb-935c-4f0a-ab77-35f4bbf44d33
+title: Suspicious Script Execution From Temp Folder
+status: test
+level: high
+description: Detects a suspicious script executions from temporary folder
+author: Florian Roth (Nextron Systems), Max Altgelt (Nextron Systems), Tim Shelton
+date: '2021-07-14'
+modified: '2022-10-05'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://www.microsoft.com/security/blog/2021/07/13/microsoft-discovers-threat-actor-targeting-solarwinds-serv-u-software-with-0-day-exploit/
+falsepositives:
+    - Administrative scripts
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+            - \mshta.exe
+            - \wscript.exe
+            - \cscript.exe
+        CommandLine|contains:
+            - \Windows\Temp
+            - \Temporary Internet
+            - \AppData\Local\Temp
+            - \AppData\Roaming\Temp
+            - '%TEMP%'
+            - '%TMP%'
+            - '%LocalAppData%\Temp'
+    filter:
+        CommandLine|contains:
+            - ' >'
+            - Out-File
+            - ConvertTo-Json
+            - -WindowStyle hidden -Verb runAs
+            - \Windows\system32\config\systemprofile\AppData\Local\Temp\Amazon\EC2-Windows\
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:29.280468+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:29.280468+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:29.280497+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:29.280504+00:00'

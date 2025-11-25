@@ -1,0 +1,57 @@
+id: ba1f7802-adc7-48b4-9ecb-81e227fddfd5
+title: Potential Network Sniffing Activity Using Network Tools
+status: test
+level: medium
+description: 'Detects potential network sniffing via use of network tools such as
+    "tshark", "windump".
+
+    Network sniffing refers to using the network interface on a system to monitor
+    or capture information sent over a wired or wireless connection.
+
+    An adversary may place a network interface into promiscuous mode to passively
+    access data in transit over the network, or use span ports to capture a larger
+    amount of data.
+
+    '
+author: Timur Zinniatullin, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+date: '2019-10-21'
+modified: '2023-02-20'
+tags:
+    - attack.credential-access
+    - attack.discovery
+    - attack.t1040
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1040/T1040.md
+falsepositives:
+    - Legitimate administration activity to troubleshoot network issues
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_tshark:
+        Image|endswith: \tshark.exe
+        CommandLine|contains: -i
+    selection_windump:
+        Image|endswith: \windump.exe
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:42.452533+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:42.452533+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:42.452538+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:42.452540+00:00'

@@ -1,0 +1,59 @@
+id: ded2b07a-d12f-4284-9b76-653e37b6c8b0
+title: Potentially Suspicious Ping/Copy Command Combination
+status: test
+level: medium
+description: 'Detects uncommon and potentially suspicious one-liner command containing
+    both "ping" and "copy" at the same time, which is usually used by malware.
+
+    '
+author: X__Junior (Nextron Systems)
+date: '2023-07-18'
+modified: '2024-03-06'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.004
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_cmd:
+        Image|endswith: \cmd.exe
+        OriginalFileName: Cmd.Exe
+    selection_action:
+        CommandLine|contains|all:
+            - ping
+            - 'copy '
+    selection_cli_1:
+        CommandLine|contains|windash: ' -n '
+    selection_cli_2:
+        CommandLine|contains|windash: ' -y '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:24.082559+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:24.082559+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:24.082568+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:24.082571+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:24.082573+00:00'

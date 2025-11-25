@@ -1,0 +1,86 @@
+id: fa0c05b6-8ad3-468d-8231-c1cbccb64fba
+title: Antivirus Hacktool Detection
+status: stable
+level: high
+description: 'Detects a highly relevant Antivirus alert that reports a hack tool or
+    other attack tool.
+
+    This event must not be ignored just because the AV has blocked the malware but
+    investigate, how it came there in the first place.
+
+    '
+author: Florian Roth (Nextron Systems), Arnim Rupp
+date: '2021-08-16'
+modified: '2024-11-02'
+tags:
+    - attack.execution
+    - attack.t1204
+references:
+    - https://www.nextron-systems.com/2021/08/16/antivirus-event-analysis-cheat-sheet-v1-8-2/
+    - https://www.nextron-systems.com/?s=antivirus
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: antivirus
+detection:
+    selection:
+        Signature|startswith:
+            - ATK/
+            - Exploit.Script.CVE
+            - HKTL
+            - HTOOL
+            - PWS.
+            - PWSX
+            - SecurityTool
+        Signature|contains:
+            - Adfind
+            - Brutel
+            - BruteR
+            - Cobalt
+            - COBEACON
+            - Cometer
+            - DumpCreds
+            - FastReverseProxy
+            - Hacktool
+            - Havoc
+            - Impacket
+            - Keylogger
+            - Koadic
+            - Mimikatz
+            - Nighthawk
+            - PentestPowerShell
+            - Potato
+            - PowerSploit
+            - PowerSSH
+            - PshlSpy
+            - PSWTool
+            - PWCrack
+            - PWDump
+            - Rozena
+            - Rusthound
+            - Sbelt
+            - Seatbelt
+            - SecurityTool
+            - SharpDump
+            - SharpHound
+            - Shellcode
+            - Sliver
+            - Snaffler
+            - SOAPHound
+            - Splinter
+            - Swrort
+            - TurtleLoader
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: antivirus
+            mapped_at: '2025-11-13T20:14:25.849973+00:00'
+    detection_fields:
+        -   source_field: Signature
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:14:25.849978+00:00'

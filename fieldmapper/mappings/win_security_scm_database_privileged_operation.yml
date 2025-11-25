@@ -1,0 +1,65 @@
+id: dae8171c-5ec6-4396-b210-8466585b53e9
+title: SCM Database Privileged Operation
+status: test
+level: medium
+description: Detects non-system users performing privileged operation os the SCM database
+author: Roberto Rodriguez @Cyb3rWard0g, Tim Shelton
+date: '2019-08-15'
+modified: '2022-09-18'
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+references:
+    - https://threathunterplaybook.com/hunts/windows/190826-RemoteSCMHandle/notebook.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4674
+        ObjectType: SC_MANAGER OBJECT
+        ObjectName: servicesactive
+        PrivilegeList: SeTakeOwnershipPrivilege
+    filter:
+        SubjectLogonId: '0x3e4'
+        ProcessName|endswith: :\Windows\System32\services.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:58.552490+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:58.552490+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:58.552517+00:00'
+        -   source_field: ObjectType
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:58.552520+00:00'
+        -   source_field: ObjectName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:58.552524+00:00'
+        -   source_field: PrivilegeList
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:58.552526+00:00'
+        -   source_field: SubjectLogonId
+            target_table: process_activity
+            target_field: actor.process.session.uid
+            mapped_at: '2025-11-13T20:23:58.552528+00:00'
+        -   source_field: ProcessName
+            target_table: process_activity
+            target_field: actor.process.name
+            mapped_at: '2025-11-13T20:23:58.552543+00:00'

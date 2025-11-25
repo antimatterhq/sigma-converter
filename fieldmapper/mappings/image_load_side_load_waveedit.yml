@@ -1,0 +1,52 @@
+id: 71b31e99-9ad0-47d4-aeb5-c0ca3928eeeb
+title: Potential Waveedit.DLL Sideloading
+status: test
+level: high
+description: Detects potential DLL sideloading of "waveedit.dll", which is part of
+    the Nero WaveEditor audio editing software.
+author: X__Junior (Nextron Systems)
+date: '2023-06-14'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://www.trendmicro.com/en_us/research/23/f/behind-the-scenes-unveiling-the-hidden-workings-of-earth-preta.html
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \waveedit.dll
+    filter_main_legit_path:
+        Image:
+            - C:\Program Files (x86)\Nero\Nero Apps\Nero WaveEditor\waveedit.exe
+            - C:\Program Files\Nero\Nero Apps\Nero WaveEditor\waveedit.exe
+        ImageLoaded|startswith:
+            - C:\Program Files (x86)\Nero\Nero Apps\Nero WaveEditor\
+            - C:\Program Files\Nero\Nero Apps\Nero WaveEditor\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:31.521170+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:31.521170+00:00'
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:31.521179+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:31.521181+00:00'

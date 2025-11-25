@@ -1,0 +1,51 @@
+id: 43fa5350-db63-4b8f-9a01-789a427074e1
+title: Potential Obfuscated Ordinal Call Via Rundll32
+status: test
+level: medium
+description: Detects execution of "rundll32" with potential obfuscated ordinal calls
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-17'
+tags:
+    - attack.defense-evasion
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \rundll32.exe
+        OriginalFileName: RUNDLL32.EXE
+        CommandLine|contains: rundll32
+    selection_cli:
+        CommandLine|contains:
+            - '#+'
+            - '#-'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:15.745769+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:15.745769+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:15.745773+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:15.745774+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:15.745775+00:00'

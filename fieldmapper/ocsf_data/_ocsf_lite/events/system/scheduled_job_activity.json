@@ -1,0 +1,187 @@
+{
+  "uid": 6,
+  "caption": "Scheduled Job Activity",
+  "description": "Scheduled Job Activity events report activities related to scheduled jobs or tasks.",
+  "extends": "base_event",
+  "name": "scheduled_job_activity",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Create"
+        },
+        "2": {
+          "caption": "Update"
+        },
+        "3": {
+          "caption": "Delete"
+        },
+        "4": {
+          "caption": "Enable"
+        },
+        "5": {
+          "caption": "Disable"
+        },
+        "6": {
+          "caption": "Start"
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "actor": {
+      "group": "context",
+      "description": "The actor that performed the activity on the job object.",
+      "requirement": "required",
+      "object": "actor",
+      "constraints": {
+        "at_least_one": [
+          "process",
+          "user",
+          "invoked_by",
+          "session",
+          "app_name",
+          "app_uid"
+        ]
+      }
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "System Activity",
+          "description": "System Activity events."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1006": {
+          "caption": "Scheduled Job Activity",
+          "description": "Scheduled Job Activity events report activities related to scheduled jobs or tasks."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "device": {
+      "description": "The device that is the target of the activity.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "device",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "job": {
+      "group": "primary",
+      "requirement": "required",
+      "object": "job"
+    },
+    "start_time": {
+      "description": "The start time of a time period, or the time of the least recent event included in the aggregate event.",
+      "group": "occurrence",
+      "requirement": "optional"
+    },
+    "risk_details": {
+      "group": "context",
+      "requirement": "optional"
+    },
+    "risk_level": {
+      "group": "context",
+      "requirement": "optional"
+    },
+    "risk_level_id": {
+      "group": "context",
+      "requirement": "optional"
+    },
+    "risk_score": {
+      "group": "context",
+      "requirement": "optional"
+    },
+    "type_uid": {
+      "description": "The resulting job object when the activity was allowed and successful.",
+      "group": "primary",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "100600": {
+          "caption": "Unknown",
+          "description": "The activity type \"Scheduled Job Activity: Unknown\" is not further specified."
+        },
+        "100601": {
+          "caption": "Create",
+          "description": "A request to create a new job."
+        },
+        "100602": {
+          "caption": "Update",
+          "description": "A request to update an existing job."
+        },
+        "100603": {
+          "caption": "Delete",
+          "description": "A request to delete an existing job."
+        },
+        "100604": {
+          "caption": "Enable",
+          "description": "A request to enable an existing job."
+        },
+        "100605": {
+          "caption": "Disable",
+          "description": "A request to disable an existing job."
+        },
+        "100606": {
+          "caption": "Start",
+          "description": "A request to start an existing job."
+        },
+        "100699": {
+          "caption": "Other",
+          "description": "The activity type \"Scheduled Job Activity: Other\" is not further specified."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    }
+  }
+}

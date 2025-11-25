@@ -1,0 +1,43 @@
+id: f74107df-b6c6-4e80-bf00-4170b658162b
+title: Sudo Privilege Escalation CVE-2019-14287
+status: test
+level: high
+description: Detects users trying to exploit sudo vulnerability reported in CVE-2019-14287
+author: Florian Roth (Nextron Systems)
+date: '2019-10-15'
+modified: '2022-10-05'
+tags:
+    - attack.privilege-escalation
+    - attack.t1068
+    - attack.t1548.003
+    - cve.2019-14287
+references:
+    - https://www.openwall.com/lists/oss-security/2019/10/14/1
+    - https://access.redhat.com/security/cve/cve-2019-14287
+    - https://twitter.com/matthieugarin/status/1183970598210412546
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        CommandLine|contains: ' -u#'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.903558+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.903558+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.903564+00:00'

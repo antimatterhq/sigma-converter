@@ -1,0 +1,59 @@
+id: 8028c2c3-e25a-46e3-827f-bbb5abf181d7
+title: WMImplant Hack Tool
+status: test
+level: high
+description: Detects parameters used by WMImplant
+author: NVISO
+date: '2020-03-26'
+modified: '2022-12-25'
+tags:
+    - attack.execution
+    - attack.t1047
+    - attack.t1059.001
+references:
+    - https://github.com/FortyNorthSecurity/WMImplant
+falsepositives:
+    - Administrative scripts that use the same keywords.
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - WMImplant
+            - ' change_user '
+            - ' gen_cli '
+            - ' command_exec '
+            - ' disable_wdigest '
+            - ' disable_winrm '
+            - ' enable_wdigest '
+            - ' enable_winrm '
+            - ' registry_mod '
+            - ' remote_posh '
+            - ' sched_job '
+            - ' service_mod '
+            - ' process_kill '
+            - ' active_users '
+            - ' basic_info '
+            - ' power_off '
+            - ' vacant_system '
+            - ' logon_events '
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.235222+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.235222+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.235229+00:00'

@@ -1,0 +1,70 @@
+id: 762f2482-ff21-4970-8939-0aa317a886bb
+title: HackTool - Certify Execution
+status: test
+level: high
+description: Detects Certify a tool for Active Directory certificate abuse based on
+    PE metadata characteristics and common command line arguments.
+author: pH-T (Nextron Systems)
+date: '2023-04-17'
+modified: '2023-04-25'
+tags:
+    - attack.discovery
+    - attack.credential-access
+    - attack.t1649
+references:
+    - https://github.com/GhostPack/Certify
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \Certify.exe
+        OriginalFileName: Certify.exe
+        Description|contains: Certify
+    selection_cli_commands:
+        CommandLine|contains:
+            - '.exe cas '
+            - '.exe find '
+            - '.exe pkiobjects '
+            - '.exe request '
+            - '.exe download '
+    selection_cli_options:
+        CommandLine|contains:
+            - ' /vulnerable'
+            - ' /template:'
+            - ' /altname:'
+            - ' /domain:'
+            - ' /path:'
+            - ' /ca:'
+    condition: selection_img or all of selection_cli_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:14.441652+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:14.441652+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:14.441657+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:14.441659+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:14.441660+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:14.441662+00:00'

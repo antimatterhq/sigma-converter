@@ -1,0 +1,67 @@
+id: e290b10b-1023-4452-a4a9-eb31a9013b3a
+title: LOLBAS Data Exfiltration by DataSvcUtil.exe
+status: test
+level: medium
+description: Detects when a user performs data exfiltration by using DataSvcUtil.exe
+author: Ialle Teixeira @teixeira0xfffff, Austin Songer @austinsonger
+date: '2021-09-30'
+modified: '2022-05-16'
+tags:
+    - attack.exfiltration
+    - attack.t1567
+references:
+    - https://gist.github.com/teixeira0xfffff/837e5bfed0d1b0a29a7cb1e5dbdd9ca6
+    - https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/wcf/wcf-data-service-client-utility-datasvcutil-exe
+    - https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/wcf/generating-the-data-service-client-library-wcf-data-services
+    - https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/wcf/how-to-add-a-data-service-reference-wcf-data-services
+    - https://lolbas-project.github.io/lolbas/Binaries/DataSvcUtil/
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - DataSvcUtil.exe being used may be performed by a system administrator.
+    - Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+    - DataSvcUtil.exe being executed from unfamiliar users should be investigated.
+        If known behavior is causing false positives, it can be exempted from the
+        rule.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_cli:
+        CommandLine|contains:
+            - '/in:'
+            - '/out:'
+            - '/uri:'
+    selection_img:
+        Image|endswith: \DataSvcUtil.exe
+        OriginalFileName: DataSvcUtil.exe
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:20.233692+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:20.233692+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:20.233705+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:20.233707+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:20.233708+00:00'

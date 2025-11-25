@@ -1,0 +1,59 @@
+id: 1723e720-616d-4ddc-ab02-f7e3685a4713
+title: Rundll32 Spawned Via Explorer.EXE
+status: test
+level: medium
+description: Detects execution of "rundll32.exe" with a parent process of Explorer.exe.
+    This has been observed by variants of Raspberry Robin, as first reported by Red
+    Canary.
+author: CD_ROM_
+date: '2022-05-21'
+modified: '2023-08-31'
+tags:
+    - attack.defense-evasion
+references:
+    - https://redcanary.com/blog/raspberry-robin/
+    - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith: \explorer.exe
+    selection_img:
+        Image|endswith: \rundll32.exe
+        OriginalFileName: RUNDLL32.EXE
+    filter_main_generic:
+        CommandLine|contains: ' C:\Windows\System32\'
+        CommandLine|endswith: ' -localserver 22d8c27b-47a1-48d1-ad08-7da7abd79617'
+    condition: all of selection_* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:31.540944+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:31.540944+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:31.540950+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:31.540951+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:31.540952+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:31.540953+00:00'

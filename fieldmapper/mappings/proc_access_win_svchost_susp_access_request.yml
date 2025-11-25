@@ -1,0 +1,61 @@
+id: 166e9c50-8cd9-44af-815d-d1f0c0e90dde
+title: Suspicious Svchost Process Access
+status: test
+level: high
+description: Detects suspicious access to the "svchost" process such as that used
+    by Invoke-Phantom to kill the thread of the Windows event logging service.
+author: Tim Burrell
+date: '2020-01-02'
+modified: '2023-01-30'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://github.com/hlldz/Invoke-Phant0m
+    - https://twitter.com/timbmsft/status/900724491076214784
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: :\Windows\System32\svchost.exe
+        GrantedAccess: '0x1F3FFF'
+        CallTrace|contains: UNKNOWN
+    filter_main_msbuild:
+        SourceImage|contains: :\Program Files\Microsoft Visual Studio\
+        SourceImage|endswith: \MSBuild\Current\Bin\MSBuild.exe
+        CallTrace|contains:
+            - Microsoft.Build.ni.dll
+            - System.ni.dll
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:19:03.806194+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:03.806194+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:03.806206+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:19:03.806209+00:00'
+        -   source_field: CallTrace
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:19:03.806212+00:00'
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:03.806214+00:00'

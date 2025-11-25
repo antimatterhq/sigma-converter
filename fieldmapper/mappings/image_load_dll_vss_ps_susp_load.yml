@@ -1,0 +1,82 @@
+id: 333cdbe8-27bb-4246-bf82-b41a0dca4b70
+title: Suspicious Volume Shadow Copy VSS_PS.dll Load
+status: test
+level: high
+description: Detects the image load of vss_ps.dll by uncommon executables
+author: Markus Neis, @markus_neis
+date: '2021-07-07'
+modified: '2024-03-28'
+tags:
+    - attack.defense-evasion
+    - attack.impact
+    - attack.t1490
+references:
+    - https://www.virustotal.com/gui/file/ba88ca45589fae0139a40ca27738a8fc2dfbe1be5a64a9558f4e0f52b35c5add
+    - https://twitter.com/am0nsec/status/1412232114980982787
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''48bfd177-7cf2-412b-ad77-baf923489e82''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''37774c23-25a1-4adb-bb6d-8bb9fd59c0f8''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \vss_ps.dll
+    filter_legit:
+        Image|startswith: C:\Windows\
+        Image|endswith:
+            - \clussvc.exe
+            - \dismhost.exe
+            - \dllhost.exe
+            - \inetsrv\appcmd.exe
+            - \inetsrv\iissetup.exe
+            - \msiexec.exe
+            - \rundll32.exe
+            - \searchindexer.exe
+            - \srtasks.exe
+            - \svchost.exe
+            - \System32\SystemPropertiesAdvanced.exe
+            - \taskhostw.exe
+            - \thor.exe
+            - \thor64.exe
+            - \tiworker.exe
+            - \vssvc.exe
+            - \WmiPrvSE.exe
+            - \wsmprovhost.exe
+    filter_programfiles:
+        Image|startswith:
+            - C:\Program Files\
+            - C:\Program Files (x86)\
+    filter_update:
+        CommandLine|startswith: C:\$WinREAgent\Scratch\
+        CommandLine|contains: \dismhost.exe {
+    filter_image_null:
+        Image: null
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:35.721606+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:35.721606+00:00'
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: process_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:35.721642+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:35.721645+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:35.721648+00:00'

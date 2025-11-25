@@ -1,0 +1,62 @@
+id: ca621ba5-54ab-4035-9942-d378e6fcde3c
+title: HackTool - HandleKatz LSASS Dumper Execution
+status: test
+level: high
+description: Detects the use of HandleKatz, a tool that demonstrates the usage of
+    cloned handles to Lsass in order to create an obfuscated memory dump of the same
+author: Florian Roth (Nextron Systems)
+date: '2022-08-18'
+modified: '2024-11-23'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://github.com/codewhitesec/HandleKatz
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_loader_img:
+        Image|endswith: \loader.exe
+        CommandLine|contains: '--pid:'
+    selection_loader_imphash:
+        Hashes|contains:
+            - IMPHASH=38D9E015591BBFD4929E0D0F47FA0055
+            - IMPHASH=0E2216679CA6E1094D63322E3412D650
+    selection_flags:
+        CommandLine|contains|all:
+            - '--pid:'
+            - '--outfile:'
+        CommandLine|contains:
+            - .dmp
+            - lsass
+            - .obf
+            - dump
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:57.102412+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:57.102412+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:57.102419+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:57.102421+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:57.102422+00:00'

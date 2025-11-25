@@ -1,0 +1,61 @@
+id: 746c86fb-ccda-4816-8997-01386263acc4
+title: Container Residence Discovery Via Proc Virtual FS
+status: test
+level: low
+description: Detects potential container discovery via listing of certain kernel features
+    in the "/proc" virtual filesystem
+author: Seth Hanford
+date: '2023-08-23'
+tags:
+    - attack.discovery
+    - attack.t1082
+references:
+    - https://blog.skyplabs.net/posts/container-detection/
+    - https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker
+falsepositives:
+    - Legitimate system administrator usage of these commands
+    - Some container tools or deployments may use these techniques natively to determine
+        how they proceed with execution, and will need to be filtered
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_tools:
+        Image|endswith:
+            - awk
+            - /cat
+            - grep
+            - /head
+            - /less
+            - /more
+            - /nl
+            - /tail
+    selection_procfs_kthreadd:
+        CommandLine|contains: /proc/2/
+    selection_procfs_target:
+        CommandLine|contains: /proc/
+        CommandLine|endswith:
+            - /cgroup
+            - /sched
+    condition: selection_tools and 1 of selection_procfs_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.883745+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.883745+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.883751+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.883753+00:00'

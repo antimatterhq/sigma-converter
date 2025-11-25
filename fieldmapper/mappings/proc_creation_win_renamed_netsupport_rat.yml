@@ -1,0 +1,55 @@
+id: 0afbd410-de03-4078-8491-f132303cb67d
+title: Renamed NetSupport RAT Execution
+status: test
+level: high
+description: Detects the execution of a renamed "client32.exe" (NetSupport RAT) via
+    Imphash, Product and OriginalFileName strings
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-19'
+modified: '2024-11-23'
+tags:
+    - attack.defense-evasion
+references:
+    - https://redcanary.com/blog/misbehaving-rats/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Product|contains: NetSupport Remote Control
+        OriginalFileName|contains: client32.exe
+        Hashes|contains: IMPHASH=A9D50692E95B79723F3E76FCF70D023E
+    filter:
+        Image|endswith: \client32.exe
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:56.562203+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:56.562203+00:00'
+    detection_fields:
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:56.562213+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:56.562216+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:56.562218+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:56.562220+00:00'

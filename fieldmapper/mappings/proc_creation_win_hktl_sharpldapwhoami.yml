@@ -1,0 +1,64 @@
+id: d9367cbb-c2e0-47ce-bdc0-128cb6da898d
+title: HackTool - SharpLdapWhoami Execution
+status: test
+level: high
+description: Detects SharpLdapWhoami, a whoami alternative that queries the LDAP service
+    on a domain controller
+author: Florian Roth (Nextron Systems)
+date: '2022-08-29'
+modified: '2023-02-04'
+tags:
+    - attack.discovery
+    - attack.t1033
+    - car.2016-03-001
+references:
+    - https://github.com/bugch3ck/SharpLdapWhoami
+falsepositives:
+    - Programs that use the same command line flags
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_name:
+        Image|endswith: \SharpLdapWhoami.exe
+    selection_pe:
+        OriginalFileName|contains: SharpLdapWhoami
+        Product: SharpLdapWhoami
+    selection_flags1:
+        CommandLine|endswith:
+            - ' /method:ntlm'
+            - ' /method:kerb'
+            - ' /method:nego'
+            - ' /m:nego'
+            - ' /m:ntlm'
+            - ' /m:kerb'
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:13.293358+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:13.293358+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:13.293392+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:13.293395+00:00'
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:13.293398+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:13.293400+00:00'

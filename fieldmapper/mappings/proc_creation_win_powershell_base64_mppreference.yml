@@ -1,0 +1,59 @@
+id: c6fb44c6-71f5-49e6-9462-1425d328aee3
+title: Powershell Base64 Encoded MpPreference Cmdlet
+status: test
+level: high
+description: Detects base64 encoded "MpPreference" PowerShell cmdlet code that tries
+    to modifies or tamper with Windows Defender AV
+author: Florian Roth (Nextron Systems)
+date: '2022-03-04'
+modified: '2023-01-30'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://learn.microsoft.com/en-us/defender-endpoint/configure-process-opened-file-exclusions-microsoft-defender-antivirus
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+    - https://twitter.com/AdamTheAnalyst/status/1483497517119590403
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|base64offset|contains:
+            - 'Add-MpPreference '
+            - 'Set-MpPreference '
+            - 'add-mppreference '
+            - 'set-mppreference '
+        CommandLine|contains:
+            - QQBkAGQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgA
+            - EAZABkAC0ATQBwAFAAcgBlAGYAZQByAGUAbgBjAGUAIA
+            - BAGQAZAAtAE0AcABQAHIAZQBmAGUAcgBlAG4AYwBlACAA
+            - UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgA
+            - MAZQB0AC0ATQBwAFAAcgBlAGYAZQByAGUAbgBjAGUAIA
+            - TAGUAdAAtAE0AcABQAHIAZQBmAGUAcgBlAG4AYwBlACAA
+            - YQBkAGQALQBtAHAAcAByAGUAZgBlAHIAZQBuAGMAZQAgA
+            - EAZABkAC0AbQBwAHAAcgBlAGYAZQByAGUAbgBjAGUAIA
+            - hAGQAZAAtAG0AcABwAHIAZQBmAGUAcgBlAG4AYwBlACAA
+            - cwBlAHQALQBtAHAAcAByAGUAZgBlAHIAZQBuAGMAZQAgA
+            - MAZQB0AC0AbQBwAHAAcgBlAGYAZQByAGUAbgBjAGUAIA
+            - zAGUAdAAtAG0AcABwAHIAZQBmAGUAcgBlAG4AYwBlACAA
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:57.142655+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:57.142655+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:57.142660+00:00'

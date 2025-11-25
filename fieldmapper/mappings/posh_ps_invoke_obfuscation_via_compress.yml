@@ -1,0 +1,48 @@
+id: 20e5497e-331c-4cd5-8d36-935f6e2a9a07
+title: Invoke-Obfuscation COMPRESS OBFUSCATION - PowerShell
+status: test
+level: medium
+description: Detects Obfuscated Powershell via COMPRESS OBFUSCATION
+author: Timur Zinniatullin, oscd.community
+date: '2020-10-18'
+modified: '2022-11-29'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_4104:
+        ScriptBlockText|contains|all:
+            - new-object
+            - text.encoding]::ascii
+        ScriptBlockText|contains:
+            - system.io.compression.deflatestream
+            - system.io.streamreader
+        ScriptBlockText|endswith: readtoend
+    condition: selection_4104
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.268787+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.268787+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.268792+00:00'

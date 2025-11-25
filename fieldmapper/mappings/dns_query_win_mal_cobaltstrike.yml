@@ -1,0 +1,50 @@
+id: f356a9c4-effd-4608-bbf8-408afd5cd006
+title: Suspicious Cobalt Strike DNS Beaconing - Sysmon
+status: test
+level: critical
+description: Detects a program that invoked suspicious DNS queries known from Cobalt
+    Strike beacons
+author: Florian Roth (Nextron Systems)
+date: '2021-11-09'
+modified: '2023-01-16'
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+references:
+    - https://www.icebrg.io/blog/footprints-of-fin7-tracking-actor-patterns
+    - https://www.sekoia.io/en/hunting-and-detecting-cobalt-strike/
+fields:
+    - Image
+    - CommandLine
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0d18728b-f5bf-4381-9dcf-915539fff6c2''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    selection1:
+        QueryName|startswith:
+            - aaa.stage.
+            - post.1
+    selection2:
+        QueryName|contains: .stage.123456.
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns_query
+            mapped_at: '2025-11-13T20:21:06.403802+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:06.403802+00:00'
+    detection_fields:
+        -   source_field: QueryName
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:21:06.403807+00:00'

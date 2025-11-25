@@ -1,0 +1,55 @@
+id: e4ed6030-ffe5-4e6a-8a8a-ab3c1ab9d94e
+title: Disable Windows IIS HTTP Logging
+status: test
+level: high
+description: Disables HTTP logging on a Windows IIS web server as seen by Threat Group
+    3390 (Bronze Union)
+author: frack113
+date: '2022-01-09'
+modified: '2023-01-22'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.002/T1562.002.md#atomic-test-1---disable-windows-iis-http-logging
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \appcmd.exe
+        OriginalFileName: appcmd.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - set
+            - config
+            - section:httplogging
+            - dontLog:true
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.102550+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.102550+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.102554+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.102567+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.102569+00:00'

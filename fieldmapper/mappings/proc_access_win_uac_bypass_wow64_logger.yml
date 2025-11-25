@@ -1,0 +1,51 @@
+id: 4f6c43e2-f989-4ea5-bcd8-843b49a0317c
+title: UAC Bypass Using WOW64 Logger DLL Hijack
+status: test
+level: high
+description: Detects the pattern of UAC Bypass using a WoW64 logger DLL hijack (UACMe
+    30)
+author: Christian Burkard (Nextron Systems)
+date: '2021-08-23'
+modified: '2022-10-09'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+references:
+    - https://github.com/hfiref0x/UACME
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        SourceImage|contains: :\Windows\SysWOW64\
+        GrantedAccess: '0x1fffff'
+        CallTrace|startswith: UNKNOWN(0000000000000000)|UNKNOWN(0000000000000000)|
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:18:58.553795+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:58.553795+00:00'
+    detection_fields:
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:58.553850+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:18:58.553854+00:00'
+        -   source_field: CallTrace
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:58.553857+00:00'

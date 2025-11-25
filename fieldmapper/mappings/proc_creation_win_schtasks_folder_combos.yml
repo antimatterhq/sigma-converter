@@ -1,0 +1,65 @@
+id: 8a8379b8-780b-4dbf-b1e9-31c8d112fefb
+title: Schtasks From Suspicious Folders
+status: test
+level: high
+description: Detects scheduled task creations that have suspicious action command
+    and folder combinations
+author: Florian Roth (Nextron Systems)
+date: '2022-04-15'
+modified: '2022-11-18'
+tags:
+    - attack.execution
+    - attack.t1053.005
+references:
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/lazarus-dream-job-chemical
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \schtasks.exe
+        OriginalFileName: schtasks.exe
+    selection_create:
+        CommandLine|contains: ' /create '
+    selection_command:
+        CommandLine|contains:
+            - powershell
+            - pwsh
+            - 'cmd /c '
+            - 'cmd /k '
+            - 'cmd /r '
+            - 'cmd.exe /c '
+            - 'cmd.exe /k '
+            - 'cmd.exe /r '
+    selection_all_folders:
+        CommandLine|contains:
+            - C:\ProgramData\
+            - '%ProgramData%'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:32.629710+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:32.629710+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:32.629718+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:32.629720+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:32.629722+00:00'

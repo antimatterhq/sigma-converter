@@ -1,0 +1,48 @@
+id: 9e3357ba-09d4-4fbd-a7c5-ad6386314513
+title: Change the Fax Dll
+status: test
+level: high
+description: Detect possible persistence using Fax DLL load when service restart
+author: frack113
+date: '2022-07-17'
+modified: '2022-12-30'
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+references:
+    - https://twitter.com/dottor_morte/status/1544652325570191361
+    - https://raw.githubusercontent.com/RiccardoAncarani/talks/master/F-Secure/unorthodox-lateral-movement.pdf
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains|all:
+            - \Software\Microsoft\Fax\Device Providers\
+            - \ImageName
+    filter:
+        Details: '%systemroot%\system32\fxst30.dll'
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

@@ -1,0 +1,43 @@
+id: 29e1c216-6408-489d-8a06-ee9d151ef819
+title: Suspicious Mount-DiskImage
+status: test
+level: low
+description: Adversaries may abuse container files such as disk image (.iso, .vhd)
+    file formats to deliver malicious payloads that may not be tagged with MOTW.
+author: frack113
+date: '2022-02-01'
+tags:
+    - attack.defense-evasion
+    - attack.t1553.005
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1553.005/T1553.005.md#atomic-test-1---mount-iso-image
+    - https://learn.microsoft.com/en-us/powershell/module/storage/mount-diskimage?view=windowsserver2022-ps
+falsepositives:
+    - Legitimate PowerShell scripts
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'Mount-DiskImage '
+            - '-ImagePath '
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.288665+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.288665+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.288668+00:00'

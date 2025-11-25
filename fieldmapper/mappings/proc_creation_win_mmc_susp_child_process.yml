@@ -1,0 +1,57 @@
+id: 05a2ab7e-ce11-4b63-86db-ab32e763e11d
+title: MMC Spawning Windows Shell
+status: test
+level: high
+description: Detects a Windows command line executable started from MMC
+author: Karneades, Swisscom CSIRT
+date: '2019-08-05'
+modified: '2022-07-14'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.003
+references:
+    - https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/
+fields:
+    - CommandLine
+    - Image
+    - ParentCommandLine
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection1:
+        ParentImage|endswith: \mmc.exe
+    selection2:
+        Image|endswith:
+            - \cmd.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \wscript.exe
+            - \cscript.exe
+            - \sh.exe
+            - \bash.exe
+            - \reg.exe
+            - \regsvr32.exe
+        Image|contains: \BITSADMIN
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:44.288773+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:44.288773+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:44.288779+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:44.288781+00:00'

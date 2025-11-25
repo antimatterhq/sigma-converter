@@ -1,0 +1,158 @@
+{
+  "uid": 4,
+  "caption": "Entity Management",
+  "description": "Entity Management events report activity by a managed client, a micro service, or a user at a management console. The activity can be a create, read, update, and delete operation on a managed entity. Note that if the operation does not concern a specific entity (e.g. it is a list operation across multiple entities) then it probably doesn't belong here. Conversely, if the action DOES involve changing or interacting (even reading) the attributes of a specific entity, such as a user or role, then this class is a good fit",
+  "extends": "base_event",
+  "name": "entity_management",
+  "attributes": {
+    "access_list": {
+      "group": "context",
+      "requirement": "optional"
+    },
+    "access_mask": {
+      "group": "context",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "1": {
+          "caption": "Create",
+          "description": "Create a new managed entity."
+        },
+        "2": {
+          "caption": "Read",
+          "description": "Read an existing managed entity."
+        },
+        "3": {
+          "caption": "Update",
+          "description": "Update an existing managed entity."
+        },
+        "4": {
+          "caption": "Delete",
+          "description": "Delete a managed entity."
+        },
+        "5": {
+          "caption": "Move",
+          "description": "Move or rename an existing managed entity."
+        },
+        "6": {
+          "caption": "Enroll",
+          "description": "Enroll an existing managed entity."
+        },
+        "7": {
+          "caption": "Unenroll",
+          "description": "Unenroll an existing managed entity."
+        },
+        "8": {
+          "caption": "Enable",
+          "description": "Enable an existing managed entity. Note: This is typically regarded as a semi-permanent, editor visible, syncable change."
+        },
+        "9": {
+          "caption": "Disable",
+          "description": "Disable an existing managed entity. Note: This is typically regarded as a semi-permanent, editor visible, syncable change."
+        },
+        "10": {
+          "caption": "Activate",
+          "description": "Activate an existing managed entity. Note: This is a typically regarded as a transient change, a change of state of the engine."
+        },
+        "11": {
+          "caption": "Deactivate",
+          "description": "Deactivate an existing managed entity. Note: This is a typically regarded as a transient change, a change of state of the engine."
+        },
+        "12": {
+          "caption": "Suspend",
+          "description": "Suspend an existing managed entity."
+        },
+        "13": {
+          "caption": "Resume",
+          "description": "Resume (unsuspend) an existing managed entity."
+        }
+      }
+    },
+    "actor": {
+      "group": "context",
+      "requirement": "required",
+      "object": "actor",
+      "constraints": {
+        "at_least_one": [
+          "process",
+          "user",
+          "invoked_by",
+          "session",
+          "app_name",
+          "app_uid"
+        ]
+      }
+    },
+    "api": {
+      "group": "primary",
+      "requirement": "required",
+      "object": "api"
+    },
+    "cloud": {
+      "caption": "Cloud",
+      "description": "The Cloud object contains information about a cloud or Software-as-a-Service account or similar construct, such as AWS Account ID, regions, organizations, folders, compartments, tenants, etc.",
+      "object": "cloud"
+    },
+    "class_uid": {
+      "description": "The class of the event.",
+      "group": "primary",
+      "requirement": "required",
+      "enum": {
+        "3004": {
+          "caption": "Entity Management"
+        }
+      }
+    },
+    "comment": {
+      "description": "The user provided comment about why the entity was changed.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "device": {
+      "caption": "Device",
+      "description": "The Device object represents an addressable computer system or host, which is typically connected to a computer network and participates in the transmission or processing of data within the computer network.",
+      "object": "device"
+    },
+    "entity": {
+      "group": "primary",
+      "requirement": "required",
+      "object": "managed_entity"
+    },
+    "entity_result": {
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "type_uid": {
+      "description": "The type of the event.",
+      "group": "primary",
+      "requirement": "recommended",
+      "enum": {
+        "300400": {
+          "caption": "Entity Management: Unknown",
+          "description": "Unknown"
+        },
+        "300401": {
+          "caption": "Entity Management: Create",
+          "description": "Create a new managed entity."
+        },
+        "300402": {
+          "caption": "Entity Management: Read",
+          "description": "Read an existing managed entity."
+        },
+        "300403": {
+          "caption": "Entity Management: Update",
+          "description": "Update an existing managed entity."
+        },
+        "300404": {
+          "caption": "Entity Management: Delete",
+          "description": "Delete a managed entity."
+        },
+        "300499": {
+          "caption": "Other",
+          "description": "The activity type is not mapped."
+        }
+      }
+    }
+  }
+}

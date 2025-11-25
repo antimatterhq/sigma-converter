@@ -1,0 +1,43 @@
+id: 00bb5bd5-1379-4fcf-a965-a5b6f7478064
+title: Windows Firewall Settings Have Been Changed
+status: test
+level: low
+description: Detects activity when the settings of the Windows firewall have been
+    changed
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+date: '2022-02-19'
+modified: '2023-04-21'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.004
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd364427(v=ws.10)
+taxonomy: sigma
+logsource:
+    product: windows
+    service: firewall-as
+detection:
+    selection:
+        EventID:
+            - 2002
+            - 2083
+            - 2003
+            - 2082
+            - 2008
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:12.614330+00:00'
+        service:
+            source_field: service
+            source_value: firewall-as
+            mapped_at: '2025-11-13T20:22:12.614330+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:12.614339+00:00'

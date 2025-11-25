@@ -1,0 +1,68 @@
+id: ec570e53-4c76-45a9-804d-dc3f355ff7a7
+title: 7Zip Compressing Dump Files
+status: test
+level: medium
+description: Detects execution of 7z in order to compress a file with a ".dmp"/".dump"
+    extension, which could be a step in a process of dump file exfiltration.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-27'
+modified: '2023-09-12'
+tags:
+    - attack.collection
+    - attack.t1560.001
+references:
+    - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
+falsepositives:
+    - Legitimate use of 7z with a command line in which ".dmp" or ".dump" appears
+        accidentally
+    - Legitimate use of 7z to compress WER ".dmp" files for troubleshooting
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1ac14d38-3dfc-4635-92c7-e3fd1c5f5bfc''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Description|contains: 7-Zip
+        Image|endswith:
+            - \7z.exe
+            - \7zr.exe
+            - \7za.exe
+        OriginalFileName:
+            - 7z.exe
+            - 7za.exe
+    selection_extension:
+        CommandLine|contains:
+            - .dmp
+            - .dump
+            - .hdmp
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.290521+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.290521+00:00'
+    detection_fields:
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:30.290527+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.290529+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:30.290530+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.290532+00:00'

@@ -1,0 +1,61 @@
+id: 8834e2f7-6b4b-4f09-8906-d2276470ee23
+title: PsExec/PAExec Escalation to LOCAL SYSTEM
+status: test
+level: high
+description: Detects suspicious commandline flags used by PsExec and PAExec to escalate
+    a command line to LOCAL_SYSTEM rights
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2021-11-23'
+modified: '2024-03-05'
+tags:
+    - attack.resource-development
+    - attack.t1587.001
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
+    - https://www.poweradmin.com/paexec/
+    - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+falsepositives:
+    - Admins that use PsExec or PAExec to escalate to the SYSTEM account for maintenance
+        purposes (rare)
+    - Users that debug Microsoft Intune issues using the commands mentioned in the
+        official documentation; see https://learn.microsoft.com/en-us/mem/intune/apps/intune-management-extension
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''207b0396-3689-42d9-8399-4222658efc99''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_sys:
+        CommandLine|contains|windash:
+            - ' -s cmd'
+            - ' -s -i cmd'
+            - ' -i -s cmd'
+            - ' -s pwsh'
+            - ' -s -i pwsh'
+            - ' -i -s pwsh'
+            - ' -s powershell'
+            - ' -s -i powershell'
+            - ' -i -s powershell'
+    selection_other:
+        CommandLine|contains:
+            - psexec
+            - paexec
+            - accepteula
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.910747+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.910747+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.910754+00:00'

@@ -1,0 +1,56 @@
+id: d3adb3ef-b7e7-4003-9092-1924c797db35
+title: AWS Identity Center Identity Provider Change
+status: test
+level: high
+description: 'Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider.
+
+    A change in identity provider allows an attacker to establish persistent access
+    or escalate privileges via user impersonation.
+
+    '
+author: Michael McIntyre @wtfender
+date: '2023-09-27'
+tags:
+    - attack.persistence
+    - attack.t1556
+references:
+    - https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html
+    - https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html
+    - https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html
+falsepositives:
+    - Authorized changes to the AWS account's identity provider
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource:
+            - sso-directory.amazonaws.com
+            - sso.amazonaws.com
+        eventName:
+            - AssociateDirectory
+            - DisableExternalIdPConfigurationForDirectory
+            - DisassociateDirectory
+            - EnableExternalIdPConfigurationForDirectory
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:17:49.396083+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:17:49.396083+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: file_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:49.396143+00:00'
+        -   source_field: eventName
+            target_table: file_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:17:49.396157+00:00'

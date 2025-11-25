@@ -1,0 +1,73 @@
+id: 5cc90652-4cbd-4241-aa3b-4b462fa5a248
+title: Potential Recon Activity Via Nltest.EXE
+status: test
+level: medium
+description: Detects nltest commands that can be used for information discovery
+author: Craig Young, oscd.community, Georg Lauenstein
+date: '2021-07-24'
+modified: '2023-12-15'
+tags:
+    - attack.discovery
+    - attack.t1016
+    - attack.t1482
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731935(v=ws.11)
+    - https://thedfirreport.com/2021/08/16/trickbot-leads-up-to-fake-1password-installation/
+    - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
+    - https://book.hacktricks.xyz/windows/basic-cmd-for-pentesters
+    - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+    - https://eqllib.readthedocs.io/en/latest/analytics/03e231a6-74bc-467a-acb1-e5676b0fb55e.html
+    - https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/
+    - https://github.com/redcanaryco/atomic-red-team/blob/5360c9d9ffa3b25f6495f7a16e267b719eba2c37/atomics/T1482/T1482.md#atomic-test-2---windows---discover-domain-trusts-with-nltest
+falsepositives:
+    - Legitimate administration use but user and host must be investigated
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''410ad193-a728-4107-bc79-4419789fcbf8''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''903076ff-f442-475a-b667-4f246bcc203b''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''77815820-246c-47b8-9741-e0def3f57308''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_nltest:
+        Image|endswith: \nltest.exe
+        OriginalFileName: nltestrk.exe
+    selection_recon:
+        CommandLine|contains|all:
+            - server
+            - query
+        CommandLine|contains:
+            - /user
+            - all_trusts
+            - 'dclist:'
+            - 'dnsgetdc:'
+            - domain_trusts
+            - 'dsgetdc:'
+            - parentdomain
+            - trusted_domains
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.117854+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.117854+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.117859+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:37.117861+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:37.117862+00:00'

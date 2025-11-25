@@ -1,0 +1,51 @@
+id: a34f79a3-8e5f-4cc3-b765-de00695452c2
+title: HackTool - PowerTool Execution
+status: test
+level: high
+description: Detects the execution of the tool PowerTool which has the ability to
+    kill a process, delete its process file, unload drivers, and delete the driver
+    files
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-11-29'
+modified: '2023-02-04'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
+    - https://www.trendmicro.com/en_us/research/22/i/play-ransomware-s-attack-playbook-unmasks-it-as-another-hive-aff.html
+    - https://twitter.com/gbti_sa/status/1249653895900602375?lang=en
+    - https://www.softpedia.com/get/Antivirus/Removal-Tools/ithurricane-PowerTool.shtml
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \PowerTool.exe
+            - \PowerTool64.exe
+        OriginalFileName: PowerTool.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.303611+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.303611+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.303618+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:30.303620+00:00'

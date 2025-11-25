@@ -1,0 +1,96 @@
+id: 7b434893-c57d-4f41-908d-6a17bf1ae98f
+title: Network Connection Initiated From Process Located In Potentially Suspicious
+    Or Uncommon Location
+status: test
+level: high
+description: 'Detects a network connection initiated by programs or processes running
+    from suspicious or uncommon files system locations.
+
+    '
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2017-03-19'
+modified: '2024-08-22'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://docs.google.com/spreadsheets/d/17pSTDNpa0sf6pHeRhusvWG6rThciE8CsXTSlDUAZDyo
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Initiated: 'true'
+        Image|contains:
+            - :\$Recycle.bin
+            - :\Perflogs\
+            - :\Temp\
+            - :\Users\Default\
+            - :\Windows\Fonts\
+            - :\Windows\IME\
+            - :\Windows\System32\Tasks\
+            - :\Windows\Tasks\
+            - \config\systemprofile\
+            - \Windows\addins\
+    filter_main_domains:
+        DestinationHostname|endswith:
+            - .githubusercontent.com
+            - anonfiles.com
+            - cdn.discordapp.com
+            - ddns.net
+            - dl.dropboxusercontent.com
+            - ghostbin.co
+            - glitch.me
+            - gofile.io
+            - hastebin.com
+            - mediafire.com
+            - mega.co.nz
+            - mega.nz
+            - onrender.com
+            - pages.dev
+            - paste.ee
+            - pastebin.com
+            - pastebin.pl
+            - pastetext.net
+            - portmap.io
+            - privatlab.com
+            - privatlab.net
+            - send.exploit.in
+            - sendspace.com
+            - storage.googleapis.com
+            - storjshare.io
+            - supabase.co
+            - temp.sh
+            - transfer.sh
+            - trycloudflare.com
+            - ufile.io
+            - w3spaces.com
+            - workers.dev
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:18.046080+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:18.046080+00:00'
+    detection_fields:
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:18.046089+00:00'
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:18.046091+00:00'
+        -   source_field: DestinationHostname
+            target_table: network_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:21:18.046094+00:00'

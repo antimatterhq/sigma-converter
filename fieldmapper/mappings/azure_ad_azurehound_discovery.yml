@@ -1,0 +1,46 @@
+id: 35b781cc-1a08-4a5a-80af-42fd7c315c6b
+title: Discovery Using AzureHound
+status: test
+level: high
+description: Detects AzureHound (A BloodHound data collector for Microsoft Azure)
+    activity via the default User-Agent that is used during its operation after successful
+    authentication.
+author: Janantha Marasinghe
+date: '2022-11-27'
+tags:
+    - attack.discovery
+    - attack.t1087.004
+    - attack.t1526
+references:
+    - https://github.com/BloodHoundAD/AzureHound
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    selection:
+        userAgent|contains: azurehound
+        ResultType: 0
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:05.901361+00:00'
+        service:
+            source_field: service
+            source_value: signinlogs
+            mapped_at: '2025-11-13T20:17:05.901361+00:00'
+    detection_fields:
+        -   source_field: userAgent
+            target_table: api_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:17:07.610100+00:00'
+        -   source_field: ResultType
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:07.610133+00:00'

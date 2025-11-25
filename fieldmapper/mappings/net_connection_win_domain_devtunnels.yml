@@ -1,0 +1,53 @@
+id: 9501f8e6-8e3d-48fc-a8a6-1089dd5d7ef4
+title: Network Connection Initiated To DevTunnels Domain
+status: test
+level: medium
+description: 'Detects network connections to Devtunnels domains initiated by a process
+    on a system. Attackers can abuse that feature to establish a reverse shell or
+    persistence on a machine.
+
+    '
+author: Kamran Saifullah
+date: '2023-11-20'
+tags:
+    - attack.exfiltration
+    - attack.t1567.001
+references:
+    - https://blueteamops.medium.com/detecting-dev-tunnels-16f0994dc3e2
+    - https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security
+    - https://cydefops.com/devtunnels-unleashed
+falsepositives:
+    - Legitimate use of Devtunnels will also trigger this.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4b657234-038e-4ad5-997c-4be42340bce4''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''b3e6418f-7c7a-4fad-993a-93b65027a9f1''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''1cb0c6ce-3d00-44fc-ab9c-6d6d577bf20b''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Initiated: 'true'
+        DestinationHostname|endswith: .devtunnels.ms
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:27.446705+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:27.446705+00:00'
+    detection_fields:
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:27.446722+00:00'
+        -   source_field: DestinationHostname
+            target_table: network_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:21:27.446725+00:00'

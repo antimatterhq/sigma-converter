@@ -1,0 +1,42 @@
+id: 57b649ef-ff42-4fb0-8bf6-62da243a1708
+title: Windows Defender Threat Detected
+status: stable
+level: high
+description: Detects actions taken by Windows Defender malware detection engines
+author: Ján Trenčanský
+date: '2020-07-28'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: windows
+    service: windefend
+detection:
+    selection:
+        EventID:
+            - 1006
+            - 1015
+            - 1116
+            - 1117
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:42.244292+00:00'
+        service:
+            source_field: service
+            source_value: windefend
+            mapped_at: '2025-11-13T20:24:42.244292+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:42.244309+00:00'

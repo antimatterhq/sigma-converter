@@ -1,0 +1,49 @@
+id: 1af57a4b-460a-4738-9034-db68b880c665
+title: PowerShell SAM Copy
+status: test
+level: high
+description: Detects suspicious PowerShell scripts accessing SAM hives
+author: Florian Roth (Nextron Systems)
+date: '2021-07-29'
+modified: '2023-01-06'
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+references:
+    - https://twitter.com/splinter_code/status/1420546784250769408
+falsepositives:
+    - Some rare backup scenarios
+    - PowerShell scripts fixing HiveNightmare / SeriousSAM ACLs
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_1:
+        CommandLine|contains|all:
+            - \HarddiskVolumeShadowCopy
+            - System32\config\sam
+    selection_2:
+        CommandLine|contains:
+            - Copy-Item
+            - cp $_.
+            - cpi $_.
+            - copy $_.
+            - .File]::Copy(
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.877101+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.877101+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.877107+00:00'

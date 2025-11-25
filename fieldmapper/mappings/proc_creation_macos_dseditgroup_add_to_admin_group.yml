@@ -1,0 +1,50 @@
+id: 5d0fdb62-f225-42fb-8402-3dfe64da468a
+title: User Added To Admin Group Via DseditGroup
+status: test
+level: medium
+description: Detects attempts to create and/or add an account to the admin group,
+    thus granting admin privileges.
+author: Sohan G (D4rkCiph3r)
+date: '2023-08-22'
+tags:
+    - attack.initial-access
+    - attack.privilege-escalation
+    - attack.t1078.003
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1078.003/T1078.003.md#atomic-test-5---add-a-newexisting-user-to-the-admin-group-using-dseditgroup-utility---macos
+    - https://ss64.com/osx/dseditgroup.html
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection:
+        Image|endswith: /dseditgroup
+        CommandLine|contains|all:
+            - ' -o edit '
+            - ' -a '
+            - ' -t user'
+            - admin
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.794479+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.794479+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.794486+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.794487+00:00'

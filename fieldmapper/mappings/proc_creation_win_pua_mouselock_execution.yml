@@ -1,0 +1,57 @@
+id: c9192ad9-75e5-43eb-8647-82a0a5b493e3
+title: PUA - Mouse Lock Execution
+status: test
+level: medium
+description: In Kaspersky's 2020 Incident Response Analyst Report they listed legitimate
+    tool "Mouse Lock" as being used for both credential access and collection in security
+    incidents.
+author: Cian Heasley
+date: '2020-08-13'
+modified: '2023-02-21'
+tags:
+    - attack.credential-access
+    - attack.collection
+    - attack.t1056.002
+references:
+    - https://github.com/klsecservices/Publications/blob/657deb6a6eb6e00669afd40173f425fb49682eaa/Incident-Response-Analyst-Report-2020.pdf
+    - https://sourceforge.net/projects/mouselock/
+fields:
+    - Product
+    - Company
+    - CommandLine
+falsepositives:
+    - Legitimate uses of Mouse Lock software
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Product|contains: Mouse Lock
+        Company|contains: Misc314
+        CommandLine|contains: Mouse Lock_
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:24.067983+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:24.067983+00:00'
+    detection_fields:
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:24.068004+00:00'
+        -   source_field: Company
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:20:24.068007+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:24.068009+00:00'

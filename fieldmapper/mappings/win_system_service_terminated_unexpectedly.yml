@@ -1,0 +1,57 @@
+id: 56abae0c-6212-4b97-adc0-0b559bb950c3
+title: Important Windows Service Terminated Unexpectedly
+status: test
+level: high
+description: Detects important or interesting Windows services that got terminated
+    unexpectedly.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-04-14'
+tags:
+    - attack.defense-evasion
+references:
+    - https://www.randori.com/blog/vulnerability-analysis-queuejumper-cve-2023-21554/
+falsepositives:
+    - Rare false positives could occur since service termination could happen due
+        to multiple reasons
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_eid:
+        Provider_Name: Service Control Manager
+        EventID: 7034
+    selection_name:
+        param1|contains: Message Queuing
+        Binary|contains:
+            - 4d0053004d005100
+            - 6d0073006d007100
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:24.938357+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:24.938357+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:24.938364+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:24.938365+00:00'
+        -   source_field: param1
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:24.938366+00:00'
+        -   source_field: Binary
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:24.938367+00:00'

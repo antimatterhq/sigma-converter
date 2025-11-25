@@ -1,0 +1,51 @@
+id: 8366030e-7216-476b-9927-271d79f13cf3
+title: Azure Unusual Authentication Interruption
+status: test
+level: medium
+description: Detects when there is a interruption in the authentication process.
+author: Austin Songer @austinsonger
+date: '2021-11-26'
+modified: '2022-12-18'
+tags:
+    - attack.initial-access
+    - attack.t1078
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    selection_50097:
+        ResultType: 50097
+        ResultDescription: Device authentication is required
+    selection_50155:
+        ResultType: 50155
+        ResultDescription: DeviceAuthenticationFailed
+    selection_50158:
+        ResultType: 50158
+        ResultDescription: ExternalSecurityChallenge - External security challenge
+            was not satisfied
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:18.849210+00:00'
+        service:
+            source_field: service
+            source_value: signinlogs
+            mapped_at: '2025-11-13T20:17:18.849210+00:00'
+    detection_fields:
+        -   source_field: ResultType
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:18.849220+00:00'
+        -   source_field: ResultDescription
+            target_table: authentication
+            target_field: status_detail
+            mapped_at: '2025-11-13T20:17:18.849222+00:00'

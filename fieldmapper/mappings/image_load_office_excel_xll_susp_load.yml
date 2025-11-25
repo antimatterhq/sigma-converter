@@ -1,0 +1,55 @@
+id: af4c4609-5755-42fe-8075-4effb49f5d44
+title: Microsoft Excel Add-In Loaded From Uncommon Location
+status: test
+level: medium
+description: Detects Microsoft Excel loading an Add-In (.xll) file from an uncommon
+    location
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-12'
+tags:
+    - attack.execution
+    - attack.t1204.002
+references:
+    - https://www.mandiant.com/resources/blog/lnk-between-browsers
+    - https://wazuh.com/blog/detecting-xll-files-used-for-dropping-fin7-jssloader-with-wazuh/
+falsepositives:
+    - Some tuning might be required to allow or remove certain locations used by the
+        rule if you consider them as safe locations
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c5f4b5cb-4c25-4249-ba91-aa03626e3185''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: \excel.exe
+        ImageLoaded|contains:
+            - \Desktop\
+            - \Downloads\
+            - \Perflogs\
+            - \Temp\
+            - \Users\Public\
+            - \Windows\Tasks\
+        ImageLoaded|endswith: .xll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:25.843074+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:25.843074+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:25.843095+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:25.843099+00:00'

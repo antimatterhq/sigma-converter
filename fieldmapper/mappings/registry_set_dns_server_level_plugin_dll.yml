@@ -1,0 +1,46 @@
+id: e61e8a88-59a9-451c-874e-70fcc9740d67
+title: New DNS ServerLevelPluginDll Installed
+status: test
+level: high
+description: Detects the installation of a DNS plugin DLL via ServerLevelPluginDll
+    parameter in registry, which can be used to execute code in context of the DNS
+    server (restart required)
+author: Florian Roth (Nextron Systems)
+date: '2017-05-08'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+    - attack.t1112
+references:
+    - https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83
+    - https://blog.3or.de/hunting-dns-server-level-plugin-dll-injection.html
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cbe51394-cd93-4473-b555-edf0144952d9''),
+    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''f63b56ee-3f79-4b8a-97fb-5c48007e8573''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: \services\DNS\Parameters\ServerLevelPluginDll
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

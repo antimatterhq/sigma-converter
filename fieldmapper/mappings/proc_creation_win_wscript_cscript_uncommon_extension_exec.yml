@@ -1,0 +1,67 @@
+id: 99b7460d-c9f1-40d7-a316-1f36f61d52ee
+title: Cscript/Wscript Uncommon Script Extension Execution
+status: test
+level: high
+description: Detects Wscript/Cscript executing a file with an uncommon (i.e. non-script)
+    extension
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-15'
+modified: '2023-06-19'
+tags:
+    - attack.execution
+    - attack.t1059.005
+    - attack.t1059.007
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        OriginalFileName:
+            - wscript.exe
+            - cscript.exe
+        Image|endswith:
+            - \wscript.exe
+            - \cscript.exe
+    selection_extension:
+        CommandLine|contains:
+            - .csv
+            - .dat
+            - .doc
+            - .gif
+            - .jpeg
+            - .jpg
+            - .png
+            - .ppt
+            - .txt
+            - .xls
+            - .xml
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:33.228446+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:33.228446+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:33.228457+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:33.228460+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.228462+00:00'

@@ -1,0 +1,83 @@
+id: c3dbbc9f-ef1d-470a-a90a-d343448d5875
+title: Suspicious Non-Browser Network Communication With Telegram API
+status: test
+level: medium
+description: Detects an a non-browser process interacting with the Telegram API which
+    could indicate use of a covert C2
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-19'
+tags:
+    - attack.command-and-control
+    - attack.t1102
+references:
+    - https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/small-sieve/NCSC-MAR-Small-Sieve.pdf
+falsepositives:
+    - Legitimate applications communicating with the Telegram API e.g. web browsers
+        not in the exclusion list, app with an RSS  etc.
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        DestinationHostname|contains: api.telegram.org
+    filter_main_brave:
+        Image|endswith: \brave.exe
+    filter_main_chrome:
+        Image:
+            - C:\Program Files\Google\Chrome\Application\chrome.exe
+            - C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+    filter_main_firefox:
+        Image:
+            - C:\Program Files\Mozilla Firefox\firefox.exe
+            - C:\Program Files (x86)\Mozilla Firefox\firefox.exe
+    filter_main_ie:
+        Image:
+            - C:\Program Files (x86)\Internet Explorer\iexplore.exe
+            - C:\Program Files\Internet Explorer\iexplore.exe
+    filter_main_maxthon:
+        Image|endswith: \maxthon.exe
+    filter_main_edge_1:
+        Image|startswith: C:\Program Files (x86)\Microsoft\EdgeWebView\Application\
+        Image|endswith: \WindowsApps\MicrosoftEdge.exe
+        Image:
+            - C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+            - C:\Program Files\Microsoft\Edge\Application\msedge.exe
+    filter_main_edge_2:
+        Image|startswith:
+            - C:\Program Files (x86)\Microsoft\EdgeCore\
+            - C:\Program Files\Microsoft\EdgeCore\
+        Image|endswith:
+            - \msedge.exe
+            - \msedgewebview2.exe
+    filter_main_opera:
+        Image|endswith: \opera.exe
+    filter_main_safari:
+        Image|endswith: \safari.exe
+    filter_main_seamonkey:
+        Image|endswith: \seamonkey.exe
+    filter_main_vivaldi:
+        Image|endswith: \vivaldi.exe
+    filter_main_whale:
+        Image|endswith: \whale.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:23.339570+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:23.339570+00:00'
+    detection_fields:
+        -   source_field: DestinationHostname
+            target_table: network_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:21:23.339598+00:00'
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:23.339602+00:00'

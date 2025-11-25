@@ -1,0 +1,64 @@
+id: 70bc5215-526f-4477-963c-a47a5c9ebd12
+title: Potential Active Directory Enumeration Using AD Module - ProcCreation
+status: test
+level: medium
+description: Detects usage of the "Import-Module" cmdlet to load the "Microsoft.ActiveDirectory.Management.dl"
+    DLL. Which is often used by attackers to perform AD enumeration.
+author: frack113
+date: '2023-01-22'
+tags:
+    - attack.reconnaissance
+    - attack.discovery
+    - attack.impact
+references:
+    - https://github.com/samratashok/ADModule
+    - https://twitter.com/cyb3rops/status/1617108657166061568?s=20
+    - https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/active-directory-enumeration-with-ad-module-without-rsat-or-admin-privileges
+falsepositives:
+    - Legitimate use of the library for administrative activity
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9e620995-f2d8-4630-8430-4afd89f77604''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''74176142-4684-4d8a-8b0a-713257e7df8e''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        OriginalFileName:
+            - PowerShell.EXE
+            - pwsh.dll
+    selection_cmdlet:
+        CommandLine|contains:
+            - 'Import-Module '
+            - 'ipmo '
+    selection_dll:
+        CommandLine|contains: Microsoft.ActiveDirectory.Management.dll
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.120410+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.120410+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:59.120415+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:59.120417+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:59.120418+00:00'

@@ -1,0 +1,74 @@
+id: ab4561b1-6c7e-48a7-ad08-087cfb9ce8f1
+title: Important Windows Event Auditing Disabled
+status: test
+level: high
+description: Detects scenarios where system auditing for important events such as
+    "Process Creation" or "Logon" events is disabled.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-20'
+modified: '2023-11-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://docs.google.com/presentation/d/1dkrldTTlN3La-OjWtkWJBb4hVk6vfsSMBFBERs6R8zA/edit
+    - https://github.com/SigmaHQ/sigma/blob/master/documentation/logsource-guides/windows/service/security.md
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''69aeb277-f15f-4d2d-b32a-55e883609563''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: dfd8c0f4-e6ad-4e07-b91b-f2fca0ddef64
+detection:
+    selection_state_success_and_failure:
+        EventID: 4719
+        SubcategoryGuid:
+            - '{0CCE9210-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9211-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9212-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9215-69AE-11D9-BED3-505054503030}'
+            - '{0CCE921B-69AE-11D9-BED3-505054503030}'
+            - '{0CCE922B-69AE-11D9-BED3-505054503030}'
+            - '{0CCE922F-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9230-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9235-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9236-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9237-69AE-11D9-BED3-505054503030}'
+            - '{0CCE923F-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9240-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9242-69AE-11D9-BED3-505054503030}'
+        AuditPolicyChanges|contains:
+            - '%%8448'
+            - '%%8450'
+    selection_state_success_only:
+        EventID: 4719
+        SubcategoryGuid: '{0CCE9217-69AE-11D9-BED3-505054503030}'
+        AuditPolicyChanges|contains: '%%8448'
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:16.673092+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:16.673092+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:16.673101+00:00'
+        -   source_field: SubcategoryGuid
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:16.673103+00:00'
+        -   source_field: AuditPolicyChanges
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:16.673105+00:00'

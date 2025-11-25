@@ -1,0 +1,45 @@
+id: bde30855-5c53-4c18-ae90-1ff79ebc9578
+title: Okta User Session Start Via An Anonymising Proxy Service
+status: test
+level: high
+description: Detects when an Okta user session starts where the user is behind an
+    anonymising proxy service.
+author: kelnage
+date: '2023-09-07'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.006
+references:
+    - https://developer.okta.com/docs/reference/api/system-log/
+    - https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection
+falsepositives:
+    - If a user requires an anonymising proxy due to valid justifications.
+taxonomy: sigma
+logsource:
+    product: okta
+    service: okta
+detection:
+    selection:
+        eventtype: user.session.start
+        securitycontext.isproxy: 'true'
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:19.511924+00:00'
+        service:
+            source_field: service
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:19.511924+00:00'
+    detection_fields:
+        -   source_field: eventtype
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:21.150464+00:00'
+        -   source_field: securitycontext.isproxy
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:21.150485+00:00'

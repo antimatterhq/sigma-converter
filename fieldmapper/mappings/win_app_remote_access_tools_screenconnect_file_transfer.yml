@@ -1,0 +1,51 @@
+id: 5d19eb78-5b5b-4ef2-a9f0-4bfa94d58a13
+title: Remote Access Tool - ScreenConnect File Transfer
+status: test
+level: low
+description: Detects file being transferred via ScreenConnect RMM
+author: Ali Alwashali
+date: '2023-10-10'
+tags:
+    - attack.execution
+    - attack.t1059.003
+references:
+    - https://www.huntandhackett.com/blog/revil-the-usage-of-legitimate-remote-admin-tooling
+    - https://github.com/SigmaHQ/sigma/pull/4467
+falsepositives:
+    - Legitimate use of ScreenConnect
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b1f73849-6329-4069-bc8f-78a604bb8b23''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: application
+detection:
+    selection:
+        Provider_Name: ScreenConnect
+        EventID: 201
+        Data|contains: Transferred files with action
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:47.342432+00:00'
+        service:
+            source_field: service
+            source_value: application
+            mapped_at: '2025-11-13T20:25:47.342432+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:47.342438+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:47.342440+00:00'
+        -   source_field: Data
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:47.342441+00:00'

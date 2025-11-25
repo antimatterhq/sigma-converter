@@ -1,0 +1,54 @@
+id: 0685b176-c816-4837-8e7b-1216f346636b
+title: HackTool - Quarks PwDump Execution
+status: test
+level: high
+description: Detects usage of the Quarks PwDump tool via commandline arguments
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-05'
+modified: '2023-02-05'
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+references:
+    - https://github.com/quarkslab/quarkspwdump
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/seedworm-apt-iran-middle-east
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \QuarksPwDump.exe
+    selection_cli:
+        CommandLine:
+            - ' -dhl'
+            - ' --dump-hash-local'
+            - ' -dhdc'
+            - ' --dump-hash-domain-cached'
+            - ' --dump-bitlocker'
+            - ' -dhd '
+            - ' --dump-hash-domain '
+            - --ntds-file
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.048163+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.048163+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.048168+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.048169+00:00'

@@ -1,0 +1,56 @@
+id: 30bcce26-51c5-49f2-99c8-7b59e3af36c7
+title: Execution Of Script Located In Potentially Suspicious Directory
+status: test
+level: medium
+description: Detects executions of scripts located in potentially suspicious locations
+    such as "/tmp" via a shell such as "bash", "sh", etc.
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+date: '2023-06-02'
+tags:
+    - attack.execution
+references:
+    - https://blogs.jpcert.or.jp/en/2023/05/gobrat.html
+    - https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/
+    - https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection
+    - https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_img:
+        Image|endswith:
+            - /bash
+            - /csh
+            - /dash
+            - /fish
+            - /ksh
+            - /sh
+            - /zsh
+    selection_flag:
+        CommandLine|contains: ' -c '
+    selection_paths:
+        CommandLine|contains: /tmp/
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.745956+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.745956+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:51.745960+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:51.745962+00:00'

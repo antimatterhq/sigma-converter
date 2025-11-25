@@ -1,0 +1,47 @@
+id: d5b9ae7a-e6fc-405e-80ff-2ff9dcc64e7e
+title: Sysprep on AppData Folder
+status: test
+level: medium
+description: Detects suspicious sysprep process start with AppData folder as target
+    (as used by Trojan Syndicasec in Thrip report by Symantec)
+author: Florian Roth (Nextron Systems)
+date: '2018-06-22'
+modified: '2021-11-27'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://www.symantec.com/blogs/threat-intelligence/thrip-hits-satellite-telecoms-defense-targets
+    - https://app.any.run/tasks/61a296bb-81ad-4fee-955f-3b399f4aaf4b
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored
+        environment
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \sysprep.exe
+        CommandLine|contains: \AppData\
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.046829+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.046829+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.046835+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.046836+00:00'

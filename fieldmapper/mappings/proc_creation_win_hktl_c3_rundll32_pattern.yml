@@ -1,0 +1,42 @@
+id: b18c9d4c-fac9-4708-bd06-dd5bfacf200f
+title: HackTool - F-Secure C3 Load by Rundll32
+status: test
+level: critical
+description: F-Secure C3 produces DLLs with a default exported StartNodeRelay function.
+author: Alfie Champion (ajpc500)
+date: '2021-06-02'
+modified: '2023-03-05'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+references:
+    - https://github.com/FSecureLABS/C3/blob/11a081fd3be2aaf2a879f6b6e9a96ecdd24966ef/Src/NodeRelayDll/NodeRelayDll.cpp#L12
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - rundll32.exe
+            - .dll
+            - StartNodeRelay
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:19.741772+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:19.741772+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:19.741780+00:00'

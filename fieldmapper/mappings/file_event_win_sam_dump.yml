@@ -1,0 +1,64 @@
+id: 4e87b8e2-2ee9-4b2a-a715-4727d297ece0
+title: Potential SAM Database Dump
+status: test
+level: high
+description: Detects the creation of files that look like exports of the local SAM
+    (Security Account Manager)
+author: Florian Roth (Nextron Systems)
+date: '2022-02-11'
+modified: '2023-01-05'
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+references:
+    - https://github.com/search?q=CVE-2021-36934
+    - https://web.archive.org/web/20210725081645/https://github.com/cube0x0/CVE-2021-36934
+    - https://www.google.com/search?q=%22reg.exe+save%22+sam
+    - https://github.com/HuskyHacks/ShadowSteal
+    - https://github.com/FireFart/hivenightmare
+falsepositives:
+    - Rare cases of administrative activity
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - \Temp\sam
+            - \sam.sav
+            - \Intel\sam
+            - \sam.hive
+            - \Perflogs\sam
+            - \ProgramData\sam
+            - \Users\Public\sam
+            - \AppData\Local\sam
+            - \AppData\Roaming\sam
+            - _ShadowSteal.zip
+            - \Documents\SAM.export
+            - :\sam
+        TargetFilename|contains:
+            - \hive_sam_
+            - \sam.save
+            - \sam.export
+            - \~reg_sam.save
+            - \sam_backup
+            - \sam.bck
+            - \sam.backup
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:35.663784+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:35.663784+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:35.663793+00:00'

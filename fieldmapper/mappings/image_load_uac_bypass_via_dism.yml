@@ -1,0 +1,49 @@
+id: a5ea83a7-05a5-44c1-be2e-addccbbd8c03
+title: UAC Bypass With Fake DLL
+status: test
+level: high
+description: Attempts to load dismcore.dll after dropping it
+author: oscd.community, Dmitry Uchakin
+date: '2020-10-06'
+modified: '2022-12-25'
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+    - attack.t1574.002
+references:
+    - https://steemit.com/utopian-io/@ah101/uac-bypassing-utility
+falsepositives:
+    - Actions of a legitimate telnet client
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: \dism.exe
+        ImageLoaded|endswith: \dismcore.dll
+    filter:
+        ImageLoaded: C:\Windows\System32\Dism\dismcore.dll
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:28.793659+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:28.793659+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:28.793685+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:28.793711+00:00'

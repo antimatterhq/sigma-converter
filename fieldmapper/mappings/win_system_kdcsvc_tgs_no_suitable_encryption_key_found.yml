@@ -1,0 +1,53 @@
+id: b1e0b3f5-b62e-41be-886a-daffde446ad4
+title: No Suitable Encryption Key Found For Generating Kerberos Ticket
+status: test
+level: low
+description: 'Detects errors when a target server doesn''t have suitable keys for
+    generating kerberos tickets.
+
+    This issue can occur for example when a service uses a user account or a computer
+    account that is configured for only DES encryption on a computer that is running
+    Windows 7 which has DES encryption for Kerberos authentication disabled.
+
+    '
+author: '@SerkinValery'
+date: '2024-03-07'
+tags:
+    - attack.credential-access
+    - attack.t1558.003
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd348773(v=ws.10)
+    - https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/kdc-event-16-27-des-encryption-disabled
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: Microsoft-Windows-Kerberos-Key-Distribution-Center
+        EventID:
+            - 16
+            - 27
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:29.494456+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:29.494456+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:29.494460+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:29.494461+00:00'

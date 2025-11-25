@@ -1,0 +1,64 @@
+id: 08249dc0-a28d-4555-8ba5-9255a198e08c
+title: Local Network Connection Initiated By Script Interpreter
+status: test
+level: medium
+description: 'Detects a script interpreter (Wscript/Cscript) initiating a local network
+    connection to download or execute a script hosted on a shared folder.
+
+    '
+author: frack113
+date: '2022-08-28'
+modified: '2024-05-31'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/28d190330fe44de6ff4767fc400cc10fa7cd6540/atomics/T1105/T1105.md
+falsepositives:
+    - Legitimate scripts
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''992a6cae-db6a-43c8-9cec-76d7195c96fc''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Initiated: 'true'
+        Image|endswith:
+            - \wscript.exe
+            - \cscript.exe
+        DestinationIp|cidr:
+            - 127.0.0.0/8
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 169.254.0.0/16
+            - ::1/128
+            - fe80::/10
+            - fc00::/7
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:11.633977+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:11.633977+00:00'
+    detection_fields:
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:11.634000+00:00'
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:11.634004+00:00'
+        -   source_field: DestinationIp
+            target_table: network_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:21:11.634006+00:00'

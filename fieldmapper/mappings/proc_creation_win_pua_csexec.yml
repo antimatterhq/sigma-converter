@@ -1,0 +1,49 @@
+id: d08a2711-ee8b-4323-bdec-b7d85e892b31
+title: PUA - CsExec Execution
+status: test
+level: high
+description: Detects the use of the lesser known remote execution tool named CsExec
+    a PsExec alternative
+author: Florian Roth (Nextron Systems)
+date: '2022-08-22'
+modified: '2023-02-21'
+tags:
+    - attack.resource-development
+    - attack.t1587.001
+    - attack.execution
+    - attack.t1569.002
+references:
+    - https://github.com/malcomvetter/CSExec
+    - https://www.microsoft.com/security/blog/2022/05/09/ransomware-as-a-service-understanding-the-cybercrime-gig-economy-and-how-to-protect-yourself/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \csexec.exe
+    selection_pe:
+        Description: csexec
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.137860+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.137860+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.137865+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:37.137867+00:00'

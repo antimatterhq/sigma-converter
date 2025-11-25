@@ -1,0 +1,46 @@
+id: 1667a172-ed4c-463c-9969-efd92195319a
+title: Okta Policy Modified or Deleted
+status: test
+level: low
+description: Detects when an Okta policy is modified or deleted.
+author: Austin Songer @austinsonger
+date: '2021-09-12'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+references:
+    - https://developer.okta.com/docs/reference/api/system-log/
+    - https://developer.okta.com/docs/reference/api/event-types/
+falsepositives:
+    - Okta Policies being modified or deleted may be performed by a system administrator.
+    - Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+    - Okta Policies modified or deleted from unfamiliar users should be investigated.
+        If known behavior is causing false positives, it can be exempted from the
+        rule.
+taxonomy: sigma
+logsource:
+    product: okta
+    service: okta
+detection:
+    selection:
+        eventtype:
+            - policy.lifecycle.update
+            - policy.lifecycle.delete
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.132510+00:00'
+        service:
+            source_field: service
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.132510+00:00'
+    detection_fields:
+        -   source_field: eventtype
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:13.132517+00:00'

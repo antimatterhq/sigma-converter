@@ -1,0 +1,58 @@
+id: 7d6d30b8-5b91-4b90-a891-46cccaf29598
+title: Program Executed Using Proxy/Local Command Via SSH.EXE
+status: test
+level: medium
+description: Detect usage of the "ssh.exe" binary as a proxy to launch other programs.
+author: frack113, Nasreddine Bencherchali
+date: '2022-12-29'
+modified: '2023-01-25'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Ssh/
+    - https://github.com/LOLBAS-Project/LOLBAS/pull/211/files
+    - https://gtfobins.github.io/gtfobins/ssh/
+    - https://man.openbsd.org/ssh_config#ProxyCommand
+    - https://man.openbsd.org/ssh_config#LocalCommand
+falsepositives:
+    - Legitimate usage for administration purposes
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage: C:\Windows\System32\OpenSSH\sshd.exe
+    selection_cli_img:
+        Image|endswith: \ssh.exe
+    selection_cli_flags:
+        CommandLine|contains: ProxyCommand=
+        CommandLine|contains|all:
+            - PermitLocalCommand
+            - LocalCommand
+    condition: selection_parent or all of selection_cli_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:40.495415+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:40.495415+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:40.495423+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:40.495428+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:40.495430+00:00'

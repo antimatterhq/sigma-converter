@@ -1,0 +1,66 @@
+id: 64e8e417-c19a-475a-8d19-98ea705394cc
+title: Alternate PowerShell Hosts - PowerShell Module
+status: test
+level: medium
+description: Detects alternate PowerShell hosts potentially bypassing detections looking
+    for powershell.exe
+author: Roberto Rodriguez @Cyb3rWard0g
+date: '2019-08-11'
+modified: '2022-12-13'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://threathunterplaybook.com/hunts/windows/190610-PwshAlternateHosts/notebook.html
+falsepositives:
+    - Programs using PowerShell directly without invocation of a dedicated interpreter
+    - MSP Detection Searcher
+    - Citrix ConfigSync.ps1
+taxonomy: sigma
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection:
+        ContextInfo|contains: '*'
+    filter_powershell:
+        ContextInfo|contains:
+            - = powershell
+            - = C:\Windows\System32\WindowsPowerShell\v1.0\powershell
+            - = C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell
+            - = C:/Windows/System32/WindowsPowerShell/v1.0/powershell
+            - = C:/Windows/SysWOW64/WindowsPowerShell/v1.0/powershell
+    filter_sdiagnhost:
+        ContextInfo|contains: = C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+    filter_citrix:
+        ContextInfo|contains: ConfigSyncRun.exe
+    filter_adace:
+        ContextInfo|contains: C:\Windows\system32\dsac.exe
+    filter_winrm:
+        ContextInfo|contains: C:\Windows\system32\wsmprovhost.exe -Embedding
+    filter_help_update:
+        Payload|contains:
+            - Update-Help
+            - Failed to update Help for the module
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_module
+            mapped_at: '2025-11-13T20:21:51.363785+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:51.363785+00:00'
+    detection_fields:
+        -   source_field: ContextInfo
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.363791+00:00'
+        -   source_field: Payload
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.363792+00:00'

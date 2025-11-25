@@ -1,0 +1,43 @@
+id: 402e1e1d-ad59-47b6-bf80-1ee44985b3a7
+title: Malicious ShellIntel PowerShell Commandlets
+status: test
+level: high
+description: Detects Commandlet names from ShellIntel exploitation scripts.
+author: Max Altgelt (Nextron Systems), Tobias Michalski (Nextron Systems)
+date: '2021-08-09'
+modified: '2023-01-02'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/Shellntel/scripts/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - Invoke-SMBAutoBrute
+            - Invoke-GPOLinks
+            - Invoke-Potato
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.305229+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.305229+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.305235+00:00'

@@ -1,0 +1,42 @@
+id: 413d4a81-6c98-4479-9863-014785fd579c
+title: Okta Admin Role Assigned to an User or Group
+status: test
+level: medium
+description: Detects when an the Administrator role is assigned to an user or group.
+author: Austin Songer @austinsonger
+date: '2021-09-12'
+modified: '2022-10-09'
+tags:
+    - attack.persistence
+    - attack.t1098.003
+references:
+    - https://developer.okta.com/docs/reference/api/system-log/
+    - https://developer.okta.com/docs/reference/api/event-types/
+falsepositives:
+    - Administrator roles could be assigned to users or group by other admin users.
+taxonomy: sigma
+logsource:
+    product: okta
+    service: okta
+detection:
+    selection:
+        eventtype:
+            - group.privilege.grant
+            - user.account.privilege.grant
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:10.375214+00:00'
+        service:
+            source_field: service
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:10.375214+00:00'
+    detection_fields:
+        -   source_field: eventtype
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:11.559896+00:00'

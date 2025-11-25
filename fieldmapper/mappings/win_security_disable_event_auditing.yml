@@ -1,0 +1,84 @@
+id: 69aeb277-f15f-4d2d-b32a-55e883609563
+title: Windows Event Auditing Disabled
+status: test
+level: low
+description: 'Detects scenarios where system auditing (i.e.: Windows event log auditing)
+    is disabled.
+
+    This may be used in a scenario where an entity would want to bypass local logging
+    to evade detection when Windows event logging is enabled and reviewed.
+
+    Also, it is recommended to turn off "Local Group Policy Object Processing" via
+    GPO, which will make sure that Active Directory GPOs take precedence over local/edited
+    computer policies via something such as "gpedit.msc".
+
+    Please note, that disabling "Local Group Policy Object Processing" may cause an
+    issue in scenarios of one off specific GPO modifications - however, it is recommended
+    to perform these modifications in Active Directory anyways.
+
+    '
+author: '@neu5ron, Nasreddine Bencherchali (Nextron Systems)'
+date: '2017-11-19'
+modified: '2023-11-15'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://docs.google.com/presentation/d/1dkrldTTlN3La-OjWtkWJBb4hVk6vfsSMBFBERs6R8zA/edit
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ab4561b1-6c7e-48a7-ad08-087cfb9ce8f1''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: dfd8c0f4-e6ad-4e07-b91b-f2fca0ddef64
+detection:
+    selection:
+        EventID: 4719
+        AuditPolicyChanges|contains:
+            - '%%8448'
+            - '%%8450'
+    filter_main_guid:
+        SubcategoryGuid:
+            - '{0CCE9210-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9211-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9212-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9215-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9217-69AE-11D9-BED3-505054503030}'
+            - '{0CCE921B-69AE-11D9-BED3-505054503030}'
+            - '{0CCE922B-69AE-11D9-BED3-505054503030}'
+            - '{0CCE922F-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9230-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9235-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9236-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9237-69AE-11D9-BED3-505054503030}'
+            - '{0CCE923F-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9240-69AE-11D9-BED3-505054503030}'
+            - '{0CCE9242-69AE-11D9-BED3-505054503030}'
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:09.397883+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:09.397883+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:10.758907+00:00'
+        -   source_field: AuditPolicyChanges
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:10.758920+00:00'
+        -   source_field: SubcategoryGuid
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:10.758923+00:00'

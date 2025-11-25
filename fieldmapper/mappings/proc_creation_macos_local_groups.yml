@@ -1,0 +1,54 @@
+id: 89bb1f97-c7b9-40e8-b52b-7d6afbd67276
+title: Local Groups Discovery - MacOs
+status: test
+level: informational
+description: Detects enumeration of local system groups
+author: Ömer Günal, Alejandro Ortuno, oscd.community
+date: '2020-10-11'
+modified: '2022-11-27'
+tags:
+    - attack.discovery
+    - attack.t1069.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.001/T1069.001.md
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    selection_1:
+        Image|endswith: /dscacheutil
+        CommandLine|contains|all:
+            - -q
+            - group
+    selection_2:
+        Image|endswith: /cat
+        CommandLine|contains: /etc/group
+    selection_3:
+        Image|endswith: /dscl
+        CommandLine|contains|all:
+            - -list
+            - /groups
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.791833+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.791833+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.791838+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.791840+00:00'

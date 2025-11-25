@@ -1,0 +1,49 @@
+id: a05baa88-e922-4001-bc4d-8738135f27de
+title: Process Monitor Driver Creation By Non-Sysinternals Binary
+status: test
+level: medium
+description: Detects creation of the Process Monitor driver by processes other than
+    Process Monitor (procmon) itself.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-05'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1068
+references:
+    - Internal Research
+falsepositives:
+    - Some false positives may occur with legitimate renamed process monitor binaries
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: \procmon
+        TargetFilename|endswith: .sys
+    filter_main_process_explorer:
+        Image|endswith:
+            - \procmon.exe
+            - \procmon64.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.589213+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.589213+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.589222+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:34.589224+00:00'

@@ -1,0 +1,47 @@
+id: e4a74e34-ecde-4aab-b2fb-9112dd01aed0
+title: Dynamic CSharp Compile Artefact
+status: test
+level: low
+description: 'When C# is compiled dynamically, a .cmdline file will be created as
+    a part of the process.
+
+    Certain processes are not typically observed compiling C# code, but can do so
+    without touching disk.
+
+    This can be used to unpack a payload for execution
+
+    '
+author: frack113
+date: '2022-01-09'
+modified: '2023-02-17'
+tags:
+    - attack.defense-evasion
+    - attack.t1027.004
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027.004/T1027.004.md#atomic-test-2---dynamic-c-compile
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith: .cmdline
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.650645+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.650645+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.650650+00:00'

@@ -1,0 +1,47 @@
+id: d2d642d7-b393-43fe-bae4-e81ed5915c4b
+title: Scheduled Task/Job At
+status: stable
+level: low
+description: 'Detects the use of at/atd which are utilities that are used to schedule
+    tasks.
+
+    They are often abused by adversaries to maintain persistence or to perform task
+    scheduling for initial or recurring execution of malicious code
+
+    '
+author: Ömer Günal, oscd.community
+date: '2020-10-06'
+modified: '2022-07-07'
+tags:
+    - attack.persistence
+    - attack.t1053.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.002/T1053.002.md
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith:
+            - /at
+            - /atd
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:49.939519+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:49.939519+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:49.939539+00:00'

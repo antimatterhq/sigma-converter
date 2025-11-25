@@ -1,0 +1,64 @@
+id: d059842b-6b9d-4ed1-b5c3-5b89143c6ede
+title: File Download Via Bitsadmin
+status: test
+level: medium
+description: Detects usage of bitsadmin downloading a file
+author: Michael Haag, FPT.EagleEye
+date: '2017-03-09'
+modified: '2023-02-15'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+    - attack.s0190
+    - attack.t1036.003
+references:
+    - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
+    - https://isc.sans.edu/diary/22264
+    - https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Some legitimate apps use this, but limited.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \bitsadmin.exe
+        OriginalFileName: bitsadmin.exe
+    selection_cmd:
+        CommandLine|contains: ' /transfer '
+    selection_cli_1:
+        CommandLine|contains:
+            - ' /create '
+            - ' /addfile '
+    selection_cli_2:
+        CommandLine|contains: http
+    condition: selection_img and (selection_cmd or all of selection_cli_*)
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.622447+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.622447+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.622454+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.622455+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.622457+00:00'

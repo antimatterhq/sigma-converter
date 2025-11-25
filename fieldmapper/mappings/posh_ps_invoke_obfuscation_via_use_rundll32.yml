@@ -1,0 +1,51 @@
+id: a5a30a6e-75ca-4233-8b8c-42e0f2037d3b
+title: Invoke-Obfuscation Via Use Rundll32 - PowerShell
+status: test
+level: high
+description: Detects Obfuscated Powershell via use Rundll32 in Scripts
+author: Nikita Nazarov, oscd.community
+date: '2019-10-08'
+modified: '2022-11-29'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_4104:
+        ScriptBlockText|contains|all:
+            - '&&'
+            - rundll32
+            - shell32.dll
+            - shellexec_rundll
+        ScriptBlockText|contains:
+            - value
+            - invoke
+            - comspec
+            - iex
+    condition: selection_4104
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.287302+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.287302+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.287307+00:00'

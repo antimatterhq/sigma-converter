@@ -1,0 +1,58 @@
+id: d679950c-abb7-43a6-80fb-2a480c4fc450
+title: PDQ Deploy Remote Adminstartion Tool Execution
+status: test
+level: medium
+description: Detect use of PDQ Deploy remote admin tool
+author: frack113
+date: '2022-10-01'
+modified: '2023-01-30'
+tags:
+    - attack.execution
+    - attack.lateral-movement
+    - attack.t1072
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/9e5b12c4912c07562aec7500447b11fa3e17e254/atomics/T1072/T1072.md
+    - https://www.pdq.com/pdq-deploy/
+falsepositives:
+    - Legitimate use
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''12b8e9f5-96b2-41e1-9a42-8c6779a5c184''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Description: PDQ Deploy Console
+        Product: PDQ Deploy
+        Company: PDQ.com
+        OriginalFileName: PDQDeployConsole.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.090059+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.090059+00:00'
+    detection_fields:
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:59.090065+00:00'
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:59.090067+00:00'
+        -   source_field: Company
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:20:59.090068+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:59.090070+00:00'

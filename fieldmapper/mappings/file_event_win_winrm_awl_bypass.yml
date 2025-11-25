@@ -1,0 +1,48 @@
+id: d353dac0-1b41-46c2-820c-d7d2561fc6ed
+title: AWL Bypass with Winrm.vbs and Malicious WsmPty.xsl/WsmTxt.xsl - File
+status: test
+level: medium
+description: Detects execution of attacker-controlled WsmPty.xsl or WsmTxt.xsl via
+    winrm.vbs and copied cscript.exe (can be renamed)
+author: Julia Fomina, oscd.community
+date: '2020-10-06'
+modified: '2022-11-28'
+tags:
+    - attack.defense-evasion
+    - attack.t1216
+references:
+    - https://posts.specterops.io/application-whitelisting-bypass-and-arbitrary-unsigned-code-execution-technique-in-winrm-vbs-c8c24fb40404
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''074e0ded-6ced-4ebd-8b4d-53f55908119d''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    system_files:
+        TargetFilename|endswith:
+            - WsmPty.xsl
+            - WsmTxt.xsl
+    in_system_folder:
+        TargetFilename|startswith:
+            - C:\Windows\System32\
+            - C:\Windows\SysWOW64\
+    condition: system_files and not in_system_folder
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.270403+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.270403+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.270406+00:00'

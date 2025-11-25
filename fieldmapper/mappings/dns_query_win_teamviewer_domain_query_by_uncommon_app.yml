@@ -1,0 +1,51 @@
+id: 778ba9a8-45e4-4b80-8e3e-34a419f0b85e
+title: TeamViewer Domain Query By Non-TeamViewer Application
+status: test
+level: medium
+description: Detects DNS queries to a TeamViewer domain only resolved by a TeamViewer
+    client by an image that isn't named TeamViewer (sometimes used by threat actors
+    for obfuscation)
+author: Florian Roth (Nextron Systems)
+date: '2022-01-30'
+modified: '2023-09-18'
+tags:
+    - attack.command-and-control
+    - attack.t1219
+references:
+    - https://www.teamviewer.com/en-us/
+falsepositives:
+    - Unknown binary names of TeamViewer
+    - Depending on the environment the rule might require some initial tuning before
+        usage to avoid FP with third party applications
+taxonomy: sigma
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    selection:
+        QueryName:
+            - taf.teamviewer.com
+            - udp.ping.teamviewer.com
+    filter_main_teamviewer:
+        Image|contains: TeamViewer
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns_query
+            mapped_at: '2025-11-13T20:21:06.361717+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:06.361717+00:00'
+    detection_fields:
+        -   source_field: QueryName
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:21:06.361743+00:00'
+        -   source_field: Image
+            target_table: dns_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:06.361747+00:00'

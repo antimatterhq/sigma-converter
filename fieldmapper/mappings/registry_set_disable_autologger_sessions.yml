@@ -1,0 +1,59 @@
+id: f37b4bce-49d0-4087-9f5b-58bffda77316
+title: Potential AutoLogger Sessions Tampering
+status: test
+level: high
+description: Detects tampering with autologger trace sessions which is a technique
+    used by attackers to disable logging
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-01'
+modified: '2023-08-17'
+tags:
+    - attack.defense-evasion
+references:
+    - https://twitter.com/MichalKoczwara/status/1553634816016498688
+    - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+    - https://i.blackhat.com/EU-21/Wednesday/EU-21-Teodorescu-Veni-No-Vidi-No-Vici-Attacks-On-ETW-Blind-EDRs.pdf
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_main:
+        TargetObject|contains: \System\CurrentControlSet\Control\WMI\Autologger\
+    selection_values:
+        TargetObject|contains:
+            - \EventLog-
+            - \Defender
+        TargetObject|endswith:
+            - \Enable
+            - \Start
+        Details: DWORD (0x00000000)
+    filter_wevtutil:
+        Image: C:\Windows\system32\wevtutil.exe
+    condition: all of selection_* and not 1 of filter_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:01.521075+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:01.521075+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:02.741422+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:02.741440+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:02.741443+00:00'

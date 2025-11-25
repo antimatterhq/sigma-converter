@@ -1,0 +1,58 @@
+id: 20384606-a124-4fec-acbb-8bd373728613
+title: Suspicious Network Connection Binary No CommandLine
+status: test
+level: high
+description: Detects suspicious network connections made by a well-known Windows binary
+    run with no command line parameters
+author: Florian Roth (Nextron Systems)
+date: '2022-07-03'
+tags:
+    - attack.defense-evasion
+references:
+    - https://redcanary.com/blog/raspberry-robin/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Initiated: 'true'
+        Image|endswith:
+            - \regsvr32.exe
+            - \rundll32.exe
+            - \dllhost.exe
+        CommandLine|endswith:
+            - \regsvr32.exe
+            - \rundll32.exe
+            - \dllhost.exe
+    filter_no_cmdline:
+        CommandLine: ''
+    filter_null:
+        CommandLine: null
+    condition: selection and not 1 of filter*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:15.145808+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:15.145808+00:00'
+    detection_fields:
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:15.145876+00:00'
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:15.145881+00:00'
+        -   source_field: CommandLine
+            target_table: network_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:15.145885+00:00'

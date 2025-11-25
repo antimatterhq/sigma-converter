@@ -1,0 +1,65 @@
+id: 285b85b1-a555-4095-8652-a8a4106af63f
+title: Suspicious Rundll32 Setupapi.dll Activity
+status: test
+level: medium
+description: setupapi.dll library provide InstallHinfSection function for processing
+    INF files. INF file may contain instructions allowing to create values in the
+    registry, modify files and install drivers. This technique could be used to obtain
+    persistence via modifying one of Run or RunOnce registry keys, run process or
+    use other DLLs chain calls (see references) InstallHinfSection function in setupapi.dll
+    calls runonce.exe executable regardless of actual content of INF file.
+author: Konstantin Grishchenko, oscd.community
+date: '2020-10-07'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+references:
+    - https://lolbas-project.github.io/lolbas/Libraries/Setupapi/
+    - https://gist.githubusercontent.com/bohops/0cc6586f205f3691e04a1ebf1806aabd/raw/baf7b29891bb91e76198e30889fbf7d6642e8974/calc_exe.inf
+    - https://raw.githubusercontent.com/huntresslabs/evading-autoruns/master/shady.inf
+    - https://twitter.com/Z3Jpa29z/status/1313742350292746241?s=20
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Scripts and administrative tools that use INF files for driver installation
+        with setupapi.dll
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \runonce.exe
+        ParentImage|endswith: \rundll32.exe
+        ParentCommandLine|contains|all:
+            - setupapi.dll
+            - InstallHinfSection
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:57.113874+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:57.113874+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:57.113883+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:57.113885+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:57.113886+00:00'

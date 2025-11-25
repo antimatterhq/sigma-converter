@@ -1,0 +1,52 @@
+id: 9e1bef8d-0fff-46f6-8465-9aa54e128c1e
+title: Use Of Hidden Paths Or Files
+status: test
+level: low
+description: Detects calls to hidden files or files located in hidden directories
+    in NIX systems.
+author: David Burkett, @signalblur
+date: '2022-12-30'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d08722cd-3d09-449a-80b4-83ea2d9d4616''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: PATH
+        name|contains: /.
+    filter:
+        name|contains:
+            - /.cache/
+            - /.config/
+            - /.pyenv/
+            - /.rustup/toolchains
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:17.439007+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:17.439007+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:17.439074+00:00'
+        -   source_field: name
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:15:17.439079+00:00'

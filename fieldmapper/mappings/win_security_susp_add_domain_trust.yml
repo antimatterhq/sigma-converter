@@ -1,0 +1,39 @@
+id: 0255a820-e564-4e40-af2b-6ac61160335c
+title: A New Trust Was Created To A Domain
+status: stable
+level: medium
+description: Addition of domains is seldom and should be verified for legitimacy.
+author: Thomas Patzke
+date: '2019-12-03'
+modified: '2024-01-16'
+tags:
+    - attack.persistence
+    - attack.t1098
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4706
+falsepositives:
+    - Legitimate extension of domain structure
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4706
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:06.991323+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:06.991323+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:06.991334+00:00'

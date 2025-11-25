@@ -1,0 +1,46 @@
+id: b28e4eb3-8bbc-4f0c-819f-edfe8e2f25db
+title: ESXi Account Creation Via ESXCLI
+status: test
+level: medium
+description: Detects user account creation on ESXi system via esxcli
+author: Cedric Maurugeon
+date: '2023-08-22'
+tags:
+    - attack.persistence
+    - attack.t1136
+references:
+    - https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_system.html
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /esxcli
+        CommandLine|contains|all:
+            - 'system '
+            - 'account '
+            - 'add '
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.908878+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.908878+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.908886+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.908887+00:00'

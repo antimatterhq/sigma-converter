@@ -1,0 +1,58 @@
+id: 32410e29-5f94-4568-b6a3-d91a8adad863
+title: PUA - Fast Reverse Proxy (FRP) Execution
+status: test
+level: high
+description: Detects the use of Fast Reverse Proxy. frp is a fast reverse proxy to
+    help you expose a local server behind a NAT or firewall to the Internet.
+author: frack113, Florian Roth
+date: '2022-09-02'
+modified: '2024-11-23'
+tags:
+    - attack.command-and-control
+    - attack.t1090
+references:
+    - https://asec.ahnlab.com/en/38156/
+    - https://github.com/fatedier/frp
+falsepositives:
+    - Legitimate use
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \frpc.exe
+            - \frps.exe
+    selection_cli:
+        CommandLine|contains: \frpc.ini
+    selection_hashes:
+        Hashes|contains:
+            - MD5=7D9C233B8C9E3F0EA290D2B84593C842
+            - SHA1=06DDC9280E1F1810677935A2477012960905942F
+            - SHA256=57B0936B8D336D8E981C169466A15A5FD21A7D5A2C7DAF62D5E142EE860E387C
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:44.256866+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:44.256866+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:44.256879+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:44.256882+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:44.256885+00:00'

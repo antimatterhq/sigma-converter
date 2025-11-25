@@ -1,0 +1,57 @@
+id: 43e32da2-fdd0-4156-90de-50dfd62636f9
+title: Dism Remove Online Package
+status: test
+level: medium
+description: Deployment Image Servicing and Management tool. DISM is used to enumerate,
+    install, uninstall, configure, and update features and packages in Windows images
+author: frack113
+date: '2022-01-16'
+modified: '2022-08-26'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md#atomic-test-26---disable-windows-defender-with-dism
+    - https://www.trendmicro.com/en_us/research/22/h/ransomware-actor-abuses-genshin-impact-anti-cheat-driver-to-kill-antivirus.html
+falsepositives:
+    - Legitimate script
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_dismhost:
+        Image|endswith: \DismHost.exe
+        ParentCommandLine|contains|all:
+            - /Online
+            - /Disable-Feature
+    selection_dism:
+        Image|endswith: \Dism.exe
+        CommandLine|contains|all:
+            - /Online
+            - /Disable-Feature
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.237776+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.237776+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.237791+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.237793+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.237794+00:00'

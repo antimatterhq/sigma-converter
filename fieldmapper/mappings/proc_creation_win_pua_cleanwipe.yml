@@ -1,0 +1,54 @@
+id: f44800ac-38ec-471f-936e-3fa7d9c53100
+title: PUA - CleanWipe Execution
+status: test
+level: high
+description: Detects the use of CleanWipe a tool usually used to delete Symantec antivirus.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2021-12-18'
+modified: '2023-02-14'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/CleanWipe
+falsepositives:
+    - Legitimate administrative use (Should be investigated either way)
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection1:
+        Image|endswith: \SepRemovalToolNative_x64.exe
+    selection2:
+        Image|endswith: \CATClean.exe
+        CommandLine|contains: --uninstall
+    selection3:
+        Image|endswith: \NetInstaller.exe
+        CommandLine|contains: -r
+    selection4:
+        Image|endswith: \WFPUnins.exe
+        CommandLine|contains|all:
+            - /uninstall
+            - /enterprise
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.292643+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.292643+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.292649+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.292651+00:00'

@@ -1,0 +1,49 @@
+id: 808146b2-9332-4d78-9416-d7e47012d83d
+title: BPFDoor Abnormal Process ID or Lock File Accessed
+status: test
+level: high
+description: detects BPFDoor .lock and .pid files access in temporary file storage
+    facility
+author: Rafal Piasecki
+date: '2022-08-10'
+tags:
+    - attack.execution
+    - attack.t1106
+    - attack.t1059
+references:
+    - https://www.sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/
+    - https://www.elastic.co/security-labs/a-peek-behind-the-bpfdoor
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: PATH
+        name:
+            - /var/run/haldrund.pid
+            - /var/run/xinetd.lock
+            - /var/run/kdevrund.pid
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:24.705595+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:24.705595+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:24.705620+00:00'
+        -   source_field: name
+            target_table: file_activity
+            target_field: file.name
+            mapped_at: '2025-11-13T20:15:24.705624+00:00'

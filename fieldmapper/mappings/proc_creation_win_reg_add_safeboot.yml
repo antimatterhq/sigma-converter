@@ -1,0 +1,58 @@
+id: d7662ff6-9e97-4596-a61d-9839e32dee8d
+title: Add SafeBoot Keys Via Reg Utility
+status: test
+level: high
+description: Detects execution of "reg.exe" commands with the "add" or "copy" flags
+    on safe boot registry keys. Often used by attacker to allow the ransomware to
+    work in safe mode as some security products do not
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-02'
+modified: '2024-03-19'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://redacted.com/blog/bianlian-ransomware-gang-gives-it-a-go/
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fc0e89b5-adb0-43c1-b749-c12a10ec37de''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \reg.exe
+        OriginalFileName: reg.exe
+    selection_safeboot:
+        CommandLine|contains: \SYSTEM\CurrentControlSet\Control\SafeBoot
+    selection_flag:
+        CommandLine|contains:
+            - ' copy '
+            - ' add '
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.943926+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.943926+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.943932+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:46.943933+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.943934+00:00'

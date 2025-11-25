@@ -1,0 +1,57 @@
+id: c6c56ada-612b-42d1-9a29-adad3c5c2c1e
+title: Audit Policy Tampering Via NT Resource Kit Auditpol
+status: test
+level: high
+description: 'Threat actors can use an older version of the auditpol binary available
+    inside the NT resource kit to change audit policy configuration to impair detection
+    capability.
+
+    This can be carried out by selectively disabling/removing certain audit policies
+    as well as restoring a custom policy owned by the threat actor.
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2021-12-18'
+modified: '2023-02-21'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+references:
+    - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Windows%202000%20Resource%20Kit%20Tools/AuditPol
+falsepositives:
+    - The old auditpol utility isn't available by default on recent versions of Windows
+        as it was replaced by a newer version. The FP rate should be very low except
+        for tools that use a similar flag structure
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0a13e132-651d-11eb-ae93-0242ac130002''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - /logon:none
+            - /system:none
+            - /sam:none
+            - /privilege:none
+            - /object:none
+            - /process:none
+            - /policy:none
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:15.724503+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:15.724503+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:15.724511+00:00'

@@ -1,0 +1,47 @@
+id: e1f7febb-7b94-4234-b5c6-00fb8500f5dd
+title: New Network ACL Entry Added
+status: test
+level: low
+description: 'Detects that network ACL entries have been added to a route table which
+    could indicate that new attack vectors have been opened up in the AWS account.
+
+    '
+author: jamesc-grafana
+date: '2024-07-11'
+tags:
+    - attack.initial-access
+    - attack.t1190
+references:
+    - https://www.gorillastack.com/blog/real-time-events/important-aws-cloudtrail-security-events-tracking/
+falsepositives:
+    - Legitimate use of ACLs to enable customer and staff access from the public internet
+        into a public VPC
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource: ec2.amazonaws.com
+        eventName: CreateNetworkAclEntry
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:18:01.131210+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:18:01.131210+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: file_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:18:01.131216+00:00'
+        -   source_field: eventName
+            target_table: file_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:01.131219+00:00'

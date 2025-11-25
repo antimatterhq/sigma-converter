@@ -1,0 +1,36 @@
+id: c8557060-9221-4448-8794-96320e6f3e74
+title: Windows PowerShell User Agent
+status: test
+level: medium
+description: Detects Windows PowerShell Web Access
+author: Florian Roth (Nextron Systems)
+date: '2017-03-13'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.command-and-control
+    - attack.t1071.001
+references:
+    - https://msdn.microsoft.com/powershell/reference/5.1/microsoft.powershell.utility/Invoke-WebRequest
+falsepositives:
+    - Administrative scripts that download files from the Internet
+    - Administrative scripts that retrieve certain website contents
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection:
+        c-useragent|contains: ' WindowsPowerShell/'
+    condition: selection
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:27.378747+00:00'
+    detection_fields:
+        -   source_field: c-useragent
+            target_table: http_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:14:27.378764+00:00'

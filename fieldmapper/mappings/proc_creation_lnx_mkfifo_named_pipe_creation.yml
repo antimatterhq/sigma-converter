@@ -1,0 +1,38 @@
+id: 9d779ce8-5256-4b13-8b6f-b91c602b43f4
+title: Named Pipe Created Via Mkfifo
+status: test
+level: low
+description: Detects the creation of a new named pipe using the "mkfifo" utility
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-16'
+tags:
+    - attack.execution
+references:
+    - https://dev.to/0xbf/use-mkfifo-to-create-named-pipe-linux-tips-5bbk
+    - https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /mkfifo
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:49.933970+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:49.933970+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:49.933979+00:00'

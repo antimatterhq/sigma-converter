@@ -1,0 +1,67 @@
+id: 4c0aaedc-154c-4427-ada0-d80ef9c9deb6
+title: Process Access via TrolleyExpress Exclusion
+status: test
+level: high
+description: Detects a possible process memory dump that uses the white-listed Citrix
+    TrolleyExpress.exe filename as a way to dump the lsass process memory
+author: Florian Roth (Nextron Systems)
+date: '2022-02-10'
+modified: '2022-05-13'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+    - attack.credential-access
+    - attack.t1003.001
+references:
+    - https://twitter.com/_xpn_/status/1491557187168178176
+    - https://www.youtube.com/watch?v=Ie831jF0bb0
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - \TrolleyExpress 7
+            - \TrolleyExpress 8
+            - \TrolleyExpress 9
+            - \TrolleyExpress.exe 7
+            - \TrolleyExpress.exe 8
+            - \TrolleyExpress.exe 9
+            - '\TrolleyExpress.exe -ma '
+    renamed:
+        Image|endswith: \TrolleyExpress.exe
+    filter_renamed:
+        OriginalFileName|contains: CtxInstall
+    filter_empty:
+        OriginalFileName: null
+    condition: selection or ( renamed and not 1 of filter* )
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:46.899068+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:46.899068+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:46.899078+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:46.899080+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:46.899081+00:00'

@@ -1,0 +1,53 @@
+id: 30a8cb77-8eb3-4cfb-8e79-ad457c5a4592
+title: Renamed Powershell Under Powershell Channel
+status: test
+level: low
+description: 'Detects a renamed Powershell execution, which is a common technique
+    used to circumvent security controls and bypass detection logic that''s dependent
+    on process names and process paths.
+
+    '
+author: Harish Segar, frack113
+date: '2020-06-29'
+modified: '2024-12-27'
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.t1036.003
+references:
+    - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    selection:
+        Data|contains: HostName=ConsoleHost
+    filter_main_ps:
+        Data|contains:
+            - HostApplication=powershell
+            - HostApplication=C:\Windows\System32\WindowsPowerShell\v1.0\powershell
+            - HostApplication=C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell
+            - HostApplication=C:/Windows/System32/WindowsPowerShell/v1.0/powershell
+            - HostApplication=C:/Windows/SysWOW64/WindowsPowerShell/v1.0/powershell
+    filter_main_host_application_null:
+        Data|re: HostId=[a-zA-Z0-9-]{36}\s+EngineVersion=
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_classic_start
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: Data
+            target_table: null
+            target_field: null
+            mapped_at: null

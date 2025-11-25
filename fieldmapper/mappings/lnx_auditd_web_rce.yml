@@ -1,0 +1,50 @@
+id: c0d3734d-330f-4a03-aae2-65dacc6a8222
+title: Webshell Remote Command Execution
+status: test
+level: critical
+description: Detects possible command execution by web application/web shell
+author: Ilyas Ochkov, Beyu Denis, oscd.community
+date: '2019-10-12'
+modified: '2022-12-25'
+tags:
+    - attack.persistence
+    - attack.t1505.003
+references:
+    - Personal Experience of the Author
+falsepositives:
+    - Admin activity
+    - Crazy web applications
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: SYSCALL
+        syscall: execve
+        key: detect_execve_www
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:48.232642+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:48.232642+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.901436+00:00'
+        -   source_field: syscall
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.901482+00:00'
+        -   source_field: key
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:49.901487+00:00'

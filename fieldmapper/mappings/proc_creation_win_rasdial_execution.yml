@@ -1,0 +1,41 @@
+id: 6bba49bf-7f8c-47d6-a1bb-6b4dece4640e
+title: Suspicious RASdial Activity
+status: test
+level: medium
+description: Detects suspicious process related to rasdial.exe
+author: juju4
+date: '2019-01-16'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1059
+references:
+    - https://twitter.com/subTee/status/891298217907830785
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored
+        environment
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: rasdial.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.276094+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.276094+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.276114+00:00'

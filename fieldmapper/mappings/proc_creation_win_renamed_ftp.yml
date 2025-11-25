@@ -1,0 +1,51 @@
+id: 277a4393-446c-449a-b0ed-7fdc7795244c
+title: Renamed FTP.EXE Execution
+status: test
+level: medium
+description: Detects the execution of a renamed "ftp.exe" binary based on the PE metadata
+    fields
+author: Victor Sergeev, oscd.community
+date: '2020-10-09'
+modified: '2023-02-03'
+tags:
+    - attack.execution
+    - attack.t1059
+    - attack.defense-evasion
+    - attack.t1202
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Ftp/
+fields:
+    - CommandLine
+    - ParentImage
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_original:
+        OriginalFileName: ftp.exe
+    filter_img:
+        Image|endswith: \ftp.exe
+    condition: selection_original and not filter_img
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.635413+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.635413+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.635418+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.635420+00:00'

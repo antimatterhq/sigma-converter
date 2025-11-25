@@ -1,0 +1,50 @@
+id: 8e4cf0e5-aa5d-4dc3-beff-dc26917744a9
+title: Tap Driver Installation
+status: test
+level: medium
+description: Well-known TAP software installation. Possible preparation for data exfiltration
+    using tunnelling techniques
+author: Daniil Yugoslavskiy, Ian Davis, oscd.community
+date: '2019-10-24'
+modified: '2022-12-25'
+tags:
+    - attack.exfiltration
+    - attack.t1048
+references:
+    - https://community.openvpn.net/openvpn/wiki/ManagingWindowsTAPDrivers
+falsepositives:
+    - Legitimate OpenVPN TAP installation
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+        ImagePath|contains: tap0901
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:23.248921+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:23.248921+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:23.248928+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:23.248930+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:23.248932+00:00'

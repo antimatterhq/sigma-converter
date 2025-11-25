@@ -1,0 +1,62 @@
+id: 7610a4ea-c06d-495f-a2ac-0a696abcfd3b
+title: Outbound Network Connection To Public IP Via Winlogon
+status: test
+level: medium
+description: Detects a "winlogon.exe" process that initiate network communications
+    with public IP addresses
+author: Christopher Peacock @securepeacock, SCYTHE @scythe_io
+date: '2023-04-28'
+modified: '2024-03-12'
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.command-and-control
+    - attack.t1218.011
+references:
+    - https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/
+falsepositives:
+    - Communication to other corporate systems that use IP addresses from public address
+        spaces
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: \winlogon.exe
+        Initiated: 'true'
+    filter_main_local_ranges:
+        DestinationIp|cidr:
+            - 127.0.0.0/8
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 169.254.0.0/16
+            - ::1/128
+            - fe80::/10
+            - fc00::/7
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:22.440725+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:22.440725+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:22.440751+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:22.440754+00:00'
+        -   source_field: DestinationIp
+            target_table: network_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:21:22.440757+00:00'

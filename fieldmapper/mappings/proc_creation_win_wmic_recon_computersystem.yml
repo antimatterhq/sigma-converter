@@ -1,0 +1,52 @@
+id: 9d7ca793-f6bd-471c-8d0f-11e68b2f0d2f
+title: Computer System Reconnaissance Via Wmic.EXE
+status: test
+level: medium
+description: Detects execution of wmic utility with the "computersystem" flag in order
+    to obtain information about the machine such as the domain, username, model, etc.
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-08'
+modified: '2023-02-14'
+tags:
+    - attack.discovery
+    - attack.execution
+    - attack.t1047
+references:
+    - https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \wmic.exe
+        OriginalFileName: wmic.exe
+    selection_cli:
+        CommandLine|contains: computersystem
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:24.776277+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:24.776277+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:24.776290+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:24.776292+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:24.776294+00:00'

@@ -1,0 +1,50 @@
+id: 79609c82-a488-426e-abcf-9f341a39365d
+title: All Rules Have Been Deleted From The Windows Firewall Configuration
+status: test
+level: high
+description: Detects when a all the rules have been deleted from the Windows Defender
+    Firewall configuration
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-17'
+modified: '2024-01-22'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.004
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd364427(v=ws.10)
+taxonomy: sigma
+logsource:
+    product: windows
+    service: firewall-as
+detection:
+    selection:
+        EventID:
+            - 2033
+            - 2059
+    filter_main_svchost:
+        ModifyingApplication|endswith: :\Windows\System32\svchost.exe
+    filter_optional_msmpeng:
+        ModifyingApplication|contains|all:
+            - :\ProgramData\Microsoft\Windows Defender\Platform\
+            - \MsMpEng.exe
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:18.544637+00:00'
+        service:
+            source_field: service
+            source_value: firewall-as
+            mapped_at: '2025-11-13T20:22:18.544637+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:18.544644+00:00'
+        -   source_field: ModifyingApplication
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:18.544647+00:00'

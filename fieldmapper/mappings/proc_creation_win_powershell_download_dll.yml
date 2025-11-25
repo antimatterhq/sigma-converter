@@ -1,0 +1,47 @@
+id: 0f0450f3-8b47-441e-a31b-15a91dc243e2
+title: Potential DLL File Download Via PowerShell Invoke-WebRequest
+status: test
+level: medium
+description: Detects potential DLL files being downloaded using the PowerShell Invoke-WebRequest
+    cmdlet
+author: Florian Roth (Nextron Systems), Hieu Tran
+date: '2023-03-13'
+tags:
+    - attack.command-and-control
+    - attack.execution
+    - attack.t1059.001
+    - attack.t1105
+references:
+    - https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - 'Invoke-WebRequest '
+            - 'IWR '
+        CommandLine|contains|all:
+            - http
+            - OutFile
+            - .dll
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:59.931752+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:59.931752+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:59.931767+00:00'

@@ -1,0 +1,55 @@
+id: 61d0475c-173f-4844-86f7-f3eebae1c66b
+title: Change PowerShell Policies to an Insecure Level - PowerShell
+status: test
+level: medium
+description: Detects changing the PowerShell script execution policy to a potentially
+    insecure level using the "Set-ExecutionPolicy" cmdlet.
+author: frack113
+date: '2021-10-20'
+modified: '2023-12-14'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4
+    - https://adsecurity.org/?p=2604
+falsepositives:
+    - Administrator script
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cf2e938e-9a3e-4fe8-a347-411642b28a9f''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''fad91067-08c5-4d1a-8d8c-d96a21b37814''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_cmdlet:
+        ScriptBlockText|contains: Set-ExecutionPolicy
+    selection_option:
+        ScriptBlockText|contains:
+            - Unrestricted
+            - bypass
+    filter_optional_chocolatey:
+        ScriptBlockText|contains:
+            - (New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')
+            - (New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')
+    condition: all of selection_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.302885+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.302885+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.302888+00:00'

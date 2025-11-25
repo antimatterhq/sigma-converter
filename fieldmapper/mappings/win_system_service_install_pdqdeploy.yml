@@ -1,0 +1,62 @@
+id: ee9ca27c-9bd7-4cee-9b01-6e906be7cae3
+title: New PDQDeploy Service - Server Side
+status: test
+level: medium
+description: 'Detects a PDQDeploy service installation which indicates that PDQDeploy
+    was installed on the machines.
+
+    PDQDeploy can be abused by attackers to remotely install packages or execute commands
+    on target machines
+
+    '
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-22'
+tags:
+    - attack.privilege-escalation
+    - attack.t1543.003
+references:
+    - https://documentation.pdq.com/PDQDeploy/13.0.3.0/index.html?windows-services.htm
+falsepositives:
+    - Legitimate use of the tool
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_root:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+    selection_service:
+        ImagePath|contains: PDQDeployService.exe
+        ServiceName:
+            - PDQDeploy
+            - PDQ Deploy
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:23.242370+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:23.242370+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:23.242380+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:23.242382+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:23.242384+00:00'
+        -   source_field: ServiceName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:23.242385+00:00'

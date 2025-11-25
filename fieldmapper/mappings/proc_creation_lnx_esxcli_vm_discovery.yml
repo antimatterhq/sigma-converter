@@ -1,0 +1,49 @@
+id: 5f1573a7-363b-4114-9208-ad7a61de46eb
+title: ESXi VM List Discovery Via ESXCLI
+status: test
+level: medium
+description: Detects execution of the "esxcli" command with the "vm" flag in order
+    to retrieve information about the installed VMs.
+author: Cedric Maurugeon
+date: '2023-09-04'
+tags:
+    - attack.discovery
+    - attack.t1033
+    - attack.t1007
+references:
+    - https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/
+    - https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_vm.html
+    - https://www.secuinfra.com/en/techtalk/hide-your-hypervisor-analysis-of-esxiargs-ransomware/
+    - https://www.trendmicro.com/en_us/research/22/e/new-linux-based-ransomware-cheerscrypt-targets-exsi-devices.html
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /esxcli
+        CommandLine|contains: vm process
+        CommandLine|endswith: ' list'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.874579+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.874579+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.874586+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.874588+00:00'

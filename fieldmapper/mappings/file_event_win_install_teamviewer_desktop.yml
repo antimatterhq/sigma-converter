@@ -1,0 +1,38 @@
+id: 9711de76-5d4f-4c50-a94f-21e4e8f8384d
+title: Installation of TeamViewer Desktop
+status: test
+level: medium
+description: TeamViewer_Desktop.exe is create during install
+author: frack113
+date: '2022-01-28'
+tags:
+    - attack.command-and-control
+    - attack.t1219
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1219/T1219.md#atomic-test-1---teamviewer-files-detected-test-on-windows
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith: \TeamViewer_Desktop.exe
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.308295+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.308295+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.308300+00:00'

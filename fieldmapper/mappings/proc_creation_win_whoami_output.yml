@@ -1,0 +1,59 @@
+id: c30fb093-1109-4dc8-88a8-b30d11c95a5d
+title: Whoami.EXE Execution With Output Option
+status: test
+level: medium
+description: Detects the execution of "whoami.exe" with the "/FO" flag to choose CSV
+    as output format or with redirection options to export the results to a file for
+    later use.
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2023-02-28'
+modified: '2023-12-04'
+tags:
+    - attack.discovery
+    - attack.t1033
+    - car.2016-03-001
+references:
+    - https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/
+    - https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/
+    - https://www.youtube.com/watch?v=DsJ9ByX84o4&t=6s
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_main_img:
+        Image|endswith: \whoami.exe
+        OriginalFileName: whoami.exe
+    selection_main_cli:
+        CommandLine|contains:
+            - ' /FO CSV'
+            - ' -FO CSV'
+    selection_special:
+        CommandLine|contains: whoami*>
+    condition: all of selection_main_* or selection_special
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:09.476580+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:09.476580+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:09.476585+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:09.476587+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:09.476588+00:00'

@@ -1,0 +1,77 @@
+id: 10c14723-61c7-4c75-92ca-9af245723ad2
+title: HackTool - Potential Impacket Lateral Movement Activity
+status: stable
+level: high
+description: Detects wmiexec/dcomexec/atexec/smbexec from Impacket framework
+author: Ecco, oscd.community, Jonhnathan Ribeiro, Tim Rauch
+date: '2019-09-03'
+modified: '2023-02-21'
+tags:
+    - attack.execution
+    - attack.t1047
+    - attack.lateral-movement
+    - attack.t1021.003
+references:
+    - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/wmiexec.py
+    - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/atexec.py
+    - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/smbexec.py
+    - https://github.com/SecureAuthCorp/impacket/blob/8b1a99f7c715702eafe3f24851817bb64721b156/examples/dcomexec.py
+    - https://www.elastic.co/guide/en/security/current/suspicious-cmd-execution-via-wmi.html
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e31f89f7-36fb-4697-8ab6-48823708353b''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_other:
+        ParentImage|endswith:
+            - \wmiprvse.exe
+            - \mmc.exe
+            - \explorer.exe
+            - \services.exe
+        CommandLine|contains|all:
+            - cmd.exe
+            - /Q
+            - /c
+            - \\127.0.0.1\
+            - '&1'
+    selection_atexec:
+        ParentCommandLine|contains:
+            - svchost.exe -k netsvcs
+            - taskeng.exe
+        CommandLine|contains|all:
+            - cmd.exe
+            - /C
+            - Windows\Temp\
+            - '&1'
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:07.860774+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:07.860774+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:07.860787+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:07.860790+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:07.860792+00:00'

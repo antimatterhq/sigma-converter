@@ -1,0 +1,45 @@
+id: 6aa12161-235a-4dfb-9c74-fe08df8d8da1
+title: Bitbucket Audit Log Configuration Updated
+status: test
+level: medium
+description: Detects changes to the bitbucket audit log configuration.
+author: Muhammad Faisal (@faisalusuf)
+date: '2024-02-25'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://confluence.atlassian.com/bitbucketserver/view-and-configure-the-audit-log-776640417.html
+falsepositives:
+    - Legitimate user activity.
+taxonomy: sigma
+logsource:
+    product: bitbucket
+    service: audit
+    definition: 'Requirements: "Basic" log level is required to receive these audit
+        events.'
+detection:
+    selection:
+        auditType.category: Auditing
+        auditType.action: Audit log configuration updated
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: bitbucket
+            mapped_at: '2025-11-13T20:18:18.625842+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:18:18.625842+00:00'
+    detection_fields:
+        -   source_field: auditType.category
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:18.625846+00:00'
+        -   source_field: auditType.action
+            target_table: api_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:18.625848+00:00'

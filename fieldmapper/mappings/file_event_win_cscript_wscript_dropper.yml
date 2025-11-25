@@ -1,0 +1,61 @@
+id: 002bdb95-0cf1-46a6-9e08-d38c128a6127
+title: WScript or CScript Dropper - File
+status: test
+level: high
+description: Detects a file ending in jse, vbe, js, vba, vbs written by cscript.exe
+    or wscript.exe
+author: Tim Shelton
+date: '2022-01-10'
+modified: '2022-12-02'
+tags:
+    - attack.execution
+    - attack.t1059.005
+    - attack.t1059.007
+references:
+    - WScript or CScript Dropper (cea72823-df4d-4567-950c-0b579eaf0846)
+fields:
+    - Image
+    - TargetFilename
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cea72823-df4d-4567-950c-0b579eaf0846''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \wscript.exe
+            - \cscript.exe
+        TargetFilename|startswith:
+            - C:\Users\
+            - C:\ProgramData
+        TargetFilename|endswith:
+            - .jse
+            - .vbe
+            - .js
+            - .vba
+            - .vbs
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.273254+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.273254+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:36.273259+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.273261+00:00'

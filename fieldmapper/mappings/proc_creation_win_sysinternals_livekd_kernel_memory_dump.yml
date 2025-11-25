@@ -1,0 +1,54 @@
+id: c7746f1c-47d3-43d6-8c45-cd1e54b6b0a2
+title: Kernel Memory Dump Via LiveKD
+status: experimental
+level: high
+description: Detects execution of LiveKD with the "-m" flag to potentially dump the
+    kernel memory
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-16'
+modified: '2024-03-13'
+tags:
+    - attack.defense-evasion
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/livekd
+    - https://4sysops.com/archives/creating-a-complete-memory-dump-without-a-blue-screen/
+    - https://kb.acronis.com/content/60892
+falsepositives:
+    - Unlikely in production environment
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \livekd.exe
+            - \livekd64.exe
+        OriginalFileName: livekd.exe
+    selection_cli:
+        CommandLine|contains|windash: ' -m'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.097287+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.097287+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:59.097295+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:59.097297+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:59.097298+00:00'

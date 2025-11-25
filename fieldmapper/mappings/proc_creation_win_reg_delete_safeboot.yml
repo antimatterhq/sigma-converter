@@ -1,0 +1,56 @@
+id: fc0e89b5-adb0-43c1-b749-c12a10ec37de
+title: SafeBoot Registry Key Deleted Via Reg.EXE
+status: test
+level: high
+description: Detects execution of "reg.exe" commands with the "delete" flag on safe
+    boot registry keys. Often used by attacker to prevent safeboot execution of security
+    products
+author: Nasreddine Bencherchali (Nextron Systems), Tim Shelton
+date: '2022-08-08'
+modified: '2023-02-04'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://www.trendmicro.com/en_us/research/22/e/avoslocker-ransomware-variant-abuses-driver-file-to-disable-anti-Virus-scans-log4shell.html
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d7662ff6-9e97-4596-a61d-9839e32dee8d''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: reg.exe
+        OriginalFileName: reg.exe
+    selection_delete:
+        CommandLine|contains|all:
+            - ' delete '
+            - \SYSTEM\CurrentControlSet\Control\SafeBoot
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.279906+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.279906+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.279912+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:58.279914+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:58.279915+00:00'

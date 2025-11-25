@@ -1,0 +1,69 @@
+id: 6e30c82f-a9f8-4aab-b79c-7c12bce6f248
+title: File Download Via Bitsadmin To An Uncommon Target Folder
+status: test
+level: medium
+description: Detects usage of bitsadmin downloading a file to uncommon target folder
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2022-06-28'
+modified: '2023-02-15'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+    - attack.s0190
+    - attack.t1036.003
+references:
+    - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
+    - https://isc.sans.edu/diary/22264
+    - https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/
+    - https://blog.talosintelligence.com/breaking-the-silence-recent-truebot-activity/
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \bitsadmin.exe
+        OriginalFileName: bitsadmin.exe
+    selection_flags:
+        CommandLine|contains:
+            - ' /transfer '
+            - ' /create '
+            - ' /addfile '
+    selection_folder:
+        CommandLine|contains:
+            - '%AppData%'
+            - '%temp%'
+            - '%tmp%'
+            - \AppData\Local\
+            - C:\Windows\Temp\
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.437370+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.437370+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:34.437383+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:34.437385+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:34.437387+00:00'

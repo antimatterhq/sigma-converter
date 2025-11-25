@@ -1,0 +1,67 @@
+id: 0ba863e6-def5-4e50-9cea-4dd8c7dc46a4
+title: Control Panel Items
+status: test
+level: high
+description: Detects the malicious use of a control panel item
+author: Kyaw Min Thein, Furkan Caliskan (@caliskanfurkan_)
+date: '2020-06-22'
+modified: '2023-10-11'
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1218.002
+    - attack.persistence
+    - attack.t1546
+references:
+    - https://ired.team/offensive-security/code-execution/code-execution-through-control-panel-add-ins
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_reg_img:
+        Image|endswith: \reg.exe
+        OriginalFileName: reg.exe
+    selection_reg_cli:
+        CommandLine|contains|all:
+            - add
+            - CurrentVersion\Control Panel\CPLs
+    selection_cpl:
+        CommandLine|endswith: .cpl
+    filter_cpl_sys:
+        CommandLine|contains:
+            - \System32\
+            - '%System%'
+            - '|C:\Windows\system32|'
+    filter_cpl_igfx:
+        CommandLine|contains|all:
+            - 'regsvr32 '
+            - ' /s '
+            - igfxCPL.cpl
+    condition: all of selection_reg_* or (selection_cpl and not 1 of filter_cpl_*)
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:32.061678+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:32.061678+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:32.061690+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:32.061691+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:32.061693+00:00'

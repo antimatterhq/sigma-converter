@@ -1,0 +1,69 @@
+id: 6f0947a4-1c5e-4e0d-8ac7-53159b8f23ca
+title: Potentially Suspicious Child Process Of Regsvr32
+status: test
+level: high
+description: Detects potentially suspicious child processes of "regsvr32.exe".
+author: elhoim, Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2022-05-05'
+modified: '2023-05-26'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.010
+references:
+    - https://redcanary.com/blog/intelligence-insights-april-2022/
+    - https://www.echotrail.io/insights/search/regsvr32.exe
+    - https://www.ired.team/offensive-security/code-execution/t1117-regsvr32-aka-squiblydoo
+falsepositives:
+    - Unlikely, but can rarely occur. Apply additional filters accordingly.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8e2b24c9-4add-46a0-b4bb-0057b4e6187d''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \regsvr32.exe
+        Image|endswith:
+            - \calc.exe
+            - \cscript.exe
+            - \explorer.exe
+            - \mshta.exe
+            - \net.exe
+            - \net1.exe
+            - \nltest.exe
+            - \notepad.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \reg.exe
+            - \schtasks.exe
+            - \werfault.exe
+            - \wscript.exe
+    filter_main_werfault:
+        Image|endswith: \werfault.exe
+        CommandLine|contains: ' -u -p '
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.969706+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.969706+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:34.969726+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:34.969731+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:34.969733+00:00'

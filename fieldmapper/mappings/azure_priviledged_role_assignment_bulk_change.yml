@@ -1,0 +1,41 @@
+id: 102e11e3-2db5-4c9e-bc26-357d42585d21
+title: Bulk Deletion Changes To Privileged Account Permissions
+status: test
+level: high
+description: Detects when a user is removed from a privileged role. Bulk changes should
+    be investigated.
+author: Mark Morowczynski '@markmorow', Yochana Henderson, '@Yochana-H'
+date: '2022-08-05'
+tags:
+    - attack.persistence
+    - attack.t1098
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-identity-management#azure-ad-roles-assignment
+falsepositives:
+    - Legtimate administrator actions of removing members from a role
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        properties.message:
+            - Remove eligible member (permanent)
+            - Remove eligible member (eligible)
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:30.265811+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:30.265811+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:16:30.265826+00:00'

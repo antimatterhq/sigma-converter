@@ -1,0 +1,41 @@
+id: 8f668cc4-c18e-45fe-ad00-624a981cf88a
+title: Okta Application Sign-On Policy Modified or Deleted
+status: test
+level: medium
+description: Detects when an application Sign-on Policy is modified or deleted.
+author: Austin Songer @austinsonger
+date: '2021-09-12'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+references:
+    - https://developer.okta.com/docs/reference/api/system-log/
+    - https://developer.okta.com/docs/reference/api/event-types/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: okta
+    service: okta
+detection:
+    selection:
+        eventtype:
+            - application.policy.sign_on.update
+            - application.policy.sign_on.rule.delete
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.127176+00:00'
+        service:
+            source_field: service
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:13.127176+00:00'
+    detection_fields:
+        -   source_field: eventtype
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:13.127195+00:00'

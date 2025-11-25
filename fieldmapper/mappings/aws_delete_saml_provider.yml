@@ -1,0 +1,61 @@
+id: ccd6a6c8-bb4e-4a91-9d2a-07e632819374
+title: AWS SAML Provider Deletion Activity
+status: experimental
+level: medium
+description: 'Detects the deletion of an AWS SAML provider, potentially indicating
+    malicious intent to disrupt administrative or security team access.
+
+    An attacker can remove the SAML provider for the information security team or
+    a team of system administrators, to make it difficult for them to work and investigate
+    at the time of the attack and after it.
+
+    '
+author: Ivan Saakov
+date: '2024-12-19'
+tags:
+    - attack.t1078.004
+    - attack.privilege-escalation
+    - attack.t1531
+references:
+    - https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteSAMLProvider.html
+falsepositives:
+    - Automated processes using tools like Terraform may trigger this alert.
+    - Legitimate administrative actions by authorized system administrators could
+        cause this alert. Verify the user identity, user agent, and hostname to ensure
+        they are expected.
+    - Deletions by unfamiliar users should be investigated. If the behavior is known
+        and expected, it can be exempted from the rule.
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource: iam.amazonaws.com
+        eventName: DeleteSAMLProvider
+        status: success
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:17:58.236251+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:17:58.236251+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: authentication
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:58.236255+00:00'
+        -   source_field: eventName
+            target_table: authentication
+            target_field: action
+            mapped_at: '2025-11-13T20:17:58.236257+00:00'
+        -   source_field: status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:17:58.236258+00:00'

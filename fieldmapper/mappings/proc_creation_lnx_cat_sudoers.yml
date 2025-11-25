@@ -1,0 +1,50 @@
+id: 0f79c4d2-4e1f-4683-9c36-b5469a665e06
+title: Cat Sudoers
+status: test
+level: medium
+description: Detects the execution of a cat /etc/sudoers to list all users that have
+    sudo rights
+author: Florian Roth (Nextron Systems)
+date: '2022-06-20'
+modified: '2022-09-15'
+tags:
+    - attack.reconnaissance
+    - attack.t1592.004
+references:
+    - https://github.com/sleventyeleven/linuxprivchecker/
+falsepositives:
+    - Legitimate administration activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith:
+            - /cat
+            - grep
+            - /head
+            - /tail
+            - /more
+        CommandLine|contains: ' /etc/sudoers'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.859871+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.859871+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.859878+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.859880+00:00'

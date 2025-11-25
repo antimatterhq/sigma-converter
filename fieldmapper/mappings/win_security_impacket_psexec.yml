@@ -1,0 +1,54 @@
+id: 32d56ea1-417f-44ff-822b-882873f5f43b
+title: Impacket PsExec Execution
+status: test
+level: high
+description: Detects execution of Impacket's psexec.py.
+author: Bhabesh Raj
+date: '2020-12-14'
+modified: '2022-09-22'
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+references:
+    - https://web.archive.org/web/20230329171218/https://blog.menasec.net/2019/02/threat-hunting-3-detecting-psexec.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The advanced audit policy setting "Object Access > Audit Detailed
+        File Share" must be configured for Success/Failure
+detection:
+    selection1:
+        EventID: 5145
+        ShareName: \\\*\IPC$
+        RelativeTargetName|contains:
+            - RemCom_stdin
+            - RemCom_stdout
+            - RemCom_stderr
+    condition: selection1
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:24.194827+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:24.194827+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:24.194835+00:00'
+        -   source_field: ShareName
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:24.194837+00:00'
+        -   source_field: RelativeTargetName
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:24.194838+00:00'

@@ -1,0 +1,85 @@
+id: 02d1d718-dd13-41af-989d-ea85c7fab93f
+title: Rare Remote Thread Creation By Uncommon Source Image
+status: experimental
+level: high
+description: Detects uncommon processes creating remote threads.
+author: Perez Diego (@darkquassar), oscd.community
+date: '2019-10-27'
+modified: '2024-07-15'
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1055
+references:
+    - Personal research, statistical analysis
+    - https://lolbas-project.github.io
+falsepositives:
+    - This rule is best put in testing first in order to create a baseline that reflects
+        the data in your environment.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''66d31e5f-52d6-40a4-9615-002d3789a119''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    selection:
+        SourceImage|endswith:
+            - \bash.exe
+            - \cscript.exe
+            - \cvtres.exe
+            - \defrag.exe
+            - \dialer.exe
+            - \dnx.exe
+            - \esentutl.exe
+            - \excel.exe
+            - \expand.exe
+            - \find.exe
+            - \findstr.exe
+            - \forfiles.exe
+            - \gpupdate.exe
+            - \hh.exe
+            - \installutil.exe
+            - \lync.exe
+            - \makecab.exe
+            - \mDNSResponder.exe
+            - \monitoringhost.exe
+            - \msbuild.exe
+            - \mshta.exe
+            - \mspaint.exe
+            - \outlook.exe
+            - \ping.exe
+            - \provtool.exe
+            - \python.exe
+            - \regsvr32.exe
+            - \robocopy.exe
+            - \runonce.exe
+            - \sapcimc.exe
+            - \smartscreen.exe
+            - \spoolsv.exe
+            - \tstheme.exe
+            - \userinit.exe
+            - \vssadmin.exe
+            - \vssvc.exe
+            - \w3wp.exe
+            - \winscp.exe
+            - \winword.exe
+            - \wmic.exe
+            - \wscript.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: create_remote_thread
+            mapped_at: '2025-11-13T20:19:49.000181+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:49.000181+00:00'
+    detection_fields:
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:49.000198+00:00'

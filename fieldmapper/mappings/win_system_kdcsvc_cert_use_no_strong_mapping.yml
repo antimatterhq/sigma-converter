@@ -1,0 +1,58 @@
+id: 993c2665-e6ef-40e3-a62a-e1a97686af79
+title: Certificate Use With No Strong Mapping
+status: test
+level: medium
+description: 'Detects a user certificate that was valid but could not be mapped to
+    a user in a strong way (such as via explicit mapping, key trust mapping, or a
+    SID)
+
+    This could be a sign of exploitation of the elevation of privilege vulnerabilities
+    (CVE-2022-34691, CVE-2022-26931, CVE-2022-26923) that can occur when the KDC allows
+    certificate spoofing by not requiring a strong mapping.
+
+    Events where the AccountName and CN of the Subject do not match, or where the
+    CN ends in a dollar sign indicating a machine, may indicate certificate spoofing.
+
+    '
+author: '@br4dy5'
+date: '2023-10-09'
+tags:
+    - attack.privilege-escalation
+references:
+    - https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16
+falsepositives:
+    - If prevalent in the environment, filter on events where the AccountName and
+        CN of the Subject do not reference the same user
+    - If prevalent in the environment, filter on CNs that end in a dollar sign indicating
+        it is a machine name
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: Kerberos-Key-Distribution-Center
+        EventID:
+            - 39
+            - 41
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:30.161326+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:30.161326+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:30.161339+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:30.161341+00:00'

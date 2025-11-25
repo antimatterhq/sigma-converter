@@ -1,0 +1,53 @@
+id: 05b2aa93-1210-42c8-8d9a-2fcc13b284f5
+title: Service Registry Key Deleted Via Reg.EXE
+status: test
+level: high
+description: Detects execution of "reg.exe" commands with the "delete" flag on services
+    registry key. Often used by attacker to remove AV software services
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-01'
+modified: '2023-02-04'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://www.virustotal.com/gui/file/2bcd5702a7565952c44075ac6fb946c7780526640d1264f692c7664c02c68465
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: reg.exe
+        OriginalFileName: reg.exe
+    selection_delete:
+        CommandLine|contains: ' delete '
+    selection_key:
+        CommandLine|contains: \SYSTEM\CurrentControlSet\services\
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:39.725523+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:39.725523+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:39.725530+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:39.725532+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:39.725533+00:00'

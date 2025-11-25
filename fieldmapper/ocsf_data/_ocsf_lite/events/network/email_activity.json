@@ -1,0 +1,210 @@
+{
+  "uid": 9,
+  "caption": "Email Activity",
+  "category": "network",
+  "description": "Email Activity events report SMTP protocol and email activities including those with embedded URLs and files. See the <code>Email</code> object for details.",
+  "extends": "base_event",
+  "name": "email_activity",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Send"
+        },
+        "2": {
+          "caption": "Receive"
+        },
+        "3": {
+          "caption": "Scan",
+          "description": "Email being scanned (example: security scanning)"
+        },
+        "4": {
+          "caption": "Trace",
+          "description": "Follow an email message as it travels through an organization. The <code>message_trace_uid</code> should be populated when selected.",
+          "references": [
+            {
+              "description": "For example Office 365 Email Message Trace",
+              "url": "href='https://learn.microsoft.com/en-us/Exchange/monitoring/trace-an-email-message/message-trace-modern-eac"
+            }
+          ]
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4": {
+          "caption": "Network Activity",
+          "description": "Network Activity events."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4009": {
+          "caption": "Email Activity",
+          "description": "Email Activity events report SMTP protocol and email activities including those with embedded URLs and files. See the Email object for details."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "direction": {
+      "description": "The direction of the email, as defined by the <code>direction_id</code> value.",
+      "group": "context",
+      "requirement": "optional"
+    },
+    "direction_id": {
+      "description": "<p>The direction of the email relative to the scanning host or organization.</p>Email scanned at an internet gateway might be characterized as inbound to the organization from the Internet, outbound from the organization to the Internet, or internal within the organization. Email scanned at a workstation might be characterized as inbound to, or outbound from the workstation.",
+      "group": "context",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "The email direction is unknown."
+        },
+        "1": {
+          "caption": "Inbound",
+          "description": "Email Inbound, from the Internet or outside network destined for an entity inside network."
+        },
+        "2": {
+          "caption": "Outbound",
+          "description": "Email Outbound, from inside the network destined for an entity outside network."
+        },
+        "3": {
+          "caption": "Internal",
+          "description": "Email Internal, from inside the network destined for an entity inside network."
+        },
+        "99": {
+          "caption": "Other"
+        }
+      }
+    },
+    "dst_endpoint": {
+      "description": "The responder (server) in a network connection.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "email": {
+      "group": "primary",
+      "requirement": "required",
+      "object": "email",
+      "constraints": {
+        "at_least_one": [
+          "from",
+          "to"
+        ]
+      }
+    },
+    "message_trace_uid": {
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "protocol_name": {
+      "description": "The Protocol Name specifies the email communication protocol, such as SMTP, IMAP, or POP3.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "src_endpoint": {
+      "description": "The initiator (client) sending the email.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "type_uid": {
+      "description": "The event/finding type ID. It identifies the event's semantics and structure. The value is calculated by the logging system as: class_uid * 100 + activity_id.",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "400900": {
+          "caption": "Unknown",
+          "description": "The activity type \"Email Activity: Unknown\" is not further specified."
+        },
+        "400901": {
+          "caption": "Send",
+          "description": "The email was sent."
+        },
+        "400902": {
+          "caption": "Receive",
+          "description": "The email was received."
+        },
+        "400903": {
+          "caption": "Scan",
+          "description": "Email being scanned (example: security scanning)."
+        },
+        "400904": {
+          "caption": "Trace",
+          "description": "Follow an email message as it travels through an organization. The message_trace_uid should be populated when selected."
+        },
+        "400999": {
+          "caption": "Other",
+          "description": "The activity type \"Email Activity: Other\" is not further specified."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    }
+  }
+}

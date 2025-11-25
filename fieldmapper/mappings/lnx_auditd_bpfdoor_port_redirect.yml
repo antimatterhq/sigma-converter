@@ -1,0 +1,65 @@
+id: 70b4156e-50fc-4523-aa50-c9dddf1993fc
+title: Bpfdoor TCP Ports Redirect
+status: test
+level: medium
+description: 'All TCP traffic on particular port from attacker is routed to different
+    port. ex. ''/sbin/iptables -t nat -D PREROUTING -p tcp -s 192.168.1.1 --dport
+    22 -j REDIRECT --to-ports 42392''
+
+    The traffic looks like encrypted SSH communications going to TCP port 22, but
+    in reality is being directed to the shell port once it hits the iptables rule
+    for the attacker host only.
+
+    '
+author: Rafal Piasecki
+date: '2022-08-10'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.004
+references:
+    - https://www.sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/
+    - https://www.elastic.co/security-labs/a-peek-behind-the-bpfdoor
+falsepositives:
+    - Legitimate ports redirect
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    cmd:
+        type: EXECVE
+        a0|endswith: iptables
+        a1: -t
+        a2: nat
+    keywords:
+        - --to-ports 42
+        - --to-ports 43
+    condition: cmd and keywords
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:19.984876+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:19.984876+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:19.984892+00:00'
+        -   source_field: a0
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:19.984896+00:00'
+        -   source_field: a1
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:19.984898+00:00'
+        -   source_field: a2
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:19.984901+00:00'

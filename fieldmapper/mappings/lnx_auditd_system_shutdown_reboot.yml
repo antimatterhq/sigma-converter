@@ -1,0 +1,51 @@
+id: 4cb57c2f-1f29-41f8-893d-8bed8e1c1d2f
+title: System Shutdown/Reboot - Linux
+status: test
+level: informational
+description: Adversaries may shutdown/reboot systems to interrupt access to, or aid
+    in the destruction of, those systems.
+author: Igor Fits, oscd.community
+date: '2020-10-15'
+modified: '2022-11-26'
+tags:
+    - attack.impact
+    - attack.t1529
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1529/T1529.md
+falsepositives:
+    - Legitimate administrative activity
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    execve:
+        type: EXECVE
+    shutdowncmd:
+        - shutdown
+        - reboot
+        - halt
+        - poweroff
+    init:
+        - init
+        - telinit
+    initselection:
+        - 0
+        - 6
+    condition: execve and (shutdowncmd or (init and initselection))
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:47.746833+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:47.746833+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:47.746847+00:00'

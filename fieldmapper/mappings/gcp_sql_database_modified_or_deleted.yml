@@ -1,0 +1,47 @@
+id: f346bbd5-2c4e-4789-a221-72de7685090d
+title: Google Cloud SQL Database Modified or Deleted
+status: test
+level: medium
+description: Detect when a Cloud SQL DB has been modified or deleted.
+author: Austin Songer @austinsonger
+date: '2021-10-15'
+modified: '2022-12-25'
+tags:
+    - attack.impact
+references:
+    - https://cloud.google.com/sql/docs/mysql/admin-api/rest/v1beta4/users/update
+falsepositives:
+    - SQL Database being modified or deleted may be performed by a system administrator.
+    - Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+    - SQL Database modified or deleted from unfamiliar users should be investigated.
+        If known behavior is causing false positives, it can be exempted from the
+        rule.
+taxonomy: sigma
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    selection:
+        gcp.audit.method_name:
+            - cloudsql.instances.create
+            - cloudsql.instances.delete
+            - cloudsql.users.update
+            - cloudsql.users.delete
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: gcp
+            mapped_at: '2025-11-13T20:17:36.147369+00:00'
+        service:
+            source_field: service
+            source_value: gcp.audit
+            mapped_at: '2025-11-13T20:17:36.147369+00:00'
+    detection_fields:
+        -   source_field: gcp.audit.method_name
+            target_table: dns_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:36.147396+00:00'

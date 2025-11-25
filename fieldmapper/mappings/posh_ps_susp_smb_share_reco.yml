@@ -1,0 +1,49 @@
+id: 95f0643a-ed40-467c-806b-aac9542ec5ab
+title: Suspicious Get Information for SMB Share
+status: test
+level: low
+description: 'Adversaries may look for folders and drives shared on remote systems
+    as a means of identifying sources of information to gather as
+
+    a precursor for Collection and to identify potential systems of interest for Lateral
+    Movement.
+
+    Networks often contain shared network drives and folders that enable users to
+    access file directories on various systems across a network.
+
+    '
+author: frack113
+date: '2021-12-15'
+modified: '2022-12-25'
+tags:
+    - attack.discovery
+    - attack.t1069.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.002/T1069.002.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains: get-smbshare
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.310531+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.310531+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.310537+00:00'

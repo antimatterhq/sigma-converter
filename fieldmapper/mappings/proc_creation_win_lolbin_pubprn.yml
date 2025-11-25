@@ -1,0 +1,41 @@
+id: 1fb76ab8-fa60-4b01-bddd-71e89bf555da
+title: Pubprn.vbs Proxy Execution
+status: test
+level: medium
+description: Detects the use of the 'Pubprn.vbs' Microsoft signed script to execute
+    commands.
+author: frack113
+date: '2022-05-28'
+tags:
+    - attack.defense-evasion
+    - attack.t1216.001
+references:
+    - https://lolbas-project.github.io/lolbas/Scripts/Pubprn/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - \pubprn.vbs
+            - 'script:'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:57.156518+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:57.156518+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:57.156523+00:00'

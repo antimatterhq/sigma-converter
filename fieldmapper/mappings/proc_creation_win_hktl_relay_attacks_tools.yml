@@ -1,0 +1,79 @@
+id: 5589ab4f-a767-433c-961d-c91f3f704db1
+title: Potential SMB Relay Attack Tool Execution
+status: test
+level: critical
+description: Detects different hacktools used for relay attacks on Windows for privilege
+    escalation
+author: Florian Roth (Nextron Systems)
+date: '2021-07-24'
+modified: '2023-02-14'
+tags:
+    - attack.execution
+    - attack.t1557.001
+references:
+    - https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/
+    - https://pentestlab.blog/2017/04/13/hot-potato/
+    - https://github.com/ohpe/juicy-potato
+    - https://hunter2.gitbook.io/darthsidious/other/war-stories/domain-admin-in-30-minutes
+    - https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire
+    - https://www.localpotato.com/
+falsepositives:
+    - Legitimate files with these rare hacktool names
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_pe:
+        Image|contains:
+            - PetitPotam
+            - RottenPotato
+            - HotPotato
+            - JuicyPotato
+            - \just_dce_
+            - Juicy Potato
+            - \temp\rot.exe
+            - \Potato.exe
+            - \SpoolSample.exe
+            - \Responder.exe
+            - \smbrelayx
+            - \ntlmrelayx
+            - \LocalPotato
+    selection_script:
+        CommandLine|contains:
+            - Invoke-Tater
+            - ' smbrelay'
+            - ' ntlmrelay'
+            - 'cme smb '
+            - ' /ntlm:NTLMhash '
+            - Invoke-PetitPotam
+            - '.exe -t * -p '
+    selection_juicypotato_enum:
+        CommandLine|contains: .exe -c "{
+        CommandLine|endswith: '}" -z'
+    filter_hotpotatoes:
+        Image|contains:
+            - HotPotatoes6
+            - HotPotatoes7
+            - 'HotPotatoes '
+    condition: 1 of selection_* and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:20.262230+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:20.262230+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:20.262238+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:20.262240+00:00'

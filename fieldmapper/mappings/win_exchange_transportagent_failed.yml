@@ -1,0 +1,47 @@
+id: c7d16cae-aaf3-42e5-9c1c-fb8553faa6fa
+title: Failed MSExchange Transport Agent Installation
+status: test
+level: high
+description: Detects a failed installation of a Exchange Transport Agent
+author: Tobias Michalski (Nextron Systems)
+date: '2021-06-08'
+modified: '2022-07-12'
+tags:
+    - attack.persistence
+    - attack.t1505.002
+references:
+    - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=8
+fields:
+    - AssemblyPath
+falsepositives:
+    - Legitimate installations of exchange TransportAgents. AssemblyPath is a good
+        indicator for this.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: msexchange-management
+detection:
+    selection:
+        EventID: 6
+        Data|contains: Install-TransportAgent
+    condition: selection
+ocsf_mapping:
+    class_name: email_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:38.469454+00:00'
+        service:
+            source_field: service
+            source_value: msexchange-management
+            mapped_at: '2025-11-13T20:24:38.469454+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: email_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:39.500884+00:00'
+        -   source_field: Data
+            target_table: email_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:39.500898+00:00'

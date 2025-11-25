@@ -1,0 +1,38 @@
+id: 62fff148-278d-497e-8ecd-ad6083231a35
+title: OneLogin User Assumed Another User
+status: test
+level: low
+description: Detects when an user assumed another user account.
+author: Austin Songer @austinsonger
+date: '2021-10-12'
+modified: '2022-12-25'
+tags:
+    - attack.impact
+references:
+    - https://developers.onelogin.com/api-docs/1/events/event-resource
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: onelogin
+    service: onelogin.events
+detection:
+    selection:
+        event_type_id: 3
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: onelogin
+            mapped_at: '2025-11-13T20:16:06.487414+00:00'
+        service:
+            source_field: service
+            source_value: onelogin.events
+            mapped_at: '2025-11-13T20:16:06.487414+00:00'
+    detection_fields:
+        -   source_field: event_type_id
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:06.487426+00:00'

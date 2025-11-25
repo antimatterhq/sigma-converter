@@ -1,0 +1,66 @@
+id: e2f17c5d-b02a-442b-9052-6eb89c9fec9c
+title: Screen Capture with Xwd
+status: test
+level: low
+description: Detects adversary creating screen capture of a full with xwd. Highly
+    recommended using rule on servers, due high usage of screenshot utilities on user
+    workstations
+author: Pawel Mazur
+date: '2021-09-13'
+modified: '2022-12-18'
+tags:
+    - attack.collection
+    - attack.t1113
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1113/T1113.md#atomic-test-3---x-windows-capture
+    - https://linux.die.net/man/1/xwd
+falsepositives:
+    - Legitimate use of screenshot utility
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: EXECVE
+        a0: xwd
+    xwd_root_window:
+        a1: -root
+        a2: -out
+        a3|endswith: .xwd
+    xwd_no_root_window:
+        a1: -out
+        a2|endswith: .xwd
+    condition: selection and 1 of xwd_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:31.564801+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:31.564801+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.564815+00:00'
+        -   source_field: a0
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.564817+00:00'
+        -   source_field: a1
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.564819+00:00'
+        -   source_field: a2
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.564820+00:00'
+        -   source_field: a3
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:31.564822+00:00'

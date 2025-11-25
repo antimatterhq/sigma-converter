@@ -1,0 +1,60 @@
+id: a46c93b7-55ed-4d27-a41b-c259456c4746
+title: Linux Crypto Mining Pool Connections
+status: stable
+level: high
+description: Detects process connections to a Monero crypto mining pool
+author: Florian Roth (Nextron Systems)
+date: '2021-10-26'
+tags:
+    - attack.impact
+    - attack.t1496
+references:
+    - https://www.poolwatch.io/coin/monero
+falsepositives:
+    - Legitimate use of crypto miners
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: linux
+detection:
+    selection:
+        DestinationHostname:
+            - pool.minexmr.com
+            - fr.minexmr.com
+            - de.minexmr.com
+            - sg.minexmr.com
+            - ca.minexmr.com
+            - us-west.minexmr.com
+            - pool.supportxmr.com
+            - mine.c3pool.com
+            - xmr-eu1.nanopool.org
+            - xmr-eu2.nanopool.org
+            - xmr-us-east1.nanopool.org
+            - xmr-us-west1.nanopool.org
+            - xmr-asia1.nanopool.org
+            - xmr-jp1.nanopool.org
+            - xmr-au1.nanopool.org
+            - xmr.2miners.com
+            - xmr.hashcity.org
+            - xmr.f2pool.com
+            - xmrpool.eu
+            - pool.hashvault.pro
+            - moneroocean.stream
+            - monerocean.stream
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:15:59.843823+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:59.843823+00:00'
+    detection_fields:
+        -   source_field: DestinationHostname
+            target_table: network_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:15:59.843878+00:00'

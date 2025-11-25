@@ -1,0 +1,52 @@
+id: 5817e76f-4804-41e6-8f1d-5fa0b3ecae2d
+title: PUA - Radmin Viewer Utility Execution
+status: test
+level: medium
+description: Detects the execution of Radmin which can be abused by an adversary to
+    remotely control Windows machines
+author: frack113
+date: '2022-01-22'
+modified: '2023-12-11'
+tags:
+    - attack.execution
+    - attack.lateral-movement
+    - attack.t1072
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1072/T1072.md
+    - https://www.radmin.fr/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Description: Radmin Viewer
+        Product: Radmin Viewer
+        OriginalFileName: Radmin.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.958776+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.958776+00:00'
+    detection_fields:
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:34.958851+00:00'
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:34.958856+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:34.958858+00:00'

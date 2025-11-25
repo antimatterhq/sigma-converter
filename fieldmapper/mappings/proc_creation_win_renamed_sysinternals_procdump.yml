@@ -1,0 +1,64 @@
+id: 4a0b2c7e-7cb2-495d-8b63-5f268e7bfd67
+title: Renamed ProcDump Execution
+status: test
+level: high
+description: 'Detects the execution of a renamed ProcDump executable.
+
+    This often done by attackers or malware in order to evade defensive mechanisms.
+
+    '
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2019-11-18'
+modified: '2024-06-25'
+tags:
+    - attack.defense-evasion
+    - attack.t1036.003
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/procdump
+falsepositives:
+    - Procdump illegally bundled with legitimate software.
+    - Administrators who rename binaries (should be investigated).
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''03795938-1387-481b-9f4c-3f6241e604fe''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_ofn:
+        OriginalFileName: procdump
+    selection_cli_dump_flag:
+        CommandLine|contains|windash:
+            - ' -ma '
+            - ' -mp '
+    selection_cli_eula_flag:
+        CommandLine|contains|windash: ' /accepteula'
+    filter_main_known_names:
+        Image|endswith:
+            - \procdump.exe
+            - \procdump64.exe
+    condition: (selection_ofn or all of selection_cli_*) and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:06.181340+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:06.181340+00:00'
+    detection_fields:
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:06.181352+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:06.181355+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:06.181357+00:00'

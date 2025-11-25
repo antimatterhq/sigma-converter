@@ -1,0 +1,52 @@
+id: 5a5152f1-463f-436b-b2f5-8eceb3964b42
+title: Displaying Hidden Files Feature Disabled
+status: experimental
+level: medium
+description: 'Detects modifications to the "Hidden" and "ShowSuperHidden" explorer
+    registry values in order to disable showing of hidden files and system files.
+
+    This technique is abused by several malware families to hide their files from
+    normal users.
+
+    '
+author: frack113
+date: '2022-04-02'
+modified: '2024-03-26'
+tags:
+    - attack.defense-evasion
+    - attack.t1564.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md#atomic-test-8---hide-files-through-registry
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith:
+            - \Microsoft\Windows\CurrentVersion\Explorer\Advanced\ShowSuperHidden
+            - \Microsoft\Windows\CurrentVersion\Explorer\Advanced\Hidden
+        Details: DWORD (0x00000000)
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: Details
+            target_table: null
+            target_field: null
+            mapped_at: null

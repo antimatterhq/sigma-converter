@@ -1,0 +1,48 @@
+id: 4cad6c64-d6df-42d6-8dae-eb78defdc415
+title: Potential Linux Process Code Injection Via DD Utility
+status: test
+level: medium
+description: Detects the injection of code by overwriting the memory map of a Linux
+    process using the "dd" Linux command.
+author: Joseph Kamau
+date: '2023-12-01'
+tags:
+    - attack.defense-evasion
+    - attack.t1055.009
+references:
+    - https://www.aon.com/cyber-solutions/aon_cyber_labs/linux-based-inter-process-code-injection-without-ptrace2/
+    - https://github.com/AonCyberLabs/Cexigua/blob/34d338620afae4c6335ba8d8d499e1d7d3d5d7b5/overwrite.sh
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /dd
+        CommandLine|contains|all:
+            - of=
+            - /proc/
+            - /mem
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:55.922971+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:55.922971+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:55.922975+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:55.922977+00:00'

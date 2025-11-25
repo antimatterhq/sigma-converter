@@ -1,0 +1,45 @@
+id: 9e099d99-44c2-42b6-a6d8-54c3545cab29
+title: HackTool - Mimikatz Kirbi File Creation
+status: test
+level: critical
+description: Detects the creation of files created by mimikatz such as ".kirbi", "mimilsa.log",
+    etc.
+author: Florian Roth (Nextron Systems), David ANDRE
+date: '2021-11-08'
+modified: '2024-06-27'
+tags:
+    - attack.credential-access
+    - attack.t1558
+references:
+    - https://cobalt.io/blog/kerberoast-attack-techniques
+    - https://pentestlab.blog/2019/10/21/persistence-security-support-provider/
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''034affe8-6170-11ec-844f-0f78aa0c4d66''),
+    type=<SigmaRelatedType.OBSOLETE: 4>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - .kirbi
+            - mimilsa.log
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:37.195944+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:37.195944+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:37.195950+00:00'

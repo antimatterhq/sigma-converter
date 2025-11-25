@@ -1,0 +1,38 @@
+id: 8ac03a65-6c84-4116-acad-dc1558ff7a77
+title: Sysmon Configuration Change
+status: test
+level: medium
+description: Detects a Sysmon configuration change, which could be the result of a
+    legitimate reconfiguration or someone trying manipulate the configuration
+author: frack113
+date: '2022-01-12'
+tags:
+    - attack.defense-evasion
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+falsepositives:
+    - Legitimate administrative action
+taxonomy: sigma
+logsource:
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 16
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:03.285548+00:00'
+        service:
+            source_field: service
+            source_value: sysmon
+            mapped_at: '2025-11-13T20:21:03.285548+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:21:03.285559+00:00'

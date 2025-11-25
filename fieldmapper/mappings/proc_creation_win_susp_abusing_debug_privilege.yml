@@ -1,0 +1,84 @@
+id: d522eca2-2973-4391-a3e0-ef0374321dae
+title: Abused Debug Privilege by Arbitrary Parent Processes
+status: test
+level: high
+description: Detection of unusual child processes by different system processes
+author: Semanur Guneysu @semanurtg, oscd.community
+date: '2020-10-28'
+modified: '2022-11-11'
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+references:
+    - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-74-638.jpg
+fields:
+    - ParentImage
+    - Image
+    - User
+    - CommandLine
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - \winlogon.exe
+            - \services.exe
+            - \lsass.exe
+            - \csrss.exe
+            - \smss.exe
+            - \wininit.exe
+            - \spoolsv.exe
+            - \searchindexer.exe
+        User|contains:
+            - AUTHORI
+            - AUTORI
+    selection_img:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+            - \cmd.exe
+        OriginalFileName:
+            - PowerShell.EXE
+            - pwsh.dll
+            - Cmd.Exe
+    filter:
+        CommandLine|contains|all:
+            - ' route '
+            - ' ADD '
+    condition: all of selection_* and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:57.689001+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:57.689001+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:57.689043+00:00'
+        -   source_field: User
+            target_table: process_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:20:57.689048+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:57.689051+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:57.689055+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:57.689058+00:00'

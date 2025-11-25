@@ -1,0 +1,50 @@
+id: f57f8d16-1f39-4dcb-a604-6c73d9b54b3d
+title: Sensitive File Access Via Volume Shadow Copy Backup
+status: test
+level: high
+description: 'Detects a command that accesses the VolumeShadowCopy in order to extract
+    sensitive files such as the Security or SAM registry hives or the AD database
+    (ntds.dit)
+
+    '
+author: Max Altgelt (Nextron Systems), Tobias Michalski (Nextron Systems)
+date: '2021-08-09'
+modified: '2024-01-18'
+tags:
+    - attack.impact
+    - attack.t1490
+references:
+    - https://twitter.com/vxunderground/status/1423336151860002816?s=20
+    - https://www.virustotal.com/gui/file/03e9b8c2e86d6db450e5eceec057d7e369ee2389b9daecaf06331a95410aa5f8/detection
+    - https://pentestlab.blog/2018/07/04/dumping-domain-password-hashes/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_1:
+        CommandLine|contains: \\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy
+    selection_2:
+        CommandLine|contains:
+            - \NTDS.dit
+            - \SYSTEM
+            - \SECURITY
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.427100+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.427100+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:34.427107+00:00'

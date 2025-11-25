@@ -1,0 +1,56 @@
+id: 1ac8666b-046f-4201-8aba-1951aaec03a3
+title: Command Line Execution with Suspicious URL and AppData Strings
+status: test
+level: medium
+description: Detects a suspicious command line execution that includes an URL and
+    AppData string in the command line parameters as used by several droppers (js/vbs
+    > powershell)
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+date: '2019-01-16'
+modified: '2021-11-27'
+tags:
+    - attack.execution
+    - attack.command-and-control
+    - attack.t1059.003
+    - attack.t1059.001
+    - attack.t1105
+references:
+    - https://www.hybrid-analysis.com/sample/3a1f01206684410dbe8f1900bbeaaa543adfcd07368ba646b499fa5274b9edf6?environmentId=100
+    - https://www.hybrid-analysis.com/sample/f16c729aad5c74f19784a24257236a8bbe27f7cdc4a89806031ec7f1bebbd475?environmentId=100
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - High
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \cmd.exe
+        CommandLine|contains|all:
+            - http
+            - ://
+            - '%AppData%'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:34.981521+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:34.981521+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:34.981533+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:34.981536+00:00'

@@ -1,0 +1,51 @@
+id: 30e92f50-bb5a-4884-98b5-d20aa80f3d7a
+title: Hidden Powershell in Link File Pattern
+status: test
+level: medium
+description: Detects events that appear when a user click on a link file with a powershell
+    command in it
+author: frack113
+date: '2022-02-06'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://www.x86matthew.com/view_post?id=embed_exe_lnk
+falsepositives:
+    - Legitimate commands in .lnk files
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage: C:\Windows\explorer.exe
+        Image: C:\Windows\System32\cmd.exe
+        CommandLine|contains|all:
+            - powershell
+            - .lnk
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.112929+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.112929+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:37.112935+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.112936+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:37.112938+00:00'

@@ -1,0 +1,50 @@
+id: 4368354e-1797-463c-bc39-a309effbe8d7
+title: Powershell Add Name Resolution Policy Table Rule
+status: test
+level: high
+description: 'Detects powershell scripts that adds a Name Resolution Policy Table
+    (NRPT) rule for the specified namespace.
+
+    This will bypass the default DNS server and uses a specified server for answering
+    the query.
+
+    '
+author: Borna Talebi
+date: '2021-09-14'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+    - attack.t1565
+references:
+    - https://twitter.com/NathanMcNulty/status/1569497348841287681
+    - https://learn.microsoft.com/en-us/powershell/module/dnsclient/add-dnsclientnrptrule?view=windowsserver2022-ps
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - Add-DnsClientNrptRule
+            - -Namesp
+            - -NameSe
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.231366+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.231366+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.231376+00:00'

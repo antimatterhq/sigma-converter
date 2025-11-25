@@ -1,0 +1,140 @@
+id: 2617e7ed-adb7-40ba-b0f3-8f9945fe6c09
+title: Suspicious SYSTEM User Process Creation
+status: test
+level: high
+description: Detects a suspicious process creation as SYSTEM user (suspicious program
+    or command line parameter)
+author: Florian Roth (Nextron Systems), David ANDRE (additional keywords)
+date: '2021-12-20'
+modified: '2024-12-01'
+tags:
+    - attack.credential-access
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1134
+    - attack.t1003
+    - attack.t1027
+references:
+    - Internal Research
+    - https://tools.thehacker.recipes/mimikatz/modules
+falsepositives:
+    - Administrative activity
+    - Scripts and administrative tools used in the monitored environment
+    - Monitoring activity
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        IntegrityLevel:
+            - System
+            - S-1-16-16384
+        User|contains:
+            - AUTHORI
+            - AUTORI
+    selection_special:
+        Image|endswith:
+            - \calc.exe
+            - \cscript.exe
+            - \forfiles.exe
+            - \hh.exe
+            - \mshta.exe
+            - \ping.exe
+            - \wscript.exe
+        CommandLine|contains:
+            - ' -NoP '
+            - ' -W Hidden '
+            - ' -decode '
+            - ' /decode '
+            - ' /urlcache '
+            - ' -urlcache '
+            - ' -e* JAB'
+            - ' -e* SUVYI'
+            - ' -e* SQBFAFgA'
+            - ' -e* aWV4I'
+            - ' -e* IAB'
+            - ' -e* PAA'
+            - ' -e* aQBlAHgA'
+            - vssadmin delete shadows
+            - reg SAVE HKLM
+            - ' -ma '
+            - Microsoft\Windows\CurrentVersion\Run
+            - .downloadstring(
+            - .downloadfile(
+            - ' /ticket:'
+            - 'dpapi::'
+            - event::clear
+            - event::drop
+            - id::modify
+            - 'kerberos::'
+            - 'lsadump::'
+            - 'misc::'
+            - 'privilege::'
+            - 'rpc::'
+            - 'sekurlsa::'
+            - 'sid::'
+            - 'token::'
+            - vault::cred
+            - vault::list
+            - ' p::d '
+            - ;iex(
+            - MiniDump
+            - 'net user '
+    filter_main_ping:
+        CommandLine|contains|all:
+            - ping
+            - 127.0.0.1
+            - ' -n '
+    filter_vs:
+        Image|endswith: \PING.EXE
+        ParentCommandLine|contains: \DismFoDInstall.cmd
+    filter_config_mgr:
+        ParentImage|contains: :\Packages\Plugins\Microsoft.GuestConfiguration.ConfigurationforWindows\
+    filter_java:
+        ParentImage|contains:
+            - :\Program Files (x86)\Java\
+            - :\Program Files\Java\
+        ParentImage|endswith: \bin\javaws.exe
+        Image|contains:
+            - :\Program Files (x86)\Java\
+            - :\Program Files\Java\
+        Image|endswith: \bin\jp2launcher.exe
+        CommandLine|contains: ' -ma '
+    condition: all of selection* and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:22.246250+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:22.246250+00:00'
+    detection_fields:
+        -   source_field: IntegrityLevel
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:20:22.246284+00:00'
+        -   source_field: User
+            target_table: process_activity
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:20:22.246287+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:22.246290+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:22.246293+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:22.246295+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:22.246298+00:00'

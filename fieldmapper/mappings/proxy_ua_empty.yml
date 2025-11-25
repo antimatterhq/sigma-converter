@@ -1,0 +1,39 @@
+id: 21e44d78-95e7-421b-a464-ffd8395659c4
+title: HTTP Request With Empty User Agent
+status: test
+level: medium
+description: 'Detects a potentially suspicious empty user agent strings in proxy log.
+
+    Could potentially indicate an uncommon request method.
+
+    '
+author: Florian Roth (Nextron Systems)
+date: '2017-07-08'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.command-and-control
+    - attack.t1071.001
+references:
+    - https://twitter.com/Carlos_Perez/status/883455096645931008
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection:
+        c-useragent: ''
+    condition: selection
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:25.862107+00:00'
+    detection_fields:
+        -   source_field: c-useragent
+            target_table: http_activity
+            target_field: http_request.user_agent
+            mapped_at: '2025-11-13T20:14:25.862112+00:00'

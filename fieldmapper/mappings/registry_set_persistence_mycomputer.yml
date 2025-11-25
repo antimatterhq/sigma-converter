@@ -1,0 +1,42 @@
+id: 8fbe98a8-8f9d-44f8-aa71-8c572e29ef06
+title: Potential Persistence Via MyComputer Registry Keys
+status: test
+level: high
+description: Detects modification to the "Default" value of the "MyComputer" key and
+    subkeys to point to a custom binary that will be launched whenever the associated
+    action is executed (see reference section for example)
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-09'
+modified: '2024-01-11'
+tags:
+    - attack.persistence
+references:
+    - https://www.hexacorn.com/blog/2017/01/18/beyond-good-ol-run-key-part-55/
+falsepositives:
+    - Unlikely but if you experience FPs add specific processes and locations you
+        would like to monitor for
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: \Microsoft\Windows\CurrentVersion\Explorer\MyComputer
+        TargetObject|endswith: (Default)
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

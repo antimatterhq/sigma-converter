@@ -1,0 +1,87 @@
+id: f376c8a7-a2d0-4ddc-aa0c-16c17236d962
+title: HackTool - Bloodhound/Sharphound Execution
+status: test
+level: high
+description: Detects command line parameters used by Bloodhound and Sharphound hack
+    tools
+author: Florian Roth (Nextron Systems)
+date: '2019-12-20'
+modified: '2023-02-04'
+tags:
+    - attack.discovery
+    - attack.t1087.001
+    - attack.t1087.002
+    - attack.t1482
+    - attack.t1069.001
+    - attack.t1069.002
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/BloodHoundAD/BloodHound
+    - https://github.com/BloodHoundAD/SharpHound
+falsepositives:
+    - Other programs that use these command line option and accepts an 'All' parameter
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Product|contains: SharpHound
+        Description|contains: SharpHound
+        Company|contains:
+            - SpecterOps
+            - evil corp
+        Image|contains:
+            - \Bloodhound.exe
+            - \SharpHound.exe
+    selection_cli_1:
+        CommandLine|contains:
+            - ' -CollectionMethod All '
+            - ' --CollectionMethods Session '
+            - ' --Loop --Loopduration '
+            - ' --PortScanTimeout '
+            - '.exe -c All -d '
+            - Invoke-Bloodhound
+            - Get-BloodHoundData
+    selection_cli_2:
+        CommandLine|contains|all:
+            - ' -JsonFolder '
+            - ' -ZipFileName '
+    selection_cli_3:
+        CommandLine|contains|all:
+            - ' DCOnly '
+            - ' --NoSaveCache '
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.444781+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.444781+00:00'
+    detection_fields:
+        -   source_field: Product
+            target_table: process_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:20:49.444823+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:49.444828+00:00'
+        -   source_field: Company
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:20:49.444831+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:49.444834+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.444837+00:00'

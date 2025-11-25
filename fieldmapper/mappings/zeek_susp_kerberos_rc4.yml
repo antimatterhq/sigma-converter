@@ -1,0 +1,51 @@
+id: 503fe26e-b5f2-4944-a126-eab405cc06e5
+title: Kerberos Network Traffic RC4 Ticket Encryption
+status: test
+level: medium
+description: Detects kerberos TGS request using RC4 encryption which may be indicative
+    of kerberoasting
+author: sigma
+date: '2020-02-12'
+modified: '2021-11-27'
+tags:
+    - attack.credential-access
+    - attack.t1558.003
+references:
+    - https://adsecurity.org/?p=3458
+falsepositives:
+    - Normal enterprise SPN requests activity
+taxonomy: sigma
+logsource:
+    product: zeek
+    service: kerberos
+detection:
+    selection:
+        request_type: TGS
+        cipher: rc4-hmac
+    computer_acct:
+        service|startswith: $
+    condition: selection and not computer_acct
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: zeek
+            mapped_at: '2025-11-13T20:14:58.216752+00:00'
+        service:
+            source_field: service
+            source_value: kerberos
+            mapped_at: '2025-11-13T20:14:58.216752+00:00'
+    detection_fields:
+        -   source_field: request_type
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:00.070422+00:00'
+        -   source_field: cipher
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:00.070439+00:00'
+        -   source_field: service
+            target_table: network_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:15:00.070442+00:00'

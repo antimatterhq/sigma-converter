@@ -1,0 +1,55 @@
+id: 4ede543c-e098-43d9-a28f-dd784a13132f
+title: Winrar Execution in Non-Standard Folder
+status: test
+level: medium
+description: Detects a suspicious winrar execution in a folder which is not the default
+    installation folder
+author: Florian Roth (Nextron Systems), Tigzy
+date: '2021-11-17'
+modified: '2023-08-31'
+tags:
+    - attack.collection
+    - attack.t1560.001
+references:
+    - https://twitter.com/cyb3rops/status/1460978167628406785
+falsepositives:
+    - Legitimate use of WinRAR in a folder of a software that bundles WinRAR
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \rar.exe
+            - \winrar.exe
+        Description: Command line RAR
+    filter_main_unrar:
+        Image|endswith: \UnRAR.exe
+    filter_main_path:
+        Image|contains:
+            - :\Program Files (x86)\WinRAR\
+            - :\Program Files\WinRAR\
+    filter_optional_temp:
+        Image|contains: :\Windows\Temp\
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:58.304947+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:58.304947+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:58.304951+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:58.304953+00:00'

@@ -1,0 +1,54 @@
+id: 1b2ae822-6fe1-43ba-aa7c-d1a3b3d1d5f2
+title: Service Installation with Suspicious Folder Pattern
+status: test
+level: high
+description: Detects service installation with suspicious folder patterns
+author: pH-T (Nextron Systems)
+date: '2022-03-18'
+modified: '2022-03-24'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - car.2013-09-005
+    - attack.t1543.003
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_eid:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+    selection_img_paths:
+        ImagePath|re|all:
+            - ^[Cc]:\\[Pp]rogram[Dd]ata\\.{1,9}\.exe
+            - ^[Cc]:\\.{1,9}\.exe
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:23.231773+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:23.231773+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:23.231793+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:23.231796+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:23.231799+00:00'

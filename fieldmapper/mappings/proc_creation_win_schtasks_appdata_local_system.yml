@@ -1,0 +1,64 @@
+id: c5c00f49-b3f9-45a6-997e-cfdecc6e1967
+title: Suspicious Schtasks Execution AppData Folder
+status: test
+level: high
+description: Detects the creation of a schtask that executes a file from C:\Users\<USER>\AppData\Local
+author: pH-T (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2022-03-15'
+modified: '2022-07-28'
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1053.005
+    - attack.t1059.001
+references:
+    - https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \schtasks.exe
+        CommandLine|contains|all:
+            - /Create
+            - /RU
+            - /TR
+            - C:\Users\
+            - \AppData\Local\
+        CommandLine|contains:
+            - NT AUT
+            - ' SYSTEM '
+    filter:
+        ParentImage|contains|all:
+            - \AppData\Local\Temp\
+            - TeamViewer_.exe
+        Image|endswith: \schtasks.exe
+        CommandLine|contains: /TN TVInstallRestore
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.094675+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.094675+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.094686+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:37.094689+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:37.094691+00:00'

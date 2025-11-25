@@ -1,0 +1,50 @@
+id: 75edd3fd-7146-48e5-9848-3013d7f0282c
+title: DHCP Server Error Failed Loading the CallOut DLL
+status: test
+level: high
+description: This rule detects a DHCP server error in which a specified Callout DLL
+    (in registry) could not be loaded
+author: Dimitrios Slamaris, @atc_project (fix)
+date: '2017-05-15'
+modified: '2022-12-25'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+references:
+    - https://blog.3or.de/mimilib-dhcp-server-callout-dll-injection.html
+    - https://technet.microsoft.com/en-us/library/cc726884(v=ws.10).aspx
+    - https://msdn.microsoft.com/de-de/library/windows/desktop/aa363389(v=vs.85).aspx
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        EventID:
+            - 1031
+            - 1032
+            - 1034
+        Provider_Name: Microsoft-Windows-DHCP-Server
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:33.757691+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:33.757691+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:33.757700+00:00'
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:33.757702+00:00'

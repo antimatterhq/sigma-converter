@@ -1,0 +1,44 @@
+id: e20b5b14-ce93-4230-88af-981983ef6e74
+title: QuickAssist Execution
+status: experimental
+level: low
+description: 'Detects the execution of Microsoft Quick Assist tool "QuickAssist.exe".
+    This utility can be used by attackers to gain remote access.
+
+    '
+author: Muhammad Faisal (@faisalusuf)
+date: '2024-12-19'
+tags:
+    - attack.command-and-control
+    - attack.t1219
+references:
+    - https://www.microsoft.com/en-us/security/blog/2024/05/15/threat-actors-misusing-quick-assist-in-social-engineering-attacks-leading-to-ransomware/
+    - https://www.linkedin.com/posts/kevin-beaumont-security_ive-been-assisting-a-few-orgs-hit-with-successful-activity-7268055739116445701-xxjZ/
+    - https://x.com/cyb3rops/status/1862406110365245506
+    - https://learn.microsoft.com/en-us/windows/client-management/client-tools/quick-assist
+falsepositives:
+    - Legitimate use of Quick Assist in the environment.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \QuickAssist.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:49.003770+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:49.003770+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:49.003780+00:00'

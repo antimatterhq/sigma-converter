@@ -1,0 +1,56 @@
+id: e8d34729-86a4-4140-adfd-0a29c2106307
+title: HackTool - CoercedPotato Execution
+status: experimental
+level: high
+description: Detects the use of CoercedPotato, a tool for privilege escalation
+author: Florian Roth (Nextron Systems)
+date: '2023-10-11'
+modified: '2024-11-23'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055
+references:
+    - https://github.com/hackvens/CoercedPotato
+    - https://blog.hackvens.fr/articles/CoercedPotato.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_loader_img:
+        Image|endswith: \CoercedPotato.exe
+    selection_params:
+        CommandLine|contains: ' --exploitId '
+    selection_loader_imphash:
+        Hashes|contains:
+            - IMPHASH=A75D7669DB6B2E107A44C4057FF7F7D6
+            - IMPHASH=F91624350E2C678C5DCBE5E1F24E22C9
+            - IMPHASH=14C81850A079A87E83D50CA41C709A15
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:16.840633+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:16.840633+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:16.840665+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:16.840670+00:00'
+        -   source_field: Hashes
+            target_table: process_activity
+            target_field: process.file.hashes.value
+            mapped_at: '2025-11-13T20:20:16.840672+00:00'

@@ -1,0 +1,40 @@
+id: ea34fb97-e2c4-4afb-810f-785e4459b194
+title: Curl Usage on Linux
+status: test
+level: low
+description: Detects a curl process start on linux, which indicates a file download
+    from a remote location or a simple web request to a remote server
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-09-15'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html
+falsepositives:
+    - Scripts created by developers and admins
+    - Administrative activity
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        Image|endswith: /curl
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:49.935635+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:49.935635+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:49.935642+00:00'

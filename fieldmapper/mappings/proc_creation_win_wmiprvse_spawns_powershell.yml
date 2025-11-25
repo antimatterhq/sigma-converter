@@ -1,0 +1,61 @@
+id: 692f0bec-83ba-4d04-af7e-e884a96059b6
+title: Potential WMI Lateral Movement WmiPrvSE Spawned PowerShell
+status: stable
+level: medium
+description: Detects Powershell as a child of the WmiPrvSE process. Which could be
+    a sign of lateral movement via WMI.
+author: Markus Neis @Karneades
+date: '2019-04-03'
+modified: '2023-03-29'
+tags:
+    - attack.execution
+    - attack.t1047
+    - attack.t1059.001
+references:
+    - https://any.run/report/68bc255f9b0db6a0d30a8f2dadfbee3256acfe12497bf93943bc1eab0735e45e/a2385d6f-34f7-403c-90d3-b1f9d2a90a5e
+falsepositives:
+    - AppvClient
+    - CCM
+    - WinRM
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8a582fe2-0882-4b89-a82a-da6b2dc32937''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''d21374ff-f574-44a7-9998-4a8c8bf33d7d''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith: \WmiPrvSE.exe
+    selection_img:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        OriginalFileName:
+            - PowerShell.EXE
+            - pwsh.dll
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:15.026581+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:15.026581+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:15.026587+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:15.026588+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:15.026589+00:00'

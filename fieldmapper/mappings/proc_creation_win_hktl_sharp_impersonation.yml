@@ -1,0 +1,63 @@
+id: f89b08d0-77ad-4728-817b-9b16c5a69c7a
+title: HackTool - SharpImpersonation Execution
+status: test
+level: high
+description: Detects execution of the SharpImpersonation tool. Which can be used to
+    manipulate tokens on a Windows computers remotely (PsExec/WmiExec) or interactively
+author: Sai Prashanth Pulisetti @pulisettis, Nasreddine Bencherchali (Nextron Systems)
+date: '2022-12-27'
+modified: '2023-02-13'
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1134.001
+    - attack.t1134.003
+references:
+    - https://s3cur3th1ssh1t.github.io/SharpImpersonation-Introduction/
+    - https://github.com/S3cur3Th1sSh1t/SharpImpersonation
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cf0c254b-22f1-4b2b-8221-e137b3c0af94''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \SharpImpersonation.exe
+        OriginalFileName: SharpImpersonation.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - ' user:'
+            - ' binary:'
+            - ' user:'
+            - ' shellcode:'
+        CommandLine|contains:
+            - ' technique:CreateProcessAsUserW'
+            - ' technique:ImpersonateLoggedOnuser'
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:44.246052+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:44.246052+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:44.246082+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:44.246085+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:44.246087+00:00'

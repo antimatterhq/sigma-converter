@@ -1,0 +1,64 @@
+id: 352a918a-34d8-4882-8470-44830c507aa3
+title: Malicious Usage Of IMDS Credentials Outside Of AWS Infrastructure
+status: experimental
+level: high
+description: 'Detects when an instance identity has taken an action that isn''t inside
+    SSM.
+
+    This can indicate that a compromised EC2 instance is being used as a pivot point.
+
+    '
+author: jamesc-grafana
+date: '2024-07-11'
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1078
+    - attack.t1078.002
+references:
+    - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-identity-roles.html
+    - https://ermetic.com/blog/aws/aws-ec2-imds-what-you-need-to-know/
+    - https://www.packetmischief.ca/2023/07/31/amazon-ec2-credential-exfiltration-how-it-happens-and-how-to-mitigate-it/#lifting-credentials-from-imds-this-is-why-we-cant-have-nice-things
+falsepositives:
+    - A team has configured an EC2 instance to use instance profiles that grant the
+        option for the EC2 instance to talk to other AWS Services
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        userIdentity.arn|re: .+:assumed-role/aws:.+
+    filter_main_generic:
+        eventSource: ssm.amazonaws.com
+        eventName: RegisterManagedInstance
+        sourceIPAddress: AWS Internal
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:17:57.385207+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:17:57.385207+00:00'
+    detection_fields:
+        -   source_field: userIdentity.arn
+            target_table: api_activity
+            target_field: actor.user.uid
+            mapped_at: '2025-11-13T20:17:58.229049+00:00'
+        -   source_field: eventSource
+            target_table: api_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:17:58.229059+00:00'
+        -   source_field: eventName
+            target_table: api_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:17:58.229061+00:00'
+        -   source_field: sourceIPAddress
+            target_table: api_activity
+            target_field: src_endpoint.ip
+            mapped_at: '2025-11-13T20:17:58.229062+00:00'

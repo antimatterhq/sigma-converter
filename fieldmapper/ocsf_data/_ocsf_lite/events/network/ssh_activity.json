@@ -1,0 +1,243 @@
+{
+  "uid": 7,
+  "caption": "SSH Activity",
+  "description": "SSH Activity events report remote client connections to a server using the Secure Shell (SSH) Protocol.",
+  "extends": "base_event",
+  "name": "ssh_activity",
+  "attributes": {
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Open",
+          "description": "A new network connection was opened."
+        },
+        "2": {
+          "caption": "Close",
+          "description": "The network connection was closed."
+        },
+        "3": {
+          "caption": "Reset",
+          "description": "The network connection was abnormally terminated or closed by a middle device like firewalls."
+        },
+        "4": {
+          "caption": "Fail",
+          "description": "The network connection failed. For example a connection timeout or no route to host."
+        },
+        "5": {
+          "caption": "Refuse",
+          "description": "The network connection was refused. For example an attempt to connect to a server port which is not open."
+        },
+        "6": {
+          "caption": "Traffic",
+          "description": "Network traffic report."
+        },
+        "7": {
+          "caption": "Listen",
+          "description": "A network endpoint began listening for new network connections."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "app_name": {
+      "description": "The name of the application that initiated the DHCP connection.",
+      "requirement": "optional"
+    },
+    "auth_type": {
+      "description": "The SSH authentication type, normalized to the caption of 'auth_type_id'. In the case of 'Other', it is defined by the event source.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "auth_type_id": {
+      "description": "The normalized identifier of the SSH authentication type.",
+      "group": "primary",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown"
+        },
+        "1": {
+          "caption": "Certificate Based",
+          "description": "Authentication using digital certificates."
+        },
+        "2": {
+          "caption": "GSSAPI",
+          "description": "GSSAPI for centralized authentication."
+        },
+        "3": {
+          "caption": "Host Based",
+          "description": "Authentication based on the client host's identity."
+        },
+        "4": {
+          "caption": "Keyboard Interactive",
+          "description": "Multi-step, interactive authentication."
+        },
+        "5": {
+          "caption": "Password",
+          "description": "Password Authentication."
+        },
+        "6": {
+          "caption": "Public Key",
+          "description": "Paired public key authentication."
+        },
+        "99": {
+          "caption": "Other"
+        }
+      }
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4": {
+          "caption": "Network Activity",
+          "description": "Network Activity events."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4007": {
+          "caption": "SSH Activity",
+          "description": "SSH Activity events report remote client connections to a server using the Secure Shell (SSH) Protocol."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "connection_info": {
+      "description": "The connection information relevant to the network traffic.",
+      "requirement": "recommended",
+      "object": "network connection information"
+    },
+    "dst_endpoint": {
+      "description": "The responder (server) in a network connection.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "file": {
+      "description": "The file that is the target of the SSH activity.",
+      "group": "context",
+      "requirement": "optional",
+      "object": "file",
+      "is_array": true
+    },
+    "protocol_ver": {
+      "caption": "SSH Version",
+      "description": "The Secure Shell Protocol version.",
+      "group": "context",
+      "requirement": "recommended"
+    },
+    "src_endpoint": {
+      "description": "The initiator (client) in a network connection.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "type_uid": {
+      "description": "The event/finding type ID. It identifies the event's semantics and structure. The value is calculated by the logging system as: class_uid * 100 + activity_id.",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "400700": {
+          "caption": "Unknown",
+          "description": "The activity type \"SSH Activity: Unknown\" is not further specified."
+        },
+        "400701": {
+          "caption": "Open",
+          "description": "A new network connection was opened."
+        },
+        "400702": {
+          "caption": "Close",
+          "description": "The network connection was closed."
+        },
+        "400703": {
+          "caption": "Reset",
+          "description": "The network connection was abnormally terminated or closed by a middle device like firewalls."
+        },
+        "400704": {
+          "caption": "Fail",
+          "description": "The network connection failed. For example a connection timeout or no route to host."
+        },
+        "400705": {
+          "caption": "Refuse",
+          "description": "The network connection was refused. For example an attempt to connect to a server port which is not open."
+        },
+        "400706": {
+          "caption": "Traffic",
+          "description": "Network traffic report."
+        },
+        "400707": {
+          "caption": "Listen",
+          "description": "A network endpoint began listening for new network connections."
+        },
+        "400799": {
+          "caption": "Other",
+          "description": "The activity type \"SSH Activity: Other\" is not further specified."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    }
+  },
+  "constraints": {
+    "at_least_one": [
+      "dst_endpoint",
+      "src_endpoint"
+    ]
+  }
+}

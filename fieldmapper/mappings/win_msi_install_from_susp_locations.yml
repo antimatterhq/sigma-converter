@@ -1,0 +1,61 @@
+id: c7c8aa1c-5aff-408e-828b-998e3620b341
+title: MSI Installation From Suspicious Locations
+status: test
+level: medium
+description: Detects MSI package installation from suspicious locations
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-31'
+modified: '2023-10-23'
+tags:
+    - attack.execution
+references:
+    - https://www.trendmicro.com/en_us/research/22/h/ransomware-actor-abuses-genshin-impact-anti-cheat-driver-to-kill-antivirus.html
+falsepositives:
+    - False positives may occur if you allow installation from folders such as the
+        desktop, the public folder or remote shares. A baseline is required before
+        production use.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: application
+detection:
+    selection:
+        Provider_Name: MsiInstaller
+        EventID:
+            - 1040
+            - 1042
+        Data|contains:
+            - :\Windows\TEMP\
+            - \\
+            - \Desktop\
+            - \PerfLogs\
+            - \Users\Public\
+    filter_winget:
+        Data|contains: \AppData\Local\Temp\WinGet\
+    filter_updhealthtools:
+        Data|contains: C:\Windows\TEMP\UpdHealthTools.msi
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:47.319146+00:00'
+        service:
+            source_field: service
+            source_value: application
+            mapped_at: '2025-11-13T20:25:47.319146+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:47.319152+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:47.319154+00:00'
+        -   source_field: Data
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:47.319155+00:00'

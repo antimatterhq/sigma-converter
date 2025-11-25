@@ -1,0 +1,60 @@
+id: 10b97915-ec8d-455f-a815-9a78926585f6
+title: Kubernetes Rolebinding Modification
+status: experimental
+level: medium
+description: 'Detects when a Kubernetes Rolebinding is created or modified.
+
+    '
+author: kelnage
+date: '2024-07-11'
+tags:
+    - attack.privilege-escalation
+references:
+    - https://kubernetes.io/docs/reference/config-api/apiserver-audit.v1/
+    - https://medium.com/@seifeddinerajhi/kubernetes-rbac-privilege-escalation-exploits-and-mitigations-26c07629eeab
+falsepositives:
+    - Modifying a Kubernetes Rolebinding may need to be done by a system administrator.
+    - Automated processes may need to take these actions and may need to be filtered.
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0322d9f2-289a-47c2-b5e1-b63c90901a3e''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    product: kubernetes
+    service: audit
+detection:
+    selection:
+        objectRef.apiGroup: rbac.authorization.k8s.io
+        objectRef.resource:
+            - clusterrolebindings
+            - rolebindings
+        verb:
+            - create
+            - delete
+            - patch
+            - replace
+            - update
+    condition: selection
+ocsf_mapping:
+    class_name: scheduled_job_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: kubernetes
+            mapped_at: '2025-11-13T20:18:37.886487+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:18:37.886487+00:00'
+    detection_fields:
+        -   source_field: objectRef.apiGroup
+            target_table: scheduled_job_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:37.886502+00:00'
+        -   source_field: objectRef.resource
+            target_table: scheduled_job_activity
+            target_field: job.name
+            mapped_at: '2025-11-13T20:18:37.886504+00:00'
+        -   source_field: verb
+            target_table: scheduled_job_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:37.886505+00:00'

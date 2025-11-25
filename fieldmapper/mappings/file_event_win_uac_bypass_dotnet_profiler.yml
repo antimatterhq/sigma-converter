@@ -1,0 +1,42 @@
+id: 93a19907-d4f9-4deb-9f91-aac4692776a6
+title: UAC Bypass Using .NET Code Profiler on MMC
+status: test
+level: high
+description: Detects the pattern of UAC Bypass using .NET Code Profiler and mmc.exe
+    DLL hijacking (UACMe 39)
+author: Christian Burkard (Nextron Systems)
+date: '2021-08-30'
+modified: '2022-10-09'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+references:
+    - https://github.com/hfiref0x/UACME
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|startswith: C:\Users\
+        TargetFilename|endswith: \AppData\Local\Temp\pe386.dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.646565+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.646565+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.646570+00:00'

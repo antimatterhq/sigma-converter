@@ -1,0 +1,51 @@
+id: ee63c85c-6d51-4d12-ad09-04e25877a947
+title: New Custom Shim Database Created
+status: test
+level: medium
+description: 'Adversaries may establish persistence and/or elevate privileges by executing
+    malicious content triggered by application shims.
+
+    The Microsoft Windows Application Compatibility Infrastructure/Framework (Application
+    Shim) was created to allow for backward compatibility of software as the operating
+    system codebase changes over time.
+
+    '
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+date: '2021-12-29'
+modified: '2023-12-06'
+tags:
+    - attack.persistence
+    - attack.t1547.009
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.011/T1546.011.md#atomic-test-2---new-shim-database-files-created-in-the-default-shim-database-directory
+    - https://www.mandiant.com/resources/blog/fin7-shim-databases-persistence
+    - https://liberty-shell.com/sec/2020/02/25/shim-persistence/
+    - https://andreafortuna.org/2018/11/12/process-injection-and-persistence-using-application-shimming/
+falsepositives:
+    - Legitimate custom SHIM installations will also trigger this rule
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains:
+            - :\Windows\apppatch\Custom\
+            - :\Windows\apppatch\CustomSDB\
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.673004+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.673004+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.673009+00:00'

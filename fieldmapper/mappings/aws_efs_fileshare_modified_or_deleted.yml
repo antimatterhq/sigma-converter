@@ -1,0 +1,50 @@
+id: 25cb1ba1-8a19-4a23-a198-d252664c8cef
+title: AWS EFS Fileshare Modified or Deleted
+status: test
+level: medium
+description: 'Detects when a EFS Fileshare is modified or deleted.
+
+    You can''t delete a file system that is in use.
+
+    If the file system has any mount targets, the adversary must first delete them,
+    so deletion of a mount will occur before deletion of a fileshare.
+
+    '
+author: Austin Songer @austinsonger
+date: '2021-08-15'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+references:
+    - https://docs.aws.amazon.com/efs/latest/ug/API_DeleteFileSystem.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource: elasticfilesystem.amazonaws.com
+        eventName: DeleteFileSystem
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:18:11.779330+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:18:11.779330+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: file_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:18:11.779357+00:00'
+        -   source_field: eventName
+            target_table: file_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:11.779360+00:00'

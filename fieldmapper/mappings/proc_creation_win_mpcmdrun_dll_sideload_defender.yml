@@ -1,0 +1,51 @@
+id: 7002aa10-b8d4-47ae-b5ba-51ab07e228b9
+title: Potential Mpclient.DLL Sideloading Via Defender Binaries
+status: test
+level: high
+description: Detects potential sideloading of "mpclient.dll" by Windows Defender processes
+    ("MpCmdRun" and "NisSrv") from their non-default directory.
+author: Bhabesh Raj
+date: '2022-08-01'
+modified: '2023-08-04'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+references:
+    - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''418dc89a-9808-4b87-b1d7-e5ae0cb6effc''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \MpCmdRun.exe
+            - \NisSrv.exe
+    filter_main_known_locations:
+        Image|startswith:
+            - C:\Program Files (x86)\Windows Defender\
+            - C:\Program Files\Microsoft Security Client\
+            - C:\Program Files\Windows Defender\
+            - C:\ProgramData\Microsoft\Windows Defender\Platform\
+            - C:\Windows\WinSxS\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:42.441265+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:42.441265+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:42.441277+00:00'

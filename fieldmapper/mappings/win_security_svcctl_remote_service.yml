@@ -1,0 +1,58 @@
+id: 586a8d6b-6bfe-4ad9-9d78-888cd2fe50c3
+title: Remote Service Activity via SVCCTL Named Pipe
+status: test
+level: medium
+description: Detects remote service activity via remote access to the svcctl named
+    pipe
+author: Samir Bousseaden
+date: '2019-04-03'
+modified: '2024-08-01'
+tags:
+    - attack.lateral-movement
+    - attack.persistence
+    - attack.t1021.002
+references:
+    - https://web.archive.org/web/20230329155141/https://blog.menasec.net/2019/03/threat-hunting-26-remote-windows.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+    definition: The advanced audit policy setting "Object Access > Audit Detailed
+        File Share" must be configured for Success/Failure
+detection:
+    selection:
+        EventID: 5145
+        ShareName: \\\*\IPC$
+        RelativeTargetName: svcctl
+        AccessList|contains: WriteData
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:44.437266+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:22:44.437266+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:45.480264+00:00'
+        -   source_field: ShareName
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:45.480281+00:00'
+        -   source_field: RelativeTargetName
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:45.480284+00:00'
+        -   source_field: AccessList
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:45.480287+00:00'

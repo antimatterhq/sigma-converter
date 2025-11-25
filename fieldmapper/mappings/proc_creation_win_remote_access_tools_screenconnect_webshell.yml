@@ -1,0 +1,46 @@
+id: b19146a3-25d4-41b4-928b-1e2a92641b1b
+title: Remote Access Tool - ScreenConnect Server Web Shell Execution
+status: test
+level: high
+description: Detects potential web shell execution from the ScreenConnect server process.
+author: Jason Rathbun (Blackpoint Cyber)
+date: '2024-02-26'
+tags:
+    - attack.initial-access
+    - attack.t1190
+references:
+    - https://blackpointcyber.com/resources/blog/breaking-through-the-screen/
+    - https://www.connectwise.com/company/trust/security-bulletins/connectwise-screenconnect-23.9.8
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \ScreenConnect.Service.exe
+        Image|endswith:
+            - \cmd.exe
+            - \csc.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:29.290693+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:29.290693+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:29.290712+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:29.290715+00:00'

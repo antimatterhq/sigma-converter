@@ -1,0 +1,43 @@
+id: 3d2a2d59-929c-4b78-8c1a-145dfe9e07b1
+title: Publisher Attachment File Dropped In Suspicious Location
+status: test
+level: medium
+description: Detects creation of files with the ".pub" extension in suspicious or
+    uncommon locations. This could be a sign of attackers abusing Publisher documents
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-02-08'
+tags:
+    - attack.defense-evasion
+references:
+    - https://twitter.com/EmericNasi/status/1623224526220804098
+falsepositives:
+    - Legitimate usage of ".pub" files from those locations
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains:
+            - \AppData\Local\Temp\
+            - \Users\Public\
+            - \Windows\Temp\
+            - C:\Temp\
+        TargetFilename|endswith: .pub
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:36.311115+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:36.311115+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:36.311120+00:00'

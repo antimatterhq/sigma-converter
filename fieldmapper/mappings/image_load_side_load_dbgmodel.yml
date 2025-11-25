@@ -1,0 +1,51 @@
+id: fef394cd-f44d-4040-9b18-95d92fe278c0
+title: Potential DLL Sideloading Of DbgModel.DLL
+status: experimental
+level: medium
+description: Detects potential DLL sideloading of "DbgModel.dll"
+author: Gary Lobermier
+date: '2024-07-11'
+modified: '2024-07-22'
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+references:
+    - https://hijacklibs.net/entries/microsoft/built-in/dbgmodel.html
+falsepositives:
+    - Legitimate applications loading their own versions of the DLL mentioned in this
+        rule
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \dbgmodel.dll
+    filter_main_generic:
+        ImageLoaded|startswith:
+            - C:\Windows\System32\
+            - C:\Windows\SysWOW64\
+            - C:\Windows\WinSxS\
+    filter_optional_windbg:
+        ImageLoaded|startswith: C:\Program Files\WindowsApps\Microsoft.WinDbg_
+    filter_optional_windows_kits:
+        ImageLoaded|startswith:
+            - C:\Program Files (x86)\Windows Kits\
+            - C:\Program Files\Windows Kits\
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: null
+            target_field: null
+            mapped_at: null

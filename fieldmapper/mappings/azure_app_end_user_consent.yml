@@ -1,0 +1,38 @@
+id: 9b2cc4c4-2ad4-416d-8e8e-ee6aa6f5035a
+title: End User Consent
+status: test
+level: low
+description: Detects when an end user consents to an application
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
+date: '2022-07-28'
+tags:
+    - attack.credential-access
+    - attack.t1528
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#end-user-consent
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        ConsentContext.IsAdminConsent: 'false'
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:37.995899+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:37.995899+00:00'
+    detection_fields:
+        -   source_field: ConsentContext.IsAdminConsent
+            target_table: api_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:39.698638+00:00'

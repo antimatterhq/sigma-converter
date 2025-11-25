@@ -1,0 +1,42 @@
+id: 77564cc2-7382-438b-a7f6-395c2ae53b9a
+title: Remote Thread Created In KeePass.EXE
+status: test
+level: high
+description: Detects remote thread creation in "KeePass.exe" which could indicates
+    potential password dumping activity
+author: Timon Hackenjos
+date: '2022-04-22'
+modified: '2023-05-05'
+tags:
+    - attack.credential-access
+    - attack.t1555.005
+references:
+    - https://www.cisa.gov/uscert/ncas/alerts/aa20-259a
+    - https://github.com/denandz/KeeFarce
+    - https://github.com/GhostPack/KeeThief
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: \KeePass.exe
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: create_remote_thread
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: null
+            target_field: null
+            mapped_at: null

@@ -1,0 +1,52 @@
+id: 3fcc9b35-39e4-44c0-a2ad-9e82b6902b31
+title: Commands to Clear or Remove the Syslog
+status: test
+level: high
+description: Detects specific commands commonly used to remove or empty the syslog.
+    Which is often used by attacker as a method to hide their tracks
+author: Max Altgelt (Nextron Systems), Roberto Rodriguez (Cyb3rWard0g), OTR (Open
+    Threat Research), MSTIC
+date: '2021-10-15'
+modified: '2022-09-15'
+tags:
+    - attack.defense-evasion
+    - attack.t1070.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.002/T1070.002.md
+falsepositives:
+    - Log rotation.
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection:
+        CommandLine|contains:
+            - rm /var/log/syslog
+            - rm -r /var/log/syslog
+            - rm -f /var/log/syslog
+            - rm -rf /var/log/syslog
+            - unlink /var/log/syslog
+            - unlink -r /var/log/syslog
+            - unlink -f /var/log/syslog
+            - unlink -rf /var/log/syslog
+            - mv /var/log/syslog
+            - ' >/var/log/syslog'
+            - ' > /var/log/syslog'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.722102+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.722102+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:51.722108+00:00'

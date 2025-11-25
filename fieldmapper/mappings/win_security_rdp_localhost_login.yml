@@ -1,0 +1,52 @@
+id: 51e33403-2a37-4d66-a574-1fda1782cc31
+title: RDP Login from Localhost
+status: test
+level: high
+description: RDP login with localhost source address may be a tunnelled login
+author: Thomas Patzke
+date: '2019-01-28'
+modified: '2022-10-09'
+tags:
+    - attack.lateral-movement
+    - car.2013-07-002
+    - attack.t1021.001
+references:
+    - https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 10
+        IpAddress:
+            - ::1
+            - 127.0.0.1
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:04.809190+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:25:04.809190+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:04.809242+00:00'
+        -   source_field: LogonType
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:04.809246+00:00'
+        -   source_field: IpAddress
+            target_table: authentication
+            target_field: src_endpoint.ip
+            mapped_at: '2025-11-13T20:25:04.809249+00:00'

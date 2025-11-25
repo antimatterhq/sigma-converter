@@ -1,0 +1,61 @@
+id: 0ed75b9c-c73b-424d-9e7d-496cd565fbe0
+title: Security Software Discovery - MacOs
+status: test
+level: medium
+description: Detects usage of system utilities (only grep for now) to discover security
+    software discovery
+author: Daniil Yugoslavskiy, oscd.community
+date: '2020-10-19'
+modified: '2022-11-27'
+tags:
+    - attack.discovery
+    - attack.t1518.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md
+falsepositives:
+    - Legitimate activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    image:
+        Image: /usr/bin/grep
+    selection_cli_1:
+        CommandLine|contains:
+            - nessusd
+            - santad
+            - CbDefense
+            - falcond
+            - td-agent
+            - packetbeat
+            - filebeat
+            - auditbeat
+            - osqueryd
+            - BlockBlock
+            - LuLu
+    selection_cli_2:
+        CommandLine|contains|all:
+            - Little
+            - Snitch
+    condition: image and 1 of selection_cli_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.805426+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.805426+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.805430+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.805431+00:00'

@@ -1,0 +1,57 @@
+id: 0dba975d-a193-4ed1-a067-424df57570d1
+title: Uncommon Network Connection Initiated By Certutil.EXE
+status: test
+level: high
+description: 'Detects a network connection initiated by the certutil.exe utility.
+
+    Attackers can abuse the utility in order to download malware or additional payloads.
+
+    '
+author: frack113, Florian Roth (Nextron Systems)
+date: '2022-09-02'
+modified: '2024-05-31'
+tags:
+    - attack.command-and-control
+    - attack.t1105
+references:
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: \certutil.exe
+        Initiated: 'true'
+        DestinationPort:
+            - 80
+            - 135
+            - 443
+            - 445
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:09.126022+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:09.126022+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:09.126035+00:00'
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:09.126038+00:00'
+        -   source_field: DestinationPort
+            target_table: network_activity
+            target_field: dst_endpoint.port
+            mapped_at: '2025-11-13T20:21:09.126041+00:00'

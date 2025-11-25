@@ -1,0 +1,56 @@
+id: 9c8c7000-3065-44a8-a555-79bcba5d9955
+title: Execute MSDT Via Answer File
+status: test
+level: high
+description: Detects execution of "msdt.exe" using an answer file which is simulating
+    the legitimate way of calling msdt via "pcwrun.exe" (For example from the compatibility
+    tab)
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-06-13'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.execution
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Msdt/
+falsepositives:
+    - Possible undocumented parents of "msdt" other than "pcwrun"
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_cli:
+        Image|endswith: \msdt.exe
+        CommandLine|contains: \WINDOWS\diagnostics\index\PCWDiagnostic.xml
+    selection_answer:
+        CommandLine|contains:
+            - ' -af '
+            - ' /af '
+    filter:
+        ParentImage|endswith: \pcwrun.exe
+    condition: all of selection* and not filter
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:30.362588+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:30.362588+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:30.362594+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:30.362595+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:30.362596+00:00'

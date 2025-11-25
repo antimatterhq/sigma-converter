@@ -1,0 +1,51 @@
+id: 46530378-f9db-4af9-a9e5-889c177d3881
+title: Azure Device or Configuration Modified or Deleted
+status: test
+level: medium
+description: Identifies when a device or device configuration in azure is modified
+    or deleted.
+author: Austin Songer @austinsonger
+date: '2021-09-03'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+    - attack.t1485
+    - attack.t1565.001
+references:
+    - https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities#core-directory
+falsepositives:
+    - Device or device configuration being modified or deleted may be performed by
+        a system administrator.
+    - Verify whether the user identity, user agent, and/or hostname should be making
+        changes in your environment.
+    - Device or device configuration modified or deleted from unfamiliar users should
+        be investigated. If known behavior is causing false positives, it can be exempted
+        from the rule.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    selection:
+        properties.message:
+            - Delete device
+            - Delete device configuration
+            - Update device
+            - Update device configuration
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:29.512789+00:00'
+        service:
+            source_field: service
+            source_value: activitylogs
+            mapped_at: '2025-11-13T20:17:29.512789+00:00'
+    detection_fields:
+        -   source_field: properties.message
+            target_table: account_change
+            target_field: message
+            mapped_at: '2025-11-13T20:17:29.512799+00:00'

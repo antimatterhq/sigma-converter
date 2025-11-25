@@ -1,0 +1,128 @@
+id: 00d0b5ab-1f55-4120-8e83-487c0a7baf19
+title: Download From Suspicious TLD - Blacklist
+status: test
+level: low
+description: Detects download of certain file types from hosts in suspicious TLDs
+author: Florian Roth (Nextron Systems)
+date: '2017-11-07'
+modified: '2023-05-18'
+tags:
+    - attack.initial-access
+    - attack.t1566
+    - attack.execution
+    - attack.t1203
+    - attack.t1204.002
+references:
+    - https://www.symantec.com/connect/blogs/shady-tld-research-gdn-and-our-2016-wrap
+    - https://promos.mcafee.com/en-US/PDF/MTMW_Report.pdf
+    - https://www.spamhaus.org/statistics/tlds/
+    - https://krebsonsecurity.com/2018/06/bad-men-at-work-please-dont-click/
+fields:
+    - ClientIP
+    - c-uri
+falsepositives:
+    - All kinds of software downloads
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b5de2919-b74a-4805-91a7-5049accbaefe''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection:
+        c-uri-extension:
+            - exe
+            - vbs
+            - bat
+            - rar
+            - ps1
+            - doc
+            - docm
+            - xls
+            - xlsm
+            - pptm
+            - rtf
+            - hta
+            - dll
+            - ws
+            - wsf
+            - sct
+            - zip
+        cs-host|endswith:
+            - .country
+            - .stream
+            - .gdn
+            - .mom
+            - .xin
+            - .kim
+            - .men
+            - .loan
+            - .download
+            - .racing
+            - .online
+            - .science
+            - .ren
+            - .gb
+            - .win
+            - .top
+            - .review
+            - .vip
+            - .party
+            - .tech
+            - .xyz
+            - .date
+            - .faith
+            - .zip
+            - .cricket
+            - .space
+            - .info
+            - .vn
+            - .cm
+            - .am
+            - .cc
+            - .asia
+            - .ws
+            - .tk
+            - .biz
+            - .su
+            - .st
+            - .ro
+            - .ge
+            - .ms
+            - .pk
+            - .nu
+            - .me
+            - .ph
+            - .to
+            - .tt
+            - .name
+            - .tv
+            - .kz
+            - .tc
+            - .mobi
+            - .study
+            - .click
+            - .link
+            - .trade
+            - .accountant
+            - .cf
+            - .gq
+            - .ml
+            - .ga
+            - .pw
+    condition: selection
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:25.875043+00:00'
+    detection_fields:
+        -   source_field: c-uri-extension
+            target_table: http_activity
+            target_field: http_request.url
+            mapped_at: '2025-11-13T20:14:25.875047+00:00'
+        -   source_field: cs-host
+            target_table: http_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:14:25.875049+00:00'

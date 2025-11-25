@@ -1,0 +1,46 @@
+id: 4916a35e-bfc4-47d0-8e25-a003d7067061
+title: Sysmon Driver Altitude Change
+status: experimental
+level: high
+description: 'Detects changes in Sysmon driver altitude value.
+
+    If the Sysmon driver is configured to load at an altitude of another registered
+    service, it will fail to load at boot.
+
+    '
+author: B.Talebi
+date: '2022-07-28'
+modified: '2024-03-25'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://posts.specterops.io/shhmon-silencing-sysmon-via-driver-unload-682b5be57650
+    - https://youtu.be/zSihR3lTf7g
+falsepositives:
+    - Legitimate driver altitude change to hide sysmon
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: \Services\
+        TargetObject|endswith: \Instances\Sysmon Instance\Altitude
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

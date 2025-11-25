@@ -1,0 +1,87 @@
+id: c649a6c7-cd8c-4a78-9c04-000fc76df954
+title: Potentially Suspicious Wuauclt Network Connection
+status: test
+level: medium
+description: 'Detects the use of the Windows Update Client binary (wuauclt.exe) to
+    proxy execute code and making network connections.
+
+    One could easily make the DLL spawn a new process and inject to it to proxy the
+    network connection and bypass this rule.
+
+    '
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+date: '2020-10-12'
+modified: '2024-03-12'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://dtm.uk/wuauclt/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+    definition: 'Requirements: The CommandLine field enrichment is required in order
+        for this rule to be used.'
+detection:
+    selection:
+        Image|contains: wuauclt
+        CommandLine|contains: ' /RunHandlerComServer'
+    filter_main_ip:
+        DestinationIp|cidr:
+            - 127.0.0.0/8
+            - 10.0.0.0/8
+            - 169.254.0.0/16
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - ::1/128
+            - fe80::/10
+            - fc00::/7
+    filter_main_msrange:
+        DestinationIp|cidr:
+            - 20.184.0.0/13
+            - 20.192.0.0/10
+            - 23.79.0.0/16
+            - 51.10.0.0/15
+            - 51.103.0.0/16
+            - 51.104.0.0/15
+            - 52.224.0.0/11
+    filter_main_uus:
+        CommandLine|contains:
+            - :\Windows\UUS\Packages\Preview\amd64\updatedeploy.dll /ClassId
+            - :\Windows\UUS\amd64\UpdateDeploy.dll /ClassId
+    filter_main_winsxs:
+        CommandLine|contains|all:
+            - :\Windows\WinSxS\
+            - '\UpdateDeploy.dll /ClassId '
+    filter_main_cli_null:
+        CommandLine: null
+    filter_main_cli_empty:
+        CommandLine: ''
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:15.758124+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:15.758124+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: network_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:15.758143+00:00'
+        -   source_field: CommandLine
+            target_table: network_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:21:15.758146+00:00'
+        -   source_field: DestinationIp
+            target_table: network_activity
+            target_field: dst_endpoint.ip
+            mapped_at: '2025-11-13T20:21:15.758147+00:00'

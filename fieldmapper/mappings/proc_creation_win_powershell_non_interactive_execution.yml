@@ -1,0 +1,72 @@
+id: f4bbd493-b796-416e-bbf2-121235348529
+title: Non Interactive PowerShell Process Spawned
+status: test
+level: low
+description: Detects non-interactive PowerShell activity by looking at the "powershell"
+    process with a non-user GUI process such as "explorer.exe" as a parent.
+author: Roberto Rodriguez @Cyb3rWard0g (rule), oscd.community (improvements)
+date: '2019-09-12'
+modified: '2023-09-07'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://web.archive.org/web/20200925032237/https://threathunterplaybook.com/notebooks/windows/02_execution/WIN-190410151110.html
+falsepositives:
+    - Likely. Many admin scripts and tools leverage PowerShell in their BAT or VB
+        scripts which may trigger this rule often. It is best to add additional filters
+        or use this to hunt for anomalies
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        OriginalFileName:
+            - PowerShell.EXE
+            - pwsh.dll
+    filter_main_generic:
+        ParentImage|endswith:
+            - :\Windows\explorer.exe
+            - :\Windows\System32\CompatTelRunner.exe
+            - :\Windows\SysWOW64\explorer.exe
+    filter_main_windows_update:
+        ParentImage: :\$WINDOWS.~BT\Sources\SetupHost.exe
+    filter_optional_vscode:
+        ParentImage|endswith: \AppData\Local\Programs\Microsoft VS Code\Code.exe
+        ParentCommandLine|contains: ' --ms-enable-electron-run-as-node '
+    filter_optional_terminal:
+        ParentImage|contains: :\Program Files\WindowsApps\Microsoft.WindowsTerminal_
+        ParentImage|endswith: \WindowsTerminal.exe
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:59.923635+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:59.923635+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:59.923663+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:19:59.923667+00:00'
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:19:59.923670+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:19:59.923673+00:00'

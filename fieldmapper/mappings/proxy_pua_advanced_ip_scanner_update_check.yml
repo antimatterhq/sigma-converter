@@ -1,0 +1,47 @@
+id: 1a9bb21a-1bb5-42d7-aa05-3219c7c8f47d
+title: PUA - Advanced IP/Port Scanner Update Check
+status: test
+level: medium
+description: Detect the update check performed by Advanced IP/Port Scanner utilities.
+author: Axel Olsson
+date: '2022-08-14'
+modified: '2024-02-15'
+tags:
+    - attack.discovery
+    - attack.t1590
+references:
+    - https://www.advanced-ip-scanner.com/
+    - https://www.advanced-port-scanner.com/
+falsepositives:
+    - Expected if you legitimately use the Advanced IP or Port Scanner utilities in
+        your environement.
+taxonomy: sigma
+logsource:
+    category: proxy
+detection:
+    selection:
+        c-uri|contains: /checkupdate.php
+        c-uri-query|contains|all:
+            - lng=
+            - ver=
+            - beta=
+            - type=
+            - rmode=
+            - product=
+    condition: selection
+ocsf_mapping:
+    class_name: http_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: proxy
+            mapped_at: '2025-11-13T20:14:25.868668+00:00'
+    detection_fields:
+        -   source_field: c-uri
+            target_table: http_activity
+            target_field: http_request.url
+            mapped_at: '2025-11-13T20:14:25.868674+00:00'
+        -   source_field: c-uri-query
+            target_table: http_activity
+            target_field: http_request.args
+            mapped_at: '2025-11-13T20:14:25.868675+00:00'

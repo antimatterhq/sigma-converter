@@ -1,0 +1,39 @@
+id: 6cc2b61b-d97e-42ef-a9dd-8aa8dc951657
+title: Okta Unauthorized Access to App
+status: test
+level: medium
+description: Detects when unauthorized access to app occurs.
+author: Austin Songer @austinsonger
+date: '2021-09-12'
+modified: '2022-10-09'
+tags:
+    - attack.impact
+references:
+    - https://developer.okta.com/docs/reference/api/system-log/
+    - https://developer.okta.com/docs/reference/api/event-types/
+falsepositives:
+    - User might of believe that they had access.
+taxonomy: sigma
+logsource:
+    product: okta
+    service: okta
+detection:
+    selection:
+        displaymessage: User attempted unauthorized access to app
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:12.061428+00:00'
+        service:
+            source_field: service
+            source_value: okta
+            mapped_at: '2025-11-13T20:16:12.061428+00:00'
+    detection_fields:
+        -   source_field: displaymessage
+            target_table: authentication
+            target_field: message
+            mapped_at: '2025-11-13T20:16:13.106849+00:00'

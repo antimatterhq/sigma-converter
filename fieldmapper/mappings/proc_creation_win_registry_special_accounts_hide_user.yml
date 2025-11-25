@@ -1,0 +1,56 @@
+id: 9ec9fb1b-e059-4489-9642-f270c207923d
+title: Hiding User Account Via SpecialAccounts Registry Key - CommandLine
+status: experimental
+level: medium
+description: 'Detects changes to the registry key "HKLM\Software\Microsoft\Windows
+    NT\CurrentVersion\Winlogon\SpecialAccounts\Userlist" where the value is set to
+    "0" in order to hide user account from being listed on the logon screen.
+
+    '
+author: '@Kostastsale, @TheDFIRReport'
+date: '2022-05-14'
+modified: '2024-08-23'
+tags:
+    - attack.t1564.002
+references:
+    - https://thedfirreport.com/2024/01/29/buzzing-on-christmas-eve-trigona-ransomware-in-3-hours/
+    - https://thedfirreport.com/2024/04/01/from-onenote-to-ransomnote-an-ice-cold-intrusion/
+    - https://thedfirreport.com/2024/04/29/from-icedid-to-dagon-locker-ransomware-in-29-days/
+    - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+falsepositives:
+    - System administrator activities
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f8aebc67-a56d-4ec9-9fbe-7b0e8b7b4efd''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \reg.exe
+        CommandLine|contains|all:
+            - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList
+            - add
+            - /v
+            - /d 0
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.141497+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.141497+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:59.141502+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:59.141503+00:00'

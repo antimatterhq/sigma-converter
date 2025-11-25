@@ -1,0 +1,75 @@
+id: 611eab06-a145-4dfa-a295-3ccc5c20f59a
+title: Mimikatz DC Sync
+status: test
+level: high
+description: Detects Mimikatz DC sync security events
+author: Benjamin Delpy, Florian Roth (Nextron Systems), Scott Dermott, Sorina Ionescu
+date: '2018-06-03'
+modified: '2022-04-26'
+tags:
+    - attack.credential-access
+    - attack.s0002
+    - attack.t1003.006
+references:
+    - https://twitter.com/gentilkiwi/status/1003236624925413376
+    - https://gist.github.com/gentilkiwi/dcc132457408cf11ad2061340dcb53c2
+    - https://blog.blacklanternsecurity.com/p/detecting-dcsync?s=r
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4662
+falsepositives:
+    - Valid DC Sync that is not covered by the filters; please report
+    - Local Domain Admin account used for Azure AD Connect
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4662
+        Properties|contains:
+            - Replicating Directory Changes All
+            - 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
+            - 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
+            - 9923a32a-3607-11d2-b9be-0000f87a36b2
+            - 89e95b76-444d-4c62-991a-0facbeda640c
+        AccessMask: '0x100'
+    filter1:
+        SubjectDomainName: Window Manager
+    filter2:
+        SubjectUserName|startswith:
+            - NT AUT
+            - MSOL_
+    filter3:
+        SubjectUserName|endswith: $
+    condition: selection and not 1 of filter*
+ocsf_mapping:
+    class_name: user_access
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:23:03.457262+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:23:03.457262+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: user_access
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:23:04.606418+00:00'
+        -   source_field: Properties
+            target_table: user_access
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:04.606429+00:00'
+        -   source_field: AccessMask
+            target_table: user_access
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:23:04.606431+00:00'
+        -   source_field: SubjectDomainName
+            target_table: user_access
+            target_field: actor.idp.domain
+            mapped_at: '2025-11-13T20:23:04.606433+00:00'
+        -   source_field: SubjectUserName
+            target_table: user_access
+            target_field: actor.user.name
+            mapped_at: '2025-11-13T20:23:04.606434+00:00'

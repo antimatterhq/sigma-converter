@@ -1,0 +1,57 @@
+id: 24b6cf51-6122-469e-861a-22974e9c1e5b
+title: Potential SmadHook.DLL Sideloading
+status: test
+level: high
+description: Detects potential DLL sideloading of "SmadHook.dll", a DLL used by SmadAV
+    antivirus
+author: X__Junior (Nextron Systems)
+date: '2023-06-01'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://research.checkpoint.com/2023/malware-spotlight-camaro-dragons-tinynote-backdoor/
+    - https://www.qurium.org/alerts/targeted-malware-against-crph/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith:
+            - \SmadHook32c.dll
+            - \SmadHook64c.dll
+    filter_main_legit_path:
+        Image:
+            - C:\Program Files (x86)\SMADAV\SmadavProtect32.exe
+            - C:\Program Files (x86)\SMADAV\SmadavProtect64.exe
+            - C:\Program Files\SMADAV\SmadavProtect32.exe
+            - C:\Program Files\SMADAV\SmadavProtect64.exe
+        ImageLoaded|startswith:
+            - C:\Program Files (x86)\SMADAV\
+            - C:\Program Files\SMADAV\
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:04.791917+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:04.791917+00:00'
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:05.818749+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:05.818775+00:00'

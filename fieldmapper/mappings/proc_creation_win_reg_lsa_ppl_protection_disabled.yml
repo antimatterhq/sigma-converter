@@ -1,0 +1,55 @@
+id: 8c0eca51-0f88-4db2-9183-fdfb10c703f9
+title: LSA PPL Protection Disabled Via Reg.EXE
+status: test
+level: high
+description: Detects the usage of the "reg.exe" utility to disable PPL protection
+    on the LSA process
+author: Florian Roth (Nextron Systems)
+date: '2022-03-22'
+modified: '2023-03-26'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.010
+references:
+    - https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \reg.exe
+        OriginalFileName: reg.exe
+    selection_cli:
+        CommandLine|contains: SYSTEM\CurrentControlSet\Control\Lsa
+        CommandLine|contains|all:
+            - ' add '
+            - ' /d 0'
+            - ' /v RunAsPPL '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:56.612035+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:56.612035+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:56.612042+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:56.612044+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:56.612045+00:00'

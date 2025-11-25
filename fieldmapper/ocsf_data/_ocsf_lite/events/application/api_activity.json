@@ -1,0 +1,207 @@
+{
+  "uid": 3,
+  "caption": "API Activity",
+  "description": "API events describe general CRUD (Create, Read, Update, Delete) API activities, e.g. (AWS Cloudtrail)",
+  "extends": "base_event",
+  "name": "api_activity",
+  "attributes": {
+    "activity_name": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Create",
+          "description": "The API call in the event pertains to a 'create' activity."
+        },
+        "2": {
+          "caption": "Read",
+          "description": "The API call in the event pertains to a 'read' activity."
+        },
+        "3": {
+          "caption": "Update",
+          "description": "The API call in the event pertains to a 'update' activity."
+        },
+        "4": {
+          "caption": "Delete",
+          "description": "The API call in the event pertains to a 'delete' activity."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "actor": {
+      "group": "context",
+      "requirement": "required",
+      "object": "actor",
+      "constraints": {
+        "at_least_one": [
+          "process",
+          "user",
+          "invoked_by",
+          "session",
+          "app_name",
+          "app_uid"
+        ]
+      }
+    },
+    "api": {
+      "group": "primary",
+      "requirement": "required",
+      "object": "api"
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "6": {
+          "caption": "Application Activity",
+          "description": "Application Activity events report detailed information about the behavior of applications and services."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "6003": {
+          "caption": "API Activity",
+          "description": "API events describe general CRUD (Create, Read, Update, Delete) API activities, e.g. (AWS Cloudtrail)."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "cloud": {
+      "caption": "Cloud",
+      "description": "The Cloud object contains information about a cloud or Software-as-a-Service :q or similar construct, such as AWS Account ID, regions, organizations, folders, compartments, tenants, etc.",
+      "object": "cloud"
+    },
+    "dst_endpoint": {
+      "description": "The responder (server) in a network connection.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "http_request": {
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "http request"
+    },
+    "http_response": {
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "http response"
+    },
+    "resources": {
+      "description": "Resource that the privileges give access to.",
+      "group": "primary",
+      "requirement": "recommended",
+      "constraints": {
+        "at_least_one": [
+          "name",
+          "uid"
+        ]
+      }
+    },
+    "src_endpoint": {
+      "description": "The initiator (client) sending the email.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "start_time": {
+      "description": "The start time of a time period, or the time of the least recent event included in the aggregate event.",
+      "group": "occurrence",
+      "requirement": "optional"
+    },
+    "type_uid": {
+      "description": "The event/finding type ID. It identifies the event's semantics and structure. The value is calculated by the logging system as: class_uid * 100 + activity_id.",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "600300": {
+          "caption": "Unknown",
+          "description": "The activity type \"API Activity: Unknown\" is not further specified."
+        },
+        "600301": {
+          "caption": "Create",
+          "description": "The API call in the event pertains to a 'create' activity."
+        },
+        "600302": {
+          "caption": "Read",
+          "description": "The API call in the event pertains to a 'read' activity."
+        },
+        "600303": {
+          "caption": "Update",
+          "description": "The API call in the event pertains to a 'update' activity."
+        },
+        "600304": {
+          "caption": "Delete",
+          "description": "The API call in the event pertains to a 'delete' activity."
+        },
+        "600399": {
+          "caption": "Other",
+          "description": "The activity type \"API Activity: Other\" is not further specified."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    }
+  },
+  "profiles": [
+    "trace"
+  ]
+}

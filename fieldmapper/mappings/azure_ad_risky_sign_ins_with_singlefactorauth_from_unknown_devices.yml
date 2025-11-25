@@ -1,0 +1,54 @@
+id: 572b12d4-9062-11ed-a1eb-0242ac120002
+title: Suspicious SignIns From A Non Registered Device
+status: test
+level: high
+description: Detects risky authentication from a non AD registered device without
+    MFA being required.
+author: Harjot Singh, '@cyb3rjy0t'
+date: '2023-01-10'
+tags:
+    - attack.defense-evasion
+    - attack.t1078
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-devices#non-compliant-device-sign-in
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    selection:
+        Status: Success
+        AuthenticationRequirement: singleFactorAuthentication
+        DeviceDetail.trusttype: ''
+        RiskState: atRisk
+    condition: selection
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:00.036752+00:00'
+        service:
+            source_field: service
+            source_value: signinlogs
+            mapped_at: '2025-11-13T20:17:00.036752+00:00'
+    detection_fields:
+        -   source_field: Status
+            target_table: authentication
+            target_field: status_id
+            mapped_at: '2025-11-13T20:17:01.826298+00:00'
+        -   source_field: AuthenticationRequirement
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:01.826318+00:00'
+        -   source_field: DeviceDetail.trusttype
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:01.826323+00:00'
+        -   source_field: RiskState
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:01.826327+00:00'

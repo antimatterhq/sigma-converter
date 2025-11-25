@@ -1,0 +1,54 @@
+id: b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5
+title: HackTool - HandleKatz Duplicating LSASS Handle
+status: test
+level: high
+description: Detects HandleKatz opening LSASS to duplicate its handle to later dump
+    the memory without opening any new handles
+author: Bhabesh Raj (rule), @thefLinkk
+date: '2022-06-27'
+modified: '2023-11-28'
+tags:
+    - attack.execution
+    - attack.t1106
+    - attack.defense-evasion
+    - attack.t1003.001
+references:
+    - https://github.com/codewhitesec/HandleKatz
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: \lsass.exe
+        GrantedAccess: '0x1440'
+        CallTrace|startswith: C:\Windows\System32\ntdll.dll+
+        CallTrace|contains: '|UNKNOWN('
+        CallTrace|endswith: )
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:18:57.029397+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:57.029397+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:57.029413+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:18:57.029416+00:00'
+        -   source_field: CallTrace
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:57.029417+00:00'

@@ -1,0 +1,78 @@
+id: 9bd012ee-0dff-44d7-84a0-aa698cfd87a3
+title: LSASS Memory Access by Tool With Dump Keyword In Name
+status: test
+level: high
+description: Detects LSASS process access requests from a source process with the
+    "dump" keyword in its image name.
+author: Florian Roth (Nextron Systems)
+date: '2022-02-10'
+modified: '2023-11-29'
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0002
+references:
+    - https://twitter.com/_xpn_/status/1491557187168178176
+    - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz
+falsepositives:
+    - Rare programs that contain the word dump in their name and access lsass
+taxonomy: sigma
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: \lsass.exe
+        SourceImage|contains: dump
+        GrantedAccess|endswith:
+            - '10'
+            - '30'
+            - '50'
+            - '70'
+            - '90'
+            - B0
+            - D0
+            - F0
+            - '18'
+            - '38'
+            - '58'
+            - '78'
+            - '98'
+            - B8
+            - D8
+            - F8
+            - 1A
+            - 3A
+            - 5A
+            - 7A
+            - 9A
+            - BA
+            - DA
+            - FA
+            - '0x14C2'
+            - FF
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_access
+            mapped_at: '2025-11-13T20:18:58.561348+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:58.561348+00:00'
+    detection_fields:
+        -   source_field: TargetImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:58.561373+00:00'
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:18:58.561377+00:00'
+        -   source_field: GrantedAccess
+            target_table: process_activity
+            target_field: requested_permissions
+            mapped_at: '2025-11-13T20:18:58.561380+00:00'

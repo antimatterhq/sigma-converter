@@ -1,0 +1,62 @@
+id: b66474aa-bd92-4333-a16c-298155b120df
+title: Potential Persistence Via Powershell Search Order Hijacking - Task
+status: test
+level: high
+description: Detects suspicious powershell execution via a schedule task where the
+    command ends with an suspicious flags to hide the powershell instance instead
+    of executeing scripts or commands. This could be a sign of persistence via PowerShell
+    "Get-Variable" technique as seen being used in Colibri Loader
+author: pH-T (Nextron Systems), Florian Roth (Nextron Systems)
+date: '2022-04-08'
+modified: '2023-02-03'
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1053.005
+    - attack.t1059.001
+references:
+    - https://blog.malwarebytes.com/threat-intelligence/2022/04/colibri-loader-combines-task-scheduler-and-powershell-in-clever-persistence-technique/
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6e8811ee-90ba-441e-8486-5653e68b2299''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage: C:\WINDOWS\System32\svchost.exe
+        ParentCommandLine|contains|all:
+            - -k netsvcs
+            - -s Schedule
+        CommandLine|endswith:
+            - ' -windowstyle hidden'
+            - ' -w hidden'
+            - ' -ep bypass'
+            - ' -noni'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:33.239187+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:33.239187+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:33.239196+00:00'
+        -   source_field: ParentCommandLine
+            target_table: process_activity
+            target_field: process.parent_process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.239198+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:33.239200+00:00'

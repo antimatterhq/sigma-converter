@@ -1,0 +1,90 @@
+id: b8fd0e93-ff58-4cbd-8f48-1c114e342e62
+title: Windows Binaries Write Suspicious Extensions
+status: test
+level: high
+description: Detects Windows executables that write files with suspicious extensions
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-12'
+modified: '2024-04-15'
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1277f594-a7d1-4f28-a2d3-73af5cbeab43''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_generic:
+        Image|endswith:
+            - \csrss.exe
+            - \lsass.exe
+            - \RuntimeBroker.exe
+            - \sihost.exe
+            - \smss.exe
+            - \wininit.exe
+            - \winlogon.exe
+        TargetFilename|endswith:
+            - .bat
+            - .dll
+            - .exe
+            - .hta
+            - .iso
+            - .ps1
+            - .txt
+            - .vbe
+            - .vbs
+    selection_special:
+        Image|endswith:
+            - \dllhost.exe
+            - \rundll32.exe
+            - \svchost.exe
+        TargetFilename|endswith:
+            - .bat
+            - .hta
+            - .iso
+            - .ps1
+            - .vbe
+            - .vbs
+    filter_main_AppLockerPolicyTest:
+        Image: C:\Windows\System32\dllhost.exe
+        TargetFilename|contains|all:
+            - :\Users\
+            - \AppData\Local\Temp\__PSScriptPolicyTest_
+        TargetFilename|endswith: .ps1
+    filter_main_script_gpo_machine:
+        Image: C:\Windows\system32\svchost.exe
+        TargetFilename|contains|all:
+            - C:\Windows\System32\GroupPolicy\DataStore\
+            - \sysvol\
+            - \Policies\
+            - \Machine\Scripts\Startup\
+        TargetFilename|endswith:
+            - .ps1
+            - .bat
+    condition: 1 of selection_* and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:37.180529+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:37.180529+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:37.180537+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:37.180540+00:00'

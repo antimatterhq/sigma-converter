@@ -1,0 +1,64 @@
+id: c79da740-5030-45ec-a2e0-479e824a562c
+title: System Disk And Volume Reconnaissance Via Wmic.EXE
+status: test
+level: medium
+description: 'An adversary might use WMI to discover information about the system,
+    such as the volume name, size,
+
+    free space, and other disk information. This can be done using the `wmic` command-line
+    utility and has been
+
+    observed being used by threat actors such as Volt Typhoon.
+
+    '
+author: Stephen Lincoln `@slincoln-aiq`(AttackIQ)
+date: '2024-02-02'
+tags:
+    - attack.execution
+    - attack.discovery
+    - attack.t1047
+    - attack.t1082
+references:
+    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-144a
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d85ecdd7-b855-4e6e-af59-d9c78b5b861e''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \WMIC.exe
+        OriginalFileName: wmic.exe
+    selection_cli:
+        CommandLine|contains:
+            - volume
+            - path win32_logicaldisk
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.038904+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.038904+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.038912+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.038914+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.038916+00:00'

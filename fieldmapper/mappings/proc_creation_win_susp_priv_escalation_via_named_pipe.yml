@@ -1,0 +1,60 @@
+id: 9bd04a79-dabe-4f1f-a5ff-92430265c96b
+title: Privilege Escalation via Named Pipe Impersonation
+status: test
+level: high
+description: Detects a remote file copy attempt to a hidden network share. This may
+    indicate lateral movement or data staging activity.
+author: Tim Rauch, Elastic (idea)
+date: '2022-09-27'
+modified: '2022-12-30'
+tags:
+    - attack.lateral-movement
+    - attack.t1021
+references:
+    - https://www.elastic.co/guide/en/security/current/privilege-escalation-via-named-pipe-impersonation.html
+falsepositives:
+    - Other programs that cause these patterns (please report)
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f35c5d71-b489-4e22-a115-f003df287317''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_name:
+        Image|endswith:
+            - \cmd.exe
+            - \powershell.exe
+        OriginalFileName:
+            - Cmd.Exe
+            - PowerShell.EXE
+    selection_args:
+        CommandLine|contains|all:
+            - echo
+            - '>'
+            - \\.\pipe\
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.041690+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.041690+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.041695+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.041696+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.041698+00:00'

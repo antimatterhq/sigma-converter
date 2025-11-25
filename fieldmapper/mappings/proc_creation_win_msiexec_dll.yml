@@ -1,0 +1,54 @@
+id: 84f52741-8834-4a8c-a413-2eb2269aa6c8
+title: DllUnregisterServer Function Call Via Msiexec.EXE
+status: test
+level: medium
+description: Detects MsiExec loading a DLL and calling its DllUnregisterServer function
+author: frack113
+date: '2022-04-24'
+modified: '2024-03-13'
+tags:
+    - attack.defense-evasion
+    - attack.t1218.007
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+    - https://lolbas-project.github.io/lolbas/Binaries/Msiexec/
+    - https://twitter.com/_st0pp3r_/status/1583914515996897281
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \msiexec.exe
+        OriginalFileName: \msiexec.exe
+    selection_flag:
+        CommandLine|contains|windash: ' -z '
+    selection_dll:
+        CommandLine|contains: .dll
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:24.089843+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:24.089843+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:24.089851+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:24.089853+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:24.089855+00:00'

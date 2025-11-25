@@ -1,0 +1,53 @@
+id: 13cfeb75-9e33-4d04-b0f7-ab8faaa95a59
+title: Windows Update Error
+status: stable
+level: informational
+description: 'Detects Windows update errors including installation failures and connection
+    issues. Defenders should observe this in case critical update KBs aren''t installed.
+
+    '
+author: frack113
+date: '2021-12-04'
+modified: '2023-09-07'
+tags:
+    - attack.impact
+    - attack.resource-development
+    - attack.t1584
+references:
+    - https://github.com/nasbench/EVTX-ETW-Resources/blob/f1b010ce0ee1b71e3024180de1a3e67f99701fe4/ETWProvidersManifests/Windows10/1903/W10_1903_Pro_20200714_18362.959/WEPExplorer/Microsoft-Windows-WindowsUpdateClient.xml
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: Microsoft-Windows-WindowsUpdateClient
+        EventID:
+            - 16
+            - 20
+            - 24
+            - 213
+            - 217
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:25.451601+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:25.451601+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:25.451608+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:25.451610+00:00'

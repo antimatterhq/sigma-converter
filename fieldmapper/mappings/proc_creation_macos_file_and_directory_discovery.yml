@@ -1,0 +1,53 @@
+id: 089dbdf6-b960-4bcc-90e3-ffc3480c20f6
+title: File and Directory Discovery - MacOS
+status: test
+level: informational
+description: Detects usage of system utilities to discover files and directories
+author: Daniil Yugoslavskiy, oscd.community
+date: '2020-10-19'
+modified: '2022-11-25'
+tags:
+    - attack.discovery
+    - attack.t1083
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1083/T1083.md
+falsepositives:
+    - Legitimate activities
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    select_file_with_asterisk:
+        Image: /usr/bin/file
+        CommandLine|re: (.){200,}
+    select_recursive_ls:
+        Image: /bin/ls
+        CommandLine|contains: -R
+    select_find_execution:
+        Image: /usr/bin/find
+    select_mdfind_execution:
+        Image: /usr/bin/mdfind
+    select_tree_execution|endswith:
+        Image: /tree
+    condition: 1 of select*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:14:25.847053+00:00'
+        product:
+            source_field: product
+            source_value: macos
+            mapped_at: '2025-11-13T20:14:25.847053+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:14:25.847057+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:14:25.847059+00:00'

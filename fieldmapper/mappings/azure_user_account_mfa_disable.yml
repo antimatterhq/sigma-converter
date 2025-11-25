@@ -1,0 +1,66 @@
+id: b18454c8-0be3-41f7-86bc-9c614611b839
+title: Multi Factor Authentication Disabled For User Account
+status: experimental
+level: medium
+description: 'Detects changes to the "StrongAuthenticationRequirement" value, where
+    the state is set to "0" or "Disabled".
+
+    Threat actors were seen disabling multi factor authentication for users in order
+    to maintain or achieve access to the account. Also see in SIM Swap attacks.
+
+    '
+author: Harjot Singh (@cyb3rjy0t)
+date: '2024-08-21'
+tags:
+    - attack.credential-access
+    - attack.persistence
+references:
+    - https://www.sans.org/blog/defending-against-scattered-spider-and-the-com-with-cybercrime-intelligence/
+falsepositives:
+    - Legitimate authorized activity.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: auditlogs
+    definition: 'Requirements: The TargetResources array needs to be mapped accurately
+        in order for this rule to work'
+detection:
+    selection:
+        LoggedByService: Core Directory
+        Category: UserManagement
+        OperationName: Update user
+        TargetResources.ModifiedProperties.DisplayName: StrongAuthenticationRequirement
+        TargetResources.ModifiedProperties.NewValue|contains: State":0
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:16:30.837155+00:00'
+        service:
+            source_field: service
+            source_value: auditlogs
+            mapped_at: '2025-11-13T20:16:30.837155+00:00'
+    detection_fields:
+        -   source_field: LoggedByService
+            target_table: account_change
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:16:33.201998+00:00'
+        -   source_field: Category
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:33.202008+00:00'
+        -   source_field: OperationName
+            target_table: account_change
+            target_field: api.operation
+            mapped_at: '2025-11-13T20:16:33.202010+00:00'
+        -   source_field: TargetResources.ModifiedProperties.DisplayName
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:33.202011+00:00'
+        -   source_field: TargetResources.ModifiedProperties.NewValue
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:16:33.202013+00:00'

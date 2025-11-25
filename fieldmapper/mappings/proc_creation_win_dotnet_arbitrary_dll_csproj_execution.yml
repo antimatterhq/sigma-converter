@@ -1,0 +1,59 @@
+id: d80d5c81-04ba-45b4-84e4-92eba40e0ad3
+title: Arbitrary DLL or Csproj Code Execution Via Dotnet.EXE
+status: test
+level: medium
+description: Detects execution of arbitrary DLLs or unsigned code via a ".csproj"
+    files via Dotnet.EXE.
+author: Beyu Denis, oscd.community
+date: '2020-10-18'
+modified: '2024-04-24'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dotnet/
+    - https://twitter.com/_felamos/status/1204705548668555264
+    - https://bohops.com/2019/08/19/dotnet-core-a-vector-for-awl-bypass-defense-evasion/
+falsepositives:
+    - Legitimate administrator usage
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \dotnet.exe
+        OriginalFileName: .NET Host
+    selection_cli:
+        CommandLine|endswith:
+            - .csproj
+            - .csproj"
+            - .dll
+            - .dll"
+            - .csproj'
+            - .dll'
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:52.624521+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:52.624521+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:52.624528+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:52.624530+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:52.624532+00:00'

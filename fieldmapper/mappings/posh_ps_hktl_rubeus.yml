@@ -1,0 +1,62 @@
+id: 3245cd30-e015-40ff-a31d-5cadd5f377ec
+title: HackTool - Rubeus Execution - ScriptBlock
+status: test
+level: high
+description: Detects the execution of the hacktool Rubeus using specific command line
+    flags
+author: Christian Burkard (Nextron Systems), Florian Roth (Nextron Systems)
+date: '2023-04-27'
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.t1558.003
+    - attack.lateral-movement
+    - attack.t1550.003
+references:
+    - https://blog.harmj0y.net/redteaming/from-kekeo-to-rubeus
+    - https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html
+    - https://github.com/GhostPack/Rubeus
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7ec2c172-dceb-4c10-92c9-87c1881b7e18''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - 'asreproast '
+            - 'dump /service:krbtgt '
+            - dump /luid:0x
+            - 'kerberoast '
+            - 'createnetonly /program:'
+            - 'ptt /ticket:'
+            - '/impersonateuser:'
+            - 'renew /ticket:'
+            - 'asktgt /user:'
+            - 'harvest /interval:'
+            - 's4u /user:'
+            - 's4u /ticket:'
+            - 'hash /password:'
+            - 'golden /aes256:'
+            - 'silver /user:'
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.246374+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.246374+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.246378+00:00'

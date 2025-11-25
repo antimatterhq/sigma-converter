@@ -1,0 +1,52 @@
+id: 02fb90de-c321-4e63-a6b9-25f4b03dfd14
+title: Windows Spooler Service Suspicious Binary Load
+status: test
+level: informational
+description: Detect DLL Load from Spooler Service backup folder
+author: FPT.EagleEye, Thomas Patzke (improvements)
+date: '2021-06-29'
+modified: '2022-06-02'
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574
+    - cve.2021-1675
+    - cve.2021-34527
+references:
+    - https://web.archive.org/web/20210629055600/https://github.com/hhlxf/PrintNightmare/
+    - https://github.com/ly4k/SpoolFool
+falsepositives:
+    - Loading of legitimate driver
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: \spoolsv.exe
+        ImageLoaded|contains:
+            - \Windows\System32\spool\drivers\x64\3\
+            - \Windows\System32\spool\drivers\x64\4\
+        ImageLoaded|endswith: .dll
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:30.128210+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:30.128210+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:30.128219+00:00'
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:30.128221+00:00'

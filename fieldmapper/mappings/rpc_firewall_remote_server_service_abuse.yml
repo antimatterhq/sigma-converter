@@ -1,0 +1,54 @@
+id: b6ea3cc7-542f-43ef-bbe4-980fbed444c7
+title: Remote Server Service Abuse
+status: test
+level: high
+description: Detects remote RPC calls to possibly abuse remote encryption service
+    via MS-SRVS
+author: Sagie Dulce, Dekel Paz
+date: '2022-01-01'
+modified: '2022-01-01'
+tags:
+    - attack.lateral-movement
+references:
+    - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-srvs/accf23b0-0f57-441c-9185-43041f1b0ee9
+    - https://github.com/jsecurity101/MSRPC-to-ATTACK/blob/ddd4608fe8684fcf2fcf9b48c5f0b3c28097f8a3/documents/MS-SRVS.md
+    - https://github.com/zeronetworks/rpcfirewall
+    - https://zeronetworks.com/blog/stopping-lateral-movement-via-the-rpc-firewall/
+falsepositives:
+    - Legitimate remote share creation
+taxonomy: sigma
+logsource:
+    category: application
+    product: rpc_firewall
+    definition: 'Requirements: install and apply the RPC Firewall to all processes
+        with "audit:true action:block uuid:4b324fc8-1670-01d3-1278-5a47bf6ee188'
+detection:
+    selection:
+        EventLog: RPCFW
+        EventID: 3
+        InterfaceUuid: 4b324fc8-1670-01d3-1278-5a47bf6ee188
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: application
+            mapped_at: '2025-11-13T20:18:22.825056+00:00'
+        product:
+            source_field: product
+            source_value: rpc_firewall
+            mapped_at: '2025-11-13T20:18:22.825056+00:00'
+    detection_fields:
+        -   source_field: EventLog
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:22.825069+00:00'
+        -   source_field: EventID
+            target_table: network_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:18:22.825071+00:00'
+        -   source_field: InterfaceUuid
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:22.825073+00:00'

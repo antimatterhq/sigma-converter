@@ -1,0 +1,45 @@
+id: fa2559c8-1197-471d-9cdd-05a0273d4522
+title: Potential AMSI Bypass Script Using NULL Bits
+status: test
+level: medium
+description: Detects usage of special strings/null bits in order to potentially bypass
+    AMSI functionalities
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-04'
+modified: '2023-05-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+references:
+    - https://github.com/r00t-3xp10it/hacking-material-books/blob/43cb1e1932c16ff1f58b755bc9ab6b096046853f/obfuscation/simple_obfuscation.md#amsi-bypass-using-null-bits-satoshi
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''92a974db-ab84-457f-9ec0-55db83d7a825''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - if(0){{{0}}}' -f $(0 -as [char]) +
+            - '#<NULL>'
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.247848+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.247848+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.247854+00:00'

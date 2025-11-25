@@ -1,0 +1,59 @@
+id: 8b0e12da-d3c3-49db-bb4f-256703f380e5
+title: PUA - Chisel Tunneling Tool Execution
+status: test
+level: high
+description: Detects usage of the Chisel tunneling tool via the commandline arguments
+author: Florian Roth (Nextron Systems)
+date: '2022-09-13'
+modified: '2023-02-13'
+tags:
+    - attack.command-and-control
+    - attack.t1090.001
+references:
+    - https://github.com/jpillora/chisel/
+    - https://arcticwolf.com/resources/blog/lorenz-ransomware-chiseling-in/
+    - https://blog.sekoia.io/lucky-mouse-incident-response-to-detection-engineering/
+falsepositives:
+    - Some false positives may occur with other tools with similar commandlines
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cf93e05e-d798-4d9e-b522-b0248dc61eaf''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \chisel.exe
+    selection_param1:
+        CommandLine|contains:
+            - 'exe client '
+            - 'exe server '
+    selection_param2:
+        CommandLine|contains:
+            - -socks5
+            - -reverse
+            - ' r:'
+            - ':127.0.0.1:'
+            - '-tls-skip-verify '
+            - :socks
+    condition: selection_img or all of selection_param*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:31.557947+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:31.557947+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:31.557952+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:31.557953+00:00'

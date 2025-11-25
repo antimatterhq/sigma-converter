@@ -1,0 +1,46 @@
+id: df69cb1d-b891-4cd9-90c7-d617d90100ce
+title: Suspicious FromBase64String Usage On Gzip Archive - Ps Script
+status: test
+level: medium
+description: Detects attempts of decoding a base64 Gzip archive in a PowerShell script.
+    This technique is often used as a method to load malicious content into memory
+    afterward.
+author: frack113
+date: '2022-12-23'
+tags:
+    - attack.command-and-control
+    - attack.t1132.001
+references:
+    - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=43
+falsepositives:
+    - Legitimate administrative script
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d75d6b6b-adb9-48f7-824b-ac2e786efe1f''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - FromBase64String
+            - MemoryStream
+            - H4sI
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.335466+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.335466+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.335470+00:00'

@@ -1,0 +1,75 @@
+id: 434c08ba-8406-4d15-8b24-782cb071a691
+title: PowerShell Execution With Potential Decryption Capabilities
+status: test
+level: high
+description: Detects PowerShell commands that decrypt an ".LNK" "file to drop the
+    next stage of the malware.
+author: X__Junior (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+date: '2023-06-30'
+modified: '2023-12-05'
+tags:
+    - attack.execution
+references:
+    - https://research.checkpoint.com/2023/chinese-threat-actors-targeting-europe-in-smugx-campaign/
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - \powershell.exe
+            - \pwsh.exe
+        OriginalFileName:
+            - PowerShell.EXE
+            - pwsh.dll
+    selection_cli_dir:
+        CommandLine|contains:
+            - 'Get-ChildItem '
+            - 'dir '
+            - 'gci '
+            - 'ls '
+    selection_cli_gc:
+        CommandLine|contains:
+            - 'Get-Content '
+            - 'gc '
+            - 'cat '
+            - 'type '
+            - ReadAllBytes
+    selection_cli_specific:
+        CommandLine|contains|all:
+            - ' ^| '
+            - \*.lnk
+            - -Recurse
+            - '-Skip '
+            - ' -ExpandProperty '
+            - \*.lnk
+            - WriteAllBytes
+            - ' .length '
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:20.253962+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:20.253962+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:20.253968+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:20.253970+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:20.253972+00:00'

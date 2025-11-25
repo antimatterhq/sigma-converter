@@ -1,0 +1,73 @@
+id: 138d3531-8793-4f50-a2cd-f291b2863d78
+title: Suspicious Service Path Modification
+status: test
+level: high
+description: Detects service path modification via the "sc" binary to a suspicious
+    command or path
+author: Victor Sergeev, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+date: '2019-10-21'
+modified: '2022-11-18'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1543.003
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.003/T1543.003.md
+    - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \sc.exe
+        CommandLine|contains|all:
+            - config
+            - binPath
+        CommandLine|contains:
+            - powershell
+            - 'cmd '
+            - mshta
+            - wscript
+            - cscript
+            - rundll32
+            - svchost
+            - dllhost
+            - cmd.exe /c
+            - cmd.exe /k
+            - cmd.exe /r
+            - cmd /c
+            - cmd /k
+            - cmd /r
+            - C:\Users\Public
+            - \Downloads\
+            - \Desktop\
+            - \Microsoft\Windows\Start Menu\Programs\Startup\
+            - C:\Windows\TEMP\
+            - \AppData\Local\Temp
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:37.129929+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:37.129929+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:37.129933+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:37.129935+00:00'

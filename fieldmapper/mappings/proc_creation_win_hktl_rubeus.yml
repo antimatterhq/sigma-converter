@@ -1,0 +1,77 @@
+id: 7ec2c172-dceb-4c10-92c9-87c1881b7e18
+title: HackTool - Rubeus Execution
+status: stable
+level: critical
+description: Detects the execution of the hacktool Rubeus via PE information of command
+    line parameters
+author: Florian Roth (Nextron Systems)
+date: '2018-12-19'
+modified: '2023-04-20'
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.t1558.003
+    - attack.lateral-movement
+    - attack.t1550.003
+references:
+    - https://blog.harmj0y.net/redteaming/from-kekeo-to-rubeus
+    - https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html
+    - https://github.com/GhostPack/Rubeus
+falsepositives:
+    - Unlikely
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7ec2c172-dceb-4c10-92c9-87c1881b7e18''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \Rubeus.exe
+        OriginalFileName: Rubeus.exe
+        Description: Rubeus
+        CommandLine|contains:
+            - 'asreproast '
+            - 'dump /service:krbtgt '
+            - dump /luid:0x
+            - 'kerberoast '
+            - 'createnetonly /program:'
+            - 'ptt /ticket:'
+            - '/impersonateuser:'
+            - 'renew /ticket:'
+            - 'asktgt /user:'
+            - 'harvest /interval:'
+            - 's4u /user:'
+            - 's4u /ticket:'
+            - 'hash /password:'
+            - 'golden /aes256:'
+            - 'silver /user:'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:38.013413+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:38.013413+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:38.013418+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:38.013420+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:20:38.013421+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:38.013422+00:00'

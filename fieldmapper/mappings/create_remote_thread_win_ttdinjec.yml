@@ -1,0 +1,39 @@
+id: c15e99a3-c474-48ab-b9a7-84549a7a9d16
+title: Remote Thread Creation Ttdinject.exe Proxy
+status: test
+level: high
+description: Detects a remote thread creation of Ttdinject.exe used as proxy
+author: frack113
+date: '2022-05-16'
+modified: '2022-06-02'
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Ttdinject/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    selection:
+        SourceImage|endswith: \ttdinject.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: create_remote_thread
+            mapped_at: '2025-11-13T20:19:40.848669+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:40.848669+00:00'
+    detection_fields:
+        -   source_field: SourceImage
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:19:40.848680+00:00'

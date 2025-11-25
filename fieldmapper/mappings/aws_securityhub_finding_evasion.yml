@@ -1,0 +1,52 @@
+id: a607e1fe-74bf-4440-a3ec-b059b9103157
+title: AWS SecurityHub Findings Evasion
+status: stable
+level: high
+description: Detects the modification of the findings on SecurityHub.
+author: Sittikorn S
+date: '2021-06-28'
+tags:
+    - attack.defense-evasion
+    - attack.t1562
+references:
+    - https://docs.aws.amazon.com/cli/latest/reference/securityhub/
+fields:
+    - sourceIPAddress
+    - userIdentity.arn
+falsepositives:
+    - System or Network administrator behaviors
+    - DEV, UAT, SAT environment. You should apply this rule with PROD environment
+        only.
+taxonomy: sigma
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    selection:
+        eventSource: securityhub.amazonaws.com
+        eventName:
+            - BatchUpdateFindings
+            - DeleteInsight
+            - UpdateFindings
+            - UpdateInsight
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: aws
+            mapped_at: '2025-11-13T20:18:16.374566+00:00'
+        service:
+            source_field: service
+            source_value: cloudtrail
+            mapped_at: '2025-11-13T20:18:16.374566+00:00'
+    detection_fields:
+        -   source_field: eventSource
+            target_table: file_activity
+            target_field: metadata.product.name
+            mapped_at: '2025-11-13T20:18:16.374579+00:00'
+        -   source_field: eventName
+            target_table: file_activity
+            target_field: action
+            mapped_at: '2025-11-13T20:18:16.374582+00:00'

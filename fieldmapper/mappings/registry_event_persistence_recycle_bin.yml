@@ -1,0 +1,53 @@
+id: 277efb8f-60be-4f10-b4d3-037802f37167
+title: Registry Persistence Mechanisms in Recycle Bin
+status: test
+level: high
+description: Detects persistence registry keys for Recycle Bin
+author: frack113
+date: '2021-11-18'
+modified: '2022-12-06'
+tags:
+    - attack.persistence
+    - attack.t1547
+references:
+    - https://github.com/vxunderground/VXUG-Papers/blob/751edb8d50f95bd7baa730adf2c6c3bb1b034276/The%20Persistence%20Series/Persistence%20via%20Recycle%20Bin/Persistence_via_Recycle_Bin.pdf
+    - https://persistence-info.github.io/Data/recyclebin.html
+    - https://www.hexacorn.com/blog/2018/05/28/beyond-good-ol-run-key-part-78-2/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection_create:
+        EventType: RenameKey
+        NewName|contains: \CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\shell\open
+    selection_set:
+        EventType: SetValue
+        TargetObject|contains: \CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\shell\open\command\(Default)
+    condition: 1 of selection_*
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_event
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: EventType
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: NewName
+            target_table: null
+            target_field: null
+            mapped_at: null
+        -   source_field: TargetObject
+            target_table: null
+            target_field: null
+            mapped_at: null

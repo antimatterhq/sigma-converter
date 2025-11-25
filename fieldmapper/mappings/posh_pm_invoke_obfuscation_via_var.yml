@@ -1,0 +1,44 @@
+id: f3c89218-8c3d-4ba9-9974-f1d8e6a1b4a6
+title: Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION - PowerShell Module
+status: test
+level: high
+description: Detects Obfuscated Powershell via VAR++ LAUNCHER
+author: Timur Zinniatullin, oscd.community
+date: '2020-10-13'
+modified: '2024-04-05'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e54f5149-6ba3-49cf-b153-070d24679126''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection_4103:
+        Payload|re: (?i)&&set.*(\{\d\}){2,}\\"\s+?-f.*&&.*cmd.*/c
+    condition: selection_4103
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_module
+            mapped_at: '2025-11-13T20:21:51.383448+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:51.383448+00:00'
+    detection_fields:
+        -   source_field: Payload
+            target_table: script_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:51.383455+00:00'

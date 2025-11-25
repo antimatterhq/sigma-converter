@@ -1,0 +1,58 @@
+id: f0767f15-0fb3-44b9-851e-e8d9a6d0005d
+title: Scheduled Task Executed Uncommon LOLBIN
+status: test
+level: medium
+description: Detects the execution of Scheduled Tasks where the program being run
+    is located in a suspicious location or where it is an unusual program to be run
+    from a Scheduled Task
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-12-05'
+modified: '2023-02-07'
+tags:
+    - attack.persistence
+    - attack.t1053.005
+references:
+    - Internal Research
+falsepositives:
+    - False positives may occur with some of the selected binaries if you have tasks
+        using them (which could be very common in your environment). Exclude all the
+        specific trusted tasks before using this rule
+taxonomy: sigma
+logsource:
+    product: windows
+    service: taskscheduler
+    definition: 'Requirements: The "Microsoft-Windows-TaskScheduler/Operational" is
+        disabled by default and needs to be enabled in order for this detection to
+        trigger'
+detection:
+    selection:
+        EventID: 129
+        Path|endswith:
+            - \calc.exe
+            - \cscript.exe
+            - \mshta.exe
+            - \mspaint.exe
+            - \notepad.exe
+            - \regsvr32.exe
+            - \wscript.exe
+    condition: selection
+ocsf_mapping:
+    class_name: scheduled_job_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:19.340280+00:00'
+        service:
+            source_field: service
+            source_value: taskscheduler
+            mapped_at: '2025-11-13T20:22:19.340280+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: scheduled_job_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:19.340303+00:00'
+        -   source_field: Path
+            target_table: scheduled_job_activity
+            target_field: script.file.path
+            mapped_at: '2025-11-13T20:22:19.340306+00:00'

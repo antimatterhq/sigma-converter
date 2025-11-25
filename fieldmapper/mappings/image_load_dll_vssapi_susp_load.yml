@@ -1,0 +1,62 @@
+id: 37774c23-25a1-4adb-bb6d-8bb9fd59c0f8
+title: Suspicious Volume Shadow Copy Vssapi.dll Load
+status: test
+level: high
+description: Detects the image load of VSS DLL by uncommon executables
+author: frack113
+date: '2022-10-31'
+modified: '2023-05-03'
+tags:
+    - attack.defense-evasion
+    - attack.impact
+    - attack.t1490
+references:
+    - https://github.com/ORCx41/DeleteShadowCopies
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''333cdbe8-27bb-4246-bf82-b41a0dca4b70''),
+    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''48bfd177-7cf2-412b-ad77-baf923489e82''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \vssapi.dll
+    filter_windows:
+        Image:
+            - C:\Windows\explorer.exe
+            - C:\Windows\ImmersiveControlPanel\SystemSettings.exe
+        Image|startswith:
+            - C:\Windows\System32\
+            - C:\Windows\SysWOW64\
+            - C:\Windows\Temp\{
+            - C:\Windows\WinSxS\
+    filter_program_files:
+        Image|startswith:
+            - C:\Program Files\
+            - C:\Program Files (x86)\
+    filter_programdata_packagecache:
+        Image|startswith: C:\ProgramData\Package Cache\
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:30.121461+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:30.121461+00:00'
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:30.121467+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:30.121468+00:00'

@@ -1,0 +1,47 @@
+id: 69b3bd1e-b38a-462f-9a23-fbdbf63d2294
+title: Github Fork Private Repositories Setting Enabled/Cleared
+status: experimental
+level: medium
+description: 'Detects when the policy allowing forks of private and internal repositories
+    is changed (enabled or cleared).
+
+    '
+author: Romain Gaillard (@romain-gaillard)
+date: '2024-07-29'
+tags:
+    - attack.persistence
+    - attack.t1020
+    - attack.t1537
+references:
+    - https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise#private_repository_forking
+falsepositives:
+    - Allowed administrative activities.
+taxonomy: sigma
+logsource:
+    product: github
+    service: audit
+    definition: 'Requirements: The audit log streaming feature must be enabled to
+        be able to receive such logs. You can enable following the documentation here:
+        https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise#setting-up-audit-log-streaming'
+detection:
+    selection:
+        action:
+            - private_repository_forking.clear
+            - private_repository_forking.enable
+    condition: selection
+ocsf_mapping:
+    class_name: api_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: github
+            mapped_at: '2025-11-13T20:16:07.329128+00:00'
+        service:
+            source_field: service
+            source_value: audit
+            mapped_at: '2025-11-13T20:16:07.329128+00:00'
+    detection_fields:
+        -   source_field: action
+            target_table: api_activity
+            target_field: action_id
+            mapped_at: '2025-11-13T20:16:07.329138+00:00'

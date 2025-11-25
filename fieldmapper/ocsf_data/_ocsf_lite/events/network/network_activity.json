@@ -1,0 +1,208 @@
+{
+  "uid": 1,
+  "caption": "Network Activity",
+  "description": "Network Activity events report network connection and traffic activity.",
+  "extends": "base_event",
+  "name": "network_activity",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Open",
+          "description": "A new network connection was opened."
+        },
+        "2": {
+          "caption": "Close",
+          "description": "The network connection was closed."
+        },
+        "3": {
+          "caption": "Reset",
+          "description": "The network connection was abnormally terminated or closed by a middle device like firewalls."
+        },
+        "4": {
+          "caption": "Fail",
+          "description": "The network connection failed. For example a connection timeout or no route to host."
+        },
+        "5": {
+          "caption": "Refuse",
+          "description": "The network connection was refused. For example an attempt to connect to a server port which is not open."
+        },
+        "6": {
+          "caption": "Traffic",
+          "description": "Network traffic report."
+        },
+        "7": {
+          "caption": "Listen",
+          "description": "A network endpoint began listening for new network connections."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4": {
+          "caption": "Network Activity",
+          "description": "Network Activity events"
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The class unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4001": {
+          "caption": "Network Activity",
+          "description": "Network Activity events report network connection and traffic activity."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "cloud": {
+      "caption": "Cloud",
+      "description": "The Cloud object contains information about a cloud or Software-as-a-Service account or similar construct, such as AWS Account ID, regions, organizations, folders, compartments, tenants, etc."
+    },
+    "connection_info": {
+      "description": "The connection information relevant to the network traffic.",
+      "requirement": "recommended"
+    },
+    "dst_endpoint": {
+      "description": "The endpoint to which the network traffic was sent.",
+      "group": "primary",
+      "requirement": "recommended",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "src_endpoint": {
+      "description": "The endpoint from which the network traffic was sent.",
+      "group": "primary",
+      "requirement": "recommended",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "start_time": {
+      "description": "The start time of a time period, or the time of the least recent event included in the aggregate event.",
+      "group": "occurrence",
+      "requirement": "optional"
+    },
+    "end_time": {
+      "description": "The end time of a time period, or the time of the most recent event included in the aggregate event.",
+      "group": "occurrence",
+      "requirement": "optional"
+    },
+    "policy": {
+      "caption": "Policy",
+      "description": "The Policy object describes the policies that are applicable. <p>Policy attributes provide traceability to the operational state of the security product at the time that the event was captured, facilitating forensics, troubleshooting, and policy tuning/adjustments.</p>",
+      "name": "policy"
+    },
+    "traffic": {
+      "description": "The traffic details relevant to the network traffic.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "type_uid": {
+      "description": "The event/finding type ID. It identifies the event's semantics and structure. The value is calculated by the logging system as: class_uid * 100 + activity_id.",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "400100": {
+          "caption": "Unknown",
+          "description": "The activity type \"Network Activity: Unknown\" is not further specified."
+        },
+        "400101": {
+          "caption": "Open",
+          "description": "A new network connection was opened."
+        },
+        "400102": {
+          "caption": "Close",
+          "description": "The network connection was closed."
+        },
+        "400103": {
+          "caption": "Reset",
+          "description": "The network connection was abnormally terminated or closed by a middle device like firewalls."
+        },
+        "400104": {
+          "caption": "Fail",
+          "description": "The network connection failed. For example a connection timeout or no route to host."
+        },
+        "400105": {
+          "caption": "Refuse",
+          "description": "The network connection was refused. For example an attempt to connect to a server port which is not open."
+        },
+        "400106": {
+          "caption": "Traffic",
+          "description": "Network traffic report."
+        },
+        "400107": {
+          "caption": "Listen",
+          "description": "A network endpoint began listening for new network connections."
+        },
+        "400199": {
+          "caption": "Other",
+          "description": "The activity type \"Network Activity: Other\" is not further specified."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "url": {
+      "description": "The URL details relevant to the network traffic.",
+      "group": "primary",
+      "requirement": "recommended"
+    }
+  }
+}

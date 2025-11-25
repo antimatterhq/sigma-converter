@@ -1,0 +1,57 @@
+id: 6d44fb93-e7d2-475c-9d3d-54c9c1e33427
+title: BITS Transfer Job With Uncommon Or Suspicious Remote TLD
+status: test
+level: medium
+description: Detects a suspicious download using the BITS client from a FQDN that
+    is unusual. Adversaries may abuse BITS jobs to persistently execute or clean up
+    after malicious payloads.
+author: Florian Roth (Nextron Systems)
+date: '2022-06-10'
+modified: '2024-12-25'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+    - https://twitter.com/malmoeb/status/1535142803075960832
+falsepositives:
+    - This rule doesn't exclude other known TLDs such as ".org" or ".net". It's recommended
+        to apply additional filters for software and scripts that leverage the BITS
+        service
+taxonomy: sigma
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    selection:
+        EventID: 16403
+    filter_main_generic:
+        RemoteName|contains:
+            - .azureedge.net/
+            - .com/
+            - .sfx.ms/
+            - download.mozilla.org/
+            - cdn.onenote.net/
+            - cdn.office.net/
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:18.876335+00:00'
+        service:
+            source_field: service
+            source_value: bits-client
+            mapped_at: '2025-11-13T20:24:18.876335+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:18.876343+00:00'
+        -   source_field: RemoteName
+            target_table: process_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:24:18.876344+00:00'

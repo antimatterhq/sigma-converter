@@ -1,0 +1,62 @@
+id: 14bcba49-a428-42d9-b943-e2ce0f0f7ae6
+title: Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION - System
+status: test
+level: high
+description: Detects Obfuscated Powershell via VAR++ LAUNCHER
+author: Timur Zinniatullin, oscd.community
+date: '2020-10-13'
+modified: '2022-11-29'
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: Service Control Manager
+        EventID: 7045
+        ImagePath|contains|all:
+            - '&&set'
+            - cmd
+            - /c
+            - -f
+        ImagePath|contains:
+            - '{0}'
+            - '{1}'
+            - '{2}'
+            - '{3}'
+            - '{4}'
+            - '{5}'
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:23.251001+00:00'
+        service:
+            source_field: service
+            source_value: system
+            mapped_at: '2025-11-13T20:25:23.251001+00:00'
+    detection_fields:
+        -   source_field: Provider_Name
+            target_table: process_activity
+            target_field: metadata.log_provider
+            mapped_at: '2025-11-13T20:25:23.251012+00:00'
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:23.251015+00:00'
+        -   source_field: ImagePath
+            target_table: process_activity
+            target_field: process.file.path
+            mapped_at: '2025-11-13T20:25:23.251016+00:00'

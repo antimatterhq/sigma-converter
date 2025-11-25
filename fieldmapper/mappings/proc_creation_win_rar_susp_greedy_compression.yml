@@ -1,0 +1,67 @@
+id: afe52666-401e-4a02-b4ff-5d128990b8cb
+title: Suspicious Greedy Compression Using Rar.EXE
+status: test
+level: high
+description: Detects RAR usage that creates an archive from a suspicious folder, either
+    a system folder or one of the folders often used by attackers for staging purposes
+author: X__Junior (Nextron Systems), Florian Roth (Nextron Systems)
+date: '2022-12-15'
+modified: '2024-01-02'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://decoded.avast.io/martinchlumecky/png-steganography
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_opt_1:
+        Image|endswith: \rar.exe
+        Description: Command line RAR
+    selection_opt_2:
+        CommandLine|contains:
+            - '.exe a '
+            - ' a -m'
+    selection_cli_flags:
+        CommandLine|contains|all:
+            - ' -hp'
+            - ' -r '
+    selection_cli_folders:
+        CommandLine|contains:
+            - ' ?:\\*.'
+            - ' ?:\\\*.'
+            - ' ?:\$Recycle.bin\'
+            - ' ?:\PerfLogs\'
+            - ' ?:\Temp'
+            - ' ?:\Users\Public\'
+            - ' ?:\Windows\'
+            - ' %public%'
+    condition: 1 of selection_opt_* and all of selection_cli_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:19:50.294418+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:50.294418+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:50.294461+00:00'
+        -   source_field: Description
+            target_table: process_activity
+            target_field: message
+            mapped_at: '2025-11-13T20:19:50.294465+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:19:50.294468+00:00'

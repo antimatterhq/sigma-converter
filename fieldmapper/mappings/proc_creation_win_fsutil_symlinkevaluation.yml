@@ -1,0 +1,60 @@
+id: c0b2768a-dd06-4671-8339-b16ca8d1f27f
+title: Fsutil Behavior Set SymlinkEvaluation
+status: test
+level: medium
+description: 'A symbolic link is a type of file that contains a reference to another
+    file.
+
+    This is probably done to make sure that the ransomware is able to follow shortcuts
+    on the machine in order to find the original file to encrypt
+
+    '
+author: frack113
+date: '2022-03-02'
+modified: '2023-01-19'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://www.cybereason.com/blog/cybereason-vs.-blackcat-ransomware
+    - https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/fsutil-behavior
+falsepositives:
+    - Legitimate use
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \fsutil.exe
+        OriginalFileName: fsutil.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - 'behavior '
+            - 'set '
+            - SymlinkEvaluation
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:55.518863+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:55.518863+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:55.518873+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:55.518876+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:55.518882+00:00'

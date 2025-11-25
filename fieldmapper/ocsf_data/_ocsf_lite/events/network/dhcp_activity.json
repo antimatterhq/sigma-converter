@@ -1,0 +1,235 @@
+{
+  "uid": 4,
+  "caption": "DHCP Activity",
+  "description": "DHCP Activity events report MAC to IP assignment via DHCP from a client or server.",
+  "extends": "base_event",
+  "name": "dhcp_activity",
+  "attributes": {
+    "activity": {
+      "description": "The normalized caption of 'activity_id' or the source specific value.",
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "1": {
+          "caption": "Discover",
+          "description": "DHCPDISCOVER"
+        },
+        "2": {
+          "caption": "Offer",
+          "description": "DHCPOFFER"
+        },
+        "3": {
+          "caption": "Request",
+          "description": "DHCPREQUEST"
+        },
+        "4": {
+          "caption": "Decline",
+          "description": "DHCPDECLINE"
+        },
+        "5": {
+          "caption": "Ack",
+          "description": "DHCPACK: The server accepts the request by sending the client a DHCP Acknowledgment message."
+        },
+        "6": {
+          "caption": "Nak",
+          "description": "DHCPNAK"
+        },
+        "7": {
+          "caption": "Release",
+          "description": "DHCPRELEASE: A DHCP client sends a DHCPRELEASE packet to the server to release the IP address and cancel any remaining lease."
+        },
+        "8": {
+          "caption": "Inform",
+          "description": "DHCPINFORM"
+        },
+        "9": {
+          "caption": "Expire",
+          "description": "DHCPEXPIRE: A DHCP lease expired."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "app_name": {
+      "description": "The name of the application that initiated the DHCP connection.",
+      "requirement": "optional"
+    },
+    "category_uid": {
+      "description": "The category unique identifier of the event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4": {
+          "caption": "Network Activity",
+          "description": "Network Activity events."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "class_uid": {
+      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "requirement": "required",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "4004": {
+          "caption": "DHCP Activity",
+          "description": "DHCP Activity events report MAC to IP assignment via DHCP from a client or server."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    },
+    "cloud": {
+      "description": "Describes details about the Cloud environment where the event was originally created or logged.",
+      "requirement": "recommended",
+      "object": "cloud"
+    },
+    "connection_info": {
+      "description": "The connection information relevant to the network traffic.",
+      "requirement": "recommended",
+      "object": "network connection information"
+    },
+    "dst_endpoint": {
+      "description": "The responder (server) of the DHCP connection.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "is_renewal": {
+      "description": "Indicates whether this is a lease/session renewal event.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "lease_dur": {
+      "group": "primary",
+      "requirement": "recommended",
+      "description": "This represents the length of the DHCP lease in seconds. This is present in DHCP Ack events."
+    },
+    "src_endpoint": {
+      "description": "The initiator (client) of the DHCP connection.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network endpoint",
+      "constraints": {
+        "at_least_one": [
+          "domain",
+          "hostname",
+          "instance_uid",
+          "interface_name",
+          "interface_uid",
+          "ip",
+          "name",
+          "svc_name",
+          "uid"
+        ]
+      }
+    },
+    "traffic": {
+      "description": "The traffic details relevant to the network traffic.",
+      "group": "primary",
+      "requirement": "recommended",
+      "object": "network traffic"
+    },
+    "transaction_uid": {
+      "description": "The unique identifier of the transaction. This is typically a random number generated from the client to associate a dhcp request/response pair.",
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "type_uid": {
+      "description": "The event/finding type ID. It identifies the event's semantics and structure. The value is calculated by the logging system as: class_uid * 100 + activity_id.",
+      "requirement": "recommended",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "Unknown"
+        },
+        "400400": {
+          "caption": "Unknown",
+          "description": "The activity type \"DHCP Activity: Unknown\" is not further specified."
+        },
+        "400401": {
+          "caption": "DHCP Discover",
+          "description": "DHCP Discover events."
+        },
+        "400402": {
+          "caption": "DHCP Offer",
+          "description": "DHCP Offer events."
+        },
+        "400403": {
+          "caption": "DHCP Request",
+          "description": "DHCP Request events."
+        },
+        "400404": {
+          "caption": "DHCP Decline",
+          "description": "DHCP Decline events."
+        },
+        "400405": {
+          "caption": "DHCP Ack",
+          "description": "DHCPACK: The server accepts the request by sending the client a DHCP Acknowledgment message."
+        },
+        "400406": {
+          "caption": "DHCP Nak",
+          "description": "DHCP Nak events."
+        },
+        "400407": {
+          "caption": "DHCP Release",
+          "description": "DHCPRELEASE: A DHCP client sends a DHCPRELEASE packet to the server to release the IP address and cancel any remaining lease."
+        },
+        "400408": {
+          "caption": "DHCP Inform",
+          "description": "DHCP Inform events."
+        },
+        "400409": {
+          "caption": "DHCP Expire",
+          "description": "DHCPEXPIRE: A DHCP lease expired."
+        },
+        "400499": {
+          "caption": "Other",
+          "description": "The activity type \"DHCP Activity: Other\" is not further specified."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "Not mapped"
+        }
+      }
+    }
+  },
+  "constraints": {
+    "at_least_one": [
+      "dst_endpoint",
+      "src_endpoint"
+    ]
+  }
+}

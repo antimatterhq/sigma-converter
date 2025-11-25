@@ -1,0 +1,54 @@
+id: 646bc99f-6682-4b47-a73a-17b1b64c9d34
+title: Execute Files with Msdeploy.exe
+status: test
+level: medium
+description: Detects file execution using the msdeploy.exe lolbin
+author: Beyu Denis, oscd.community
+date: '2020-10-18'
+modified: '2021-11-27'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Msdeploy/
+    - https://twitter.com/pabraeken/status/995837734379032576
+    - https://twitter.com/pabraeken/status/999090532839313408
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - System administrator Usage
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - verb:sync
+            - -source:RunCommand
+            - -dest:runCommand
+        Image|endswith: \msdeploy.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:59.129558+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:59.129558+00:00'
+    detection_fields:
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:59.129565+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:59.129567+00:00'

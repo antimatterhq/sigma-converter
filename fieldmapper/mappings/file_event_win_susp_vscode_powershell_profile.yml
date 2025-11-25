@@ -1,0 +1,44 @@
+id: 3a9fa2ec-30bc-4ebd-b49e-7c9cff225502
+title: VsCode Powershell Profile Modification
+status: test
+level: medium
+description: Detects the creation or modification of a vscode related powershell profile
+    which could indicate suspicious activity as the profile can be used as a mean
+    of persistence
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-08-24'
+modified: '2023-01-06'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1546.013
+references:
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.2
+falsepositives:
+    - Legitimate use of the profile by developers or administrators
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b5b78988-486d-4a80-b991-930eff3ff8bf''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith: \Microsoft.VSCode_profile.ps1
+    condition: selection
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:35.666401+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:35.666401+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:35.666410+00:00'

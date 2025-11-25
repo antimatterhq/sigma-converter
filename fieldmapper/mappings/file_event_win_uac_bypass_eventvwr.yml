@@ -1,0 +1,51 @@
+id: 63e4f530-65dc-49cc-8f80-ccfa95c69d43
+title: UAC Bypass Using EventVwr
+status: test
+level: high
+description: Detects the pattern of a UAC bypass using Windows Event Viewer
+author: Antonio Cocomazzi (idea), Florian Roth (Nextron Systems)
+date: '2022-04-27'
+modified: '2022-11-22'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+references:
+    - https://twitter.com/orange_8361/status/1518970259868626944?s=20&t=RFXqZjtA7tWM3HxqEH78Aw
+    - https://twitter.com/splinter_code/status/1519075134296006662?s=12&t=DLUXH86WtcmG_AZ5gY3C6g
+    - https://lolbas-project.github.io/lolbas/Binaries/Eventvwr/#execute
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - \Microsoft\Event Viewer\RecentViews
+            - \Microsoft\EventV~1\RecentViews
+    filter:
+        Image|startswith:
+            - C:\Windows\System32\
+            - C:\Windows\SysWOW64\
+    condition: selection and not filter
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_event
+            mapped_at: '2025-11-13T20:21:34.600293+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:34.600293+00:00'
+    detection_fields:
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:34.600299+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:34.600322+00:00'

@@ -1,0 +1,58 @@
+id: cd3d1298-eb3b-476c-ac67-12847de55813
+title: DLL Execution via Rasautou.exe
+status: test
+level: medium
+description: Detects using Rasautou.exe for loading arbitrary .DLL specified in -d
+    option and executes the export specified in -p.
+author: Julia Fomina, oscd.community
+date: '2020-10-09'
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/Rasautou/
+    - https://github.com/fireeye/DueDLLigence
+    - https://www.fireeye.com/blog/threat-research/2019/10/staying-hidden-on-the-endpoint-evading-detection-with-shellcode.html
+falsepositives:
+    - Unlikely
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+    definition: Since options '-d' and '-p' were removed in Windows 10 this rule is
+        relevant only for Windows before 10. And as Windows 7 doesn't log command
+        line in 4688 by default, to detect this attack you need Sysmon 1 configured
+        or KB3004375 installed for command-line auditing (https://support.microsoft.com/en-au/help/3004375/microsoft-security-advisory-update-to-improve-windows-command-line-aud)
+detection:
+    selection_img:
+        Image|endswith: \rasautou.exe
+        OriginalFileName: rasdlui.exe
+    selection_cli:
+        CommandLine|contains|all:
+            - ' -d '
+            - ' -p '
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:49.478743+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:49.478743+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:49.478749+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:49.478751+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:49.478752+00:00'

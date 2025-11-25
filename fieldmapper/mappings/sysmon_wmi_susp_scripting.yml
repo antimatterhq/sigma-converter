@@ -1,0 +1,59 @@
+id: fe21810c-2a8c-478f-8dd3-5a287fb2a0e0
+title: Suspicious Scripting in a WMI Consumer
+status: test
+level: high
+description: Detects suspicious commands that are related to scripting/powershell
+    in WMI Event Consumers
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro
+date: '2019-04-15'
+modified: '2023-09-09'
+tags:
+    - attack.execution
+    - attack.t1059.005
+references:
+    - https://in.security/an-intro-into-abusing-and-identifying-wmi-event-subscriptions-for-persistence/
+    - https://github.com/Neo23x0/signature-base/blob/615bf1f6bac3c1bdc417025c40c073e6c2771a76/yara/gen_susp_lnk_files.yar#L19
+    - https://github.com/RiccardoAncarani/LiquidSnake
+fields:
+    - User
+    - Operation
+falsepositives:
+    - Legitimate administrative scripts
+taxonomy: sigma
+logsource:
+    category: wmi_event
+    product: windows
+detection:
+    selection_destination:
+        Destination|contains|all:
+            - new-object
+            - net.webclient
+            - .downloadstring
+            - new-object
+            - net.webclient
+            - .downloadfile
+        Destination|contains:
+            - ' iex('
+            - ' -nop '
+            - ' -noprofile '
+            - ' -decode '
+            - ' -enc '
+            - WScript.Shell
+            - System.Security.Cryptography.FromBase64Transform
+    condition: selection_destination
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: wmi_event
+            mapped_at: '2025-11-13T20:18:44.943450+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:18:44.943450+00:00'
+    detection_fields:
+        -   source_field: Destination
+            target_table: script_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:18:46.327855+00:00'

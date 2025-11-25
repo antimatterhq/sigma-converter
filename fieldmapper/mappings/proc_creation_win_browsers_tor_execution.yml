@@ -1,0 +1,41 @@
+id: 62f7c9bf-9135-49b2-8aeb-1e54a6ecc13c
+title: Tor Client/Browser Execution
+status: test
+level: high
+description: Detects the use of Tor or Tor-Browser to connect to onion routing networks
+author: frack113
+date: '2022-02-20'
+modified: '2023-02-13'
+tags:
+    - attack.command-and-control
+    - attack.t1090.003
+references:
+    - https://www.logpoint.com/en/blog/detecting-tor-use-with-logpoint/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - \tor.exe
+            - \Tor Browser\Browser\firefox.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:51.927534+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:51.927534+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:51.927538+00:00'

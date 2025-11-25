@@ -1,0 +1,58 @@
+id: 3761e026-f259-44e6-8826-719ed8079408
+title: Linux Network Service Scanning - Auditd
+status: test
+level: low
+description: Detects enumeration of local or remote network services.
+author: Alejandro Ortuno, oscd.community
+date: '2020-10-21'
+modified: '2023-09-26'
+tags:
+    - attack.discovery
+    - attack.t1046
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md
+falsepositives:
+    - Legitimate administration activities
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3e102cd9-a70d-4a7a-9508-403963092f31''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    product: linux
+    service: auditd
+    definition: Configure these rules https://github.com/Neo23x0/auditd/blob/e181243a7c708e9d579557d6f80e0ed3d3483b89/audit.rules#L182-L183
+detection:
+    selection:
+        type: SYSCALL
+        exe|endswith:
+            - /telnet
+            - /nmap
+            - /netcat
+            - /nc
+            - /ncat
+            - /nc.openbsd
+        key: network_connect_4
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:25.760123+00:00'
+        service:
+            source_field: service
+            source_value: auditd
+            mapped_at: '2025-11-13T20:15:25.760123+00:00'
+    detection_fields:
+        -   source_field: type
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:27.348396+00:00'
+        -   source_field: exe
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:27.348416+00:00'
+        -   source_field: key
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:15:27.348420+00:00'

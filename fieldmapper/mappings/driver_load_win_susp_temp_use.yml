@@ -1,0 +1,41 @@
+id: 2c4523d5-d481-4ed0-8ec3-7fbf0cb41a75
+title: Driver Load From A Temporary Directory
+status: test
+level: high
+description: Detects a driver load from a temporary directory
+author: Florian Roth (Nextron Systems)
+date: '2017-02-12'
+modified: '2021-11-27'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1543.003
+references:
+    - Internal Research
+falsepositives:
+    - There is a relevant set of false positives depending on applications in the
+        environment
+taxonomy: sigma
+logsource:
+    category: driver_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|contains: \Temp\
+    condition: selection
+ocsf_mapping:
+    class_name: null
+    logsource:
+        category:
+            source_field: category
+            source_value: driver_load
+            mapped_at: null
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: null
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: null
+            target_field: null
+            mapped_at: null

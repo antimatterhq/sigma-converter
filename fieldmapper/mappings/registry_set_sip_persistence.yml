@@ -1,0 +1,67 @@
+id: 5a2b21ee-6aaa-4234-ac9d-59a59edf90a1
+title: Persistence Via New SIP Provider
+status: test
+level: medium
+description: Detects when an attacker register a new SIP provider for persistence
+    and defense evasion
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-21'
+modified: '2023-08-17'
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.t1553.003
+references:
+    - https://persistence-info.github.io/Data/codesigning.html
+    - https://github.com/gtworek/PSBits/tree/master/SIP
+    - https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf
+falsepositives:
+    - Legitimate SIP being registered by the OS or different software.
+taxonomy: sigma
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_root:
+        TargetObject|contains:
+            - \SOFTWARE\Microsoft\Cryptography\Providers\
+            - \SOFTWARE\Microsoft\Cryptography\OID\EncodingType
+            - \SOFTWARE\WOW6432Node\Microsoft\Cryptography\Providers\
+            - \SOFTWARE\WOW6432Node\Microsoft\Cryptography\OID\EncodingType
+    selection_dll:
+        TargetObject|contains:
+            - \Dll
+            - \$DLL
+    filter:
+        Details:
+            - WINTRUST.DLL
+            - mso.dll
+    filter_poqexec:
+        Image: C:\Windows\System32\poqexec.exe
+        TargetObject|contains: \CryptSIPDll
+        Details: C:\Windows\System32\PsfSip.dll
+    condition: all of selection_* and not 1 of filter*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_set
+            mapped_at: '2025-11-13T20:22:08.080995+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:08.080995+00:00'
+    detection_fields:
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:08.081005+00:00'
+        -   source_field: Details
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:08.081008+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:08.081009+00:00'

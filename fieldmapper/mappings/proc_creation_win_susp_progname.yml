@@ -1,0 +1,91 @@
+id: efdd8dd5-cee8-4e59-9390-7d4d5e4dd6f6
+title: Suspicious Program Names
+status: test
+level: high
+description: Detects suspicious patterns in program names or folders that are often
+    found in malicious samples or hacktools
+author: Florian Roth (Nextron Systems)
+date: '2022-02-11'
+modified: '2023-03-22'
+tags:
+    - attack.execution
+    - attack.t1059
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1560.001/T1560.001.md
+fields:
+    - CommandLine
+    - ParentCommandLine
+    - CurrentDirectory
+falsepositives:
+    - Legitimate tools that accidentally match on the searched patterns
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        Image|contains:
+            - \CVE-202
+            - \CVE202
+        Image|endswith:
+            - \poc.exe
+            - \artifact.exe
+            - \artifact64.exe
+            - \artifact_protected.exe
+            - \artifact32.exe
+            - \artifact32big.exe
+            - obfuscated.exe
+            - obfusc.exe
+            - \meterpreter
+    selection_commandline:
+        CommandLine|contains:
+            - inject.ps1
+            - Invoke-CVE
+            - pupy.ps1
+            - payload.ps1
+            - beacon.ps1
+            - PowerView.ps1
+            - bypass.ps1
+            - obfuscated.ps1
+            - obfusc.ps1
+            - obfus.ps1
+            - obfs.ps1
+            - evil.ps1
+            - MiniDogz.ps1
+            - _enc.ps1
+            - \shell.ps1
+            - \rshell.ps1
+            - revshell.ps1
+            - \av.ps1
+            - \av_test.ps1
+            - adrecon.ps1
+            - mimikatz.ps1
+            - \PowerUp_
+            - powerup.ps1
+            - \Temp\a.ps1
+            - \Temp\p.ps1
+            - \Temp\1.ps1
+            - Hound.ps1
+            - encode.ps1
+            - powercat.ps1
+    condition: 1 of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:27.346722+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:27.346722+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:27.346740+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:27.346743+00:00'

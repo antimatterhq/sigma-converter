@@ -1,0 +1,47 @@
+id: b55d23e5-6821-44ff-8a6e-67218891e49f
+title: HybridConnectionManager Service Running
+status: test
+level: high
+description: Rule to detect the Hybrid Connection Manager service running on an endpoint.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+date: '2021-04-12'
+modified: '2024-08-05'
+tags:
+    - attack.persistence
+    - attack.t1554
+references:
+    - https://twitter.com/Cyb3rWard0g/status/1381642789369286662
+falsepositives:
+    - Legitimate use of Hybrid Connection Manager via Azure function apps.
+taxonomy: sigma
+logsource:
+    product: windows
+    service: microsoft-servicebus-client
+detection:
+    selection:
+        EventID:
+            - 40300
+            - 40301
+            - 40302
+    keywords:
+        - HybridConnection
+        - sb://
+        - servicebus.windows.net
+        - HybridConnectionManage
+    condition: selection and keywords
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:12.605545+00:00'
+        service:
+            source_field: service
+            source_value: microsoft-servicebus-client
+            mapped_at: '2025-11-13T20:22:12.605545+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: process_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:22:12.605560+00:00'

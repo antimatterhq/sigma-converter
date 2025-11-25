@@ -1,0 +1,76 @@
+id: 749c9f5e-b353-4b90-a9c1-05243357ca4b
+title: Potential Privilege Escalation via Local Kerberos Relay over LDAP
+status: test
+level: high
+description: 'Detects a suspicious local successful logon event where the Logon Package
+    is Kerberos, the remote address is set to localhost, and the target user SID is
+    the built-in local Administrator account.
+
+    This may indicate an attempt to leverage a Kerberos relay attack variant that
+    can be used to elevate privilege locally from a domain joined limited user to
+    local System privileges.
+
+    '
+author: Elastic, @SBousseaden
+date: '2022-04-27'
+modified: '2024-08-13'
+tags:
+    - attack.privilege-escalation
+    - attack.credential-access
+    - attack.t1548
+references:
+    - https://twitter.com/sbousseaden/status/1518976397364056071?s=12&t=qKO5eKHvWhAP19a50FTZ7g
+    - https://github.com/elastic/detection-rules/blob/5fe7833312031a4787e07893e27e4ea7a7665745/rules/_deprecated/privilege_escalation_krbrelayup_suspicious_logon.toml#L38
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 3
+        AuthenticationPackageName: Kerberos
+        IpAddress: 127.0.0.1
+        TargetUserSid|startswith: S-1-5-21-
+        TargetUserSid|endswith: '-500'
+    filter_main_ip_null:
+        IpPort: '0'
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: authentication
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:25:00.327874+00:00'
+        service:
+            source_field: service
+            source_value: security
+            mapped_at: '2025-11-13T20:25:00.327874+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: authentication
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:25:02.276112+00:00'
+        -   source_field: LogonType
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:02.276123+00:00'
+        -   source_field: AuthenticationPackageName
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:02.276126+00:00'
+        -   source_field: IpAddress
+            target_table: authentication
+            target_field: src_endpoint.ip
+            mapped_at: '2025-11-13T20:25:02.276127+00:00'
+        -   source_field: TargetUserSid
+            target_table: authentication
+            target_field: actor.user.uid
+            mapped_at: '2025-11-13T20:25:02.276129+00:00'
+        -   source_field: IpPort
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:25:02.276130+00:00'

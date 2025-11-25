@@ -1,0 +1,68 @@
+id: 91e69562-2426-42ce-a647-711b8152ced6
+title: AADInternals PowerShell Cmdlets Execution - PsScript
+status: test
+level: high
+description: Detects ADDInternals Cmdlet execution. A tool for administering Azure
+    AD and Office 365. Which can be abused by threat actors to attack Azure AD or
+    Office 365.
+author: Austin Songer (@austinsonger), Nasreddine Bencherchali (Nextron Systems)
+date: '2022-12-23'
+tags:
+    - attack.execution
+    - attack.reconnaissance
+    - attack.discovery
+    - attack.credential-access
+    - attack.impact
+references:
+    - https://o365blog.com/aadinternals/
+    - https://github.com/Gerenios/AADInternals
+falsepositives:
+    - Legitimate use of the library for administrative activity
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c86500e9-a645-4680-98d7-f882c70c1ea3''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: Script Block Logging must be enable
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - Add-AADInt
+            - ConvertTo-AADInt
+            - Disable-AADInt
+            - Enable-AADInt
+            - Export-AADInt
+            - Get-AADInt
+            - Grant-AADInt
+            - Install-AADInt
+            - Invoke-AADInt
+            - Join-AADInt
+            - New-AADInt
+            - Open-AADInt
+            - Read-AADInt
+            - Register-AADInt
+            - Remove-AADInt
+            - Restore-AADInt
+            - Search-AADInt
+            - Send-AADInt
+            - Set-AADInt
+            - Start-AADInt
+            - Update-AADInt
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.250733+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.250733+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.250739+00:00'

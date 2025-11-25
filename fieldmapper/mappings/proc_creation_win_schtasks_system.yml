@@ -1,0 +1,65 @@
+id: 89ca78fd-b37c-4310-b3d3-81a023f83936
+title: Schtasks Creation Or Modification With SYSTEM Privileges
+status: test
+level: high
+description: Detects the creation or update of a scheduled task to run with "NT AUTHORITY\SYSTEM"
+    privileges
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2022-07-28'
+modified: '2023-10-11'
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1053.005
+references:
+    - https://www.elastic.co/security-labs/exploring-the-qbot-attack-pattern
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_root:
+        Image|endswith: \schtasks.exe
+        CommandLine|contains:
+            - ' /change '
+            - ' /create '
+    selection_run:
+        CommandLine|contains: '/ru '
+    selection_user:
+        CommandLine|contains:
+            - NT AUT
+            - ' SYSTEM '
+    filter_optional_teamviewer:
+        Image|endswith: \schtasks.exe
+        CommandLine|contains|all:
+            - /TN TVInstallRestore
+            - \TeamViewer_.exe
+    filter_optional_avira:
+        CommandLine|contains:
+            - '/Create /F /RU System /SC WEEKLY /TN AviraSystemSpeedupVerify /TR '
+            - :\Program Files (x86)\Avira\System Speedup\setup\avira_speedup_setup.exe
+            - /VERIFY /VERYSILENT /NOSTART /NODOTNET /NORESTART" /RL HIGHEST
+    condition: all of selection_* and not 1 of filter_optional_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:45.401775+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:45.401775+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:45.401783+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:45.401786+00:00'

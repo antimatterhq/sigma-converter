@@ -1,0 +1,43 @@
+id: 1cbbeaaf-3c8c-4e4c-9d72-49485b6a176b
+title: DNS Query To Ufile.io
+status: test
+level: low
+description: Detects DNS queries to "ufile.io", which was seen abused by malware and
+    threat actors as a method for data exfiltration
+author: yatinwad, TheDFIRReport
+date: '2022-06-23'
+modified: '2023-09-18'
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+references:
+    - https://thedfirreport.com/2021/12/13/diavol-ransomware/
+falsepositives:
+    - DNS queries for "ufile" are not malicious by nature necessarily. Investigate
+        the source to determine the necessary actions to take
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''090ffaad-c01a-4879-850c-6d57da98452d''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    selection:
+        QueryName|contains: ufile.io
+    condition: selection
+ocsf_mapping:
+    class_name: dns_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: dns_query
+            mapped_at: '2025-11-13T20:21:06.388851+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:06.388851+00:00'
+    detection_fields:
+        -   source_field: QueryName
+            target_table: dns_activity
+            target_field: query.hostname
+            mapped_at: '2025-11-13T20:21:06.388856+00:00'

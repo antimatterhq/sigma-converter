@@ -1,0 +1,79 @@
+id: 396f6630-f3ac-44e3-bfc8-1b161bc00c4e
+title: Suspicious Child Process Of Wermgr.EXE
+status: experimental
+level: high
+description: Detects suspicious Windows Error Reporting manager (wermgr.exe) child
+    process
+author: Florian Roth (Nextron Systems)
+date: '2022-10-14'
+modified: '2024-08-29'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055
+    - attack.t1036
+references:
+    - https://www.trendmicro.com/en_us/research/22/j/black-basta-infiltrates-networks-via-qakbot-brute-ratel-and-coba.html
+    - https://www.echotrail.io/insights/search/wermgr.exe
+    - https://github.com/binderlabs/DirCreate2System
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5394fcc7-aeb2-43b5-9a09-cac9fc5edcd5''),
+    type=<SigmaRelatedType.SIMILAR: 6>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \wermgr.exe
+        Image|endswith:
+            - \cmd.exe
+            - \cscript.exe
+            - \ipconfig.exe
+            - \mshta.exe
+            - \net.exe
+            - \net1.exe
+            - \netstat.exe
+            - \nslookup.exe
+            - \powershell_ise.exe
+            - \powershell.exe
+            - \pwsh.exe
+            - \regsvr32.exe
+            - \rundll32.exe
+            - \systeminfo.exe
+            - \whoami.exe
+            - \wscript.exe
+    filter_main_rundll32:
+        Image|endswith: \rundll32.exe
+        CommandLine|contains|all:
+            - C:\Windows\system32\WerConCpl.dll
+            - 'LaunchErcApp '
+        CommandLine|contains:
+            - -queuereporting
+            - -responsepester
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:56.602555+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:56.602555+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:56.602560+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:56.602561+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:56.602563+00:00'

@@ -1,0 +1,51 @@
+id: 3735d5ac-d770-4da0-99ff-156b180bc600
+title: Potential CCleanerReactivator.DLL Sideloading
+status: test
+level: medium
+description: Detects potential DLL sideloading of "CCleanerReactivator.dll"
+author: X__Junior
+date: '2023-07-13'
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+references:
+    - https://lab52.io/blog/2344-2/
+falsepositives:
+    - False positives could occur from other custom installation paths. Apply additional
+        filters accordingly.
+taxonomy: sigma
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        ImageLoaded|endswith: \CCleanerReactivator.dll
+    filter_main_path:
+        Image|startswith:
+            - C:\Program Files\CCleaner\
+            - C:\Program Files (x86)\CCleaner\
+        Image|endswith: \CCleanerReactivator.exe
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: image_load
+            mapped_at: '2025-11-13T20:19:25.877774+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:19:25.877774+00:00'
+    detection_fields:
+        -   source_field: ImageLoaded
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:19:25.877784+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:19:25.877786+00:00'

@@ -1,0 +1,53 @@
+id: fdeebdf0-9f3f-4d08-84a6-4c4d13e39fe4
+title: Network Connection Initiated To Mega.nz
+status: test
+level: low
+description: 'Detects a network connection initiated by a binary to "api.mega.co.nz".
+
+    Attackers were seen abusing file sharing websites similar to "mega.nz" in order
+    to upload/download additional payloads.
+
+    '
+author: Florian Roth (Nextron Systems)
+date: '2021-12-06'
+modified: '2024-05-31'
+tags:
+    - attack.exfiltration
+    - attack.t1567.001
+references:
+    - https://megatools.megous.com/
+    - https://www.mandiant.com/resources/russian-targeting-gov-business
+falsepositives:
+    - Legitimate MEGA installers and utilities are expected to communicate with this
+        domain. Exclude hosts that are known to be allowed to use this tool.
+taxonomy: sigma
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Initiated: 'true'
+        DestinationHostname|endswith:
+            - mega.co.nz
+            - mega.nz
+    condition: selection
+ocsf_mapping:
+    class_name: network_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: network_connection
+            mapped_at: '2025-11-13T20:21:09.590710+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:09.590710+00:00'
+    detection_fields:
+        -   source_field: Initiated
+            target_table: network_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:09.590738+00:00'
+        -   source_field: DestinationHostname
+            target_table: network_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-13T20:21:09.590742+00:00'

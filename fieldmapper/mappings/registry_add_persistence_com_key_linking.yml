@@ -1,0 +1,53 @@
+id: 9b0f8a61-91b2-464f-aceb-0527e0a45020
+title: Potential COM Object Hijacking Via TreatAs Subkey - Registry
+status: test
+level: medium
+description: Detects COM object hijacking via TreatAs subkey
+author: Kutepov Anton, oscd.community
+date: '2019-10-23'
+modified: '2023-02-07'
+tags:
+    - attack.persistence
+    - attack.t1546.015
+references:
+    - https://bohops.com/2018/08/18/abusing-the-com-registry-structure-part-2-loading-techniques-for-evasion-and-persistence/
+falsepositives:
+    - Maybe some system utilities in rare cases use linking keys for backward compatibility
+taxonomy: sigma
+logsource:
+    category: registry_add
+    product: windows
+detection:
+    selection:
+        EventType: CreateKey
+        TargetObject|contains|all:
+            - HKU\
+            - Classes\CLSID\
+            - \TreatAs
+    filter_svchost:
+        Image: C:\WINDOWS\system32\svchost.exe
+    condition: selection and not 1 of filter_*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: registry_add
+            mapped_at: '2025-11-13T20:22:08.104370+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:22:08.104370+00:00'
+    detection_fields:
+        -   source_field: EventType
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:22:08.104380+00:00'
+        -   source_field: TargetObject
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:22:08.104382+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:22:08.104384+00:00'

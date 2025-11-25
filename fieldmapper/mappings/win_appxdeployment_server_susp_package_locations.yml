@@ -1,0 +1,58 @@
+id: 5cdeaf3d-1489-477c-95ab-c318559fc051
+title: Suspicious AppX Package Locations
+status: test
+level: high
+description: Detects an appx package added the pipeline of the "to be processed" packages
+    which is located in suspicious locations
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-01-11'
+tags:
+    - attack.defense-evasion
+references:
+    - Internal Research
+    - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+    - https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting
+    - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    selection:
+        EventID: 854
+        Path|contains:
+            - C:\Users\Public\
+            - /users/public/
+            - C:\PerfLogs\
+            - C:/perflogs/
+            - \Desktop\
+            - /desktop/
+            - \Downloads\
+            - /Downloads/
+            - C:\Windows\Temp\
+            - C:/Windows/Temp/
+            - \AppdData\Local\Temp\
+            - /AppdData/Local/Temp/
+    condition: selection
+ocsf_mapping:
+    class_name: scheduled_job_activity
+    logsource:
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:24:50.521672+00:00'
+        service:
+            source_field: service
+            source_value: appxdeployment-server
+            mapped_at: '2025-11-13T20:24:50.521672+00:00'
+    detection_fields:
+        -   source_field: EventID
+            target_table: scheduled_job_activity
+            target_field: metadata.event_code
+            mapped_at: '2025-11-13T20:24:50.521677+00:00'
+        -   source_field: Path
+            target_table: scheduled_job_activity
+            target_field: script.file.path
+            mapped_at: '2025-11-13T20:24:50.521679+00:00'

@@ -1,0 +1,54 @@
+id: ebbeb024-5b1d-4e16-9c0c-917f86c708a7
+title: User Added to an Administrator's Azure AD Role
+status: test
+level: medium
+description: User Added to an Administrator's Azure AD Role
+author: Raphaël CALVET, @MetallicHack
+date: '2021-10-04'
+modified: '2022-10-09'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1098.003
+    - attack.t1078
+references:
+    - https://m365internals.com/2021/07/13/what-ive-learned-from-doing-a-year-of-cloud-forensics-in-azure-ad/
+falsepositives:
+    - PIM (Privileged Identity Management) generates this event each time 'eligible
+        role' is enabled.
+taxonomy: sigma
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    selection:
+        Operation: Add member to role.
+        Workload: AzureActiveDirectory
+        ModifiedProperties{}.NewValue|endswith:
+            - Admins
+            - Administrator
+    condition: selection
+ocsf_mapping:
+    class_name: account_change
+    logsource:
+        product:
+            source_field: product
+            source_value: azure
+            mapped_at: '2025-11-13T20:17:30.309086+00:00'
+        service:
+            source_field: service
+            source_value: activitylogs
+            mapped_at: '2025-11-13T20:17:30.309086+00:00'
+    detection_fields:
+        -   source_field: Operation
+            target_table: account_change
+            target_field: api.operation
+            mapped_at: '2025-11-13T20:17:32.212074+00:00'
+        -   source_field: Workload
+            target_table: account_change
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:17:32.212085+00:00'
+        -   source_field: ModifiedProperties{}.NewValue
+            target_table: account_change
+            target_field: api.request.data
+            mapped_at: '2025-11-13T20:17:32.212086+00:00'

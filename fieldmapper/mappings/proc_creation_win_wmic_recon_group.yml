@@ -1,0 +1,60 @@
+id: 164eda96-11b2-430b-85ff-6a265c15bf32
+title: Local Groups Reconnaissance Via Wmic.EXE
+status: test
+level: low
+description: 'Detects the execution of "wmic" with the "group" flag.
+
+    Adversaries may attempt to find local system groups and permission settings.
+
+    The knowledge of local system permission groups can help adversaries determine
+    which groups exist and which users belong to a particular group.
+
+    Adversaries may use this information to determine which users have elevated permissions,
+    such as the users found within the local administrators group.
+
+    '
+author: frack113
+date: '2021-12-12'
+modified: '2023-02-14'
+tags:
+    - attack.discovery
+    - attack.t1069.001
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.001/T1069.001.md
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: \wmic.exe
+        OriginalFileName: wmic.exe
+    selection_cli:
+        CommandLine|contains: ' group'
+    condition: all of selection*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:28.750824+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:28.750824+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:28.750834+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:28.750836+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:20:28.750838+00:00'

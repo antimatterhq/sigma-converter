@@ -1,0 +1,45 @@
+id: 27ee9438-90dc-4bef-904b-d3ef927f5e7e
+title: Windows Kernel Debugger Execution
+status: test
+level: medium
+description: Detects execution of the Windows Kernel Debugger "kd.exe".
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-15'
+modified: '2024-04-24'
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+references:
+    - Internal Research
+falsepositives:
+    - Rare occasions of legitimate cases where kernel debugging is necessary in production.
+        Investigation is required
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: \kd.exe
+        OriginalFileName: kd.exe
+    condition: selection
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:28.743622+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:28.743622+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:28.743632+00:00'
+        -   source_field: OriginalFileName
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-13T20:20:28.743634+00:00'

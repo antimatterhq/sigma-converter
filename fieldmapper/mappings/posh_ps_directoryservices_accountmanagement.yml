@@ -1,0 +1,47 @@
+id: b29a93fb-087c-4b5b-a84d-ee3309e69d08
+title: Manipulation of User Computer or Group Security Principals Across AD
+status: test
+level: medium
+description: 'Adversaries may create a domain account to maintain access to victim
+    systems.
+
+    Domain accounts are those managed by Active Directory Domain Services where access
+    and permissions are configured across systems and services that are part of that
+    domain..
+
+    '
+author: frack113
+date: '2021-12-28'
+tags:
+    - attack.persistence
+    - attack.t1136.002
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1136.002/T1136.002.md#atomic-test-3---create-a-new-domain-account-using-powershell
+    - https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement?view=net-8.0
+falsepositives:
+    - Legitimate administrative script
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains: System.DirectoryServices.AccountManagement
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:48.282783+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:48.282783+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:48.282787+00:00'

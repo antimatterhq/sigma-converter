@@ -1,0 +1,54 @@
+id: 1f49f2ab-26bc-48b3-96cc-dcffbc93eadf
+title: Potential Suspicious PowerShell Keywords
+status: test
+level: medium
+description: Detects potentially suspicious keywords that could indicate the use of
+    a PowerShell exploitation framework
+author: Florian Roth (Nextron Systems), Perez Diego (@darkquassar), Tuan Le (NCSGroup)
+date: '2019-02-11'
+modified: '2023-04-21'
+tags:
+    - attack.execution
+    - attack.t1059.001
+references:
+    - https://posts.specterops.io/entering-a-covenant-net-command-and-control-e11038bcf462
+    - https://github.com/PowerShellMafia/PowerSploit/blob/d943001a7defb5e0d1657085a77a0e78609be58f/CodeExecution/Invoke-ReflectivePEInjection.ps1
+    - https://github.com/hlldz/Phant0m/blob/30c2935d8cf4aafda17ee2fab7cd0c4aa9a607c2/old/Invoke-Phant0m.ps1
+    - https://gist.github.com/MHaggis/0dbe00ad401daa7137c81c99c268cfb7
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - System.Reflection.Assembly.Load($
+            - '[System.Reflection.Assembly]::Load($'
+            - '[Reflection.Assembly]::Load($'
+            - System.Reflection.AssemblyName
+            - Reflection.Emit.AssemblyBuilderAccess
+            - Reflection.Emit.CustomAttributeBuilder
+            - Runtime.InteropServices.UnmanagedType
+            - Runtime.InteropServices.DllImportAttribute
+            - SuspendThread
+            - rundll32
+    condition: selection
+ocsf_mapping:
+    class_name: script_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: ps_script
+            mapped_at: '2025-11-13T20:21:46.232294+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:46.232294+00:00'
+    detection_fields:
+        -   source_field: ScriptBlockText
+            target_table: script_activity
+            target_field: script.script_content.value
+            mapped_at: '2025-11-13T20:21:46.232301+00:00'

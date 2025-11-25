@@ -1,0 +1,49 @@
+id: fa4aaed5-4fe0-498d-bbc0-08e3346387ba
+title: Copy Passwd Or Shadow From TMP Path
+status: test
+level: high
+description: Detects when the file "passwd" or "shadow" is copied from tmp path
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+date: '2023-01-31'
+tags:
+    - attack.credential-access
+    - attack.t1552.001
+references:
+    - https://blogs.blackberry.com/
+    - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
+falsepositives:
+    - Unknown
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_img:
+        Image|endswith: /cp
+    selection_path:
+        CommandLine|contains: /tmp/
+    selection_file:
+        CommandLine|contains:
+            - passwd
+            - shadow
+    condition: all of selection_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:15:51.728803+00:00'
+        product:
+            source_field: product
+            source_value: linux
+            mapped_at: '2025-11-13T20:15:51.728803+00:00'
+    detection_fields:
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:15:51.728809+00:00'
+        -   source_field: CommandLine
+            target_table: process_activity
+            target_field: process.cmd_line
+            mapped_at: '2025-11-13T20:15:51.728811+00:00'

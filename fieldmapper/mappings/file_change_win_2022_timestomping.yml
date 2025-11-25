@@ -1,0 +1,77 @@
+id: 558eebe5-f2ba-4104-b339-36f7902bcc1a
+title: File Creation Date Changed to Another Year
+status: test
+level: high
+description: 'Attackers may change the file creation time of a backdoor to make it
+    look like it was installed with the operating system.
+
+    Note that many processes legitimately change the creation time of a file; it does
+    not necessarily indicate malicious activity.
+
+    '
+author: frack113, Florian Roth (Nextron Systems)
+date: '2022-08-12'
+modified: '2022-10-25'
+tags:
+    - attack.t1070.006
+    - attack.defense-evasion
+references:
+    - https://www.inversecos.com/2022/04/defence-evasion-technique-timestomping.html
+falsepositives:
+    - Changes made to or by the local NTP service
+taxonomy: sigma
+logsource:
+    category: file_change
+    product: windows
+detection:
+    selection1:
+        PreviousCreationUtcTime|startswith: '2022'
+    filter1:
+        CreationUtcTime|startswith: '2022'
+    selection2:
+        PreviousCreationUtcTime|startswith: '202'
+    filter2:
+        CreationUtcTime|startswith: '202'
+    gen_filter_updates:
+        Image:
+            - C:\Windows\system32\ProvTool.exe
+            - C:\Windows\System32\usocoreworker.exe
+            - C:\Windows\ImmersiveControlPanel\SystemSettings.exe
+        TargetFilename|startswith: C:\ProgramData\USOPrivate\UpdateStore\
+        TargetFilename|endswith:
+            - .tmp
+            - .temp
+    gen_filter_tiworker:
+        Image|startswith: C:\WINDOWS\
+        Image|endswith: \TiWorker.exe
+        TargetFilename|endswith: .cab
+    condition: (( selection1 and not filter1 ) or ( selection2 and not filter2 ))
+        and not 1 of gen_filter*
+ocsf_mapping:
+    class_name: file_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: file_change
+            mapped_at: '2025-11-13T20:21:42.540286+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:21:42.540286+00:00'
+    detection_fields:
+        -   source_field: PreviousCreationUtcTime
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:43.771386+00:00'
+        -   source_field: CreationUtcTime
+            target_table: file_activity
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-13T20:21:43.771408+00:00'
+        -   source_field: Image
+            target_table: file_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:21:43.771412+00:00'
+        -   source_field: TargetFilename
+            target_table: file_activity
+            target_field: file.path
+            mapped_at: '2025-11-13T20:21:43.771415+00:00'

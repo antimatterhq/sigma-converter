@@ -1,0 +1,52 @@
+id: 84b1ecf9-6eff-4004-bafb-bae5c0e251b2
+title: Potentially Suspicious GoogleUpdate Child Process
+status: test
+level: high
+description: Detects potentially suspicious child processes of "GoogleUpdate.exe"
+author: Nasreddine Bencherchali (Nextron Systems)
+date: '2023-05-15'
+modified: '2023-05-22'
+tags:
+    - attack.defense-evasion
+references:
+    - https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/goofy-guineapig/NCSC-MAR-Goofy-Guineapig.pdf
+falsepositives:
+    - Unknown
+related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''bdbab15a-3826-48fa-a1b7-723cd8f32fcc''),
+    type=<SigmaRelatedType.DERIVED: 2>)])'
+taxonomy: sigma
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: \GoogleUpdate.exe
+    filter_main_known_legit:
+        Image|contains: \Google
+        Image|endswith:
+            - \setup.exe
+            - chrome_updater.exe
+            - chrome_installer.exe
+    filter_main_image_null:
+        Image: null
+    condition: selection and not 1 of filter_main_*
+ocsf_mapping:
+    class_name: process_activity
+    logsource:
+        category:
+            source_field: category
+            source_value: process_creation
+            mapped_at: '2025-11-13T20:20:56.585211+00:00'
+        product:
+            source_field: product
+            source_value: windows
+            mapped_at: '2025-11-13T20:20:56.585211+00:00'
+    detection_fields:
+        -   source_field: ParentImage
+            target_table: process_activity
+            target_field: process.parent_process.name
+            mapped_at: '2025-11-13T20:20:56.585218+00:00'
+        -   source_field: Image
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-13T20:20:56.585220+00:00'
