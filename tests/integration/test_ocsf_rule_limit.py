@@ -266,8 +266,3 @@ class TestRuleLimit:
         mock_load.assert_called_once_with(filename=None)
         assert 'limited_from' in result['stats']
         assert result['stats']['limited_from'] == 20
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
-

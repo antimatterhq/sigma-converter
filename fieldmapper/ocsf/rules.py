@@ -1,6 +1,6 @@
 from sigma.rule import SigmaYAMLLoader, SigmaRuleBase, SigmaRule
 from dataclasses import dataclass, field
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Dict, Tuple
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -103,7 +103,7 @@ class SigmaRuleOCSFLite(SigmaRule):
     @classmethod
     def load(cls, path: str, base_dir: str = "mappings") -> 'SigmaRuleOCSFLite':
         """
-        Load a mapped rule from YAML or JSON file.
+        Load a mapped rule from YAML file.
         
         Supports two input formats:
         1. Full path: load("mappings/windows/process_creation/rule.yml")
@@ -238,7 +238,7 @@ class SigmaRuleOCSFLite(SigmaRule):
             
             # Initialize basic attributes
             instance.ocsflite = OCSFLite()
-            instance.ocsflite.class_name = data.get('event_class')
+            instance.ocsflite.class_name = data.get('class_name') or data.get('event_class')
             instance.source_filename = source_filename
             
             # Parse field mappings from condensed format
@@ -276,6 +276,198 @@ class SigmaRuleOCSFLite(SigmaRule):
                 instance.ocsflite.detection_fields.append(mapping)
             
             return instance
+
+    @classmethod
+    def build_field_mapping_dict(cls, mappings_dir: str = "fieldmapper/mappings") -> Dict[str, List[str]]:
+        """
+        Build a field mapping dictionary from all OCSF-mapped rules in a directory.
+        
+        This creates a consolidated mapping of Sigma field names to OCSF field names,
+        suitable for use with Sigma's FieldMappingTransformation.
+        
+        Args:
+            mappings_dir: Directory containing OCSF-mapped rule files
+                          Default: "fieldmapper/mappings"
+        
+        Returns:
+            Dict[str, List[str]] where:
+            - Key: Source Sigma field name (e.g., "EventID", "Image")
+            - Value: List of OCSF target field names (e.g., ["event_id", "process.name"])
+        
+        Example:
+            >>> mappings = SigmaRuleOCSFLite.build_field_mapping_dict("fieldmapper/mappings")
+            >>> print(mappings)
+            {
+                "EventID": ["event_id"],
+                "Image": ["process.name", "actor.process.name"],
+                "CommandLine": ["process.cmd_line"],
+                ...
+            }
+            
+            >>> # Use with Sigma FieldMappingTransformation
+            >>> from sigma.processing.transformations import FieldMappingTransformation
+            >>> transform = FieldMappingTransformation(mappings)
+        """
+        from pathlib import Path
+        
+        mappings: Dict[str, set] = {}  # Use set to avoid duplicates
+        
+        # Find all YAML files in mappings directory
+        base_path = Path(mappings_dir)
+        if not base_path.exists():
+            raise FileNotFoundError(f"Mappings directory not found: {mappings_dir}")
+        
+        yaml_files = list(base_path.rglob("*.yml"))
+        
+        # Load each file and extract field mappings
+        for file_path in yaml_files:
+            try:
+                # Use existing load method
+                rule = cls.load(str(file_path))
+                
+                # Extract field mappings
+                if rule.ocsflite and rule.ocsflite.detection_fields:
+                    for field_mapping in rule.ocsflite.detection_fields:
+                        # Skip unmapped fields
+                        if not field_mapping.target_field or field_mapping.target_field == "<UNMAPPED>":
+                            continue
+                        
+                        source = field_mapping.source_field
+                        target = field_mapping.target_field
+                        
+                        # Add to mappings (use set to deduplicate)
+                        if source not in mappings:
+                            mappings[source] = set()
+                        mappings[source].add(target)
+            
+            except Exception as e:
+                # Skip files that can't be loaded (may not be mapping files)
+                continue
+        
+        # Convert sets to sorted lists for consistent output
+        return {source: sorted(list(targets)) 
+                for source, targets in sorted(mappings.items())}
+    
+    @classmethod
+    def build_table_mappings(
+        cls,
+        mappings_dir: str = "fieldmapper/mappings"
+    ) -> tuple[Dict[tuple[Optional[str], Optional[str], Optional[str]], str], Dict[str, str]]:
+        """
+        Build table mappings for pipeline processing.
+        
+        This method analyzes all OCSF-mapped rules and separates them into:
+        1. Non-conflicted logsources: Where all rules with the same logsource map to the same table
+        2. Conflicted rules: Where the logsource maps to multiple tables, requiring per-rule assignment
+        
+        Args:
+            mappings_dir: Directory containing OCSF-mapped rule files
+                          Default: "fieldmapper/mappings"
+        
+        Returns:
+            Tuple of (logsource_mappings, conflicted_rule_mappings):
+            - logsource_mappings: Dict[(category, product, service)] -> table_name
+              For logsources where ALL rules map to the same table
+            - conflicted_rule_mappings: Dict[rule_id] -> table_name
+              For rules where logsource maps to multiple tables
+        
+        Example:
+            >>> logsource_map, conflicted_map = SigmaRuleOCSFLite.build_hybrid_table_mappings()
+            >>> 
+            >>> # Non-conflicted: All process_creation/linux rules -> process_activity
+            >>> print(logsource_map[('process_creation', 'linux', None)])
+            'process_activity'
+            >>> 
+            >>> # Conflicted: file_event/windows rules need per-rule assignment
+            >>> print(conflicted_map['fcc6d700-68d9-4241-9a1a-06874d621b06'])
+            'file_activity'
+            >>> 
+            >>> # Use in pipeline
+            >>> from sigma.processing.conditions import LogsourceCondition
+            >>> from sigma.pipelines.lakewatch.custom_conditions import RuleIDCondition
+            >>> 
+            >>> items = []
+            >>> # Add LogsourceCondition items
+            >>> for (cat, prod, svc), table in logsource_map.items():
+            ...     items.append(ProcessingItem(
+            ...         transformation=SetCustomAttributeTransformation("table", table),
+            ...         rule_conditions=[LogsourceCondition(cat, prod, svc)]
+            ...     ))
+            >>> 
+            >>> # Add RuleIDCondition items for conflicts
+            >>> for rule_id, table in conflicted_map.items():
+            ...     items.append(ProcessingItem(
+            ...         transformation=SetCustomAttributeTransformation("table", table),
+            ...         rule_conditions=[RuleIDCondition(rule_id)]
+            ...     ))
+        """
+        from pathlib import Path
+        from collections import defaultdict
+        
+        # Group rules by logsource
+        logsource_to_rules = defaultdict(list)
+        
+        # Find all YAML files in mappings directory
+        base_path = Path(mappings_dir)
+        if not base_path.exists():
+            raise FileNotFoundError(f"Mappings directory not found: {mappings_dir}")
+        
+        yaml_files = list(base_path.rglob("*.yml"))
+        
+        # Load each file and group by logsource
+        for file_path in yaml_files:
+            try:
+                rule = cls.load(str(file_path))
+                
+                # Skip if no OCSF mapping, no ID, or unmapped
+                if not rule.ocsflite or not rule.ocsflite.class_name:
+                    continue
+                if rule.ocsflite.class_name == "<UNMAPPED>":
+                    continue
+                if not rule.id:
+                    continue
+                
+                # Get logsource fields (handle dict or object)
+                logsource = rule.logsource
+                if isinstance(logsource, dict):
+                    category = logsource.get('category')
+                    product = logsource.get('product')
+                    service = logsource.get('service')
+                else:
+                    category = getattr(logsource, 'category', None)
+                    product = getattr(logsource, 'product', None)
+                    service = getattr(logsource, 'service', None)
+                
+                logsource_key = (category, product, service)
+                
+                logsource_to_rules[logsource_key].append({
+                    'id': str(rule.id),
+                    'table': rule.ocsflite.class_name
+                })
+            
+            except Exception as e:
+                # Skip files that can't be loaded
+                continue
+        
+        # Separate non-conflicted logsources from conflicted rules
+        logsource_mappings = {}
+        conflicted_rule_mappings = {}
+        
+        for logsource_key, rules in logsource_to_rules.items():
+            # Get unique tables for this logsource
+            tables = set(r['table'] for r in rules)
+            
+            if len(tables) == 1:
+                # No conflict: all rules with this logsource map to the same table
+                # Use LogsourceCondition for efficiency
+                logsource_mappings[logsource_key] = list(tables)[0]
+            else:
+                # Conflict: rules with this logsource map to different tables
+                # Add each rule individually using RuleIDCondition
+                for rule in rules:
+                    conflicted_rule_mappings[rule['id']] = rule['table']
+        
+        return logsource_mappings, conflicted_rule_mappings
 
     @property
     def ocsf_category(self) -> Optional[str]:

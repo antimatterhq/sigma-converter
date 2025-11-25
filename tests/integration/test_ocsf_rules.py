@@ -1143,6 +1143,169 @@ class TestFactoryMethodsAndProperties:
         assert len(unmapped) == 1
 
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
-
+class TestBuildFieldMappingDict:
+    """Tests for build_field_mapping_dict class method."""
+    
+    def test_build_from_directory(self, tmp_path):
+        """Test building mapping dict from directory of rules."""
+        # Create test mapping files
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+        
+        # Rule 1: process_creation
+        rule1 = mappings_dir / "rule1.yml"
+        rule1.write_text("""
+title: Test Rule 1
+id: 12345678-1234-1234-1234-123456789012
+status: test
+description: Test process creation rule
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4688
+        Image: test.exe
+        CommandLine: test
+    condition: selection
+ocsf_mapping:
+    event_class: process_activity
+    detection_fields:
+        - source_field: EventID
+          target_table: process_activity
+          target_field: event_id
+        - source_field: Image
+          target_table: process_activity
+          target_field: process.name
+        - source_field: CommandLine
+          target_table: process_activity
+          target_field: process.cmd_line
+""")
+        
+        # Rule 2: network activity (EventID maps to same, Image to different)
+        rule2 = mappings_dir / "rule2.yml"
+        rule2.write_text("""
+title: Test Rule 2
+id: 22345678-1234-1234-1234-123456789012
+status: test
+description: Test network activity rule
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 3
+        Image: test.exe
+        DestinationIp: 1.1.1.1
+    condition: selection
+ocsf_mapping:
+    event_class: network_activity
+    detection_fields:
+        - source_field: EventID
+          target_table: network_activity
+          target_field: event_id
+        - source_field: Image
+          target_table: network_activity
+          target_field: actor.process.name
+        - source_field: DestinationIp
+          target_table: network_activity
+          target_field: dst_endpoint.ip
+""")
+        
+        # Build mapping
+        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        
+        # Assertions
+        assert "EventID" in result
+        assert "event_id" in result["EventID"]
+        
+        assert "Image" in result
+        assert len(result["Image"]) == 2
+        assert "process.name" in result["Image"]
+        assert "actor.process.name" in result["Image"]
+        
+        assert "CommandLine" in result
+        assert result["CommandLine"] == ["process.cmd_line"]
+        
+        assert "DestinationIp" in result
+        assert result["DestinationIp"] == ["dst_endpoint.ip"]
+    
+    def test_build_skips_unmapped_fields(self, tmp_path):
+        """Test that unmapped fields are excluded."""
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+        
+        rule = mappings_dir / "rule.yml"
+        rule.write_text("""
+title: Test Rule
+id: 32345678-1234-1234-1234-123456789012
+status: test
+description: Test rule with unmapped field
+logsource:
+    product: windows
+detection:
+    selection:
+        EventID: 1
+        UnmappedField: test
+    condition: selection
+ocsf_mapping:
+    event_class: process_activity
+    detection_fields:
+        - source_field: EventID
+          target_table: process_activity
+          target_field: event_id
+        - source_field: UnmappedField
+          target_table: null
+          target_field: <UNMAPPED>
+""")
+        
+        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        
+        assert "EventID" in result
+        assert "UnmappedField" not in result
+    
+    def test_build_empty_directory(self, tmp_path):
+        """Test with empty directory."""
+        mappings_dir = tmp_path / "empty"
+        mappings_dir.mkdir()
+        
+        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        
+        assert result == {}
+    
+    def test_build_nonexistent_directory(self):
+        """Test with non-existent directory."""
+        with pytest.raises(FileNotFoundError):
+            SigmaRuleOCSFLite.build_field_mapping_dict("/nonexistent/path")
+    
+    def test_build_returns_sorted_lists(self, tmp_path):
+        """Test that results are sorted for consistency."""
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+        
+        # Create rules that would produce unsorted results
+        for i, target in enumerate(["zzz.field", "aaa.field", "mmm.field"]):
+            rule = mappings_dir / f"rule{i}.yml"
+            rule.write_text(f"""
+title: Test Rule {i}
+id: {i}2345678-1234-1234-1234-123456789012
+status: test
+description: Test rule {i}
+logsource:
+    product: test
+detection:
+    selection:
+        TestField: value
+    condition: selection
+ocsf_mapping:
+    event_class: test
+    detection_fields:
+        - source_field: TestField
+          target_table: test
+          target_field: {target}
+""")
+        
+        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        
+        # Should be sorted
+        assert result["TestField"] == ["aaa.field", "mmm.field", "zzz.field"]

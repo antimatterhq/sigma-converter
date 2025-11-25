@@ -26,7 +26,7 @@ class DatabricksBackend(TextQueryBackend):
     }
     # TODO: does the backend requires that a processing pipeline is provided? This information can be used by user
     # interface programs like Sigma CLI to warn users about inappropriate usage of the backend.
-    requires_pipeline: bool = False
+    requires_pipeline: bool = True
 
     # Operator precedence: tuple of Condition{AND,OR,NOT} in order of precedence.
     # The backend generates grouping if required

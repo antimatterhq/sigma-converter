@@ -532,8 +532,3 @@ class TestCLIMain:
         assert call_kwargs['full_export'] is True
         assert call_kwargs['json_format'] is True
         assert call_kwargs['limit'] == 10
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
-
