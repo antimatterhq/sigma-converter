@@ -6,7 +6,7 @@ Implements a two-step mapping strategy with intelligent caching.
 """
 
 import json
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from openai import OpenAI
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -31,6 +31,12 @@ class FieldMappingsResponse(BaseModel):
     """Structured response for field mappings."""
     model_config = ConfigDict(extra='forbid')
     mappings: List[FieldMapping] = Field(description="List of field mappings from source to target")
+
+
+class ActivityIdResponse(BaseModel):
+    """Structured response for activity_id mapping."""
+    model_config = ConfigDict(extra='forbid')
+    activity_id: Union[int, str] = Field(description="OCSF activity_id integer from enum, or UNMAPPED if uncertain")
 
 
 class OpenAIMapper:
@@ -112,13 +118,51 @@ class OpenAIMapper:
         
         return "<UNMAPPED>"
     
+    def _get_activity_id_enum(self, event_class: str) -> Dict[str, Dict[str, str]]:
+        """
+        Extract activity_id enum from raw event class JSON file.
+        
+        Args:
+            event_class: OCSF event class name (e.g., "system/process_activity")
+            
+        Returns:
+            Dict mapping activity_id values to their caption and description
+            Example: {"1": {"caption": "Launch", "description": "..."}, ...}
+        """
+        from pathlib import Path
+        
+        # Search for base name in all subdirectories
+        events_dir = Path("fieldmapper/ocsf_data/_ocsf_lite") / "events"
+        json_path = None
+       
+        for subdir in events_dir.glob("*/"):
+            if subdir.is_dir():
+                candidate = subdir / f"{event_class}.json"
+                if candidate.exists():
+                    json_path = candidate
+                    break
+        
+        # Check if file was found
+        if json_path is None:
+            return {}
+        
+        try:
+            with open(json_path) as f:
+                event_data = json.load(f)
+            
+            attributes = event_data.get("attributes", {})
+            activity_id_attr = attributes.get("activity_id", {})
+            return activity_id_attr.get("enum", {})
+        except (json.JSONDecodeError, IOError):
+            return {}
+    
     def map_detection_fields(self, event_class: str, 
                            detection_fields: List[str]) -> Dict[str, str]:
         """
         Step 2: Map detection fields to OCSF fields.
         
-        Cache key: source field name only (no event class context needed)
-        Field names in Sigma are not ambiguous across contexts.
+        Cache key: event_class + field name for context-aware caching.
+        The same field can map differently across event classes (e.g., Image in process_activity vs file_activity).
         
         Only sends uncached fields to AI in a single batch call.
         
@@ -135,7 +179,7 @@ class OpenAIMapper:
         # Check cache for each field (unless skip flag is set)
         if not self.skip_cache_reads:
             for source_field in detection_fields:
-                cached = self.cache.get_detection_field_mapping(field_name=source_field)
+                cached = self.cache.get_detection_field_mapping(event_class=event_class, field_name=source_field)
                 
                 if cached:
                     mappings[source_field] = cached.get("target_field")
@@ -153,6 +197,7 @@ class OpenAIMapper:
             # Cache each new mapping individually
             for field, target in new_mappings.items():
                 self.cache.set_detection_field_mapping(
+                    event_class=event_class,
                     field_name=field,
                     mapping={"target_field": target}
                 )
@@ -161,6 +206,52 @@ class OpenAIMapper:
         
         return mappings
     
+    # TODO: Implement the activity_id mapping here. 
+    def map_activity_id(self, event_class: str, context: MappingContext) -> Optional[int]:
+        """
+        Map Sigma rule to OCSF activity_id using AI.
+        
+        This is Step 3 of the mapping process - determining the specific activity_id
+        for an already-mapped event class based on the Sigma rule's context.
+        
+        Args:
+            event_class: Already-determined OCSF event class (e.g., "system/process_activity")
+            context: Sigma rule context (title, description, logsource, tags)
+            
+        Returns:
+            activity_id integer, or None if event class has no activity_id enum,
+            or -1 is returned by AI to indicate UNMAPPED
+        """
+        # Get available activity IDs for this event class
+        activity_enum = self._get_activity_id_enum(event_class)
+        
+        if not activity_enum:
+            # Event class doesn't have activity_id field
+            print(f"NO ACTIVITY ID ENUM FOR {event_class}")
+            return None
+        
+        # Build prompt with context and available activity IDs
+        prompt = self._build_activity_id_prompt(event_class, context, activity_enum)
+        
+        # Call AI with structured output
+        try:
+            response_data = self._call_openai(prompt, ActivityIdResponse)
+            activity_id = response_data['activity_id']
+            # Handle UNMAPPED string response
+            if activity_id == "UNMAPPED":
+                return None
+            
+            # Validate activity_id exists in enum
+            if isinstance(activity_id, int) and str(activity_id) in activity_enum:
+                return activity_id
+            else:
+                # AI returned invalid activity_id, treat as unmapped
+                return None
+                
+        except Exception:
+            # On error, treat as unmapped
+            return None
+
     def _map_fields_batch(self, event_class: str, 
                          fields: List[str]) -> Dict[str, str]:
         """
@@ -359,6 +450,66 @@ Return ONLY the event class name or <UNMAPPED>.
         
         return prompt
     
+    def _build_activity_id_prompt(self, event_class: str, context: MappingContext, 
+                                   activity_enum: Dict[str, Dict[str, str]]) -> str:
+        """Build prompt for activity_id mapping."""
+        
+        # Format available activity IDs
+        activity_options = []
+        for id_val, details in sorted(activity_enum.items(), key=lambda x: int(x[0]) if x[0].isdigit() else 99):
+            caption = details.get("caption", "")
+            description = details.get("description", "")
+            if description and description != caption:
+                activity_options.append(f"  {id_val}: {caption} - {description}")
+            else:
+                activity_options.append(f"  {id_val}: {caption}")
+        
+        activities_text = "\n".join(activity_options)
+        
+        # Get all logsource fields
+        category = context._logsource_category or "N/A"
+        product = context._logsource_product or "N/A"
+        service = context._logsource_service or "N/A"
+        
+        prompt = f"""You are selecting the correct OCSF activity_id for an already-mapped event class.
+
+Rule Context:
+- Title: {context.title}
+- Description: {context.description or 'N/A'}
+- Logsource Category: {category}
+- Logsource Product: {product}
+- Logsource Service: {service}
+- Tags: {', '.join(context.tags) if context.tags else 'N/A'}
+
+Already-Selected Event Class: {event_class}
+
+Available Activity IDs (select ONE from this list):
+{activities_text}
+
+Task: Select the most appropriate activity_id based on STRONG EVIDENCE from the rule's context.
+
+CRITICAL GUIDELINES:
+1. Logsource category is the PRIMARY indicator:
+   - "process_creation" → activity_id 1 (Launch/Create)
+   - "process_termination" → activity_id 2 (Terminate)
+   - "file_delete" → activity_id 4 (Delete)
+   - "file_change" or "file_event" → activity_id 3 (Update/Modify)
+   
+2. If category doesn't clearly map, examine product/service and title/description
+
+3. **IMPORTANT**: If you CANNOT determine the activity_id with HIGH CONFIDENCE, you MUST return "UNMAPPED"
+   - Not enough evidence in the context? → UNMAPPED
+   - Rule could match multiple activities? → UNMAPPED
+   - Activity type is ambiguous? → UNMAPPED
+   
+4. Only use activity_id 0 (Unknown) if it exists in the enum AND the source data itself indicates unknown activity
+
+5. Do NOT guess or infer without strong evidence
+
+Return the activity_id as an integer OR the string "UNMAPPED"."""
+        
+        return prompt
+    
     def _build_batch_field_mapping_prompt(self, event_class: str, fields: List[str],
                                          available_fields: List[str], retry_hint: bool = False) -> str:
         """Build prompt for mapping multiple fields at once."""
@@ -450,6 +601,47 @@ RULES:
     def _get_field_mapping_few_shot_examples(self) -> str:
         """Few-shot examples for field mapping across different event classes."""
         return """
+SEMANTIC MAPPING RULES - Understanding Subject vs Actor:
+
+The event_class name identifies the SUBJECT of the event (what the event is about):
+- file_activity → a FILE is being acted upon
+- process_activity → a PROCESS is being created/terminated/modified  
+- network_activity → a NETWORK CONNECTION is being established
+- http_activity → an HTTP REQUEST is being made
+
+Key Objects and When to Use Them:
+
+1. SUBJECT objects (the thing being observed):
+   - 'file.*' in file_activity → the file being created/deleted/modified
+   - 'process.*' in process_activity → the process being launched/terminated
+   - 'src_endpoint.*' and 'dst_endpoint.*' in network_activity → the connection endpoints
+
+2. ACTOR objects (who/what performed the action):
+   - 'actor.user.*' → the user account that initiated the activity
+   - 'actor.process.*' → the process that performed the activity (when not the subject)
+
+Context-Aware Field Mapping Strategy:
+
+A. Fields like 'Image', 'CommandLine', 'ProcessId':
+   - In process_activity: These describe the SUBJECT process → map to 'process.*'
+     Example: Image → process.name
+   
+   - In file_activity: These describe the ACTOR process (that touched the file) → map to 'actor.process.*'
+     Example: Image → actor.process.name
+   
+   - In network_activity: These describe the ACTOR process (that made the connection) → map to 'actor.process.*'
+     Example: Image → actor.process.name
+
+B. Fields like 'TargetFilename', 'FileName':
+   - In file_activity: These describe the SUBJECT file → map to 'file.*'
+     Example: TargetFilename → file.path
+
+C. Fields like 'User', 'Username':
+   - In any event_class: The user who initiated → 'actor.user.name'
+   - Exception: 'TargetUsername' in account_change → the account being changed
+
+Key Insight: Ask yourself "Is this field describing the SUBJECT of the event or the ACTOR performing it?"
+
 FIELD MAPPING EXAMPLES:
 
 1. Windows Process Fields (process_activity):
@@ -510,22 +702,25 @@ FIELD MAPPING EXAMPLES:
    - LegacyFieldName → <UNMAPPED>
    - UnsupportedAttribute → <UNMAPPED>
 
-IMPORTANT DISTINCTION for process_activity:
-- 'process' = The main process being observed (the target of the event)
-  Example: The process that was launched, terminated, or modified
+IMPORTANT DISTINCTION - Subject vs Actor in Different Event Classes:
+- In process_activity:
+  'process' = The SUBJECT process being observed (launched/terminated/modified)
   Use for: CommandLine, Image, ProcessId, CurrentDirectory, etc.
   
-- 'actor.process' = The process that performed the action
-  Example: A parent process that launched a child process
-  Rarely used in field mappings - mostly use 'actor.user' for who initiated it
+- In file_activity, network_activity, etc:
+  'actor.process' = The process that PERFORMED the action (not the subject)
+  Use for: Image, CommandLine when they describe the process that acted on a file/made a connection
+  
+- 'actor.user' = The user account that initiated any activity (used in all event classes)
 
 RULES:
 - **CRITICAL for AWS CloudTrail and cloud API logs**: eventSource always maps to metadata.product and eventName maps to api.operation
 - Always use full dot-notation for nested fields
-- **IMPORTANT for process_activity**: Use 'process.*' for the main process (CommandLine, Image, etc.)
-  NOT 'actor.process.*'. The 'actor' object represents WHO initiated the activity.
-- Parent process fields use 'process.parent_process.*' prefix
-- Actor fields (user/session info) use 'actor.user.*' or 'actor.session.*'
+- **Apply the Subject vs Actor pattern**: Determine if the field describes the subject of the event or the actor performing it
+- In process_activity: Process fields (Image, CommandLine) → 'process.*' (the subject)
+- In other event classes: Process fields (Image, CommandLine) → 'actor.process.*' (the actor)
+- Parent process fields always use 'process.parent_process.*' prefix (in process_activity)
+- User fields always use 'actor.user.*' (in all event classes)
 - If no good semantic match exists, use <UNMAPPED>
 - Match field semantics, not just names (e.g., Image = file path of executable)
 """

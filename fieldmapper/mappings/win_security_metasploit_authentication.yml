@@ -30,34 +30,35 @@ detection:
         Workstation|re: ^[A-Za-z0-9]{16}$
     condition: 1 of selection*
 ocsf_mapping:
-    class_name: network_activity
+    class_name: authentication
+    activity_id: UNMAPPED
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:22:41.643420+00:00'
+            mapped_at: '2025-11-26T02:43:49.616652+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-13T20:22:41.643420+00:00'
+            mapped_at: '2025-11-26T02:43:49.616652+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: network_activity
+            target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:22:43.769270+00:00'
+            mapped_at: '2025-11-26T02:43:51.792530+00:00'
         -   source_field: LogonType
-            target_table: network_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:22:43.769290+00:00'
+            target_table: authentication
+            target_field: logon_type
+            mapped_at: '2025-11-26T02:43:51.792547+00:00'
         -   source_field: AuthenticationPackageName
-            target_table: network_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:22:43.769293+00:00'
+            target_table: authentication
+            target_field: auth_protocol
+            mapped_at: '2025-11-26T02:43:51.792550+00:00'
         -   source_field: WorkstationName
-            target_table: network_activity
-            target_field: src_endpoint.hostname
-            mapped_at: '2025-11-13T20:22:43.769295+00:00'
+            target_table: authentication
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-26T02:43:51.792552+00:00'
         -   source_field: Workstation
-            target_table: network_activity
-            target_field: src_endpoint.hostname
-            mapped_at: '2025-11-13T20:22:43.769297+00:00'
+            target_table: authentication
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-26T02:43:51.792554+00:00'

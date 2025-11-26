@@ -39,29 +39,30 @@ detection:
     condition: ( selection_sysmon and not 1 of filter_main_* ) or selection_calltrace
 ocsf_mapping:
     class_name: process_activity
+    activity_id: UNMAPPED
     logsource:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-13T20:18:57.021861+00:00'
+            mapped_at: '2025-11-26T02:24:12.801729+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:18:57.021861+00:00'
+            mapped_at: '2025-11-26T02:24:12.801729+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-13T20:18:57.021896+00:00'
+            mapped_at: '2025-11-26T02:24:12.801770+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
-            target_field: requested_permissions
-            mapped_at: '2025-11-13T20:18:57.021900+00:00'
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-26T02:24:12.801774+00:00'
         -   source_field: CallTrace
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:18:57.021902+00:00'
+            mapped_at: '2025-11-26T02:24:12.801778+00:00'
         -   source_field: SourceImage
             target_table: process_activity
-            target_field: process.file.path
-            mapped_at: '2025-11-13T20:18:57.021905+00:00'
+            target_field: actor.process.name
+            mapped_at: '2025-11-26T02:24:12.801781+00:00'

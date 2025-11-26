@@ -25,26 +25,27 @@ detection:
         eventtype: user.authentication.auth_via_mfa
     condition: selection
 ocsf_mapping:
-    class_name: authentication
+    class_name: user_access
+    activity_id: UNMAPPED
     logsource:
         product:
             source_field: product
             source_value: okta
-            mapped_at: '2025-11-13T20:16:17.999283+00:00'
+            mapped_at: '2025-11-26T02:18:36.851708+00:00'
         service:
             source_field: service
             source_value: okta
-            mapped_at: '2025-11-13T20:16:17.999283+00:00'
+            mapped_at: '2025-11-26T02:18:36.851708+00:00'
     detection_fields:
         -   source_field: outcome.reason
-            target_table: authentication
+            target_table: user_access
             target_field: status_detail
-            mapped_at: '2025-11-13T20:16:18.980880+00:00'
+            mapped_at: '2025-11-26T02:18:38.383954+00:00'
         -   source_field: outcome.result
-            target_table: authentication
-            target_field: disposition
-            mapped_at: '2025-11-13T20:16:18.980888+00:00'
+            target_table: user_access
+            target_field: actor.authorizations.decision
+            mapped_at: '2025-11-26T02:18:38.383985+00:00'
         -   source_field: eventtype
-            target_table: authentication
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:16:18.980890+00:00'
+            target_table: user_access
+            target_field: action
+            mapped_at: '2025-11-26T02:18:38.383989+00:00'

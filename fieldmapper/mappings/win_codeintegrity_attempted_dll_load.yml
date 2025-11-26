@@ -114,30 +114,31 @@ detection:
             - \antimalware_provider.dll
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
 ocsf_mapping:
-    class_name: file_activity
+    class_name: process_activity
+    activity_id: UNMAPPED
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:24:56.603312+00:00'
+            mapped_at: '2025-11-26T02:47:27.431127+00:00'
         service:
             source_field: service
             source_value: codeintegrity-operational
-            mapped_at: '2025-11-13T20:24:56.603312+00:00'
+            mapped_at: '2025-11-26T02:47:27.431127+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: file_activity
+            target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:24:58.870445+00:00'
+            mapped_at: '2025-11-26T02:47:28.803725+00:00'
         -   source_field: FileNameBuffer
-            target_table: file_activity
-            target_field: file.name
-            mapped_at: '2025-11-13T20:24:58.870457+00:00'
+            target_table: process_activity
+            target_field: process.file.name
+            mapped_at: '2025-11-26T02:47:28.803751+00:00'
         -   source_field: ProcessNameBuffer
-            target_table: file_activity
-            target_field: actor.process.name
-            mapped_at: '2025-11-13T20:24:58.870460+00:00'
+            target_table: process_activity
+            target_field: process.name
+            mapped_at: '2025-11-26T02:47:28.803753+00:00'
         -   source_field: RequestedPolicy
-            target_table: file_activity
+            target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:24:58.870461+00:00'
+            mapped_at: '2025-11-26T02:47:28.803755+00:00'

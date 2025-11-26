@@ -26,22 +26,23 @@ detection:
             - \pwsh.exe
     condition: selection
 ocsf_mapping:
-    class_name: process_activity
+    class_name: scheduled_job_activity
+    activity_id: 1
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:24:18.874811+00:00'
+            mapped_at: '2025-11-26T02:46:39.491040+00:00'
         service:
             source_field: service
             source_value: bits-client
-            mapped_at: '2025-11-13T20:24:18.874811+00:00'
+            mapped_at: '2025-11-26T02:46:39.491040+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: process_activity
+            target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:24:18.874828+00:00'
+            mapped_at: '2025-11-26T02:46:39.491060+00:00'
         -   source_field: processPath
-            target_table: process_activity
-            target_field: process.file.path
-            mapped_at: '2025-11-13T20:24:18.874830+00:00'
+            target_table: scheduled_job_activity
+            target_field: actor.process.name
+            mapped_at: '2025-11-26T02:46:39.491063+00:00'

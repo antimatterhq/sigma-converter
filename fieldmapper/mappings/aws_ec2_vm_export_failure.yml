@@ -30,34 +30,35 @@ detection:
         responseElements|contains: Failure
     condition: selection and not 1 of filter*
 ocsf_mapping:
-    class_name: api_activity
+    class_name: datastore_activity
+    activity_id: UNMAPPED
     logsource:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-13T20:17:59.599839+00:00'
+            mapped_at: '2025-11-26T02:22:26.479594+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-13T20:17:59.599839+00:00'
+            mapped_at: '2025-11-26T02:22:26.479594+00:00'
     detection_fields:
         -   source_field: eventName
-            target_table: api_activity
-            target_field: action
-            mapped_at: '2025-11-13T20:18:01.112043+00:00'
+            target_table: datastore_activity
+            target_field: api.operation
+            mapped_at: '2025-11-26T02:22:27.463150+00:00'
         -   source_field: eventSource
-            target_table: api_activity
+            target_table: datastore_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-13T20:18:01.112078+00:00'
+            mapped_at: '2025-11-26T02:22:27.463167+00:00'
         -   source_field: errorMessage
-            target_table: api_activity
-            target_field: api.response.error
-            mapped_at: '2025-11-13T20:18:01.112083+00:00'
+            target_table: datastore_activity
+            target_field: api.response.message
+            mapped_at: '2025-11-26T02:22:27.463171+00:00'
         -   source_field: errorCode
-            target_table: api_activity
+            target_table: datastore_activity
             target_field: api.response.code
-            mapped_at: '2025-11-13T20:18:01.112086+00:00'
+            mapped_at: '2025-11-26T02:22:27.463184+00:00'
         -   source_field: responseElements
-            target_table: api_activity
+            target_table: datastore_activity
             target_field: api.response.data
-            mapped_at: '2025-11-13T20:18:01.112089+00:00'
+            mapped_at: '2025-11-26T02:22:27.463188+00:00'

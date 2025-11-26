@@ -36,22 +36,23 @@ detection:
             - cdn.office.net/
     condition: selection and not 1 of filter_main_*
 ocsf_mapping:
-    class_name: process_activity
+    class_name: network_activity
+    activity_id: UNMAPPED
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:24:18.876335+00:00'
+            mapped_at: '2025-11-26T02:46:39.956346+00:00'
         service:
             source_field: service
             source_value: bits-client
-            mapped_at: '2025-11-13T20:24:18.876335+00:00'
+            mapped_at: '2025-11-26T02:46:39.956346+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: process_activity
+            target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:24:18.876343+00:00'
+            mapped_at: '2025-11-26T02:46:39.956375+00:00'
         -   source_field: RemoteName
-            target_table: process_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:24:18.876344+00:00'
+            target_table: network_activity
+            target_field: dst_endpoint.hostname
+            mapped_at: '2025-11-26T02:46:39.956379+00:00'

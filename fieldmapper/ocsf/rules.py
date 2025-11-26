@@ -1,6 +1,6 @@
 from sigma.rule import SigmaYAMLLoader, SigmaRuleBase, SigmaRule
 from dataclasses import dataclass, field
-from typing import Optional, List, Any, Dict, Tuple
+from typing import Optional, List, Any, Dict, Union
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -67,6 +67,7 @@ class DetectionFieldMapping:
 class OCSFLite:
     """OCSF Lite mapping for Sigma rules."""
     class_name: Optional[str] = None                           # Target OCSF event class
+    activity_id: Optional[Union[int, str]] = None              # Target activity_id (int) or "UNMAPPED"
     logsource: Optional[LogSourceMapping] = None               # Logsource mappings
     detection_fields: Optional[List[DetectionFieldMapping]] = None  # Detection field mappings
     
@@ -74,6 +75,7 @@ class OCSFLite:
         """Convert to dictionary for serialization."""
         return {
             'class_name': self.class_name,
+            'activity_id': self.activity_id,
             'logsource': self.logsource.to_dict() if self.logsource else None,
             'detection_fields': [f.to_dict() for f in self.detection_fields] if self.detection_fields else []
         }
@@ -499,6 +501,16 @@ class SigmaRuleOCSFLite(SigmaRule):
             return None
         # Extract table name from "system/process_activity" -> "process_activity"
         return self.ocsflite.class_name.split('/')[-1]
+
+    @property
+    def activity_id(self) -> Optional[int]:
+        """
+        OCSF activity_id for the rule.
+        """
+        if not self.ocsflite.activity_id:
+            return None
+
+        return self.ocsflite.activity_id
     
     @property
     def detection_fields(self) -> List[str]:
@@ -782,6 +794,17 @@ class SigmaRuleOCSFLite(SigmaRule):
                 mapping.target_table = table_name
                 mapping.target_field = target_path  # Store AI response directly (field path or "<UNMAPPED>")
                 mapping.mapped_at = datetime.now(timezone.utc).isoformat()
+
+        # Map activity_id for the event class
+        if event_class != "<UNMAPPED>":
+            activity_id = ai_mapper.map_activity_id(event_class, context)
+
+            if activity_id is not None:
+                self.ocsflite.activity_id = activity_id
+            else:
+                self.ocsflite.activity_id = "UNMAPPED"
+        else:
+            print(f"     Skipping activity_id mapping:")
         
         return True
     
@@ -856,6 +879,7 @@ class SigmaRuleOCSFLite(SigmaRule):
             
             return {
                 'event_class': self.ocsflite.class_name,
+                'activity_id': self.ocsflite.activity_id,
                 'field_mappings': field_mappings
             }
     
