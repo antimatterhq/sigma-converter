@@ -300,10 +300,10 @@ class TestCacheControl:
             with open(schema_path, 'w') as f:
                 json.dump(schema_data, f)
             
-            # Pre-populate cache
+            # Pre-populate cache with context-aware key format
             cache_data = {
                 "logsource": {},
-                "detection_fields": {"ProcessId": {"target_field": "cached_field"}}
+                "detection_fields": {"system/process_activity:ProcessId": {"target_field": "cached_field"}}
             }
             with open(cache_path, 'w') as f:
                 json.dump(cache_data, f)

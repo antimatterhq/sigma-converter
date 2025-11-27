@@ -3,7 +3,12 @@ This module handles rule loading, AI mapping, and export operations
 """
 import os
 from typing import Optional, List, Dict, Any
+
 from fieldmapper.ocsf.rules import load_sigma_rules, SigmaRuleOCSFLite
+from fieldmapper.ocsf.schema_loader import OCSFLiteSchema
+from fieldmapper.ocsf.openai_mapper import OpenAIMapper
+from fieldmapper.ocsf.ai_mapper import MappingCache
+from fieldmapper.ocsf.export_utils import export_rule_to_file
 
 
 def load_and_process_rules(
@@ -94,10 +99,6 @@ def load_and_process_rules(
             os.remove(cache_path)
         
         # Initialize AI mapper
-        from fieldmapper.ocsf.schema_loader import OCSFLiteSchema
-        from fieldmapper.ocsf.openai_mapper import OpenAIMapper
-        from fieldmapper.ocsf.ai_mapper import MappingCache
-        
         try:
             schema = OCSFLiteSchema(schema_path)
             cache = MappingCache(cache_path)
@@ -110,7 +111,6 @@ def load_and_process_rules(
             
             # Setup export if output directory specified
             if output_dir:
-                from fieldmapper.ocsf.export_utils import export_rule_to_file
                 export_format = 'json' if json_format else 'yaml'
                 os.makedirs(output_dir, exist_ok=True)
             

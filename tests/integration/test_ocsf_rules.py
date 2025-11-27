@@ -641,35 +641,39 @@ class TestMappingCache:
         cache_file = tmp_path / "test_cache.json"
         cache = MappingCache(cache_file=str(cache_file))
         
-        # Set a mapping (new API: field_name, mapping_dict)
-        cache.set_detection_field_mapping("dst_port", {"target_field": "dst_endpoint.port"})
+        # Set a mapping (event_class, field_name, mapping_dict)
+        cache.set_detection_field_mapping("network_activity", "dst_port", {"target_field": "dst_endpoint.port"})
         
         # Get the mapping
-        result = cache.get_detection_field_mapping("dst_port")
+        result = cache.get_detection_field_mapping("network_activity", "dst_port")
         assert result == {"target_field": "dst_endpoint.port"}
         
         # Non-existent key
-        result = cache.get_detection_field_mapping("nonexistent")
+        result = cache.get_detection_field_mapping("network_activity", "nonexistent")
         assert result is None
     
     def test_detection_field_cache_with_context(self, tmp_path):
-        """Test detection field cache (simplified - no context keys)."""
+        """Test detection field cache."""
         from fieldmapper.ocsf.ai_mapper import MappingCache
         
         cache_file = tmp_path / "test_cache.json"
         cache = MappingCache(cache_file=str(cache_file))
         
-        # Set mapping (field-only caching now)
-        cache.set_detection_field_mapping("EventID", {"target_field": "metadata.uid"})
+        # Set mapping for Image in process_activity context
+        cache.set_detection_field_mapping("process_activity", "Image", {"target_field": "process.name"})
         
-        # Get mapping
-        result = cache.get_detection_field_mapping("EventID")
-        assert result == {"target_field": "metadata.uid"}
+
+        # Set mapping for Image in file_activity context (different target!)
+        cache.set_detection_field_mapping("file_activity", "Image", {"target_field": "actor.process.name"})
         
-        # Update mapping (overwrites - no context differentiation)
-        cache.set_detection_field_mapping("EventID", {"target_field": "activity_id"})
-        result = cache.get_detection_field_mapping("EventID")
-        assert result == {"target_field": "activity_id"}
+        
+        # Get mapping for process_activity context
+        result = cache.get_detection_field_mapping("process_activity", "Image")
+        assert result == {"target_field": "process.name"}
+
+        # Get mapping for file_activity context (should be different!)
+        result = cache.get_detection_field_mapping("file_activity", "Image")
+        assert result == {"target_field": "actor.process.name"}
     
     def test_cache_persistence(self, tmp_path):
         """Test that cache persists across instances."""
@@ -695,13 +699,13 @@ class TestMappingCache:
         
         # Add mappings
         cache.set_logsource_mapping("cat:firewall", {"event_class": "Network Activity"})
-        cache.set_detection_field_mapping("dst_port", {"target_field": "dst_endpoint.port"})
+        cache.set_detection_field_mapping("network_activity", "dst_port", {"target_field": "dst_endpoint.port"})
         
         # Clear all
         cache.clear()
         
         assert cache.get_logsource_mapping("cat:firewall") is None
-        assert cache.get_detection_field_mapping("dst_port") is None
+        assert cache.get_detection_field_mapping("network_activity", "dst_port") is None
     
     def test_cache_clear_specific_type(self, tmp_path):
         """Test clearing specific mapping type."""
@@ -712,23 +716,24 @@ class TestMappingCache:
         
         # Add mappings
         cache.set_logsource_mapping("cat:firewall", {"event_class": "Network Activity"})
-        cache.set_detection_field_mapping("dst_port", {"target_field": "dst_endpoint.port"})
+        cache.set_detection_field_mapping("network_activity", "dst_port", {"target_field": "dst_endpoint.port"})
         
         # Clear only logsource
         cache.clear(MappingType.LOGSOURCE)
         
         assert cache.get_logsource_mapping("cat:firewall") is None
-        assert cache.get_detection_field_mapping("dst_port") is not None
+        assert cache.get_detection_field_mapping("network_activity", "dst_port") is not None
     
-    def test_cache_key_generation(self):
-        """Test that cache uses simple keys (field names for detection, composite for logsource)."""
+    def test_cache_key_generation(self, tmp_path):
+        """Test that cache uses context-aware keys (event_class:field_name for detection, composite for logsource)."""
         from fieldmapper.ocsf.ai_mapper import MappingCache
         
-        cache = MappingCache()
+        cache_file = tmp_path / "test_cache.json"
+        cache = MappingCache(cache_file=str(cache_file))
         
-        # Detection field caching uses field name as-is
-        cache.set_detection_field_mapping("CommandLine", {"target_field": "process.cmd_line"})
-        result = cache.get_detection_field_mapping("CommandLine")
+        # Detection field caching uses event_class:field_name as key
+        cache.set_detection_field_mapping("process_activity", "CommandLine", {"target_field": "process.cmd_line"})
+        result = cache.get_detection_field_mapping("process_activity", "CommandLine")
         assert result == {"target_field": "process.cmd_line"}
         
         # Logsource caching uses composite string keys
@@ -746,7 +751,7 @@ class TestMappingCache:
         # Add mappings
         cache.set_logsource_mapping("cat:firewall", {"event_class": "Network Activity"})
         cache.set_logsource_mapping("cat:process_creation", {"event_class": "Process Activity"})
-        cache.set_detection_field_mapping("dst_port", {"target_field": "dst_endpoint.port"})
+        cache.set_detection_field_mapping("network_activity", "dst_port", {"target_field": "dst_endpoint.port"})
         
         stats = cache.get_stats()
         assert stats["logsource_mappings"] == 2
@@ -1143,6 +1148,173 @@ class TestFactoryMethodsAndProperties:
         assert len(unmapped) == 1
 
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
-
+class TestPipelineMappingsFieldMappings:
+    """Tests for field_mappings attribute in build_pipeline_mappings()."""
+    
+    def test_build_from_directory(self, tmp_path):
+        """Test building field mapping dict from directory of rules."""
+        # Create test mapping files
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+        
+        # Rule 1: process_creation
+        rule1 = mappings_dir / "rule1.yml"
+        rule1.write_text("""
+title: Test Rule 1
+id: 12345678-1234-1234-1234-123456789012
+status: test
+description: Test process creation rule
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4688
+        Image: test.exe
+        CommandLine: test
+    condition: selection
+ocsf_mapping:
+    event_class: process_activity
+    detection_fields:
+        - source_field: EventID
+          target_table: process_activity
+          target_field: event_id
+        - source_field: Image
+          target_table: process_activity
+          target_field: process.name
+        - source_field: CommandLine
+          target_table: process_activity
+          target_field: process.cmd_line
+""")
+        
+        # Rule 2: network activity (EventID maps to same, Image to different)
+        rule2 = mappings_dir / "rule2.yml"
+        rule2.write_text("""
+title: Test Rule 2
+id: 22345678-1234-1234-1234-123456789012
+status: test
+description: Test network activity rule
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 3
+        Image: test.exe
+        DestinationIp: 1.1.1.1
+    condition: selection
+ocsf_mapping:
+    event_class: network_activity
+    detection_fields:
+        - source_field: EventID
+          target_table: network_activity
+          target_field: event_id
+        - source_field: Image
+          target_table: network_activity
+          target_field: actor.process.name
+        - source_field: DestinationIp
+          target_table: network_activity
+          target_field: dst_endpoint.ip
+""")
+        
+        # Build pipeline mappings
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
+        
+        # Assertions
+        assert "EventID" in result
+        assert "event_id" in result["EventID"]
+        
+        assert "Image" in result
+        assert len(result["Image"]) == 2
+        assert "process.name" in result["Image"]
+        assert "actor.process.name" in result["Image"]
+        
+        assert "CommandLine" in result
+        assert result["CommandLine"] == ["process.cmd_line"]
+        
+        assert "DestinationIp" in result
+        assert result["DestinationIp"] == ["dst_endpoint.ip"]
+    
+    def test_build_skips_unmapped_fields(self, tmp_path):
+        """Test that unmapped fields are excluded."""
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+        
+        rule = mappings_dir / "rule.yml"
+        rule.write_text("""
+title: Test Rule
+id: 32345678-1234-1234-1234-123456789012
+status: test
+description: Test rule with unmapped field
+logsource:
+    product: windows
+detection:
+    selection:
+        EventID: 1
+        UnmappedField: test
+    condition: selection
+ocsf_mapping:
+    event_class: process_activity
+    detection_fields:
+        - source_field: EventID
+          target_table: process_activity
+          target_field: event_id
+        - source_field: UnmappedField
+          target_table: null
+          target_field: <UNMAPPED>
+""")
+        
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
+        
+        assert "EventID" in result
+        assert "UnmappedField" not in result
+    
+    def test_build_empty_directory(self, tmp_path):
+        """Test with empty directory."""
+        mappings_dir = tmp_path / "empty"
+        mappings_dir.mkdir()
+        
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
+        
+        assert result == {}
+    
+    def test_build_nonexistent_directory(self):
+        """Test with non-existent directory."""
+        with pytest.raises(FileNotFoundError):
+            SigmaRuleOCSFLite.build_pipeline_mappings("/nonexistent/path")
+    
+    def test_build_returns_sorted_lists(self, tmp_path):
+        """Test that results are sorted for consistency."""
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+        
+        # Create rules that would produce unsorted results
+        for i, target in enumerate(["zzz.field", "aaa.field", "mmm.field"]):
+            rule = mappings_dir / f"rule{i}.yml"
+            rule.write_text(f"""
+title: Test Rule {i}
+id: {i}2345678-1234-1234-1234-123456789012
+status: test
+description: Test rule {i}
+logsource:
+    product: test
+detection:
+    selection:
+        TestField: value
+    condition: selection
+ocsf_mapping:
+    event_class: test
+    detection_fields:
+        - source_field: TestField
+          target_table: test
+          target_field: {target}
+""")
+        
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
+        
+        # Should be sorted
+        assert result["TestField"] == ["aaa.field", "mmm.field", "zzz.field"]

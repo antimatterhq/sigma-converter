@@ -50,26 +50,27 @@ detection:
         Application|endswith: \tomcat\bin\tomcat8.exe
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
 ocsf_mapping:
-    class_name: network_activity
+    class_name: authentication
+    activity_id: 4
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:24:02.417684+00:00'
+            mapped_at: '2025-11-26T02:46:13.900901+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-13T20:24:02.417684+00:00'
+            mapped_at: '2025-11-26T02:46:13.900901+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: network_activity
+            target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:24:02.417731+00:00'
+            mapped_at: '2025-11-26T02:46:14.724791+00:00'
         -   source_field: DestPort
-            target_table: network_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:24:02.417736+00:00'
+            target_table: authentication
+            target_field: dst_endpoint.port
+            mapped_at: '2025-11-26T02:46:14.724806+00:00'
         -   source_field: Application
-            target_table: network_activity
+            target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:24:02.417739+00:00'
+            mapped_at: '2025-11-26T02:46:14.724809+00:00'

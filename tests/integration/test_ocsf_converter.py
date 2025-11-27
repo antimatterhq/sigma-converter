@@ -173,8 +173,3 @@ class TestLoadAndProcessRules:
             
             # Cache file should be deleted
             assert not os.path.exists(cache_path)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
-

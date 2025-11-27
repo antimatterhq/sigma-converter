@@ -35,30 +35,31 @@ detection:
         sourceIPAddress: AWS Internal
     condition: selection and not 1 of filter_main_*
 ocsf_mapping:
-    class_name: api_activity
+    class_name: user_access
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-13T20:17:57.385207+00:00'
+            mapped_at: '2025-11-26T02:22:22.022873+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-13T20:17:57.385207+00:00'
+            mapped_at: '2025-11-26T02:22:22.022873+00:00'
     detection_fields:
         -   source_field: userIdentity.arn
-            target_table: api_activity
+            target_table: user_access
             target_field: actor.user.uid
-            mapped_at: '2025-11-13T20:17:58.229049+00:00'
+            mapped_at: '2025-11-26T02:22:22.993294+00:00'
         -   source_field: eventSource
-            target_table: api_activity
+            target_table: user_access
             target_field: metadata.product.name
-            mapped_at: '2025-11-13T20:17:58.229059+00:00'
+            mapped_at: '2025-11-26T02:22:22.993304+00:00'
         -   source_field: eventName
-            target_table: api_activity
-            target_field: action
-            mapped_at: '2025-11-13T20:17:58.229061+00:00'
+            target_table: user_access
+            target_field: api.operation
+            mapped_at: '2025-11-26T02:22:22.993306+00:00'
         -   source_field: sourceIPAddress
-            target_table: api_activity
+            target_table: user_access
             target_field: src_endpoint.ip
-            mapped_at: '2025-11-13T20:17:58.229062+00:00'
+            mapped_at: '2025-11-26T02:22:22.993307+00:00'

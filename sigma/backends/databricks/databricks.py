@@ -1,32 +1,47 @@
-import json
 import re
-from typing import Pattern, Union, ClassVar, Tuple, List, Dict, Any
+from typing import Pattern, Union, ClassVar, Tuple, List, Dict, Any, Optional
 
-import yaml
 from sigma.conditions import ConditionItem, ConditionOR, ConditionAND, ConditionNOT, \
     ConditionFieldEqualsValueExpression
 from sigma.conversion.base import TextQueryBackend
 from sigma.conversion.deferred import DeferredQueryExpression
 from sigma.conversion.state import ConversionState
-from sigma.rule import SigmaRule, SigmaLevel
+from sigma.processing.pipeline import ProcessingPipeline
+from sigma.rule import SigmaRule
 from sigma.types import SigmaCompareExpression, SigmaString
 from sigma.types import SpecialChars
 
 
 class DatabricksBackend(TextQueryBackend):
     """Databricks backend for PySigma."""
-    # See the pySigma documentation for further infromation:
-    # https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html
+
+    def __init__(
+        self,
+        processing_pipeline: Optional[ProcessingPipeline] = None,
+        collect_errors: bool = False,
+        time_column: str = "time",
+        catalog: str = "lakewatch",
+        schema: str = "gold",
+        time_filter: str = "24 HOUR",
+        **backend_options: Dict,
+    ):
+        super().__init__(
+            processing_pipeline=processing_pipeline,
+            collect_errors=collect_errors,
+            **backend_options,
+        )
+        self.time_column = time_column
+        self.catalog = catalog
+        self.schema = schema
+        self.time_filter = time_filter
 
     name: ClassVar[str] = "databricks"
     formats: Dict[str, str] = {
-        "default": "Plain Databricks SQL queries",
-        "dbsql": "Databricks SQL queries with additional metadata as comments",
-        "detection_yaml": "Yaml markup for Alex's own detection framework",
+        "default": "Databricks SQL queries",
+        # Future formats will be added here with format-specific finalize methods
     }
-    # TODO: does the backend requires that a processing pipeline is provided? This information can be used by user
-    # interface programs like Sigma CLI to warn users about inappropriate usage of the backend.
-    requires_pipeline: bool = False
+
+    requires_pipeline: bool = True
 
     # Operator precedence: tuple of Condition{AND,OR,NOT} in order of precedence.
     # The backend generates grouping if required
@@ -209,41 +224,29 @@ class DatabricksBackend(TextQueryBackend):
     # TODO: implement custom methods for query elements not covered by the default backend base.
     # Documentation: https://sigmahq-pysigma.readthedocs.io/en/latest/Backends.html
 
-    @staticmethod
-    def finalize_query_dbsql(rule: SigmaRule, query: str, index: int, state: ConversionState) -> Any:
-        rule_status = (rule.status.name or "test").lower()
-        title = rule.title.replace('\n', ' ')
-        return f"-- title: \"{title}\". status: {rule_status}\n{query}"
+    def finalize_query_default(
+        self, rule: SigmaRule, query: str, index: int, state: ConversionState
+    ) -> str:
+        """
+        Finalize query by adding SELECT/FROM structure and time filtering.
+        
+        Generates: 
+        SELECT * FROM {catalog}.{schema}.{table} 
+        WHERE {time_column} BETWEEN CURRENT_TIMESTAMP() - INTERVAL {time_filter} AND CURRENT_TIMESTAMP()
+          AND ({query})
+        
+        """
+        # Get table from custom attributes (set by pipeline)
+        table = rule.custom_attributes.get('table', '<UNMAPPED_TABLE>')
+        
+        # Build fully-qualified table name
+        fq_table = f"{self.catalog}.{self.schema}.{table}"
+        
+        # Build WHERE clause with time filter
+        where_clause = (
+            f"{self.time_column} BETWEEN "
+            f"CURRENT_TIMESTAMP() - INTERVAL {self.time_filter} AND CURRENT_TIMESTAMP() "
+            f"AND ({query})"
+        )
 
-    @staticmethod
-    def finalize_output_dbsql(queries: List[str]) -> Any:
-        return "\n\n".join(queries)
-
-    @staticmethod
-    def finalize_query_detection_yaml(rule: SigmaRule, query: str, index: int, state: ConversionState) -> Any:
-        statuses = {"experimental": "test", "stable": "release"}
-        levels = {SigmaLevel.INFORMATIONAL.name: 0, SigmaLevel.LOW.name: 10, SigmaLevel.MEDIUM.name: 30,
-                  SigmaLevel.HIGH.name: 50, SigmaLevel.CRITICAL.name: 90}
-        rule_status = (rule.status.name or "test").lower()
-        d = {"name": rule.title,
-             "sql": query,
-             "status": statuses.get(rule_status, rule_status),
-             "template": rule.title,
-             }
-        if rule.level:
-            level = levels.get(rule.level.name)
-            if level:
-                d["severity"] = level
-        return json.dumps(d)
-
-    @staticmethod
-    def finalize_output_detection_yaml(queries: List[str]) -> Any:
-        data = {"description": "Detections generated from Sigma rules"}
-        detections = []
-        for query in queries:
-            d = json.loads(query)
-            if d["status"] == "deprecated" or d["status"] == "unsupported" or d["sql"] == "":
-                continue
-            detections.append(d)
-        data["detections"] = detections
-        return yaml.dump(data, default_flow_style=False)
+        return f"SELECT * FROM {fq_table} WHERE {where_clause}"

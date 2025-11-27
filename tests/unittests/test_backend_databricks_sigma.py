@@ -49,7 +49,7 @@ def test_databricks_sigma_and_expression(databricks_sigma_backend: DatabricksBac
                     fieldB: valueB
                 condition: sel
         """)
-    ) == ["lower(fieldA) = lower('valueA') AND lower(fieldB) = lower('valueB')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valueA') AND lower(fieldB) = lower('valueB'))"]
 
 
 def test_databricks_sigma_or_expression(databricks_sigma_backend: DatabricksBackend):
@@ -67,7 +67,7 @@ def test_databricks_sigma_or_expression(databricks_sigma_backend: DatabricksBack
                     fieldB: valueB
                 condition: 1 of sel*
         """)
-    ) == ["lower(fieldA) = lower('valueA') OR lower(fieldB) = lower('valueB')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valueA') OR lower(fieldB) = lower('valueB'))"]
 
 
 def test_databricks_sigma_match_with_dot_string(databricks_sigma_backend: DatabricksBackend):
@@ -85,7 +85,7 @@ def test_databricks_sigma_match_with_dot_string(databricks_sigma_backend: Databr
                     fieldB: valueB
                 condition: 1 of sel*
         """)
-    ) == ["lower(fieldA) = lower('value.A') OR lower(fieldB) = lower('valueB')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('value.A') OR lower(fieldB) = lower('valueB'))"]
 
 
 def test_databricks_sigma_and_or_expression(databricks_sigma_backend: DatabricksBackend):
@@ -106,8 +106,8 @@ def test_databricks_sigma_and_or_expression(databricks_sigma_backend: Databricks
                         - valueB2
                 condition: sel
         """)
-    ) == ["(lower(fieldA) = lower('valueA1') OR lower(fieldA) = lower('valueA2')) AND "
-          "(lower(fieldB) = lower('valueB1') OR lower(fieldB) = lower('valueB2'))"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(fieldA) = lower('valueA1') OR lower(fieldA) = lower('valueA2')) AND "
+          "(lower(fieldB) = lower('valueB1') OR lower(fieldB) = lower('valueB2')))"]
 
 
 def test_databricks_sigma_or_and_expression(databricks_sigma_backend: DatabricksBackend):
@@ -127,8 +127,8 @@ def test_databricks_sigma_or_and_expression(databricks_sigma_backend: Databricks
                     fieldB: valueB2
                 condition: 1 of sel*
         """)
-    ) == ["lower(fieldA) = lower('valueA1') AND lower(fieldB) = lower('valueB1') OR lower(fieldA) = lower('valueA2') "
-          "AND lower(fieldB) = lower('valueB2')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valueA1') AND lower(fieldB) = lower('valueB1') OR lower(fieldA) = lower('valueA2') "
+          "AND lower(fieldB) = lower('valueB2'))"]
 
 
 def test_databricks_sigma_in_expression(databricks_sigma_backend: DatabricksBackend):
@@ -147,8 +147,8 @@ def test_databricks_sigma_in_expression(databricks_sigma_backend: DatabricksBack
                         - valueC*
                 condition: sel
         """)
-    ) == ["lower(fieldA) = lower('valueA') OR lower(fieldA) = lower('valueB') OR "
-          "startswith(lower(fieldA), lower('valueC'))"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valueA') OR lower(fieldA) = lower('valueB') OR "
+          "startswith(lower(fieldA), lower('valueC')))"]
 
 
 def test_databricks_sigma_regex_query(databricks_sigma_backend: DatabricksBackend):
@@ -165,7 +165,7 @@ def test_databricks_sigma_regex_query(databricks_sigma_backend: DatabricksBacken
                     fieldB: foo
                 condition: sel
         """)
-    ) == ["fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo'))"]
 
 
 def test_databricks_sigma_regex_query_flags(databricks_sigma_backend: DatabricksBackend):
@@ -182,7 +182,7 @@ def test_databricks_sigma_regex_query_flags(databricks_sigma_backend: Databricks
                     fieldB: foo
                 condition: sel
         """)
-    ) == ["fieldA rlike '(?i)foo.*bar' AND lower(fieldB) = lower('foo')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (fieldA rlike '(?i)foo.*bar' AND lower(fieldB) = lower('foo'))"]
 
 
 def test_databricks_sigma_cidr_query(databricks_sigma_backend: DatabricksBackend):
@@ -198,7 +198,7 @@ def test_databricks_sigma_cidr_query(databricks_sigma_backend: DatabricksBackend
                     field|cidr: 192.168.0.0/16
                 condition: sel
         """)
-    ) == ["cidrmatch(field, '192.168.0.0/16')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (cidrmatch(field, '192.168.0.0/16'))"]
 
 
 def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend: DatabricksBackend):
@@ -214,7 +214,7 @@ def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend: D
                     field name: value
                 condition: sel
         """)
-    ) == ["lower(`field name`) = lower('value')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(`field name`) = lower('value'))"]
 
 
 def test_databricks_sigma_field_name_with_period(databricks_sigma_backend: DatabricksBackend):
@@ -231,52 +231,6 @@ def test_databricks_sigma_field_name_with_period(databricks_sigma_backend: Datab
                         - value1
                 condition: sel
         """)
-    ) == ["lower(responseElements.publiclyAccessible) = lower('value1')"]
+    ) == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(responseElements.publiclyAccessible) = lower('value1'))"]
 
 
-def test_databricks_sigma_detection_yaml_output(databricks_sigma_backend: DatabricksBackend):
-    sigma_rules = SigmaCollection.from_yaml("""
-            title: Test
-            status: stable
-            logsource:
-                category: test_category
-                product: test_product
-            level: high
-            detection:
-                sel:
-                    fieldA|re: foo.*bar
-                    fieldB: foo
-                condition: sel
-        """)
-    queries = databricks_sigma_backend.convert(sigma_rules)
-    final_queries = [databricks_sigma_backend.finalize_query_detection_yaml(q[0], q[1], 0, None)
-                     for q in zip(sigma_rules.rules, queries)]
-    yaml_rules = databricks_sigma_backend.finalize_output_detection_yaml(final_queries)
-    assert yaml_rules == """description: Detections generated from Sigma rules
-detections:
-- name: Test
-  severity: 50
-  sql: fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')
-  status: release
-  template: Test
-"""
-
-
-def test_databricks_sigma_dbsql_output(databricks_sigma_backend: DatabricksBackend):
-    sigma_rules = SigmaCollection.from_yaml("""
-            title: Test
-            status: stable
-            logsource:
-                category: test_category
-                product: test_product
-            detection:
-                sel:
-                    fieldA|re: foo.*bar
-                    fieldB: foo
-                condition: sel
-        """)
-    queries = databricks_sigma_backend.convert(sigma_rules)
-    final_queries = [databricks_sigma_backend.finalize_query_dbsql(q[0], q[1], 0, None)
-                     for q in zip(sigma_rules.rules, queries)]
-    sql_rules = databricks_sigma_backend.finalize_output_dbsql(final_queries)
-    assert sql_rules == "-- title: \"Test\". status: stable\nfieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo')"
