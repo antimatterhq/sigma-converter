@@ -724,11 +724,12 @@ class TestMappingCache:
         assert cache.get_logsource_mapping("cat:firewall") is None
         assert cache.get_detection_field_mapping("network_activity", "dst_port") is not None
     
-    def test_cache_key_generation(self):
+    def test_cache_key_generation(self, tmp_path):
         """Test that cache uses context-aware keys (event_class:field_name for detection, composite for logsource)."""
         from fieldmapper.ocsf.ai_mapper import MappingCache
         
-        cache = MappingCache()
+        cache_file = tmp_path / "test_cache.json"
+        cache = MappingCache(cache_file=str(cache_file))
         
         # Detection field caching uses event_class:field_name as key
         cache.set_detection_field_mapping("process_activity", "CommandLine", {"target_field": "process.cmd_line"})
@@ -1147,11 +1148,11 @@ class TestFactoryMethodsAndProperties:
         assert len(unmapped) == 1
 
 
-class TestBuildFieldMappingDict:
-    """Tests for build_field_mapping_dict class method."""
+class TestPipelineMappingsFieldMappings:
+    """Tests for field_mappings attribute in build_pipeline_mappings()."""
     
     def test_build_from_directory(self, tmp_path):
-        """Test building mapping dict from directory of rules."""
+        """Test building field mapping dict from directory of rules."""
         # Create test mapping files
         mappings_dir = tmp_path / "mappings"
         mappings_dir.mkdir()
@@ -1216,8 +1217,9 @@ ocsf_mapping:
           target_field: dst_endpoint.ip
 """)
         
-        # Build mapping
-        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        # Build pipeline mappings
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
         
         # Assertions
         assert "EventID" in result
@@ -1263,7 +1265,8 @@ ocsf_mapping:
           target_field: <UNMAPPED>
 """)
         
-        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
         
         assert "EventID" in result
         assert "UnmappedField" not in result
@@ -1273,14 +1276,15 @@ ocsf_mapping:
         mappings_dir = tmp_path / "empty"
         mappings_dir.mkdir()
         
-        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
         
         assert result == {}
     
     def test_build_nonexistent_directory(self):
         """Test with non-existent directory."""
         with pytest.raises(FileNotFoundError):
-            SigmaRuleOCSFLite.build_field_mapping_dict("/nonexistent/path")
+            SigmaRuleOCSFLite.build_pipeline_mappings("/nonexistent/path")
     
     def test_build_returns_sorted_lists(self, tmp_path):
         """Test that results are sorted for consistency."""
@@ -1309,7 +1313,8 @@ ocsf_mapping:
           target_field: {target}
 """)
         
-        result = SigmaRuleOCSFLite.build_field_mapping_dict(str(mappings_dir))
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        result = mappings.field_mappings
         
         # Should be sorted
         assert result["TestField"] == ["aaa.field", "mmm.field", "zzz.field"]

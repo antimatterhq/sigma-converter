@@ -7,6 +7,8 @@ Implements a two-step mapping strategy with intelligent caching.
 
 import json
 from typing import Dict, List, Optional, Union
+from pathlib import Path
+
 from openai import OpenAI
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -129,8 +131,6 @@ class OpenAIMapper:
             Dict mapping activity_id values to their caption and description
             Example: {"1": {"caption": "Launch", "description": "..."}, ...}
         """
-        from pathlib import Path
-        
         # Search for base name in all subdirectories
         events_dir = Path("fieldmapper/ocsf_data/_ocsf_lite") / "events"
         json_path = None
@@ -206,7 +206,6 @@ class OpenAIMapper:
         
         return mappings
     
-    # TODO: Implement the activity_id mapping here. 
     def map_activity_id(self, event_class: str, context: MappingContext) -> Optional[int]:
         """
         Map Sigma rule to OCSF activity_id using AI.
@@ -219,8 +218,7 @@ class OpenAIMapper:
             context: Sigma rule context (title, description, logsource, tags)
             
         Returns:
-            activity_id integer, or None if event class has no activity_id enum,
-            or -1 is returned by AI to indicate UNMAPPED
+            activity_id integer, or UNMAPPED if event class has no activity_id enum
         """
         # Get available activity IDs for this event class
         activity_enum = self._get_activity_id_enum(event_class)
@@ -237,8 +235,8 @@ class OpenAIMapper:
         try:
             response_data = self._call_openai(prompt, ActivityIdResponse)
             activity_id = response_data['activity_id']
-            # Handle UNMAPPED string response
-            if activity_id == "UNMAPPED":
+            # Handle <UNMAPPED> string response
+            if activity_id == "<UNMAPPED>":
                 return None
             
             # Validate activity_id exists in enum

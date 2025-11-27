@@ -18,7 +18,7 @@ class RuleMappingAnalysis:
     rule_id: str
     rule_title: str
     class_name: Optional[str]
-    activity_id: Optional[int | str]  # Can be int or "UNMAPPED"
+    activity_id: Optional[int | str]  # Can be int or "<UNMAPPED>"
     total_detection_fields: int
     mapped_detection_fields: int
     unmapped_detection_fields: int
@@ -41,7 +41,7 @@ class MappingStatistics:
     
     # Activity ID stats (with defaults - must come after non-default fields)
     has_activity_id: int = 0  # Count of rules with valid activity_id
-    unmapped_activity_id: int = 0  # Count with "UNMAPPED"
+    unmapped_activity_id: int = 0  # Count with "<UNMAPPED>"
     no_activity_id: int = 0  # Count with None (event class has no activity_id field)
     
     # Event class distribution
@@ -65,7 +65,7 @@ def classify_mapping_status(analysis: RuleMappingAnalysis) -> str:
         return "unmapped"
     
     # Check if activity_id is unmapped (when it should exist)
-    activity_id_unmapped = (analysis.activity_id == "UNMAPPED")
+    activity_id_unmapped = (analysis.activity_id == "<UNMAPPED>")
     
     if analysis.total_detection_fields == 0:
         # No fields to map, but check activity_id

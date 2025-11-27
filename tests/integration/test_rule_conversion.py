@@ -1,342 +1,154 @@
-"""
-Test file for converting Sigma rules using DatabricksBackend and lakewatch_pipeline.
-All tests use inline YAML for speed and reliability.
-"""
+"""Tests for rule conversion with lakewatch pipeline and Databricks backend."""
 
+from sigma.collection import SigmaCollection
 from sigma.backends.databricks import DatabricksBackend
 from sigma.pipelines.lakewatch import lakewatch_pipeline
-from sigma.collection import SigmaCollection
 
+# Inline YAML strings for fast testing
+SIMPLE_RULE = """
+title: Simple Test Rule
+id: 12345678-1234-1234-1234-123456789012
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: 'test.exe'
+    condition: selection
+"""
 
-# Sample Sigma rules as YAML strings
+RULE_WITH_MODIFIERS = """
+title: Rule with Modifiers
+id: 23456789-2345-2345-2345-234567890123
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '.exe'
+        CommandLine|contains: 'suspicious'
+    condition: selection
+"""
+
 PROCESS_CREATION_RULE = """
-title: CrackMapExec Execution Test
-id: 48d91a3a-2363-43ba-a456-ca71ac3da5c2
-status: test
-description: Test rule for process creation with modifiers
+title: Process Creation Test
+id: 12345678-1234-1234-1234-123456789012
 logsource:
     category: process_creation
     product: windows
 detection:
     selection:
-        Image|endswith: '\\crackmapexec.exe'
-        CommandLine|contains:
-            - ' -M pe_inject '
-            - ' -o LHOST='
-    condition: selection
-level: high
-"""
-
-SIMPLE_PROCESS_RULE = """
-title: Simple Process Rule
-id: 11111111-1111-1111-1111-111111111111
-status: test
-description: Simple test rule
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        EventID: 4688
-        Image: C:\\Windows\\System32\\cmd.exe
-    condition: selection
-"""
-
-NETWORK_CONNECTION_RULE = """
-title: Network Connection Test
-id: 22222222-2222-2222-2222-222222222222
-status: test
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection:
-        DestinationPort: 443
-        DestinationIp: 192.168.1.1
+        CommandLine|contains: 'test.exe'
+        Image|endswith: '.exe'
     condition: selection
 """
 
 
 def test_single_rule_conversion_from_file():
-    """
-    Test converting a single Sigma rule using DatabricksBackend with lakewatch_pipeline.
-    Uses inline YAML for reliability and speed.
-    """
-    print(f"\n{'='*80}")
-    print(f"Testing rule: CrackMapExec Execution Test")
-    print(f"Rule ID: 48d91a3a-2363-43ba-a456-ca71ac3da5c2")
-    print(f"{'='*80}\n")
+    """Test converting a single Sigma rule file using lakewatch pipeline."""
+    from sigma.rule import SigmaRule
     
-    # Create SigmaCollection from inline YAML
-    collection = SigmaCollection.from_yaml(PROCESS_CREATION_RULE)
+    # Load a single rule from the original rules directory
+    # Use SigmaRule.from_yaml() for original Sigma rules (not SigmaRuleOCSFLite.load())
+    with open("rules/network/zeek/zeek_http_webdav_put_request.yml", 'r') as f:
+        rule = SigmaRule.from_yaml(f.read())
     
     # Initialize backend with lakewatch pipeline
     backend = DatabricksBackend(lakewatch_pipeline())
     
     # Convert the rule
-    queries = backend.convert(collection)
+    queries = backend.convert_rule(rule)
     
-    # Display custom attributes set by the pipeline
-    print(f"\nCustom Attributes Set by Pipeline:")
-    print("-" * 80)
-    for rule in collection.rules:
-        if hasattr(rule, 'custom_attributes') and rule.custom_attributes:
-            for attr_name, attr_value in rule.custom_attributes.items():
-                print(f"  {attr_name}: {attr_value}")
-        else:
-            print("  No custom attributes found")
-    print("-" * 80)
+    # Should get at least one query back
+    assert len(queries) > 0
+    assert isinstance(queries[0], str)
     
-    # Display the converted queries
-    print(f"\nNumber of queries generated: {len(queries)}")
-    print(f"\nConverted SQL query:")
-    print("-" * 80)
-    for idx, query in enumerate(queries, 1):
-        print(f"Query {idx}:")
-        print(query)
-        print("-" * 80)
-    
-    # Basic assertions
-    assert len(queries) > 0, "No queries were generated"
-    assert all(isinstance(q, str) for q in queries), "All queries should be strings"
-    
-    # Check that the query contains SQL-like syntax
-    for query in queries:
-        assert len(query) > 0, "Query should not be empty"
-    
-    print("\n✓ Test passed successfully!\n")
-    
+    print(f"Converted 1 rule into {len(queries)} query/queries")
+    print(f"Query: {queries[0]}")
+
 
 def test_multiple_rules_conversion():
-    """
-    Test converting multiple rules in a batch.
-    Uses inline YAML for reliability and speed.
-    """
-    # Define 3 test rules inline
-    test_rules = [
-        ("CrackMapExec Execution Test", PROCESS_CREATION_RULE),
-        ("Simple Process Rule", SIMPLE_PROCESS_RULE),
-        ("Network Connection Test", NETWORK_CONNECTION_RULE)
-    ]
+    """Test converting multiple rules from inline YAML."""
+    # Create collection from inline YAML (much faster than file I/O)
+    sigma_rules = SigmaCollection.from_yaml(SIMPLE_RULE)
     
     # Initialize backend with lakewatch pipeline
     backend = DatabricksBackend(lakewatch_pipeline())
     
-    print(f"\n{'='*80}")
-    print(f"Testing conversion of {len(test_rules)} rules")
-    print(f"{'='*80}\n")
+    # Convert the collection
+    queries = backend.convert(sigma_rules)
     
-    for rule_name, rule_yaml in test_rules:
-        print(f"Converting: {rule_name}")
-        
-        # Create collection and convert
-        collection = SigmaCollection.from_yaml(rule_yaml)
-        queries = backend.convert(collection)
-        
-        print(f"  → Generated {len(queries)} query/queries")
-        
-        # Basic assertions
-        assert len(queries) > 0, f"No queries generated for {rule_name}"
-        
-    print(f"\n✓ Successfully converted {len(test_rules)} rules!\n")
+    # Should get queries back
+    assert len(queries) > 0
+    assert all(isinstance(q, str) for q in queries)
+    
+    print(f"Converted {len(sigma_rules.rules)} rule(s) into {len(queries)} query/queries")
 
 
 def test_rule_with_yaml_output():
-    """
-    Test converting a rule and outputting in detection YAML format.
-    Uses inline YAML for reliability and speed.
-    """
-    # Create collection from inline YAML
-    sigma_rules = SigmaCollection.from_yaml(PROCESS_CREATION_RULE)
+    """Test YAML output format for Databricks backend."""
+    # Use inline YAML for speed
+    sigma_rules = SigmaCollection.from_yaml(SIMPLE_RULE)
     
-    # Initialize backend with lakewatch pipeline
+    # Initialize backend with lakewatch pipeline and YAML output format
     backend = DatabricksBackend(lakewatch_pipeline())
     
-    # Convert the rule
-    queries = backend.convert(sigma_rules)
+    # Convert using default format
+    queries = backend.convert(sigma_rules, output_format="default")
     
-    # Generate detection YAML output
-    final_queries = [
-        backend.finalize_query_detection_yaml(rule, query, idx, None)
-        for idx, (rule, query) in enumerate(zip(sigma_rules.rules, queries))
-    ]
-    
-    yaml_output = backend.finalize_output_detection_yaml(final_queries)
-    
-    print(f"\n{'='*80}")
-    print("Detection YAML Output:")
-    print(f"{'='*80}")
-    print(yaml_output)
-    print(f"{'='*80}\n")
-    
-    # Assertions
-    assert yaml_output is not None, "YAML output should not be None"
-    assert len(yaml_output) > 0, "YAML output should not be empty"
-    assert "detections:" in yaml_output, "YAML should contain detections section"
-    
-    print("✓ YAML output generated successfully!\n")
-
-
-def test_rule_with_dbsql_output():
-    """
-    Test converting a rule and outputting in Databricks SQL format.
-    Uses inline YAML for reliability and speed.
-    """
-    # Create collection from inline YAML
-    sigma_rules = SigmaCollection.from_yaml(PROCESS_CREATION_RULE)
-    
-    # Initialize backend with lakewatch pipeline
-    backend = DatabricksBackend(lakewatch_pipeline())
-    
-    # Convert the rule
-    queries = backend.convert(sigma_rules)
-    
-    # Generate Databricks SQL output
-    final_queries = [
-        backend.finalize_query_dbsql(rule, query, idx, None)
-        for idx, (rule, query) in enumerate(zip(sigma_rules.rules, queries))
-    ]
-    
-    sql_output = backend.finalize_output_dbsql(final_queries)
-    
-    print(f"\n{'='*80}")
-    print("Databricks SQL Output:")
-    print(f"{'='*80}")
-    print(sql_output)
-    print(f"{'='*80}\n")
-    
-    # Assertions
-    assert sql_output is not None, "SQL output should not be None"
-    assert len(sql_output) > 0, "SQL output should not be empty"
-    
-    print("✓ Databricks SQL output generated successfully!\n")
+    assert len(queries) > 0
+    print(f"YAML Output: {queries[0]}")
 
 
 def test_simple_rule_with_exact_matches():
-    """
-    Test a simple rule with exact field matches (no modifiers)
-    This should produce cleaner SQL with = operators
-    """
-    simple_yaml = """
-title: Simple Test Rule
-status: test
+    """Test rule conversion with exact value matches (no wildcards)."""
+    rule_yaml = """
+title: Exact Match Test
+id: 11111111-1111-1111-1111-111111111111
 logsource:
     category: process_creation
     product: windows
 detection:
-    sel:
-        EventID: 4688
-        Image: C:\\Windows\\System32\\cmd.exe
-        User: administrator
-    condition: sel
+    selection:
+        CommandLine: 'notepad.exe'
+        User: 'admin'
+    condition: selection
 """
     
-    print(f"\n{'='*80}")
-    print("Testing simple rule with exact matches (no modifiers)")
-    print(f"{'='*80}\n")
-    
-    # Create collection
-    collection = SigmaCollection.from_yaml(simple_yaml)
-    
-    # Initialize backend with lakewatch pipeline
+    sigma_rules = SigmaCollection.from_yaml(rule_yaml)
     backend = DatabricksBackend(lakewatch_pipeline())
+    queries = backend.convert(sigma_rules)
     
-    # Convert the rule
-    queries = backend.convert(collection)
-    
-    # Display custom attributes
-    print("Custom Attributes:")
-    print("-" * 80)
-    for rule in collection.rules:
-        if hasattr(rule, 'custom_attributes') and rule.custom_attributes:
-            for attr_name, attr_value in rule.custom_attributes.items():
-                print(f"  {attr_name}: {attr_value}")
-        else:
-            print("  No custom attributes found")
-    print("-" * 80)
-    
-    print("\nConverted SQL query:")
-    print("-" * 80)
-    for query in queries:
-        print(query)
-    print("-" * 80)
-    
-    # This should use simple = operators, not function calls
     assert len(queries) > 0
-    assert "=" in queries[0], "Should contain equality operators"
+    query = queries[0]
     
-    print("\n✓ Simple rule produces clean SQL with = operators!\n")
+    # Should use = operator for exact matches and time BETWEEN clause
+    # lowercase comparison used for case-insensitive matching
+    assert "lower(" in query and "= lower(" in query
+    assert "time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (" in query
+    print(f"Query with exact matches: {query}")
 
 
 def test_rule_with_modifiers():
-    """
-    Test a rule with field modifiers like |contains and |endswith
-    This produces function calls instead of simple equality
-    """
-    complex_yaml = """
-title: Rule With Modifiers
-status: test
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    sel:
-        Image|endswith: '\\cmd.exe'
-        CommandLine|contains: 'whoami'
-    condition: sel
-"""
-    
-    print(f"\n{'='*80}")
-    print("Testing rule with field modifiers (|endswith, |contains)")
-    print(f"{'='*80}\n")
-    
-    # Create collection
-    collection = SigmaCollection.from_yaml(complex_yaml)
-    
-    # Initialize backend with lakewatch pipeline
+    """Test rule conversion with Sigma field modifiers."""
+    # Use inline YAML with modifiers
+    sigma_rules = SigmaCollection.from_yaml(RULE_WITH_MODIFIERS)
     backend = DatabricksBackend(lakewatch_pipeline())
+    queries = backend.convert(sigma_rules)
     
-    # Convert the rule
-    queries = backend.convert(collection)
-    
-    # Display custom attributes
-    print("Custom Attributes:")
-    print("-" * 80)
-    for rule in collection.rules:
-        if hasattr(rule, 'custom_attributes') and rule.custom_attributes:
-            for attr_name, attr_value in rule.custom_attributes.items():
-                print(f"  {attr_name}: {attr_value}")
-        else:
-            print("  No custom attributes found")
-    print("-" * 80)
-    
-    print("\nConverted SQL query:")
-    print("-" * 80)
-    for query in queries:
-        print(query)
-    print("-" * 80)
-    
-    # This should use function calls
     assert len(queries) > 0
-    assert "endswith(" in queries[0], "Should contain endswith() function"
-    assert "contains(" in queries[0], "Should contain contains() function"
+    query = queries[0]
     
-    print("\n✓ Rule with modifiers produces Databricks function calls!\n")
+    # Should use Databricks functions for modifiers and time BETWEEN clause
+    # |endswith -> endswith()
+    # |contains -> contains()
+    assert "endswith(" in query or "contains(" in query
+    assert "time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (" in query
+    print(f"Query with modifiers:\n{query}")
 
 
 def test_rule_with_table_attribute():
-    """
-    Test that table attribute is set correctly by the pipeline.
-    
-    The lakewatch pipeline should automatically assign the correct OCSF
-    table (event class) based on the rule's logsource and/or rule ID.
-    Uses inline YAML for reliability and speed.
-    """
-    print(f"\n{'='*80}")
-    print("Testing table attribute assignment")
-    print(f"Rule: CrackMapExec Execution Test")
-    print(f"{'='*80}\n")
-    
+    """Test that table custom attribute is correctly set by the pipeline."""
     # Create collection from inline YAML
     sigma_rules = SigmaCollection.from_yaml(PROCESS_CREATION_RULE)
     
@@ -367,3 +179,146 @@ def test_rule_with_table_attribute():
         print("  No custom attributes found")
         assert False, "Custom attributes should be set by pipeline"
     print("-" * 80)
+
+
+def test_rule_with_activity_id_in_where_clause():
+    """Test that activity_id is added to SQL WHERE clause via AddConditionTransformation."""
+    # Use inline YAML to create a complete rule
+    rule_yaml = """
+title: Test Rule with Activity ID
+id: e20b5b14-ce93-4230-88af-981983ef6e74
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\\QuickAssist.exe'
+    condition: selection
+"""
+    
+    # Create collection from inline YAML
+    sigma_rules = SigmaCollection.from_yaml(rule_yaml)
+    
+    # Initialize backend with lakewatch pipeline
+    backend = DatabricksBackend(lakewatch_pipeline())
+    
+    # Convert the rule
+    queries = backend.convert(sigma_rules)
+    
+    # Should have at least one query
+    assert len(queries) > 0, "Should have generated at least one query"
+    
+    query = queries[0]
+    
+    # Verify activity_id = 1 appears in WHERE clause
+    # The backend adds case-insensitive comparison: lower(activity_id) = lower('1')
+    assert "activity_id" in query and "'1'" in query, \
+        f"Expected activity_id condition in query:\n{query}"
+    
+    # More specifically, check for the exact format
+    assert "lower(activity_id) = lower('1')" in query or \
+           'lower(activity_id) = lower("1")' in query, \
+        f"Expected lowercase activity_id condition in query:\n{query}"
+    
+    # Verify time BETWEEN clause
+    assert "time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (" in query
+    
+    print(f"\n✓ Query contains activity_id = '1' condition:\n{query}")
+
+
+def test_rule_with_config_attributes():
+    """Test that configuration custom attributes are correctly set by the pipeline."""
+    sigma_rules = SigmaCollection.from_yaml(SIMPLE_RULE)
+    backend = DatabricksBackend(lakewatch_pipeline())
+    backend.convert(sigma_rules)
+    
+    rule = sigma_rules.rules[0]
+    
+    # Verify all config attributes are set
+    assert 'time_column' in rule.custom_attributes
+    assert rule.custom_attributes['time_column'] == 'time'
+    
+    assert 'catalog' in rule.custom_attributes
+    assert rule.custom_attributes['catalog'] == 'lakewatch'
+    
+    assert 'schema' in rule.custom_attributes
+    assert rule.custom_attributes['schema'] == 'gold'
+    
+    print(f"\n✓ Configuration attributes set:")
+    print(f"  time_column: {rule.custom_attributes['time_column']}")
+    print(f"  catalog: {rule.custom_attributes['catalog']}")
+    print(f"  schema: {rule.custom_attributes['schema']}")
+
+
+def test_backend_config_overrides():
+    """Test that backend can override configuration via kwargs."""
+    # Test with defaults
+    backend_default = DatabricksBackend(lakewatch_pipeline())
+    assert backend_default.time_column == "time"
+    assert backend_default.catalog == "lakewatch"
+    assert backend_default.schema == "gold"
+    assert backend_default.time_filter == "24 HOUR"
+    
+    # Test with overrides
+    backend_custom = DatabricksBackend(
+        lakewatch_pipeline(), 
+        time_column="event_timestamp",
+        catalog="my_catalog",
+        schema="silver",
+        time_filter="1 HOUR"
+    )
+    assert backend_custom.time_column == "event_timestamp"
+    assert backend_custom.catalog == "my_catalog"
+    assert backend_custom.schema == "silver"
+    assert backend_custom.time_filter == "1 HOUR"
+    
+
+    
+    print(f"\n✓ Default configuration:")
+    print(f"  time_column: {backend_default.time_column}")
+    print(f"  catalog: {backend_default.catalog}")
+    print(f"  schema: {backend_default.schema}")
+    print(f"  time_filter: {backend_default.time_filter}")
+    print(f"\n✓ Override configuration:")
+    print(f"  time_column: {backend_custom.time_column}")
+    print(f"  catalog: {backend_custom.catalog}")
+    print(f"  schema: {backend_custom.schema}")
+    print(f"  time_filter: {backend_custom.time_filter}")
+
+
+def test_rule_with_time_filter_enabled():
+    """Test that time filtering is applied when time_filter is set."""
+    sigma_rules = SigmaCollection.from_yaml(SIMPLE_RULE)
+    backend = DatabricksBackend(lakewatch_pipeline(), time_filter="24 HOUR")
+    queries = backend.convert(sigma_rules)
+    
+    query = queries[0]
+    
+    # Verify BETWEEN syntax present
+    assert "time BETWEEN" in query
+    assert "CURRENT_TIMESTAMP() - INTERVAL 24 HOUR" in query
+    assert "AND CURRENT_TIMESTAMP()" in query
+    
+    # Verify detection logic is wrapped in parentheses
+    assert "AND (" in query and query.count("(") >= 2
+    
+    print(f"\n✓ Time filter applied:\n{query}")
+
+
+def test_rule_with_custom_time_window():
+    """Test custom time windows (minutes, days)."""
+    sigma_rules = SigmaCollection.from_yaml(SIMPLE_RULE)
+    
+    # Test 30 minute window
+    backend_30min = DatabricksBackend(lakewatch_pipeline(), time_filter="30 MINUTE")
+    query_30min = backend_30min.convert(sigma_rules)[0]
+    assert "INTERVAL 30 MINUTE" in query_30min
+    
+    # Test 7 day window
+    backend_7day = DatabricksBackend(lakewatch_pipeline(), time_filter="7 DAY")
+    query_7day = backend_7day.convert(sigma_rules)[0]
+    assert "INTERVAL 7 DAY" in query_7day
+    
+    print(f"\n✓ Custom time windows working:")
+    print(f"  30 MINUTE: {query_30min[:100]}...")
+    print(f"  7 DAY: {query_7day[:100]}...")

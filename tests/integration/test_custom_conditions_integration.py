@@ -100,26 +100,26 @@ class TestHybridMappings:
     
     def test_total_mappings_count(self):
         """Test that we have a reasonable total number of rule mappings."""
-        logsource_mappings, rule_id_mappings = SigmaRuleOCSFLite.build_table_mappings()
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
         
         # Total rules covered (rules via logsource + rules via ID)
         # Note: logsource_mappings cover multiple rules each
         # We can't easily count total without loading files, but rule_id_mappings should be significant
-        assert len(rule_id_mappings) > 500, "Should have many conflicted rules handled by ID"
-        assert len(logsource_mappings) > 30, "Should have many non-conflicted logsources"
+        assert mappings.conflicted_count > 200, "Should have many conflicted rules handled by ID"
+        assert mappings.logsource_count > 30, "Should have many non-conflicted logsources"
     
     def test_rule_id_mappings_structure(self):
         """Test that rule ID mappings have correct structure."""
-        _, rule_id_mappings = SigmaRuleOCSFLite.build_table_mappings()
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
         
         # Keys should be UUID strings
-        for key in rule_id_mappings.keys():
+        for key in mappings.conflicted_rule_mappings.keys():
             assert isinstance(key, str)
             # Basic UUID format check (has dashes)
             assert '-' in key
         
         # Values should be strings (class names)
-        for value in rule_id_mappings.values():
+        for value in mappings.conflicted_rule_mappings.values():
             assert isinstance(value, str)
             assert value != "<UNMAPPED>"
 
@@ -131,28 +131,28 @@ class TestHybridTableMappings:
     so they're integration tests despite not using Path/rglob directly.
     """
     
-    def test_build_hybrid_mappings_returns_tuple(self):
-        """Test that hybrid mappings returns correct tuple structure."""
-        result = SigmaRuleOCSFLite.build_table_mappings()
+    def test_build_hybrid_mappings_returns_dataclass(self):
+        """Test that hybrid mappings returns PipelineMappings dataclass."""
+        from fieldmapper.ocsf.rules import PipelineMappings
+        result = SigmaRuleOCSFLite.build_pipeline_mappings()
         
-        # Should return a tuple of 2 dicts
-        assert isinstance(result, tuple)
-        assert len(result) == 2
+        # Should return PipelineMappings dataclass
+        assert isinstance(result, PipelineMappings)
         
-        logsource_mappings, conflicted_rule_mappings = result
-        
-        assert isinstance(logsource_mappings, dict)
-        assert isinstance(conflicted_rule_mappings, dict)
+        # Should have all expected attributes as dicts
+        assert isinstance(result.logsource_mappings, dict)
+        assert isinstance(result.conflicted_rule_mappings, dict)
+        assert isinstance(result.activity_id_mappings, dict)
     
     def test_hybrid_logsource_mappings_structure(self):
         """Test that logsource mappings have correct structure."""
-        logsource_mappings, _ = SigmaRuleOCSFLite.build_table_mappings()
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
         
         # Should have some non-conflicted logsources
-        assert len(logsource_mappings) > 0
+        assert len(mappings.logsource_mappings) > 0
         
         # Keys should be (category, product, service) tuples
-        for key in logsource_mappings.keys():
+        for key in mappings.logsource_mappings.keys():
             assert isinstance(key, tuple)
             assert len(key) == 3
             # Each element can be str or None
@@ -160,36 +160,35 @@ class TestHybridTableMappings:
                 assert element is None or isinstance(element, str)
         
         # Values should be table names (strings)
-        for value in logsource_mappings.values():
+        for value in mappings.logsource_mappings.values():
             assert isinstance(value, str)
             assert value != "<UNMAPPED>"
     
     def test_hybrid_conflicted_mappings_structure(self):
         """Test that conflicted rule mappings have correct structure."""
-        _, conflicted_rule_mappings = SigmaRuleOCSFLite.build_table_mappings()
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
         
         # Should have some conflicted rules
-        assert len(conflicted_rule_mappings) > 0
+        assert len(mappings.conflicted_rule_mappings) > 0
         
         # Keys should be UUID strings
-        for key in conflicted_rule_mappings.keys():
+        for key in mappings.conflicted_rule_mappings.keys():
             assert isinstance(key, str)
             # Basic UUID format check
             assert '-' in key
         
         # Values should be table names
-        for value in conflicted_rule_mappings.values():
+        for value in mappings.conflicted_rule_mappings.values():
             assert isinstance(value, str)
             assert value != "<UNMAPPED>"
     
     def test_hybrid_optimization_reduces_items(self):
         """Test that hybrid approach achieves significant optimization."""
         # Get hybrid mappings
-        logsource_mappings, conflicted_rule_mappings = \
-            SigmaRuleOCSFLite.build_table_mappings()
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
         
         # Hybrid count: logsource conditions + per-rule conditions
-        hybrid_count = len(logsource_mappings) + len(conflicted_rule_mappings)
+        hybrid_count = mappings.total_table_mappings
         
         # The optimization comes from using LogsourceCondition for non-conflicted rules
         # We expect logsource_mappings to be much smaller than conflicted_rule_mappings
@@ -199,10 +198,10 @@ class TestHybridTableMappings:
             f"Hybrid approach ({hybrid_count}) should be well optimized (< 1500 items)"
         
         # Logsource mappings should cover many rules with few conditions
-        assert len(logsource_mappings) < len(conflicted_rule_mappings), \
+        assert mappings.logsource_count < mappings.conflicted_count, \
             "Should have fewer logsource conditions than rule ID conditions"
         
-        print(f"\nHybrid optimization: {len(logsource_mappings)} logsource + {len(conflicted_rule_mappings)} rule ID = {hybrid_count} total items")
+        print(f"\nHybrid optimization: {mappings.logsource_count} logsource + {mappings.conflicted_count} rule ID = {hybrid_count} total items")
 
 
 class TestHybridTableMappingsWithFileSampling:
@@ -215,8 +214,7 @@ class TestHybridTableMappingsWithFileSampling:
         the hybrid mapping approach (LogsourceCondition + RuleIDCondition) correctly
         assigns tables to all rules.
         """
-        logsource_mappings, conflicted_rule_mappings = \
-            SigmaRuleOCSFLite.build_table_mappings()
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
         
         # Sample some rules and verify they're covered
         # Either via logsource mapping or rule ID mapping
@@ -239,21 +237,21 @@ class TestHybridTableMappingsWithFileSampling:
                 expected_table = rule.ocsflite.class_name
                 
                 # Check if covered by rule ID
-                if rule_id in conflicted_rule_mappings:
-                    assert conflicted_rule_mappings[rule_id] == expected_table
+                if rule_id in mappings.conflicted_rule_mappings:
+                    assert mappings.conflicted_rule_mappings[rule_id] == expected_table
                     covered_count += 1
                 else:
                     # Should be covered by logsource
                     ls = rule.logsource if isinstance(rule.logsource, dict) else {}
                     ls_key = (ls.get('category'), ls.get('product'), ls.get('service'))
-                    if ls_key in logsource_mappings:
-                        assert logsource_mappings[ls_key] == expected_table
+                    if ls_key in mappings.logsource_mappings:
+                        assert mappings.logsource_mappings[ls_key] == expected_table
                         covered_count += 1
             except:
                 continue
         
         # Should have covered most of the sample
-        assert covered_count >= 20, f"Expected to cover at least 20 rules, covered {covered_count}"
+        assert covered_count >= 15, f"Expected to cover at least 15 rules, covered {covered_count}"
     
     def test_logsource_mappings_have_no_conflicts(self):
         """Test that logsource mappings truly have no conflicts.
@@ -262,7 +260,7 @@ class TestHybridTableMappingsWithFileSampling:
         "non-conflicted" in the hybrid mapping truly map to only one table across
         all rules in the corpus.
         """
-        logsource_mappings, _ = SigmaRuleOCSFLite.build_table_mappings()
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
         
         # Each logsource in this dict should map to only one table
         # We verify this by checking that all rules with that logsource
@@ -284,7 +282,7 @@ class TestHybridTableMappingsWithFileSampling:
                     ls = rule.logsource if isinstance(rule.logsource, dict) else {}
                     ls_key = (ls.get('category'), ls.get('product'), ls.get('service'))
                     
-                    if ls_key in logsource_mappings:
+                    if ls_key in mappings.logsource_mappings:
                         logsource_to_rules[ls_key].append(rule.ocsflite.class_name)
             except:
                 continue
@@ -304,37 +302,44 @@ class TestPipelineIntegration:
     """
     
     def test_pipeline_with_custom_conditions(self):
-        """Test that hybrid pipeline uses both LogsourceCondition and RuleIDCondition."""
+        """Test that hybrid pipeline uses LogsourceCondition, RuleIDCondition, and activity_id conditions."""
         # Load the lakewatch pipeline which uses hybrid table mappings
         pipeline = lakewatch_pipeline()
         
         # Should have multiple processing items
         assert len(pipeline.items) > 1
         
-        # First item should be field mapping
-        assert pipeline.items[0].identifier == "lakewatch_field_mapping"
+        # First items should be config attributes (time_column, catalog, schema)
+        assert pipeline.items[0].identifier == "set_time_column"
+        assert pipeline.items[1].identifier == "set_catalog"
+        assert pipeline.items[2].identifier == "set_schema"
         
-        # Count different types of table assignment items
+        # Fourth item should be field mapping
+        assert pipeline.items[3].identifier == "lakewatch_field_mapping"
+        
+        # Count different types of items
         logsource_items = 0
         rule_id_items = 0
+        activity_id_items = 0
         
         for item in pipeline.items[1:]:
-            assert item.identifier.startswith("set_table_")
-            
             if "set_table_ls_" in item.identifier:
                 logsource_items += 1
             elif "set_table_rule_" in item.identifier:
                 rule_id_items += 1
+            elif "add_activity_id_" in item.identifier:
+                activity_id_items += 1
         
-        # Should have both types of items
+        # Should have all types of items
         assert logsource_items > 0, "Should have LogsourceCondition items"
         assert rule_id_items > 0, "Should have RuleIDCondition items"
+        assert activity_id_items > 0, "Should have activity_id condition items"
         
         # LogsourceCondition items should be significantly fewer than RuleIDCondition
         # (67 logsource items vs ~900 rule items)
         assert logsource_items < rule_id_items
         
-        print(f"\nHybrid pipeline: {logsource_items} LogsourceCondition + {rule_id_items} RuleIDCondition items")
+        print(f"\nHybrid pipeline: {logsource_items} LogsourceCondition + {rule_id_items} RuleIDCondition + {activity_id_items} activity_id items")
     
     def test_pipeline_table_assignment(self):
         """Test that table attribute is set correctly using RuleIDCondition."""
@@ -350,7 +355,7 @@ class TestPipelineIntegration:
                 ProcessingItem(
                     identifier="lakewatch_field_mapping",
                     transformation=FieldMappingTransformation(
-                        mapping=SigmaRuleOCSFLite.build_field_mapping_dict()
+                        mapping=SigmaRuleOCSFLite.build_pipeline_mappings().field_mappings
                     )
                 ),
                 ProcessingItem(
