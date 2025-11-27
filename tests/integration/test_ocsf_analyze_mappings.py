@@ -109,7 +109,7 @@ class TestClassifyMappingStatus:
             rule_id="test6",
             rule_title="Test Rule",
             class_name="process_activity",
-            activity_id="UNMAPPED",
+            activity_id="<UNMAPPED>",
             total_detection_fields=5,
             mapped_detection_fields=0,
             unmapped_detection_fields=5,

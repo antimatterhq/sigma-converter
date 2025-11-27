@@ -430,22 +430,26 @@ class TestCLIMain:
         captured = capsys.readouterr()
         assert "format: JSON" in captured.out
     
-    @patch('fieldmapper.ocsf.analyze_mappings.analyze_directory')
-    @patch('fieldmapper.ocsf.analyze_mappings.generate_report')
-    def test_main_analyze_mode(self, mock_generate_report, mock_analyze, capsys):
+    @patch('fieldmapper.ocsf.cli.analyze_directory')
+    @patch('fieldmapper.ocsf.cli.generate_report')
+    def test_main_analyze_mode(self, mock_generate_report, mock_analyze, capsys, tmp_path):
         """Test --analyze mode."""
+        # Create temporary directory for the test
+        test_dir = tmp_path / "mappings"
+        test_dir.mkdir()
+        
         mock_analyze.return_value = ({}, [])
         mock_generate_report.return_value = "Test report"
         
         with pytest.raises(SystemExit) as exc_info:
-            with patch('sys.argv', ['cli.py', '--analyze', '/tmp/mappings']):
+            with patch('sys.argv', ['cli.py', '--analyze', str(test_dir)]):
                 main()
         
         captured = capsys.readouterr()
         assert "Test report" in captured.out
         assert exc_info.value.code == 0
     
-    @patch('fieldmapper.ocsf.analyze_mappings.analyze_directory')
+    @patch('fieldmapper.ocsf.cli.analyze_directory')
     def test_main_analyze_mode_file_not_found(self, mock_analyze, capsys):
         """Test --analyze mode with missing directory."""
         mock_analyze.side_effect = FileNotFoundError("Directory not found")
