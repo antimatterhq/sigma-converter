@@ -29,4 +29,4 @@ def test_snake_case_fields_conversion():
 def test_snake_case_detection_conversion():
     rule = DatabricksBackend(snake_case()).convert(
         SigmaCollection.from_yaml(YAML_STR))
-    assert rule == ["event_id = 123 AND lower(image) = lower('test.exe') AND lower(test_field) = lower('test')"]
+    assert rule == ["SELECT * FROM lakewatch.gold.<UNMAPPED_TABLE> WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (event_id = 123 AND lower(image) = lower('test.exe') AND lower(test_field) = lower('test'))"]

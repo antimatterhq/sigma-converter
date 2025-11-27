@@ -18,6 +18,7 @@ class RuleMappingAnalysis:
     rule_id: str
     rule_title: str
     class_name: Optional[str]
+    activity_id: Optional[int | str]  # Can be int or "<UNMAPPED>"
     total_detection_fields: int
     mapped_detection_fields: int
     unmapped_detection_fields: int
@@ -33,10 +34,15 @@ class MappingStatistics:
     completely_unmapped: int  # class_name null OR no fields mapped
     no_event_class: int  # Rules with null/missing class_name
     
-    # Field-level stats
+    # Field-level stats (no defaults)
     total_fields: int
     mapped_fields: int
     unmapped_fields: int
+    
+    # Activity ID stats (with defaults - must come after non-default fields)
+    has_activity_id: int = 0  # Count of rules with valid activity_id
+    unmapped_activity_id: int = 0  # Count with "<UNMAPPED>"
+    no_activity_id: int = 0  # Count with None (event class has no activity_id field)
     
     # Event class distribution
     event_classes: Dict[str, int] = field(default_factory=dict)  # class_name -> count
@@ -58,12 +64,21 @@ def classify_mapping_status(analysis: RuleMappingAnalysis) -> str:
     if not analysis.class_name or analysis.class_name == "null":
         return "unmapped"
     
-    if analysis.total_detection_fields == 0:
-        return "complete"  # No fields to map
+    # Check if activity_id is unmapped (when it should exist)
+    activity_id_unmapped = (analysis.activity_id == "<UNMAPPED>")
     
-    if analysis.mapped_detection_fields == analysis.total_detection_fields:
+    if analysis.total_detection_fields == 0:
+        # No fields to map, but check activity_id
+        return "complete" if not activity_id_unmapped else "partial"
+    
+    # Consider both fields and activity_id
+    all_complete = (analysis.mapped_detection_fields == analysis.total_detection_fields 
+                    and not activity_id_unmapped)
+    some_mapped = (analysis.mapped_detection_fields > 0 or not activity_id_unmapped)
+    
+    if all_complete:
         return "complete"
-    elif analysis.mapped_detection_fields > 0:
+    elif some_mapped:
         return "partial"
     else:
         return "unmapped"
@@ -94,6 +109,7 @@ def analyze_rule(rule_path: Path) -> Optional[RuleMappingAnalysis]:
         # Extract OCSF mapping info
         ocsf_mapping = data.get('ocsf_mapping', {})
         class_name = ocsf_mapping.get('class_name')
+        activity_id = ocsf_mapping.get('activity_id')
         
         # Count detection fields
         detection_fields = ocsf_mapping.get('detection_fields', [])
@@ -113,6 +129,7 @@ def analyze_rule(rule_path: Path) -> Optional[RuleMappingAnalysis]:
             rule_id=rule_id,
             rule_title=rule_title,
             class_name=class_name,
+            activity_id=activity_id,
             total_detection_fields=total_detection_fields,
             mapped_detection_fields=mapped_count,
             unmapped_detection_fields=unmapped_count,
@@ -203,6 +220,20 @@ def analyze_directory(dir_path: Path) -> Tuple[MappingStatistics, List[RuleMappi
         if not a.class_name or a.class_name in ('null', '<UNMAPPED>')
     )
     
+    # Count activity_id statistics
+    has_activity_id = 0
+    unmapped_activity_id = 0
+    no_activity_id = 0
+    
+    for analysis in analyses:
+        if analysis.activity_id is not None:
+            if isinstance(analysis.activity_id, int):
+                has_activity_id += 1
+            elif analysis.activity_id == "UNMAPPED":
+                unmapped_activity_id += 1
+        else:
+            no_activity_id += 1
+    
     # Count event classes
     event_classes: Dict[str, int] = {}
     for analysis in analyses:
@@ -222,6 +253,9 @@ def analyze_directory(dir_path: Path) -> Tuple[MappingStatistics, List[RuleMappi
         partially_mapped=partially_mapped,
         completely_unmapped=completely_unmapped,
         no_event_class=no_event_class,
+        has_activity_id=has_activity_id,
+        unmapped_activity_id=unmapped_activity_id,
+        no_activity_id=no_activity_id,
         total_fields=total_fields,
         mapped_fields=mapped_fields,
         unmapped_fields=unmapped_fields,
@@ -276,6 +310,19 @@ def generate_report(stats: MappingStatistics, analyses: List[RuleMappingAnalysis
         
         lines.append(f"  - Mapped: {stats.mapped_fields:,} ({mapped_pct:.1f}%)")
         lines.append(f"  - Unmapped: {stats.unmapped_fields:,} ({unmapped_pct:.1f}%)")
+    
+    lines.append("")
+    
+    # Activity ID statistics
+    lines.append("Activity ID Statistics:")
+    if stats.total_rules > 0:
+        has_activity_pct = (stats.has_activity_id / stats.total_rules) * 100
+        unmapped_activity_pct = (stats.unmapped_activity_id / stats.total_rules) * 100
+        no_activity_pct = (stats.no_activity_id / stats.total_rules) * 100
+        
+        lines.append(f"  - Mapped Activity IDs: {stats.has_activity_id:,} ({has_activity_pct:.1f}%)")
+        lines.append(f"  - Unmapped Activity IDs: {stats.unmapped_activity_id:,} ({unmapped_activity_pct:.1f}%)")
+        lines.append(f"  - No Activity ID Field: {stats.no_activity_id:,} ({no_activity_pct:.1f}%)")
     
     lines.append("")
     

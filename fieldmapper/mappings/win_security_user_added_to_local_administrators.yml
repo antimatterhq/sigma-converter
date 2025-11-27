@@ -31,30 +31,31 @@ detection:
         SubjectUserName|endswith: $
     condition: all of selection_* and not 1 of filter_*
 ocsf_mapping:
-    class_name: account_change
+    class_name: group_management
+    activity_id: 3
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:22:29.444857+00:00'
+            mapped_at: '2025-11-26T02:43:34.552568+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-13T20:22:29.444857+00:00'
+            mapped_at: '2025-11-26T02:43:34.552568+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: account_change
+            target_table: group_management
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:22:30.990108+00:00'
+            mapped_at: '2025-11-26T02:43:35.777381+00:00'
         -   source_field: TargetUserName
-            target_table: account_change
-            target_field: user.name
-            mapped_at: '2025-11-13T20:22:30.990132+00:00'
-        -   source_field: TargetSid
-            target_table: account_change
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:22:30.990135+00:00'
-        -   source_field: SubjectUserName
-            target_table: account_change
+            target_table: group_management
             target_field: actor.user.name
-            mapped_at: '2025-11-13T20:22:30.990138+00:00'
+            mapped_at: '2025-11-26T02:43:35.777396+00:00'
+        -   source_field: TargetSid
+            target_table: group_management
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-26T02:43:35.777398+00:00'
+        -   source_field: SubjectUserName
+            target_table: group_management
+            target_field: actor.user.name
+            mapped_at: '2025-11-26T02:43:35.777400+00:00'

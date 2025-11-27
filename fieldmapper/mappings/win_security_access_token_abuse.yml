@@ -31,34 +31,35 @@ detection:
         ImpersonationLevel: '%%1833'
     condition: selection
 ocsf_mapping:
-    class_name: process_activity
+    class_name: authentication
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:25:09.981350+00:00'
+            mapped_at: '2025-11-26T02:47:47.842123+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-13T20:25:09.981350+00:00'
+            mapped_at: '2025-11-26T02:47:47.842123+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: process_activity
+            target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:25:11.581138+00:00'
+            mapped_at: '2025-11-26T02:47:48.743037+00:00'
         -   source_field: LogonType
-            target_table: process_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:25:11.581170+00:00'
+            target_table: authentication
+            target_field: logon_type
+            mapped_at: '2025-11-26T02:47:48.743062+00:00'
         -   source_field: LogonProcessName
-            target_table: process_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:25:11.581174+00:00'
+            target_table: authentication
+            target_field: actor.process.name
+            mapped_at: '2025-11-26T02:47:48.743067+00:00'
         -   source_field: AuthenticationPackageName
-            target_table: process_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:25:11.581178+00:00'
+            target_table: authentication
+            target_field: auth_protocol
+            mapped_at: '2025-11-26T02:47:48.743070+00:00'
         -   source_field: ImpersonationLevel
-            target_table: process_activity
+            target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:25:11.581181+00:00'
+            mapped_at: '2025-11-26T02:47:48.743073+00:00'

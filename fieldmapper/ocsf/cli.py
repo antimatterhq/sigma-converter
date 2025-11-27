@@ -7,8 +7,10 @@ This module provides the CLI entry point and display/presentation logic.
 import argparse
 from pathlib import Path
 from typing import List
+
 from fieldmapper.ocsf.rules import SigmaRuleOCSFLite
 from fieldmapper.ocsf.converter import load_and_process_rules
+from fieldmapper.ocsf.analyze_mappings import analyze_directory, generate_report
 
 
 def print_separator(char="=", length=80):
@@ -241,8 +243,6 @@ def main():
     
     # Handle --analyze mode (separate from normal operation)
     if args.analyze:
-        from fieldmapper.ocsf.analyze_mappings import analyze_directory, generate_report
-        
         try:
             stats, analyses = analyze_directory(Path(args.analyze))
             report = generate_report(stats, analyses)

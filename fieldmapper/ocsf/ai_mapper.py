@@ -107,30 +107,34 @@ class MappingCache:
         self._cache["logsource"][logsource_key] = mapping
         self.save()
     
-    def get_detection_field_mapping(self, field_name: str) -> Optional[Dict[str, str]]:
+    def get_detection_field_mapping(self, event_class: str, field_name: str) -> Optional[Dict[str, str]]:
         """
         Get cached detection field mapping.
         
-        Cache key is field name only (no context). Field names in Sigma are not ambiguous
-        across contexts, enabling maximum cache efficiency.
+        Cache key includes event_class for context-aware caching, since the same field
+        can map to different OCSF fields depending on the event class context.
         
         Args:
-            field_name: The source field name (e.g., "EventID", "dst_port")
+            event_class: The OCSF event class (e.g., "process_activity", "file_activity")
+            field_name: The source field name (e.g., "Image", "CommandLine")
         
         Returns:
-            Dict with mapping info (e.g., {"target_field": "process.cmd_line"}), or None if not cached
+            Dict with mapping info (e.g., {"target_field": "actor.process.name"}), or None if not cached
         """
-        return self._cache["detection_fields"].get(field_name)
+        cache_key = f"{event_class}:{field_name}"
+        return self._cache["detection_fields"].get(cache_key)
     
-    def set_detection_field_mapping(self, field_name: str, mapping: Dict[str, str]) -> None:
+    def set_detection_field_mapping(self, event_class: str, field_name: str, mapping: Dict[str, str]) -> None:
         """
         Store detection field mapping in cache.
         
         Args:
-            field_name: The source field name
-            mapping: Dict containing the mapping (e.g., {"target_field": "process.cmd_line"})
+            event_class: The OCSF event class (e.g., "process_activity")
+            field_name: The source field name (e.g., "Image")
+            mapping: Dict containing the mapping (e.g., {"target_field": "actor.process.name"})
         """
-        self._cache["detection_fields"][field_name] = mapping
+        cache_key = f"{event_class}:{field_name}"
+        self._cache["detection_fields"][cache_key] = mapping
         self.save()
     
     def load(self) -> None:

@@ -37,38 +37,39 @@ detection:
         TargetUserName: ANONYMOUS LOGON
     condition: 1 of selection_* and not filter
 ocsf_mapping:
-    class_name: process_activity
+    class_name: authentication
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-13T20:25:08.211871+00:00'
+            mapped_at: '2025-11-26T02:47:45.831385+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-13T20:25:08.211871+00:00'
+            mapped_at: '2025-11-26T02:47:45.831385+00:00'
     detection_fields:
         -   source_field: EventID
-            target_table: process_activity
+            target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-13T20:25:09.401748+00:00'
+            mapped_at: '2025-11-26T02:47:46.630032+00:00'
         -   source_field: SubjectUserSid
-            target_table: process_activity
+            target_table: authentication
             target_field: actor.user.uid
-            mapped_at: '2025-11-13T20:25:09.401773+00:00'
+            mapped_at: '2025-11-26T02:47:46.630050+00:00'
         -   source_field: LogonType
-            target_table: process_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:25:09.401777+00:00'
+            target_table: authentication
+            target_field: logon_type
+            mapped_at: '2025-11-26T02:47:46.630053+00:00'
         -   source_field: LogonProcessName
-            target_table: process_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:25:09.401785+00:00'
+            target_table: authentication
+            target_field: actor.process.name
+            mapped_at: '2025-11-26T02:47:46.630055+00:00'
         -   source_field: KeyLength
-            target_table: process_activity
+            target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:25:09.401788+00:00'
+            mapped_at: '2025-11-26T02:47:46.630058+00:00'
         -   source_field: TargetUserName
-            target_table: process_activity
-            target_field: user.name
-            mapped_at: '2025-11-13T20:25:09.401791+00:00'
+            target_table: authentication
+            target_field: <UNMAPPED>
+            mapped_at: '2025-11-26T02:47:46.630079+00:00'

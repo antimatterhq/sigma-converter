@@ -25,26 +25,27 @@ detection:
         eventName: RestoreDBInstanceFromDBSnapshot
     condition: selection_source
 ocsf_mapping:
-    class_name: api_activity
+    class_name: datastore_activity
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-13T20:17:51.323628+00:00'
+            mapped_at: '2025-11-26T02:22:13.576354+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-13T20:17:51.323628+00:00'
+            mapped_at: '2025-11-26T02:22:13.576354+00:00'
     detection_fields:
         -   source_field: eventSource
-            target_table: api_activity
+            target_table: datastore_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-13T20:17:52.132625+00:00'
+            mapped_at: '2025-11-26T02:22:14.748620+00:00'
         -   source_field: responseElements.publiclyAccessible
-            target_table: api_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-13T20:17:52.132634+00:00'
+            target_table: datastore_activity
+            target_field: databucket.is_public
+            mapped_at: '2025-11-26T02:22:14.748641+00:00'
         -   source_field: eventName
-            target_table: api_activity
-            target_field: action
-            mapped_at: '2025-11-13T20:17:52.132637+00:00'
+            target_table: datastore_activity
+            target_field: api.operation
+            mapped_at: '2025-11-26T02:22:14.748646+00:00'
