@@ -84,6 +84,28 @@ class OCSFLite:
 
 
 @dataclass
+class OCSFValidationResult:
+    """Complete OCSF mapping validation state."""
+    event_class: Optional[str]
+    activity_id: Optional[int]
+    unmapped_fields: List[str]
+    
+    @property
+    def is_valid(self) -> bool:
+        """Check if all OCSF mappings are valid."""
+        return (
+            self.event_class 
+            and self.event_class != '<UNMAPPED>' 
+            and not self.unmapped_fields
+        )
+    
+    @property
+    def has_valid_table(self) -> bool:
+        """Check if event_class mapping is valid."""
+        return self.event_class and self.event_class != '<UNMAPPED>'
+
+
+@dataclass
 class PipelineMappings:
     """Container for all pipeline processing mappings extracted from OCSF rule files."""
     
@@ -320,6 +342,36 @@ class SigmaRuleOCSFLite(SigmaRule):
                 instance.ocsflite.detection_fields.append(mapping)
             
             return instance
+
+    @classmethod
+    def from_sigma_rule_with_ocsf_mapping(cls, rule: SigmaRule) -> Optional['SigmaRuleOCSFLite']:
+        """
+        Convert a SigmaRule with ocsf_mapping in custom_attributes to SigmaRuleOCSFLite.
+        
+        Used by validators to work with CLI-loaded rules that have OCSF mappings
+        stored in custom_attributes.
+        
+        Args:
+            rule: SigmaRule with ocsf_mapping dict in custom_attributes
+            
+        Returns:
+            SigmaRuleOCSFLite instance or None if no valid ocsf_mapping
+        """
+        ocsf_mapping = rule.custom_attributes.get('ocsf_mapping')
+        if not ocsf_mapping or not isinstance(ocsf_mapping, dict):
+            return None
+        
+        # Build full dict with rule data and ocsf_mapping
+        full_dict = {
+            'ocsf_mapping': ocsf_mapping,
+            'id': rule.id,
+            'title': rule.title,
+            'detection': rule.detection,
+            'logsource': rule.logsource,
+            'custom_attributes': rule.custom_attributes,
+        }
+        
+        return cls.from_mapping_dict(full_dict)
 
     @classmethod
     def build_pipeline_mappings(
@@ -660,6 +712,19 @@ class SigmaRuleOCSFLite(SigmaRule):
         
         return unmapped
 
+    def validate_ocsf_mappings(self) -> 'OCSFValidationResult':
+        """
+        Validate all OCSF mappings and return comprehensive result.
+        
+        Returns:
+            OCSFValidationResult with event_class, activity_id, and unmapped_fields
+        """
+        return OCSFValidationResult(
+            event_class=self.ocsflite.class_name,
+            activity_id=self.ocsflite.activity_id,
+            unmapped_fields=self.unmapped_fields()
+        )
+
     def create_logsource_mappings(self) -> None:
         """Initialize logsource mappings from the rule's logsource fields."""
         if not self.logsource:
@@ -826,45 +891,38 @@ class SigmaRuleOCSFLite(SigmaRule):
             Dictionary representation suitable for YAML/JSON export
         """
         if full:
-            # Full export: include all SigmaRule attributes + OCSF mappings
-            # Define all SigmaRule attributes to export
-            rule_attrs = [
-                'id', 'title', 'status', 'level', 'description', 'author',
-                'date', 'modified', 'tags', 'references', 'fields',
-                'falsepositives', 'license', 'custom_attributes',
-                'name', 'related', 'scope', 'taxonomy',
-                'logsource',    # Original logsource from YAML
-                'detection'     # Original detection from YAML
-            ]
+            # Start with pySigma's base export (handles most fields correctly)
+            result = super().to_dict()
             
-            result = {}
+            # Add missing fields that pySigma doesn't export
             
-            # Export all SigmaRule attributes
-            for attr in rule_attrs:
-                if hasattr(self, attr):
-                    value = getattr(self, attr)
-                    if value is not None:
-                        # Skip empty collections (lists, tuples, dicts)
-                        if isinstance(value, (list, tuple, dict)) and not value:
-                            continue
-                        # Convert to serializable format
-                        if isinstance(value, (list, tuple)):
-                            # Convert items to strings if they're objects (like SigmaRuleTag)
-                            # but preserve simple types as-is
-                            result[attr] = [str(item) if not isinstance(item, (str, int, float, bool)) else item for item in value]
-                        elif isinstance(value, dict):
-                            result[attr] = value
-                        elif hasattr(value, 'to_dict'):
-                            # Use object's own serialization method
-                            result[attr] = value.to_dict()
-                        else:
-                            # Only convert non-serializable types to string
-                            if isinstance(value, (str, int, float, bool, type(None))):
-                                result[attr] = value
-                            else:
-                                result[attr] = str(value)
+            # 1. Related field - convert SigmaRelated object to YAML format
+            if self.related is not None:
+                result['related'] = [
+                    {
+                        'id': str(item.id),
+                        'type': item.type.name.lower()
+                    }
+                    for item in self.related.related
+                ]
             
-            # Add OCSF mappings (shows source -> target mappings)
+            # 2. Logsource - convert to dict
+            if self.logsource is not None:
+                result['logsource'] = self.logsource.to_dict()
+            
+            # 3. Detection - convert to dict
+            if self.detection is not None:
+                result['detection'] = self.detection.to_dict()
+            
+            # 4. Taxonomy (if different from default)
+            if self.taxonomy != 'sigma':
+                result['taxonomy'] = self.taxonomy
+            
+            # 5. License
+            if self.license is not None:
+                result['license'] = self.license
+            
+            # 6. Add our OCSF mappings
             result['ocsf_mapping'] = self.ocsflite.to_dict()
             
             return result
@@ -874,10 +932,8 @@ class SigmaRuleOCSFLite(SigmaRule):
             if self.ocsflite.detection_fields:
                 for mapping in self.ocsflite.detection_fields:
                     if mapping.target_field == "<UNMAPPED>":
-                        # Source field name stays as key, value is "<UNMAPPED>"
                         field_mappings[mapping.source_field] = "<UNMAPPED>"
                     elif mapping.target_field:
-                        # Format as "source_field: target_table.target_field"
                         field_mappings[mapping.source_field] = f"{mapping.target_table}.{mapping.target_field}"
                     else:
                         field_mappings[mapping.source_field] = None

@@ -18,7 +18,7 @@ class TestRuleLimit:
     @pytest.fixture
     def mock_rules(self):
         """Create a list of mock rule objects."""
-        from fieldmapper.ocsf.rules import SigmaRuleOCSFLite, OCSFLite
+        from fieldmapper.ocsf.rules import SigmaRuleOCSFLite
         from sigma.rule import SigmaRule, SigmaLogSource
         
         rules = []

@@ -1,7 +1,6 @@
 import pytest
 from pathlib import Path
 import tempfile
-import os
 from sigma.rule import SigmaRule
 
 from fieldmapper.ocsf.rules import OCSFLite, SigmaRuleOCSFLite, load_sigma_rules
@@ -662,7 +661,7 @@ class TestMappingCache:
         # Set mapping for Image in process_activity context
         cache.set_detection_field_mapping("process_activity", "Image", {"target_field": "process.name"})
         
-
+        
         # Set mapping for Image in file_activity context (different target!)
         cache.set_detection_field_mapping("file_activity", "Image", {"target_field": "actor.process.name"})
         

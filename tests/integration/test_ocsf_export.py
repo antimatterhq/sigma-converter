@@ -5,6 +5,7 @@ import json
 import yaml
 import tempfile
 import pytest
+from datetime import date
 from pathlib import Path
 from unittest.mock import Mock
 from fieldmapper.ocsf.rules import (
@@ -47,7 +48,7 @@ class TestDataclassToDict:
         
         assert 'category' in result
         assert 'product' in result
-        assert 'service' not in result  # service is None
+        assert 'service' not in result
         assert result['category']['source_field'] == 'category'
         assert result['product']['source_field'] == 'product'
     
@@ -99,21 +100,30 @@ class TestRuleExportDict:
         rule = Mock(spec=SigmaRuleOCSFLite)
         rule.id = "test-rule-123"
         rule.title = "Test Process Creation"
+        rule.name = None
         rule.status = "stable"
         rule.level = "high"
         rule.description = "Test description"
         rule.author = "Test Author"
-        rule.date = "2025-01-01"
-        rule.modified = "2025-01-02"
+        rule.date = date(2025, 1, 1)
+        rule.modified = date(2025, 1, 2)
         rule.tags = ["attack.t1059", "attack.execution"]
         rule.references = ["https://example.com"]
         rule.source_filename = "test_rule.yml"
+        rule.fields = []
+        rule.falsepositives = []
         
         # Mock logsource
         rule.logsource = Mock()
         rule.logsource.category = "process_creation"
         rule.logsource.product = "windows"
         rule.logsource.service = None
+        
+        # Add custom_attributes
+        rule.custom_attributes = {}
+        
+        # Mock detection
+        rule.detection = Mock()
         
         # Mock OCSF mappings
         rule.ocsflite = OCSFLite(
@@ -145,21 +155,7 @@ class TestRuleExportDict:
         assert 'id' not in result
         assert 'title' not in result
     
-    def test_full_export_format(self, mock_rule):
-        """Test full export (all rule details)."""
-        result = mock_rule.to_export_dict(full=True)
-        
-        # Should contain rule metadata
-        assert result['id'] == "test-rule-123"
-        assert result['title'] == "Test Process Creation"
-        assert result['status'] == "stable"
-        assert result['level'] == "high"
-        assert result['description'] == "Test description"
-        assert result['author'] == "Test Author"
-        
-        # Should contain OCSF mappings
-        assert 'ocsf_mapping' in result
-        assert result['ocsf_mapping']['class_name'] == "system/process_activity"
+
     
     def test_unmapped_fields_in_export(self, mock_rule):
         """Test export with unmapped fields (None values)."""

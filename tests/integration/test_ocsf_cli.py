@@ -11,7 +11,7 @@ from io import StringIO
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from fieldmapper.ocsf.cli import print_separator, print_rule_details, print_summary, main
-from fieldmapper.ocsf.rules import SigmaRuleOCSFLite, OCSFLite
+from fieldmapper.ocsf.rules import SigmaRuleOCSFLite
 from sigma.rule import SigmaRule, SigmaLogSource
 
 

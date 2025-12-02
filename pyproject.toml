@@ -13,12 +13,12 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.9,<3.14"
 pysigma = "^0.11.23"
-inflection = "^0.5.1"
 sqlglot = "*"
 sigma-cli = "*"
 pyyaml = ">=6.0"
 openai = ">=1.0.0"
 mitreattack-python = {version = ">=3.0.0", python = ">=3.10"}
+tqdm = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.4.2"
@@ -30,6 +30,13 @@ pylint = "^3.3.8"
 
 [tool.poetry.scripts]
 field-mapper = "fieldmapper.ocsf.cli:main"
+convert-lakewatch = "fieldmapper.ocsf.convert_lakewatch:main"
+
+[tool.poetry.plugins."sigma.backends"]
+databricks = "sigma.backends.databricks:DatabricksBackend"
+
+[tool.poetry.plugins."sigma.pipelines"]
+lakewatch = "sigma.pipelines.lakewatch.lakewatch:lakewatch_pipeline"
 
 [build-system]
 requires = ["poetry-core>=1.3.0"]
