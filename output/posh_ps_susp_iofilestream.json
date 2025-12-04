@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious IO.FileStream",
+    "comment": "Open a handle on the drive volume via the \\\\.\\ DOS device path specifier and perform direct access read of the first few bytes of the volume.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('new-object')) AND contains(lower(script.script_content.value), lower('io.filestream')) AND contains(lower(script.script_content.value), lower('\\\\.\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Open a handle on the drive volume via the \\\\.\\ DOS device path specifier and perform direct access read of the first few bytes of the volume.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate PowerShell scripts Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1006/T1006.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

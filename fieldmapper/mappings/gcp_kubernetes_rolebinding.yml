@@ -1,14 +1,10 @@
-id: 0322d9f2-289a-47c2-b5e1-b63c90901a3e
 title: Google Cloud Kubernetes RoleBinding
+id: 0322d9f2-289a-47c2-b5e1-b63c90901a3e
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Detects the creation or patching of potential malicious RoleBinding.
     This includes RoleBindings and ClusterRoleBinding.
-author: Austin Songer @austinsonger
-date: '2021-08-09'
-modified: '2022-10-09'
-tags:
-    - attack.credential-access
 references:
     - https://github.com/elastic/detection-rules/pull/1267
     - https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/cluster-role-v1/#ClusterRole
@@ -22,7 +18,10 @@ falsepositives:
     - RoleBindings and ClusterRoleBinding modified or deleted from unfamiliar users
         should be investigated. If known behavior is causing false positives, it can
         be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+date: '2021-08-09'
+modified: '2022-10-09'
 logsource:
     product: gcp
     service: gcp.audit
@@ -45,13 +44,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:24.517976+00:00'
+            mapped_at: '2025-12-04T01:38:44.996286+00:00'
         service:
             source_field: service
             source_value: gcp.audit
-            mapped_at: '2025-11-26T02:21:24.517976+00:00'
+            mapped_at: '2025-12-04T01:38:44.996286+00:00'
     detection_fields:
         -   source_field: gcp.audit.method_name
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:24.517991+00:00'
+            mapped_at: '2025-12-04T01:38:44.996300+00:00'

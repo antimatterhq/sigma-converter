@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Remove Immutable File Attribute",
+    "comment": "Detects usage of the 'chattr' utility to remove immutable file attribute.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/chattr')) AND contains(lower(process.cmd_line), lower(' -i ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the 'chattr' utility to remove immutable file attribute.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrator interacting with immutable files (e.g. for instance backups). Reference: https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1222",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

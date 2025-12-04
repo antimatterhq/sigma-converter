@@ -1,7 +1,8 @@
-id: 92fa78e7-4d39-45f1-91a3-8b23f3f1088d
 title: Potential Startup Shortcut Persistence Via PowerShell.EXE
+id: 92fa78e7-4d39-45f1-91a3-8b23f3f1088d
 status: test
 level: high
+author: Christopher Peacock '@securepeacock', SCYTHE
 description: 'Detects PowerShell writing startup shortcuts.
 
     This procedure was highlighted in Red Canary Intel Insights Oct. 2021, "We frequently
@@ -15,19 +16,17 @@ description: 'Detects PowerShell writing startup shortcuts.
     the command-line script that leads to the installation of a malicious DLL"
 
     '
-author: Christopher Peacock '@securepeacock', SCYTHE
-date: '2021-10-24'
-modified: '2023-02-23'
-tags:
-    - attack.persistence
-    - attack.t1547.001
 references:
     - https://redcanary.com/blog/intelligence-insights-october-2021/
     - https://github.com/redcanaryco/atomic-red-team/blob/36d49de4c8b00bf36054294b4a1fcbab3917d7c5/atomics/T1547.001/T1547.001.md#atomic-test-7---add-executable-shortcut-link-to-user-startup-folder
 falsepositives:
     - Depending on your environment accepted applications may leverage this at times.
         It is recommended to search for anomalies inidicative of malware.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.001
+date: '2021-10-24'
+modified: '2023-02-23'
 logsource:
     category: file_event
     product: windows
@@ -46,17 +45,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:36.559774+00:00'
+            mapped_at: '2025-12-04T01:53:13.050918+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:36.559774+00:00'
+            mapped_at: '2025-12-04T01:53:13.050918+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:36.559788+00:00'
+            mapped_at: '2025-12-04T01:53:13.050937+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:36.559790+00:00'
+            mapped_at: '2025-12-04T01:53:13.050939+00:00'

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "PowerShell Script Dropped Via PowerShell.EXE",
+    "comment": "Detects PowerShell creating a PowerShell file (.ps1). While often times this behavior is benign, sometimes it can be a sign of a dropper script trying to achieve persistence.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe'))) AND endswith(lower(file.path), lower('.ps1')) AND NOT (contains(lower(file.path), lower('__psscriptpolicytest_')) OR startswith(lower(file.path), lower('c:\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR startswith(lower(file.path), lower('c:\\\\windows\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell creating a PowerShell file (.ps1). While often times this behavior is benign, sometimes it can be a sign of a dropper script trying to achieve persistence.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives will differ depending on the environment and scripts used. Apply additional filters accordingly. Reference: https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

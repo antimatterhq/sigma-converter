@@ -1,7 +1,8 @@
-id: 9976fa64-2804-423c-8a5b-646ade840773
 title: Suspicious Outbound SMTP Connections
+id: 9976fa64-2804-423c-8a5b-646ade840773
 status: test
 level: medium
+author: frack113
 description: 'Adversaries may steal data by exfiltrating it over an un-encrypted network
     protocol other than that of the existing command and control channel.
 
@@ -9,18 +10,16 @@ description: 'Adversaries may steal data by exfiltrating it over an un-encrypted
     and control server.
 
     '
-author: frack113
-date: '2022-01-07'
-modified: '2022-09-21'
-tags:
-    - attack.exfiltration
-    - attack.t1048.003
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1048.003/T1048.003.md#atomic-test-5---exfiltration-over-alternative-protocol---smtp
     - https://www.ietf.org/rfc/rfc2821.txt
 falsepositives:
     - Other SMTP tools
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+date: '2022-01-07'
+modified: '2022-09-21'
 logsource:
     category: network_connection
     product: windows
@@ -49,21 +48,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:32.532583+00:00'
+            mapped_at: '2025-12-04T01:51:37.778194+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:32.532583+00:00'
+            mapped_at: '2025-12-04T01:51:37.778194+00:00'
     detection_fields:
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:32.532598+00:00'
+            mapped_at: '2025-12-04T01:51:37.778210+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:32.532601+00:00'
+            mapped_at: '2025-12-04T01:51:37.778212+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:32.532605+00:00'
+            mapped_at: '2025-12-04T01:51:37.778213+00:00'

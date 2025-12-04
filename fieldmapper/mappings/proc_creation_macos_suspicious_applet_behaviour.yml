@@ -1,18 +1,17 @@
-id: a753a6af-3126-426d-8bd0-26ebbcb92254
 title: Osacompile Execution By Potentially Suspicious Applet/Osascript
+id: a753a6af-3126-426d-8bd0-26ebbcb92254
 status: test
 level: medium
-description: Detects potential suspicious applet or osascript executing "osacompile".
 author: Sohan G (D4rkCiph3r), Red Canary (Idea)
-date: '2023-04-03'
-tags:
-    - attack.execution
-    - attack.t1059.002
+description: Detects potential suspicious applet or osascript executing "osacompile".
 references:
     - https://redcanary.com/blog/mac-application-bundles/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.002
+date: '2023-04-03'
 logsource:
     category: process_creation
     product: macos
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:46.129699+00:00'
+            mapped_at: '2025-12-04T01:34:39.047801+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:46.129699+00:00'
+            mapped_at: '2025-12-04T01:34:39.047801+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:13:46.129717+00:00'
+            mapped_at: '2025-12-04T01:34:39.047817+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:46.129720+00:00'
+            mapped_at: '2025-12-04T01:34:39.047819+00:00'

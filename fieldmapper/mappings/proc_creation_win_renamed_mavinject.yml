@@ -1,17 +1,10 @@
-id: e6474a1b-5390-49cd-ab41-8d88655f7394
 title: Renamed Mavinject.EXE Execution
+id: e6474a1b-5390-49cd-ab41-8d88655f7394
 status: test
 level: high
+author: frack113, Florian Roth
 description: Detects the execution of a renamed version of the "Mavinject" process.
     Which can be abused to perform process injection using the "/INJECTRUNNING" flag
-author: frack113, Florian Roth
-date: '2022-12-05'
-modified: '2023-02-03'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055.001
-    - attack.t1218.013
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.004/T1056.004.md
@@ -23,7 +16,13 @@ references:
     - https://github.com/keyboardcrunch/SentinelOne-ATTACK-Queries/blob/6a228d23eefe963ca81f2d52f94b815f61ef5ee0/Tactics/DefenseEvasion.md#t1055-process-injection
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055.001
+    - attack.t1218.013
+date: '2022-12-05'
+modified: '2023-02-03'
 logsource:
     category: process_creation
     product: windows
@@ -44,17 +43,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:23.046890+00:00'
+            mapped_at: '2025-12-04T01:47:40.755065+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:23.046890+00:00'
+            mapped_at: '2025-12-04T01:47:40.755065+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:23.046902+00:00'
+            mapped_at: '2025-12-04T01:47:40.755084+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:23.046905+00:00'
+            mapped_at: '2025-12-04T01:47:40.755085+00:00'

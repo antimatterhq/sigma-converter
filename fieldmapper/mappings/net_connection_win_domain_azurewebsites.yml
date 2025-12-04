@@ -1,19 +1,13 @@
-id: 5c80b618-0dbb-46e6-acbb-03d90bcb6d83
 title: Network Connection Initiated To AzureWebsites.NET By Non-Browser Process
+id: 5c80b618-0dbb-46e6-acbb-03d90bcb6d83
 status: experimental
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects an initiated network connection by a non browser process on
     the system to "azurewebsites.net". The latter was often used by threat actors
     as a malware hosting and exfiltration site.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-06-24'
-modified: '2024-07-16'
-tags:
-    - attack.command-and-control
-    - attack.t1102
-    - attack.t1102.001
 references:
     - https://www.sentinelone.com/labs/wip26-espionage-threat-actors-abuse-cloud-infrastructure-in-targeted-telco-attacks/
     - https://symantec-enterprise-blogs.security.com/threat-intelligence/harvester-new-apt-attacks-asia
@@ -21,9 +15,12 @@ references:
     - https://intezer.com/blog/research/how-we-escaped-docker-in-azure-functions/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e043f529-8514-4205-8ab0-7f7d2927b400''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1102
+    - attack.t1102.001
+date: '2024-06-24'
+modified: '2024-07-16'
 logsource:
     category: network_connection
     product: windows
@@ -140,6 +137,9 @@ detection:
     filter_main_empty:
         Image: ''
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: e043f529-8514-4205-8ab0-7f7d2927b400
+        type: derived
 ocsf_mapping:
     class_name: network_activity
     activity_id: 1
@@ -147,21 +147,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:37:58.047548+00:00'
+            mapped_at: '2025-12-04T01:51:27.236485+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:58.047548+00:00'
+            mapped_at: '2025-12-04T01:51:27.236485+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:58.047568+00:00'
+            mapped_at: '2025-12-04T01:51:27.236501+00:00'
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:37:58.047571+00:00'
+            mapped_at: '2025-12-04T01:51:27.236503+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:58.047572+00:00'
+            mapped_at: '2025-12-04T01:51:27.236504+00:00'

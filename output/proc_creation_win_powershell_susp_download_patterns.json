@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell Download and Execute Pattern",
+    "comment": "Detects suspicious PowerShell download patterns that are often used in malicious scripts, stagers or downloaders (make sure that your backend applies the strings case-insensitive)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('iex ((new-object net.webclient).downloadstring')) OR contains(lower(process.cmd_line), lower('iex (new-object net.webclient).downloadstring')) OR contains(lower(process.cmd_line), lower('iex((new-object net.webclient).downloadstring')) OR contains(lower(process.cmd_line), lower('iex(new-object net.webclient).downloadstring')) OR contains(lower(process.cmd_line), lower(' -command (new-object system.net.webclient).downloadfile(')) OR contains(lower(process.cmd_line), lower(' -c (new-object system.net.webclient).downloadfile('))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious PowerShell download patterns that are often used in malicious scripts, stagers or downloaders (make sure that your backend applies the strings case-insensitive)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Software installers that pull packages from remote systems and execute them References: https://gist.github.com/jivoi/c354eaaf3019352ce32522f916c03d70, https://www.trendmicro.com/en_us/research/22/j/lv-ransomware-exploits-proxyshell-in-attack.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

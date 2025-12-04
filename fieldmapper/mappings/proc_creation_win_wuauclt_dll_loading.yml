@@ -1,26 +1,22 @@
-id: af77cf95-c469-471c-b6a0-946c685c4798
 title: Proxy Execution Via Wuauclt.EXE
+id: af77cf95-c469-471c-b6a0-946c685c4798
 status: test
 level: high
-description: Detects the use of the Windows Update Client binary (wuauclt.exe) for
-    proxy execution.
 author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), Florian Roth
     (Nextron Systems), Sreeman, FPT.EagleEye Team
-date: '2020-10-12'
-modified: '2023-11-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
-    - attack.execution
+description: Detects the use of the Windows Update Client binary (wuauclt.exe) for
+    proxy execution.
 references:
     - https://dtm.uk/wuauclt/
     - https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ba1bb0cb-73da-42de-ad3a-de10c643a5d0''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''d7825193-b70a-48a4-b992-8b5b3015cc11''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.execution
+date: '2020-10-12'
+modified: '2023-11-11'
 logsource:
     category: process_creation
     product: windows
@@ -45,6 +41,11 @@ detection:
             - :\Windows\WinSxS\
             - '\UpdateDeploy.dll /ClassId '
     condition: all of selection_* and not 1 of filter_main_*
+related:
+    -   id: ba1bb0cb-73da-42de-ad3a-de10c643a5d0
+        type: obsolete
+    -   id: d7825193-b70a-48a4-b992-8b5b3015cc11
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -52,21 +53,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:53.053536+00:00'
+            mapped_at: '2025-12-04T01:49:41.283851+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:53.053536+00:00'
+            mapped_at: '2025-12-04T01:49:41.283851+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:53.053555+00:00'
+            mapped_at: '2025-12-04T01:49:41.284013+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:53.053558+00:00'
+            mapped_at: '2025-12-04T01:49:41.284017+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:53.053560+00:00'
+            mapped_at: '2025-12-04T01:49:41.284018+00:00'

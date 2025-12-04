@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "File Deletion Via Del",
+    "comment": "Detects execution of the builtin \"del\"/\"erase\" commands in order to delete files. Adversaries may delete files left behind by the actions of their intrusion activity. Malware, tools, or other non-native files dropped or created on a system by an adversary may leave traces to indicate to what was done within a network and how. Removal of these files can occur during an intrusion, or as part of a post-intrusion process to minimize the adversary's footprint.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND (contains(lower(process.cmd_line), lower('del ')) OR contains(lower(process.cmd_line), lower('erase '))) AND (contains(lower(process.cmd_line), lower(' -f')) OR contains(lower(process.cmd_line), lower(' /f')) OR contains(lower(process.cmd_line), lower(' \u2013f')) OR contains(lower(process.cmd_line), lower(' \u2014f')) OR contains(lower(process.cmd_line), lower(' \u2015f')) OR contains(lower(process.cmd_line), lower(' -s')) OR contains(lower(process.cmd_line), lower(' /s')) OR contains(lower(process.cmd_line), lower(' \u2013s')) OR contains(lower(process.cmd_line), lower(' \u2014s')) OR contains(lower(process.cmd_line), lower(' \u2015s')) OR contains(lower(process.cmd_line), lower(' -q')) OR contains(lower(process.cmd_line), lower(' /q')) OR contains(lower(process.cmd_line), lower(' \u2013q')) OR contains(lower(process.cmd_line), lower(' \u2014q')) OR contains(lower(process.cmd_line), lower(' \u2015q'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the builtin \"del\"/\"erase\" commands in order to delete files. Adversaries may delete files left behind by the actions of their intrusion activity. Malware, tools, or other non-native files dropped or created on a system by an adversary may leave traces to indicate to what was done within a network and how. Removal of these files can occur during an intrusion, or as part of a post-intrusion process to minimize the adversary's footprint.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives levels will differ Depending on the environment. You can use a combination of ParentImage and other keywords from the CommandLine field to filter legitimate activity References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.004/T1070.004.md, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/erase",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

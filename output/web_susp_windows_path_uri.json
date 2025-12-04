@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Windows Strings In URI",
+    "comment": "Detects suspicious Windows strings in URI which could indicate possible exfiltration or webshell communication",
+    "annotations": {
+      "source": "sigma",
+      "category": "webserver",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.args), lower('=c:/users')) OR contains(lower(http_request.args), lower('=c:/program%20files')) OR contains(lower(http_request.args), lower('=c:/windows')) OR contains(lower(http_request.args), lower('=c%3a%5cusers')) OR contains(lower(http_request.args), lower('=c%3a%5cprogram%20files')) OR contains(lower(http_request.args), lower('=c%3a%5cwindows')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious Windows strings in URI which could indicate possible exfiltration or webshell communication",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate application and websites that use windows paths in their URL Reference: https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

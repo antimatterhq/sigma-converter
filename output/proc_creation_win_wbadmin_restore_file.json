@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "File Recovery From Backup Via Wbadmin.EXE",
+    "comment": "Detects the recovery of files from backups via \"wbadmin.exe\". Attackers can restore sensitive files such as NTDS.DIT or Registry Hives from backups in order to potentially extract credentials.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wbadmin.exe')) AND lower(process.file.name) = lower('wbadmin.exe') AND contains(lower(process.cmd_line), lower(' recovery')) AND contains(lower(process.cmd_line), lower('recoverytarget')) AND contains(lower(process.cmd_line), lower('itemtype:file')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the recovery of files from backups via \"wbadmin.exe\". Attackers can restore sensitive files such as NTDS.DIT or Registry Hives from backups in order to potentially extract credentials.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-start-recovery, https://lolbas-project.github.io/lolbas/Binaries/Wbadmin/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1490"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Fsutil Suspicious Invocation",
+    "comment": "Detects suspicious parameters of fsutil (deleting USN journal, configuring it with small size, etc). Might be used by ransomwares during the attack (seen by NotPetya and others).",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\fsutil.exe')) AND lower(process.file.name) = lower('fsutil.exe') AND (contains(lower(process.cmd_line), lower('deletejournal')) OR contains(lower(process.cmd_line), lower('createjournal')) OR contains(lower(process.cmd_line), lower('setzerodata'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious parameters of fsutil (deleting USN journal, configuring it with small size, etc). Might be used by ransomwares during the attack (seen by NotPetya and others).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Admin activity 2. Scripts and administrative tools used in the monitored environment References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070/T1070.md, https://eqllib.readthedocs.io/en/latest/analytics/c91f422a-5214-4b17-8664-c5fcf115c0a2.html, https://github.com/albertzsigovits/malware-notes/blob/558898932c1579ff589290092a2c8febefc3a4c9/Ransomware/Lockbit.md, https://blog.cluster25.duskrise.com/2023/05/22/back-in-black-blackbyte-nt",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1485"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

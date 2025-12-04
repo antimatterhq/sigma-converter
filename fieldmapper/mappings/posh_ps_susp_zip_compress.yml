@@ -1,7 +1,8 @@
-id: b7a3c9a3-09ea-4934-8864-6a32cacd98d9
 title: Zip A Folder With PowerShell For Staging In Temp - PowerShell Script
+id: b7a3c9a3-09ea-4934-8864-6a32cacd98d9
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), frack113
 description: 'Detects PowerShell scripts that make use of the "Compress-Archive" Cmdlet
     in order to compress folders and files where the output is stored in a potentially
     suspicious location that is used often by malware for exfiltration.
@@ -11,22 +12,16 @@ description: 'Detects PowerShell scripts that make use of the "Compress-Archive"
     data sent over the network.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), frack113
-date: '2021-07-20'
-modified: '2023-12-18'
-tags:
-    - attack.collection
-    - attack.t1074.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1074.001/T1074.001.md
     - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-347a
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''71ff406e-b633-4989-96ec-bc49d825a412''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''daf7eb81-35fd-410d-9d7a-657837e602bb''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''85a8e5ba-bd03-4bfb-bbfa-a4409a8f8b98''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1074.001
+date: '2021-07-20'
+modified: '2023-12-18'
 logsource:
     category: ps_script
     product: windows
@@ -38,6 +33,13 @@ detection:
             - Compress-Archive -Path*-DestinationPath*\AppData\Local\Temp\
             - Compress-Archive -Path*-DestinationPath*:\Windows\Temp\
     condition: selection
+related:
+    -   id: 71ff406e-b633-4989-96ec-bc49d825a412
+        type: similar
+    -   id: daf7eb81-35fd-410d-9d7a-657837e602bb
+        type: similar
+    -   id: 85a8e5ba-bd03-4bfb-bbfa-a4409a8f8b98
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -45,13 +47,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:46.664517+00:00'
+            mapped_at: '2025-12-04T01:54:02.634011+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:46.664517+00:00'
+            mapped_at: '2025-12-04T01:54:02.634011+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:46.664531+00:00'
+            mapped_at: '2025-12-04T01:54:02.634029+00:00'

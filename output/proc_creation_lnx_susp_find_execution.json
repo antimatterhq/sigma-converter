@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Discovery Activity Using Find - Linux",
+    "comment": "Detects usage of \"find\" binary in a suspicious manner to perform discovery",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/find')) AND (contains(lower(process.cmd_line), lower('-perm -4000')) OR contains(lower(process.cmd_line), lower('-perm -2000')) OR contains(lower(process.cmd_line), lower('-perm 0777')) OR contains(lower(process.cmd_line), lower('-perm -222')) OR contains(lower(process.cmd_line), lower('-perm -o w')) OR contains(lower(process.cmd_line), lower('-perm -o x')) OR contains(lower(process.cmd_line), lower('-perm -u=s')) OR contains(lower(process.cmd_line), lower('-perm -g=s'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of \"find\" binary in a suspicious manner to perform discovery",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/SaiSathvik1/Linux-Privilege-Escalation-Notes",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1083"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

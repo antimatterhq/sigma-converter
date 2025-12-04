@@ -1,17 +1,10 @@
-id: 277a4393-446c-449a-b0ed-7fdc7795244c
 title: Renamed FTP.EXE Execution
+id: 277a4393-446c-449a-b0ed-7fdc7795244c
 status: test
 level: medium
+author: Victor Sergeev, oscd.community
 description: Detects the execution of a renamed "ftp.exe" binary based on the PE metadata
     fields
-author: Victor Sergeev, oscd.community
-date: '2020-10-09'
-modified: '2023-02-03'
-tags:
-    - attack.execution
-    - attack.t1059
-    - attack.defense-evasion
-    - attack.t1202
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Ftp/
 fields:
@@ -19,7 +12,13 @@ fields:
     - ParentImage
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+    - attack.defense-evasion
+    - attack.t1202
+date: '2020-10-09'
+modified: '2023-02-03'
 logsource:
     category: process_creation
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:35.817092+00:00'
+            mapped_at: '2025-12-04T01:47:01.190248+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:35.817092+00:00'
+            mapped_at: '2025-12-04T01:47:01.190248+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:35.817106+00:00'
+            mapped_at: '2025-12-04T01:47:01.190265+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:35.817108+00:00'
+            mapped_at: '2025-12-04T01:47:01.190267+00:00'

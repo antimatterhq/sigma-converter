@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potential Ruby Reverse Shell",
+    "comment": "Detects execution of ruby with the \"-e\" flag and calls to \"socket\" related functions. This could be an indication of a potential attempt to setup a reverse shell",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.name), lower('ruby')) AND contains(lower(process.cmd_line), lower(' -e')) AND contains(lower(process.cmd_line), lower('rsocket')) AND contains(lower(process.cmd_line), lower('tcpsocket')) AND (contains(lower(process.cmd_line), lower(' ash')) OR contains(lower(process.cmd_line), lower(' bash')) OR contains(lower(process.cmd_line), lower(' bsh')) OR contains(lower(process.cmd_line), lower(' csh')) OR contains(lower(process.cmd_line), lower(' ksh')) OR contains(lower(process.cmd_line), lower(' pdksh')) OR contains(lower(process.cmd_line), lower(' sh')) OR contains(lower(process.cmd_line), lower(' tcsh'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of ruby with the \"-e\" flag and calls to \"socket\" related functions. This could be an indication of a potential attempt to setup a reverse shell",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet, https://www.revshells.com/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

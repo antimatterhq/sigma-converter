@@ -1,19 +1,18 @@
-id: dae8171c-5ec6-4396-b210-8466585b53e9
 title: SCM Database Privileged Operation
+id: dae8171c-5ec6-4396-b210-8466585b53e9
 status: test
 level: medium
-description: Detects non-system users performing privileged operation os the SCM database
 author: Roberto Rodriguez @Cyb3rWard0g, Tim Shelton
-date: '2019-08-15'
-modified: '2022-09-18'
-tags:
-    - attack.privilege-escalation
-    - attack.t1548
+description: Detects non-system users performing privileged operation os the SCM database
 references:
     - https://threathunterplaybook.com/hunts/windows/190826-RemoteSCMHandle/notebook.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+date: '2019-08-15'
+modified: '2022-09-18'
 logsource:
     product: windows
     service: security
@@ -34,33 +33,33 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:05.775307+00:00'
+            mapped_at: '2025-12-04T01:56:08.885772+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:05.775307+00:00'
+            mapped_at: '2025-12-04T01:56:08.885772+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:05.775329+00:00'
+            mapped_at: '2025-12-04T01:56:08.885789+00:00'
         -   source_field: ObjectType
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:05.775332+00:00'
+            mapped_at: '2025-12-04T01:56:08.885790+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:05.775334+00:00'
+            mapped_at: '2025-12-04T01:56:08.885792+00:00'
         -   source_field: PrivilegeList
             target_table: process_activity
             target_field: device.groups.privileges
-            mapped_at: '2025-11-26T02:46:05.775335+00:00'
+            mapped_at: '2025-12-04T01:56:08.885793+00:00'
         -   source_field: SubjectLogonId
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:05.775337+00:00'
+            mapped_at: '2025-12-04T01:56:08.885795+00:00'
         -   source_field: ProcessName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:46:05.775338+00:00'
+            mapped_at: '2025-12-04T01:56:08.885796+00:00'

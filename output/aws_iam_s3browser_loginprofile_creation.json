@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "AWS IAM S3Browser LoginProfile Creation",
+    "comment": "Detects S3 Browser utility performing reconnaissance looking for existing IAM Users without a LoginProfile defined then (when found) creating a LoginProfile.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(metadata.product.name) = lower('iam.amazonaws.com') AND (lower(LOWER(api.operation)) in ('getloginprofile', 'createloginprofile')) AND contains(lower(http_request.user_agent), lower('s3 browser')))"
+      }
+    },
+    "output": {
+      "summary": "Detects S3 Browser utility performing reconnaissance looking for existing IAM Users without a LoginProfile defined then (when found) creating a LoginProfile.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Valid usage of S3 Browser for IAM LoginProfile listing and/or creation Reference: https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "009"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1078",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

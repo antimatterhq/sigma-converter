@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Malicious DLL File Dropped in the Teams or OneDrive Folder",
+    "comment": "Detects creation of a malicious DLL file in the location where the OneDrive or Team applications Upon execution of the Teams or OneDrive application, the dropped malicious DLL file (\"iphlpapi.dll\") is sideloaded",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(file.path), lower('iphlpapi.dll')) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\microsoft')))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of a malicious DLL file in the location where the OneDrive or Team applications Upon execution of the Teams or OneDrive application, the dropped malicious DLL file (\"iphlpapi.dll\") is sideloaded",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://blog.cyble.com/2022/07/27/targeted-attacks-being-carried-out-via-dll-sideloading/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1574",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

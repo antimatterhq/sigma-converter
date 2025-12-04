@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "AWS Glue Development Endpoint Activity",
+    "comment": "Detects possible suspicious glue development endpoint activity.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('glue.amazonaws.com') AND (lower(LOWER(metadata.event_code)) in ('createdevendpoint', 'deletedevendpoint', 'updatedevendpoint')))"
+      }
+    },
+    "output": {
+      "summary": "Detects possible suspicious glue development endpoint activity.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Glue Development Endpoint Activity may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 2. If known behavior is causing false positives, it can be exempted from the rule. References: https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/, https://docs.aws.amazon.com/glue/latest/webapi/API_CreateDevEndpoint.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

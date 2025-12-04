@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Regsvr32 Execution From Potential Suspicious Location",
+    "comment": "Detects execution of regsvr32 where the DLL is located in a potentially suspicious location.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\regsvr32.exe')) AND lower(process.file.name) = lower('regsvr32.exe') AND (contains(lower(process.cmd_line), lower(':\\\\programdata\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\roaming\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of regsvr32 where the DLL is located in a potentially suspicious location.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some installers might execute \"regsvr32\" with DLLs located in %TEMP% or in %PROGRAMDATA%. Apply additional filters if necessary. References: https://web.archive.org/web/20171001085340/https://subt0x10.blogspot.com/2017/04/bypass-application-whitelisting-script.html, https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

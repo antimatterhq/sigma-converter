@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "LSASS Dump Keyword In CommandLine",
+    "comment": "Detects the presence of the keywords \"lsass\" and \".dmp\" in the commandline, which could indicate a potential attempt to dump or create a dump of the lsass process.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('lsass.dmp')) OR contains(lower(process.cmd_line), lower('lsass.zip')) OR contains(lower(process.cmd_line), lower('lsass.rar')) OR contains(lower(process.cmd_line), lower('andrew.dmp')) OR contains(lower(process.cmd_line), lower('coredump.dmp')) OR contains(lower(process.cmd_line), lower('notlsass.zip')) OR contains(lower(process.cmd_line), lower('lsass_2')) OR contains(lower(process.cmd_line), lower('lsassdump')) OR contains(lower(process.cmd_line), lower('lsassdmp'))) AND contains(lower(process.cmd_line), lower('lsass')) AND contains(lower(process.cmd_line), lower('.dmp')) AND contains(lower(process.cmd_line), lower('sqldmpr')) AND contains(lower(process.cmd_line), lower('.mdmp')) AND contains(lower(process.cmd_line), lower('nanodump')) AND contains(lower(process.cmd_line), lower('.dmp')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the presence of the keywords \"lsass\" and \".dmp\" in the commandline, which could indicate a potential attempt to dump or create a dump of the lsass process.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://github.com/Hackndo/lsassy, https://medium.com/@markmotig/some-ways-to-dump-lsass-exe-c4a75fdc49bf, https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/windows/credential_access_lsass_memdump_file_created.toml, https://www.whiteoaksecurity.com/blog/attacks-defenses-dumping-lsass-no-mimikatz/, https://github.com/helpsystems/nanodump, https://github.com/CCob/MirrorDump",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

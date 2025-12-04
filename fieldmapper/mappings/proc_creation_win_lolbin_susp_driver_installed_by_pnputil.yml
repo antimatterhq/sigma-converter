@@ -1,15 +1,10 @@
-id: a2ea3ae7-d3d0-40a0-a55c-25a45c87cac1
 title: Suspicious Driver Install by pnputil.exe
+id: a2ea3ae7-d3d0-40a0-a55c-25a45c87cac1
 status: test
 level: medium
+author: Hai Vaknin @LuxNoBulIshit, Avihay eldad  @aloneliassaf, Austin Songer @austinsonger
 description: Detects when a possible suspicious driver is being installed via pnputil.exe
     lolbin
-author: Hai Vaknin @LuxNoBulIshit, Avihay eldad  @aloneliassaf, Austin Songer @austinsonger
-date: '2021-09-30'
-modified: '2022-10-09'
-tags:
-    - attack.persistence
-    - attack.t1547
 references:
     - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/pnputil-command-syntax
     - https://strontic.github.io/xcyclopedia/library/pnputil.exe-60EDC5E6BDBAEE441F2E3AEACD0340D2.html
@@ -24,7 +19,11 @@ falsepositives:
         changes in your environment.
     - Pnputil.exe being executed from unfamiliar users should be investigated. If
         known behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547
+date: '2021-09-30'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -45,17 +44,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:44.777593+00:00'
+            mapped_at: '2025-12-04T01:47:58.576624+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:44.777593+00:00'
+            mapped_at: '2025-12-04T01:47:58.576624+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:44.777611+00:00'
+            mapped_at: '2025-12-04T01:47:58.576663+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:44.777614+00:00'
+            mapped_at: '2025-12-04T01:47:58.576665+00:00'

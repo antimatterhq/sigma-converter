@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential WinAPI Calls Via PowerShell Scripts",
+    "comment": "Detects use of WinAPI functions in PowerShell scripts",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('virtualalloc')) AND contains(lower(script.script_content.value), lower('openprocess')) AND contains(lower(script.script_content.value), lower('writeprocessmemory')) AND contains(lower(script.script_content.value), lower('createremotethread')) OR contains(lower(script.script_content.value), lower('openprocesstoken')) AND contains(lower(script.script_content.value), lower('lookupprivilegevalue')) AND contains(lower(script.script_content.value), lower('adjusttokenprivileges')) OR contains(lower(script.script_content.value), lower('openprocesstoken')) AND contains(lower(script.script_content.value), lower('duplicatetokenex')) AND contains(lower(script.script_content.value), lower('closehandle')) OR contains(lower(script.script_content.value), lower('writeprocessmemory')) AND contains(lower(script.script_content.value), lower('virtualalloc')) AND contains(lower(script.script_content.value), lower('readprocessmemory')) AND contains(lower(script.script_content.value), lower('virtualfree'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects use of WinAPI functions in PowerShell scripts",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1106"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

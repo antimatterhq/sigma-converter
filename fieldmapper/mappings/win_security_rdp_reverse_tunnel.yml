@@ -1,12 +1,15 @@
-id: 5bed80b6-b3e8-428e-a3ae-d3c757589e41
 title: RDP over Reverse SSH Tunnel WFP
+id: 5bed80b6-b3e8-428e-a3ae-d3c757589e41
 status: test
 level: high
+author: Samir Bousseaden
 description: Detects svchost hosting RDP termsvcs communicating with the loopback
     address
-author: Samir Bousseaden
-date: '2019-02-16'
-modified: '2022-09-02'
+references:
+    - https://twitter.com/SBousseaden/status/1096148422984384514
+    - https://github.com/sbousseaden/EVTX-ATTACK-SAMPLES/blob/44fbe85f72ee91582876b49678f9a26292a155fb/Command%20and%20Control/DE_RDP_Tunnel_5156.evtx
+falsepositives:
+    - Programs that connect locally to the RDP port
 tags:
     - attack.defense-evasion
     - attack.command-and-control
@@ -15,12 +18,8 @@ tags:
     - attack.t1090.002
     - attack.t1021.001
     - car.2013-07-002
-references:
-    - https://twitter.com/SBousseaden/status/1096148422984384514
-    - https://github.com/sbousseaden/EVTX-ATTACK-SAMPLES/blob/44fbe85f72ee91582876b49678f9a26292a155fb/Command%20and%20Control/DE_RDP_Tunnel_5156.evtx
-falsepositives:
-    - Programs that connect locally to the RDP port
-taxonomy: sigma
+date: '2019-02-16'
+modified: '2022-09-02'
 logsource:
     product: windows
     service: security
@@ -51,37 +50,37 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:03.806223+00:00'
+            mapped_at: '2025-12-04T01:56:08.256962+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:03.806223+00:00'
+            mapped_at: '2025-12-04T01:56:08.256962+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:04.805456+00:00'
+            mapped_at: '2025-12-04T01:56:08.256991+00:00'
         -   source_field: SourcePort
             target_table: network_activity
             target_field: src_endpoint.port
-            mapped_at: '2025-11-26T02:46:04.805475+00:00'
+            mapped_at: '2025-12-04T01:56:08.256993+00:00'
         -   source_field: DestAddress
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:46:04.805478+00:00'
+            mapped_at: '2025-12-04T01:56:08.256994+00:00'
         -   source_field: DestPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:46:04.805482+00:00'
+            mapped_at: '2025-12-04T01:56:08.256996+00:00'
         -   source_field: SourceAddress
             target_table: network_activity
             target_field: src_endpoint.ip
-            mapped_at: '2025-11-26T02:46:04.805484+00:00'
+            mapped_at: '2025-12-04T01:56:08.256997+00:00'
         -   source_field: FilterOrigin
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:04.805487+00:00'
+            mapped_at: '2025-12-04T01:56:08.256998+00:00'
         -   source_field: Application
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:04.805489+00:00'
+            mapped_at: '2025-12-04T01:56:08.256999+00:00'

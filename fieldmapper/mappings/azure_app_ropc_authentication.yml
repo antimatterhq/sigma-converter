@@ -1,7 +1,8 @@
-id: 55695bc0-c8cf-461f-a379-2535f563c854
 title: Applications That Are Using ROPC Authentication Flow
+id: 55695bc0-c8cf-461f-a379-2535f563c854
 status: test
 level: medium
+author: Mark Morowczynski '@markmorow', Bailey Bercik '@baileybercik'
 description: 'Resource owner password credentials (ROPC) should be avoided if at all
     possible as this requires the user to expose their current password credentials
     to the application directly.
@@ -10,20 +11,18 @@ description: 'Resource owner password credentials (ROPC) should be avoided if at
     identity provider.
 
     '
-author: Mark Morowczynski '@markmorow', Bailey Bercik '@baileybercik'
-date: '2022-06-01'
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-authentication-flows
+falsepositives:
+    - Applications that are being used as part of automated testing or a legacy application
+        that cannot use any other modern authentication flow
 tags:
     - attack.t1078
     - attack.defense-evasion
     - attack.persistence
     - attack.privilege-escalation
     - attack.initial-access
-references:
-    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-authentication-flows
-falsepositives:
-    - Applications that are being used as part of automated testing or a legacy application
-        that cannot use any other modern authentication flow
-taxonomy: sigma
+date: '2022-06-01'
 logsource:
     product: azure
     service: signinlogs
@@ -38,13 +37,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:36.979473+00:00'
+            mapped_at: '2025-12-04T01:38:11.612475+00:00'
         service:
             source_field: service
             source_value: signinlogs
-            mapped_at: '2025-11-26T02:20:36.979473+00:00'
+            mapped_at: '2025-12-04T01:38:11.612475+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:20:36.979489+00:00'
+            mapped_at: '2025-12-04T01:38:11.612496+00:00'

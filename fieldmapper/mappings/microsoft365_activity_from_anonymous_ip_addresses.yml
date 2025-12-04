@@ -1,21 +1,20 @@
-id: d8b0a4fe-07a8-41be-bd39-b14afa025d95
 title: Activity from Anonymous IP Addresses
+id: d8b0a4fe-07a8-41be-bd39-b14afa025d95
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Detects when a Microsoft Cloud App Security reported when users were
     active from an IP address that has been identified as an anonymous proxy IP address.
-author: Austin Songer @austinsonger
-date: '2021-08-23'
-modified: '2022-10-09'
-tags:
-    - attack.command-and-control
-    - attack.t1573
 references:
     - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
     - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
 falsepositives:
     - User using a VPN or Proxy
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1573
+date: '2021-08-23'
+modified: '2022-10-09'
 logsource:
     product: m365
     service: threat_management
@@ -32,21 +31,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:21:53.430051+00:00'
+            mapped_at: '2025-12-04T01:38:58.684968+00:00'
         service:
             source_field: service
             source_value: threat_management
-            mapped_at: '2025-11-26T02:21:53.430051+00:00'
+            mapped_at: '2025-12-04T01:38:58.684968+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:53.430084+00:00'
+            mapped_at: '2025-12-04T01:38:58.684983+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:21:53.430125+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:38:58.684985+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:21:53.430129+00:00'
+            mapped_at: '2025-12-04T01:38:58.684986+00:00'

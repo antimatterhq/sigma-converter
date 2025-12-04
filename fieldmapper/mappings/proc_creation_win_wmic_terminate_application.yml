@@ -1,22 +1,19 @@
-id: 49d9671b-0a0a-4c09-8280-d215bfd30662
 title: Application Terminated Via Wmic.EXE
+id: 49d9671b-0a0a-4c09-8280-d215bfd30662
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects calls to the "terminate" function via wmic in order to kill an
     application
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-09-11'
-tags:
-    - attack.execution
-    - attack.t1047
 references:
     - https://cyble.com/blog/lockfile-ransomware-using-proxyshell-attack-to-deploy-ransomware/
     - https://www.bitdefender.com/files/News/CaseStudies/study/377/Bitdefender-Whitepaper-WMI-creat4871-en-EN-GenericUse.pdf
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''847d5ff3-8a31-4737-a970-aeae8fe21765''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+date: '2023-09-11'
 logsource:
     category: process_creation
     product: windows
@@ -29,6 +26,9 @@ detection:
             - call
             - terminate
     condition: all of selection_*
+related:
+    -   id: 847d5ff3-8a31-4737-a970-aeae8fe21765
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 2
@@ -36,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:44.643120+00:00'
+            mapped_at: '2025-12-04T01:48:44.449813+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:44.643120+00:00'
+            mapped_at: '2025-12-04T01:48:44.449813+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:44.643152+00:00'
+            mapped_at: '2025-12-04T01:48:44.449825+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:44.643156+00:00'
+            mapped_at: '2025-12-04T01:48:44.449827+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:44.643159+00:00'
+            mapped_at: '2025-12-04T01:48:44.449828+00:00'

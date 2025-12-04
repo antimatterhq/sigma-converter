@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Fsutil Behavior Set SymlinkEvaluation",
+    "comment": "A symbolic link is a type of file that contains a reference to another file. This is probably done to make sure that the ransomware is able to follow shortcuts on the machine in order to find the original file to encrypt",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\fsutil.exe')) AND lower(process.file.name) = lower('fsutil.exe') AND contains(lower(process.cmd_line), lower('behavior ')) AND contains(lower(process.cmd_line), lower('set ')) AND contains(lower(process.cmd_line), lower('symlinkevaluation')))"
+      }
+    },
+    "output": {
+      "summary": "A symbolic link is a type of file that contains a reference to another file. This is probably done to make sure that the ransomware is able to follow shortcuts on the machine in order to find the original file to encrypt",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use References: https://www.cybereason.com/blog/cybereason-vs.-blackcat-ransomware, https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/fsutil-behavior",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

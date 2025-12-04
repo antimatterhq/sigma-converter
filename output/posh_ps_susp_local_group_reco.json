@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Get Local Groups Information - PowerShell",
+    "comment": "Adversaries may attempt to find local system groups and permission settings. The knowledge of local system permission groups can help adversaries determine which groups exist and which users belong to a particular group. Adversaries may use this information to determine which users have elevated permissions, such as the users found within the local administrators group.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('get-localgroup')) OR contains(lower(script.script_content.value), lower('get-localgroupmember')) OR contains(lower(script.script_content.value), lower('get-wmiobject')) AND contains(lower(script.script_content.value), lower('win32_group'))))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may attempt to find local system groups and permission settings. The knowledge of local system permission groups can help adversaries determine which groups exist and which users belong to a particular group. Adversaries may use this information to determine which users have elevated permissions, such as the users found within the local administrators group.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.001/T1069.001.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1069",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

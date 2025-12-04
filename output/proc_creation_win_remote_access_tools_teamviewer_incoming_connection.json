@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Remote Access Tool - Team Viewer Session Started On Windows Host",
+    "comment": "Detects the command line executed when TeamViewer starts a session started by a remote host. Once a connection has been started, an investigator can verify the connection details by viewing the \"incoming_connections.txt\" log file in the TeamViewer folder.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.name) = lower('teamviewer_desktop.exe') AND lower(process.parent_process.name) = lower('teamviewer_service.exe') AND endswith(lower(process.cmd_line), lower('teamviewer_desktop.exe --ipcport 5939 --module 1')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the command line executed when TeamViewer starts a session started by a remote host. Once a connection has been started, an investigator can verify the connection details by viewing the \"incoming_connections.txt\" log file in the TeamViewer folder.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of TeamViewer Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1133"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

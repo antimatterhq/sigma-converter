@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Windows Terminal Profile Settings Modification By Uncommon Process",
+    "comment": "Detects the creation or modification of the Windows Terminal Profile settings file \"settings.json\" by an uncommon process.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(actor.process.name), lower('\\\\cmd.exe')) OR endswith(lower(actor.process.name), lower('\\\\cscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\mshta.exe')) OR endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe')) OR endswith(lower(actor.process.name), lower('\\\\wscript.exe'))) AND endswith(lower(file.path), lower('\\\\appdata\\\\local\\\\packages\\\\microsoft.windowsterminal_8wekyb3d8bbwe\\\\localstate\\\\settings.json')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation or modification of the Windows Terminal Profile settings file \"settings.json\" by an uncommon process.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some false positives may occur with admin scripts that set WT settings. References: https://github.com/redcanaryco/atomic-red-team/blob/74438b0237d141ee9c99747976447dc884cb1a39/atomics/T1547.015/T1547.015.md#atomic-test-1---persistence-by-modifying-windows-terminal-profile, https://twitter.com/nas_bench/status/1550836225652686848",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1547",
+          "subTechniqueId": "015"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

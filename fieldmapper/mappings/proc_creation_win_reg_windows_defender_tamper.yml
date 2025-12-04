@@ -1,24 +1,23 @@
-id: 452bce90-6fb0-43cc-97a5-affc283139b3
 title: Suspicious Windows Defender Registry Key Tampering Via Reg.EXE
+id: 452bce90-6fb0-43cc-97a5-affc283139b3
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Swachchhanda Shrawan Poudel, Nasreddine Bencherchali
+    (Nextron Systems)
 description: Detects the usage of "reg.exe" to tamper with different Windows Defender
     registry keys in order to disable some important features related to protection
     and detection
-author: Florian Roth (Nextron Systems), Swachchhanda Shrawan Poudel, Nasreddine Bencherchali
-    (Nextron Systems)
-date: '2022-03-22'
-modified: '2023-06-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell/
     - https://github.com/swagkarna/Defeat-Defender-V1.2.0
     - https://www.elevenforum.com/t/video-guide-how-to-completely-disable-microsoft-defender-antivirus.14608/page-2
 falsepositives:
     - Rare legitimate use by administrators to test software (should always be investigated)
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-03-22'
+modified: '2023-06-05'
 logsource:
     category: process_creation
     product: windows
@@ -74,21 +73,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:07.045265+00:00'
+            mapped_at: '2025-12-04T01:48:13.116739+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:07.045265+00:00'
+            mapped_at: '2025-12-04T01:48:13.116739+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:07.045284+00:00'
+            mapped_at: '2025-12-04T01:48:13.116753+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:07.045288+00:00'
+            mapped_at: '2025-12-04T01:48:13.116755+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:07.045290+00:00'
+            mapped_at: '2025-12-04T01:48:13.116756+00:00'

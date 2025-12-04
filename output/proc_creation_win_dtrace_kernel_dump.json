@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Kernel Dump Using Dtrace",
+    "comment": "Detects suspicious way to dump the kernel on Windows systems using dtrace.exe, which is available on Windows systems since Windows 10 19H1",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\dtrace.exe')) AND contains(lower(process.cmd_line), lower('lkd(0)')) OR contains(lower(process.cmd_line), lower('syscall:::return')) AND contains(lower(process.cmd_line), lower('lkd('))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious way to dump the kernel on Windows systems using dtrace.exe, which is available on Windows systems since Windows 10 19H1",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/0gtweet/status/1474899714290208777?s=12, https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/dtrace",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

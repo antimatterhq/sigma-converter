@@ -1,21 +1,20 @@
-id: 571498c8-908e-40b4-910b-d2369159a3da
 title: Password Protected ZIP File Opened (Email Attachment)
+id: 571498c8-908e-40b4-910b-d2369159a3da
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the extraction of password protected ZIP archives. See the filename
     variable for more details on which file has been opened.
-author: Florian Roth (Nextron Systems)
-date: '2022-05-09'
+references:
+    - https://twitter.com/sbousseaden/status/1523383197513379841
+falsepositives:
+    - Legitimate used of encrypted ZIP files
 tags:
     - attack.defense-evasion
     - attack.initial-access
     - attack.t1027
     - attack.t1566.001
-references:
-    - https://twitter.com/sbousseaden/status/1523383197513379841
-falsepositives:
-    - Legitimate used of encrypted ZIP files
-taxonomy: sigma
+date: '2022-05-09'
 logsource:
     product: windows
     service: security
@@ -33,17 +32,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:48.855207+00:00'
+            mapped_at: '2025-12-04T01:55:36.638878+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:48.855207+00:00'
+            mapped_at: '2025-12-04T01:55:36.638878+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: file_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:50.229848+00:00'
+            mapped_at: '2025-12-04T01:55:36.638899+00:00'
         -   source_field: TargetName
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:44:50.229857+00:00'
+            mapped_at: '2025-12-04T01:55:36.638902+00:00'

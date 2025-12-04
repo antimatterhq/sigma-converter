@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Ping/Copy Command Combination",
+    "comment": "Detects uncommon and potentially suspicious one-liner command containing both \"ping\" and \"copy\" at the same time, which is usually used by malware.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND contains(lower(process.cmd_line), lower('ping')) AND contains(lower(process.cmd_line), lower('copy ')) AND (contains(lower(process.cmd_line), lower(' -n ')) OR contains(lower(process.cmd_line), lower(' /n ')) OR contains(lower(process.cmd_line), lower(' \u2013n ')) OR contains(lower(process.cmd_line), lower(' \u2014n ')) OR contains(lower(process.cmd_line), lower(' \u2015n '))) AND (contains(lower(process.cmd_line), lower(' -y ')) OR contains(lower(process.cmd_line), lower(' /y ')) OR contains(lower(process.cmd_line), lower(' \u2013y ')) OR contains(lower(process.cmd_line), lower(' \u2014y ')) OR contains(lower(process.cmd_line), lower(' \u2015y '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects uncommon and potentially suspicious one-liner command containing both \"ping\" and \"copy\" at the same time, which is usually used by malware.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

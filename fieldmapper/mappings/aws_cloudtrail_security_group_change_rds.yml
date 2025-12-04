@@ -1,7 +1,8 @@
-id: 14f3f1c8-02d5-43a2-a191-91ffb52d3015
 title: RDS Database Security Group Modification
+id: 14f3f1c8-02d5-43a2-a191-91ffb52d3015
 status: test
 level: medium
+author: jamesc-grafana
 description: 'Detects changes to the security group entries for RDS databases.
 
     This can indicate that a misconfiguration has occurred which potentially exposes
@@ -10,16 +11,14 @@ description: 'Detects changes to the security group entries for RDS databases.
     to legitimate services and users.
 
     '
-author: jamesc-grafana
-date: '2024-07-11'
-tags:
-    - attack.initial-access
-    - attack.t1190
 references:
     - https://www.gorillastack.com/blog/real-time-events/important-aws-cloudtrail-security-events-tracking/
 falsepositives:
     - Creation of a new Database that needs new security group rules
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1190
+date: '2024-07-11'
 logsource:
     product: aws
     service: cloudtrail
@@ -39,17 +38,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:35.136267+00:00'
+            mapped_at: '2025-12-04T01:39:19.128247+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:35.136267+00:00'
+            mapped_at: '2025-12-04T01:39:19.128247+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:35.136284+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:19.128268+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:35.136286+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:19.128271+00:00'

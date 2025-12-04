@@ -1,20 +1,19 @@
-id: 074e0ded-6ced-4ebd-8b4d-53f55908119d
 title: AWL Bypass with Winrm.vbs and Malicious WsmPty.xsl/WsmTxt.xsl
+id: 074e0ded-6ced-4ebd-8b4d-53f55908119d
 status: test
 level: medium
+author: Julia Fomina, oscd.community
 description: Detects execution of attacker-controlled WsmPty.xsl or WsmTxt.xsl via
     winrm.vbs and copied cscript.exe (can be renamed)
-author: Julia Fomina, oscd.community
-date: '2020-10-06'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1216
 references:
     - https://posts.specterops.io/application-whitelisting-bypass-and-arbitrary-unsigned-code-execution-technique-in-winrm-vbs-c8c24fb40404
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1216
+date: '2020-10-06'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:56.153580+00:00'
+            mapped_at: '2025-12-04T01:46:25.864184+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:56.153580+00:00'
+            mapped_at: '2025-12-04T01:46:25.864184+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:56.153596+00:00'
+            mapped_at: '2025-12-04T01:46:25.864210+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:56.153598+00:00'
+            mapped_at: '2025-12-04T01:46:25.864212+00:00'

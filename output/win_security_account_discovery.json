@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "AD Privileged Users or Groups Reconnaissance",
+    "comment": "Detect priv users or groups recon based on 4661 eventid and known privileged users or groups SIDs",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 4661 AND (lower(LOWER(observables.type)) in ('sam_user', 'sam_group')) AND (endswith(lower(observables.name), lower('-512')) OR endswith(lower(observables.name), lower('-502')) OR endswith(lower(observables.name), lower('-500')) OR endswith(lower(observables.name), lower('-505')) OR endswith(lower(observables.name), lower('-519')) OR endswith(lower(observables.name), lower('-520')) OR endswith(lower(observables.name), lower('-544')) OR endswith(lower(observables.name), lower('-551')) OR endswith(lower(observables.name), lower('-555'))) AND contains(lower(observables.name), lower('admin')) AND NOT endswith(lower(actor.user.name), lower('$')))"
+      }
+    },
+    "output": {
+      "summary": "Detect priv users or groups recon based on 4661 eventid and known privileged users or groups SIDs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: If source account name is not an admin then its super suspicious Reference: https://web.archive.org/web/20230329163438/https://blog.menasec.net/2019/02/threat-hunting-5-detecting-enumeration.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

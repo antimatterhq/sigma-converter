@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "DNS Query To Ufile.io - DNS Client",
+    "comment": "Detects DNS queries to \"ufile.io\", which was seen abused by malware and threat actors as a method for data exfiltration",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "dns-client",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 3008 AND contains(lower(query.hostname), lower('ufile.io')))"
+      }
+    },
+    "output": {
+      "summary": "Detects DNS queries to \"ufile.io\", which was seen abused by malware and threat actors as a method for data exfiltration",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: DNS queries for \"ufile\" are not malicious by nature necessarily. Investigate the source to determine the necessary actions to take Reference: https://thedfirreport.com/2021/12/13/diavol-ransomware/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

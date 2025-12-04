@@ -1,22 +1,21 @@
-id: b5746143-59d6-4603-8d06-acbd60e166ee
 title: Uncommon Child Process Of AddinUtil.EXE
+id: b5746143-59d6-4603-8d06-acbd60e166ee
 status: test
 level: medium
+author: Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)
 description: 'Detects uncommon child processes of the Add-In deployment cache updating
     utility (AddInutil.exe) which could be a sign of potential abuse of the binary
     to proxy execution via a custom Addins.Store payload.
 
     '
-author: Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)
-date: '2023-09-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2023-09-18'
 logsource:
     category: process_creation
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:14.503639+00:00'
+            mapped_at: '2025-12-04T01:41:40.324879+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:14.503639+00:00'
+            mapped_at: '2025-12-04T01:41:40.324879+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:14.503664+00:00'
+            mapped_at: '2025-12-04T01:41:40.324894+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:14.503668+00:00'
+            mapped_at: '2025-12-04T01:41:40.324925+00:00'

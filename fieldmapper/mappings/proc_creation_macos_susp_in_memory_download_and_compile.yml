@@ -1,21 +1,20 @@
-id: 13db8d2e-7723-4c2c-93c1-a4d36994f7ef
 title: Potential In-Memory Download And Compile Of Payloads
+id: 13db8d2e-7723-4c2c-93c1-a4d36994f7ef
 status: test
 level: medium
+author: Sohan G (D4rkCiph3r), Red Canary (idea)
 description: Detects potential in-memory downloading and compiling of applets using
     curl and osacompile as seen used by XCSSET malware
-author: Sohan G (D4rkCiph3r), Red Canary (idea)
-date: '2023-08-22'
+references:
+    - https://redcanary.com/blog/mac-application-bundles/
+falsepositives:
+    - Unknown
 tags:
     - attack.command-and-control
     - attack.execution
     - attack.t1059.007
     - attack.t1105
-references:
-    - https://redcanary.com/blog/mac-application-bundles/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2023-08-22'
 logsource:
     category: process_creation
     product: macos
@@ -32,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:23.317460+00:00'
+            mapped_at: '2025-12-04T01:34:18.521364+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:23.317460+00:00'
+            mapped_at: '2025-12-04T01:34:18.521364+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:23.317473+00:00'
+            mapped_at: '2025-12-04T01:34:18.521379+00:00'

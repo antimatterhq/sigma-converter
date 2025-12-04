@@ -1,20 +1,19 @@
-id: 05b2aa93-1210-42c8-8d9a-2fcc13b284f5
 title: Service Registry Key Deleted Via Reg.EXE
+id: 05b2aa93-1210-42c8-8d9a-2fcc13b284f5
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of "reg.exe" commands with the "delete" flag on services
     registry key. Often used by attacker to remove AV software services
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-01'
-modified: '2023-02-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://www.virustotal.com/gui/file/2bcd5702a7565952c44075ac6fb946c7780526640d1264f692c7664c02c68465
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-08-01'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:48.304123+00:00'
+            mapped_at: '2025-12-04T01:47:12.926909+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:48.304123+00:00'
+            mapped_at: '2025-12-04T01:47:12.926909+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:48.304157+00:00'
+            mapped_at: '2025-12-04T01:47:12.926953+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:48.304161+00:00'
+            mapped_at: '2025-12-04T01:47:12.926955+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:48.304164+00:00'
+            mapped_at: '2025-12-04T01:47:12.926956+00:00'

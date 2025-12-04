@@ -1,7 +1,8 @@
-id: 2dbd9d3d-9e27-42a8-b8df-f13825c6c3d5
 title: WebDav Client Execution Via Rundll32.EXE
+id: 2dbd9d3d-9e27-42a8-b8df-f13825c6c3d5
 status: test
 level: medium
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
 description: 'Detects "svchost.exe" spawning "rundll32.exe" with command arguments
     like "C:\windows\system32\davclnt.dll,DavSetCookie".
 
@@ -9,18 +10,16 @@ description: 'Detects "svchost.exe" spawning "rundll32.exe" with command argumen
     on a WebDav server).
 
     '
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2020-05-02'
-modified: '2023-09-18'
-tags:
-    - attack.exfiltration
-    - attack.t1048.003
 references:
     - https://github.com/OTRF/detection-hackathon-apt29/issues/17
     - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/7.B.4_C10730EA-6345-4934-AA0F-B0EFCA0C4BA6.md
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+date: '2020-05-02'
+modified: '2023-09-18'
 logsource:
     category: process_creation
     product: windows
@@ -40,25 +39,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:54.319844+00:00'
+            mapped_at: '2025-12-04T01:42:14.977205+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:54.319844+00:00'
+            mapped_at: '2025-12-04T01:42:14.977205+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:54.319874+00:00'
+            mapped_at: '2025-12-04T01:42:14.977220+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:54.319878+00:00'
+            mapped_at: '2025-12-04T01:42:14.977222+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:54.319882+00:00'
+            mapped_at: '2025-12-04T01:42:14.977223+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:54.319885+00:00'
+            mapped_at: '2025-12-04T01:42:14.977224+00:00'

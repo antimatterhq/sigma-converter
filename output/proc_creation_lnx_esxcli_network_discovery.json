@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "ESXi Network Configuration Discovery Via ESXCLI",
+    "comment": "Detects execution of the \"esxcli\" command with the \"network\" flag in order to retrieve information about the network configuration.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/esxcli')) AND contains(lower(process.cmd_line), lower('network')) AND (contains(lower(process.cmd_line), lower(' get')) OR contains(lower(process.cmd_line), lower(' list'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the \"esxcli\" command with the \"network\" flag in order to retrieve information about the network configuration.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/, https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_network.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1033"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

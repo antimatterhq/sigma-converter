@@ -1,23 +1,22 @@
-id: 38646daa-e78f-4ace-9de0-55547b2d30da
 title: PUA - Seatbelt Execution
+id: 38646daa-e78f-4ace-9de0-55547b2d30da
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of the PUA/Recon tool Seatbelt via PE information
     of command line parameters
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-18'
-modified: '2023-02-04'
-tags:
-    - attack.discovery
-    - attack.t1526
-    - attack.t1087
-    - attack.t1083
 references:
     - https://github.com/GhostPack/Seatbelt
     - https://www.bluetangle.dev/2022/08/fastening-seatbelt-on-threat-hunting.html
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1526
+    - attack.t1087
+    - attack.t1083
+date: '2022-10-18'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -58,25 +57,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:26.872915+00:00'
+            mapped_at: '2025-12-04T01:42:42.879697+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:26.872915+00:00'
+            mapped_at: '2025-12-04T01:42:42.879697+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:26.872934+00:00'
+            mapped_at: '2025-12-04T01:42:42.879722+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:26.872937+00:00'
+            mapped_at: '2025-12-04T01:42:42.879724+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:27:26.872938+00:00'
+            mapped_at: '2025-12-04T01:42:42.879725+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:26.872940+00:00'
+            mapped_at: '2025-12-04T01:42:42.879727+00:00'

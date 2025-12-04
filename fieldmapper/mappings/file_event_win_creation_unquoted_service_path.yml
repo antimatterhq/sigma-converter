@@ -1,7 +1,8 @@
-id: 8c3c76ca-8f8b-4b1d-aaf3-81aebcd367c9
 title: Creation Exe for Service with Unquoted Path
+id: 8c3c76ca-8f8b-4b1d-aaf3-81aebcd367c9
 status: test
 level: high
+author: frack113
 description: 'Adversaries may execute their own malicious payloads by hijacking vulnerable
     file path references.
 
@@ -10,16 +11,14 @@ description: 'Adversaries may execute their own malicious payloads by hijacking 
     choose the adversary''s executable to launch.
 
     '
-author: frack113
-date: '2021-12-30'
-tags:
-    - attack.persistence
-    - attack.t1547.009
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.009/T1574.009.md
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.009
+date: '2021-12-30'
 logsource:
     category: file_event
     product: windows
@@ -29,18 +28,18 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: file_activity
-    activity_id: 3
+    activity_id: 1
     logsource:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:39.943444+00:00'
+            mapped_at: '2025-12-04T01:52:31.819959+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:39.943444+00:00'
+            mapped_at: '2025-12-04T01:52:31.819959+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:39.943467+00:00'
+            mapped_at: '2025-12-04T01:52:31.819973+00:00'

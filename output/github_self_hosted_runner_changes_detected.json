@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "Github Self Hosted Runner Changes Detected",
+    "comment": "A self-hosted runner is a system that you deploy and manage to execute jobs from GitHub Actions on GitHub.com. This rule detects changes to self-hosted runners configurations in the environment. The self-hosted runner configuration changes once detected, it should be validated from GitHub UI because the log entry may not provide full context.",
+    "annotations": {
+      "source": "sigma",
+      "product": "github",
+      "service": "audit",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(action)) in ('org\\.remove_self_hosted_runner', 'org\\.runner_group_created', 'org\\.runner_group_removed', 'org\\.runner_group_runner_removed', 'org\\.runner_group_runners_added', 'org\\.runner_group_runners_updated', 'org\\.runner_group_updated', 'repo\\.register_self_hosted_runner', 'repo\\.remove_self_hosted_runner'))"
+      }
+    },
+    "output": {
+      "summary": "A self-hosted runner is a system that you deploy and manage to execute jobs from GitHub Actions on GitHub.com. This rule detects changes to self-hosted runners configurations in the environment. The self-hosted runner configuration changes once detected, it should be validated from GitHub UI because the log entry may not provide full context.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Allowed self-hosted runners changes in the environment. 2. A self-hosted runner is automatically removed from GitHub if it has not connected to GitHub Actions for more than 14 days. 3. An ephemeral self-hosted runner is automatically removed from GitHub if it has not connected to GitHub Actions for more than 1 day. References: https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#about-self-hosted-runners, https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#search-based-on-operation",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1526"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1213",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1078",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Execute Code with Pester.bat",
+    "comment": "Detects code execution via Pester.bat (Pester - Powershell Modulte for testing)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('pester')) AND contains(lower(process.cmd_line), lower('get-help')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) AND contains(lower(process.cmd_line), lower('pester')) AND contains(lower(process.cmd_line), lower(';')) AND (contains(lower(process.cmd_line), lower('help')) OR contains(lower(process.cmd_line), lower('?')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects code execution via Pester.bat (Pester - Powershell Modulte for testing)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of Pester for writing tests for Powershell scripts and modules References: https://twitter.com/Oddvarmoe/status/993383596244258816, https://github.com/api0cradle/LOLBAS/blob/d148d278f5f205ce67cfaf49afdfb68071c7252a/OSScripts/pester.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1216"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

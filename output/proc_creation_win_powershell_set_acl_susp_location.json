@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "PowerShell Set-Acl On Windows Folder",
+    "comment": "Detects PowerShell scripts to set the ACL to a file in the Windows folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('set-acl ')) AND contains(lower(process.cmd_line), lower('-aclobject ')) AND (contains(lower(process.cmd_line), lower('-path \"c:\\\\windows')) OR contains(lower(process.cmd_line), lower('-path \\'c:\\\\windows')) OR contains(lower(process.cmd_line), lower('-path %windir%')) OR contains(lower(process.cmd_line), lower('-path $env:windir'))) AND (contains(lower(process.cmd_line), lower('fullcontrol')) OR contains(lower(process.cmd_line), lower('allow'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell scripts to set the ACL to a file in the Windows folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-acl?view=powershell-5.1, https://github.com/redcanaryco/atomic-red-team/blob/74438b0237d141ee9c99747976447dc884cb1a39/atomics/T1505.005/T1505.005.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

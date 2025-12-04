@@ -1,19 +1,18 @@
-id: ca2092a1-c273-4878-9b4b-0d60115bf5ea
 title: Suspicious Encoded PowerShell Command Line
+id: ca2092a1-c273-4878-9b4b-0d60115bf5ea
 status: test
 level: high
-description: Detects suspicious powershell process starts with base64 encoded commands
-    (e.g. Emotet)
 author: Florian Roth (Nextron Systems), Markus Neis, Jonhnathan Ribeiro, Daniil Yugoslavskiy,
     Anton Kutepov, oscd.community
-date: '2018-09-03'
-modified: '2023-04-06'
+description: Detects suspicious powershell process starts with base64 encoded commands
+    (e.g. Emotet)
+references:
+    - https://app.any.run/tasks/6217d77d-3189-4db2-a957-8ab239f3e01e
 tags:
     - attack.execution
     - attack.t1059.001
-references:
-    - https://app.any.run/tasks/6217d77d-3189-4db2-a957-8ab239f3e01e
-taxonomy: sigma
+date: '2018-09-03'
+modified: '2023-04-06'
 logsource:
     category: process_creation
     product: windows
@@ -53,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:46.406754+00:00'
+            mapped_at: '2025-12-04T01:45:24.247223+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:46.406754+00:00'
+            mapped_at: '2025-12-04T01:45:24.247223+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:46.406767+00:00'
+            mapped_at: '2025-12-04T01:45:24.247242+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:46.406770+00:00'
+            mapped_at: '2025-12-04T01:45:24.247243+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:46.406772+00:00'
+            mapped_at: '2025-12-04T01:45:24.247245+00:00'

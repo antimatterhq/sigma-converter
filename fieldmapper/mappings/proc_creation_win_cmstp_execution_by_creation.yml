@@ -1,18 +1,10 @@
-id: 7d4cdc5a-0076-40ca-aac8-f7e714570e47
 title: CMSTP Execution Process Creation
+id: 7d4cdc5a-0076-40ca-aac8-f7e714570e47
 status: stable
 level: high
+author: Nik Seetharaman
 description: Detects various indicators of Microsoft Connection Manager Profile Installer
     execution
-author: Nik Seetharaman
-date: '2018-07-16'
-modified: '2020-12-23'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218.003
-    - attack.g0069
-    - car.2019-04-001
 references:
     - https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/
 fields:
@@ -21,7 +13,14 @@ fields:
     - Details
 falsepositives:
     - Legitimate CMSTP use (unlikely in modern enterprise environments)
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218.003
+    - attack.g0069
+    - car.2019-04-001
+date: '2018-07-16'
+modified: '2020-12-23'
 logsource:
     category: process_creation
     product: windows
@@ -36,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:54.727641+00:00'
+            mapped_at: '2025-12-04T01:45:31.739224+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:54.727641+00:00'
+            mapped_at: '2025-12-04T01:45:31.739224+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:54.727662+00:00'
+            mapped_at: '2025-12-04T01:45:31.739237+00:00'

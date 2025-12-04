@@ -1,17 +1,13 @@
-id: f41b0311-44f9-44f0-816d-dd45e39d4bc8
 title: Access To Crypto Currency Wallets By Uncommon Applications
+id: f41b0311-44f9-44f0-816d-dd45e39d4bc8
 status: experimental
 level: medium
+author: X__Junior (Nextron Systems)
 description: 'Detects file access requests to crypto currency files by uncommon processes.
 
     Could indicate potential attempt of crypto currency wallet stealing.
 
     '
-author: X__Junior (Nextron Systems)
-date: '2024-07-29'
-tags:
-    - attack.t1003
-    - attack.credential-access
 references:
     - Internal Research
 falsepositives:
@@ -19,7 +15,10 @@ falsepositives:
     - Backup software
     - Legitimate software installed on partitions other than "C:\"
     - Searching software such as "everything.exe"
-taxonomy: sigma
+tags:
+    - attack.t1003
+    - attack.credential-access
+date: '2024-07-29'
 logsource:
     category: file_access
     product: windows
@@ -55,22 +54,22 @@ detection:
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
 ocsf_mapping:
     class_name: file_activity
-    activity_id: 2
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: file_access
-            mapped_at: '2025-11-26T02:40:57.370795+00:00'
+            mapped_at: '2025-12-04T01:53:29.707519+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:57.370795+00:00'
+            mapped_at: '2025-12-04T01:53:29.707519+00:00'
     detection_fields:
         -   source_field: FileName
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:40:58.104615+00:00'
+            mapped_at: '2025-12-04T01:53:29.707533+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:58.104630+00:00'
+            mapped_at: '2025-12-04T01:53:29.707544+00:00'

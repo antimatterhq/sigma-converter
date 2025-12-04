@@ -1,7 +1,8 @@
-id: 4096842a-8f9f-4d36-92b4-d0b2a62f9b2a
 title: Potential PetitPotam Attack Via EFS RPC Calls
+id: 4096842a-8f9f-4d36-92b4-d0b2a62f9b2a
 status: test
 level: medium
+author: '@neu5ron, @Antonlovesdnb, Mike Remen'
 description: "Detects usage of the windows RPC library Encrypting File System Remote\
     \ Protocol (MS-EFSRPC). Variations of this RPC are used within the attack refereed\
     \ to as PetitPotam.\nThe usage of this RPC function should be rare if ever used\
@@ -10,12 +11,6 @@ description: "Detects usage of the windows RPC library Encrypting File System Re
     \ View surrounding logs (within a few minutes before and after) from the Source\
     \ IP to. Logs from from the Source IP would include dce_rpc, smb_mapping, smb_files,\
     \ rdp, ntlm, kerberos, etc..'\n"
-author: '@neu5ron, @Antonlovesdnb, Mike Remen'
-date: '2021-08-17'
-modified: '2022-11-28'
-tags:
-    - attack.t1557.001
-    - attack.t1187
 references:
     - https://github.com/topotam/PetitPotam/blob/d83ac8f2dd34654628c17490f99106eb128e7d1e/PetitPotam/PetitPotam.cpp
     - https://msrc.microsoft.com/update-guide/vulnerability/ADV210003
@@ -33,7 +28,11 @@ falsepositives:
     - Uncommon but legitimate windows administrator or software tasks that make use
         of the Encrypting File System RPC Calls. Verify if this is common activity
         (see description).
-taxonomy: sigma
+tags:
+    - attack.t1557.001
+    - attack.t1187
+date: '2021-08-17'
+modified: '2022-11-28'
 logsource:
     product: zeek
     service: dce_rpc
@@ -48,13 +47,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:14:51.357542+00:00'
+            mapped_at: '2025-12-04T01:35:08.264182+00:00'
         service:
             source_field: service
             source_value: dce_rpc
-            mapped_at: '2025-11-26T02:14:51.357542+00:00'
+            mapped_at: '2025-12-04T01:35:08.264182+00:00'
     detection_fields:
         -   source_field: operation
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:14:52.023227+00:00'
+            mapped_at: '2025-12-04T01:35:08.264210+00:00'

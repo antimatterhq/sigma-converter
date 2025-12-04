@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Suspicious Process By Web Server Process",
+    "comment": "Detects potentially suspicious processes being spawned by a web server process which could be the result of a successfully placed web shell or exploitation",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\caddy.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\httpd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\nginx.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\php-cgi.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\php.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\tomcat.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\umworkerprocess.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\w3wp.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\ws_tomcatservice.exe')) OR (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\javaw.exe'))) AND (contains(lower(process.parent_process.name), lower('-tomcat-')) OR contains(lower(process.parent_process.name), lower('\\\\tomcat'))) OR (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\javaw.exe'))) AND (contains(lower(process.parent_process.cmd_line), lower('catalina_home')) OR contains(lower(process.parent_process.cmd_line), lower('catalina.home')) OR contains(lower(process.parent_process.cmd_line), lower('catalina.jar')))) AND (endswith(lower(process.name), lower('\\\\arp.exe')) OR endswith(lower(process.name), lower('\\\\at.exe')) OR endswith(lower(process.name), lower('\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\bitsadmin.exe')) OR endswith(lower(process.name), lower('\\\\certutil.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\dsget.exe')) OR endswith(lower(process.name), lower('\\\\hostname.exe')) OR endswith(lower(process.name), lower('\\\\nbtstat.exe')) OR endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe')) OR endswith(lower(process.name), lower('\\\\netdom.exe')) OR endswith(lower(process.name), lower('\\\\netsh.exe')) OR endswith(lower(process.name), lower('\\\\nltest.exe')) OR endswith(lower(process.name), lower('\\\\ntdsutil.exe')) OR endswith(lower(process.name), lower('\\\\powershell_ise.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\qprocess.exe')) OR endswith(lower(process.name), lower('\\\\query.exe')) OR endswith(lower(process.name), lower('\\\\qwinsta.exe')) OR endswith(lower(process.name), lower('\\\\reg.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\sc.exe')) OR endswith(lower(process.name), lower('\\\\sh.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR endswith(lower(process.name), lower('\\\\wusa.exe'))) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) AND endswith(lower(process.cmd_line), lower('windows\\\\system32\\\\cmd.exe /c c:\\\\manageengine\\\\admanager \"plus\\\\es\\\\bin\\\\elasticsearch.bat -enode.name=rmp-node1 -pelasticsearch-pid.txt')) OR endswith(lower(process.parent_process.name), lower('\\\\java.exe')) AND contains(lower(process.cmd_line), lower('sc query')) AND contains(lower(process.cmd_line), lower('admanager plus'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially suspicious processes being spawned by a web server process which could be the result of a successfully placed web shell or exploitation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Particular web applications may spawn a shell process legitimately Reference: https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1190"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

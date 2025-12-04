@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "name": "Suspicious Installer Package Child Process",
+    "comment": "Detects the execution of suspicious child processes from macOS installer package parent process. This includes osascript, JXA, curl and wget amongst other interpreters",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('/package_script_service')) OR endswith(lower(process.parent_process.name), lower('/installer'))) AND (endswith(lower(process.name), lower('/sh')) OR endswith(lower(process.name), lower('/bash')) OR endswith(lower(process.name), lower('/dash')) OR endswith(lower(process.name), lower('/python')) OR endswith(lower(process.name), lower('/ruby')) OR endswith(lower(process.name), lower('/perl')) OR endswith(lower(process.name), lower('/php')) OR endswith(lower(process.name), lower('/javascript')) OR endswith(lower(process.name), lower('/osascript')) OR endswith(lower(process.name), lower('/tclsh')) OR endswith(lower(process.name), lower('/curl')) OR endswith(lower(process.name), lower('/wget'))) AND (contains(lower(process.cmd_line), lower('preinstall')) OR contains(lower(process.cmd_line), lower('postinstall'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of suspicious child processes from macOS installer package parent process. This includes osascript, JXA, curl and wget amongst other interpreters",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate software uses the scripts (preinstall, postinstall) References: https://redcanary.com/blog/clipping-silver-sparrows-wings/, https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/execution_installer_package_spawned_network_event.toml",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1071"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

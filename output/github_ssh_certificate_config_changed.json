@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Github SSH Certificate Configuration Changed",
+    "comment": "Detects when changes are made to the SSH certificate configuration of the organization.",
+    "annotations": {
+      "source": "sigma",
+      "product": "github",
+      "service": "audit",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND (lower(LOWER(action)) in ('ssh_certificate_authority\\.create', 'ssh_certificate_requirement\\.disable')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when changes are made to the SSH certificate configuration of the organization.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Allowed administrative activities. References: https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-git-access-to-your-organizations-repositories/about-ssh-certificate-authorities, https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise#ssh_certificate_authority",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1078",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

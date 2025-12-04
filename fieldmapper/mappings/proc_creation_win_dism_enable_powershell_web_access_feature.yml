@@ -1,21 +1,20 @@
-id: 7e8f2d3b-9c1a-4f67-b9e8-8d9006e0e51f
 title: PowerShell Web Access Feature Enabled Via DISM
+id: 7e8f2d3b-9c1a-4f67-b9e8-8d9006e0e51f
 status: test
 level: high
+author: Michael Haag
 description: Detects the use of DISM to enable the PowerShell Web Access feature,
     which could be used for remote access and potential abuse
-author: Michael Haag
-date: '2024-09-03'
-tags:
-    - attack.persistence
-    - attack.t1548.002
 references:
     - https://docs.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature
     - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-241a
     - https://gist.github.com/MHaggis/7e67b659af9148fa593cf2402edebb41
 falsepositives:
     - Legitimate PowerShell Web Access installations by administrators
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1548.002
+date: '2024-09-03'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:41.617925+00:00'
+            mapped_at: '2025-12-04T01:42:04.855562+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:41.617925+00:00'
+            mapped_at: '2025-12-04T01:42:04.855562+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:41.617944+00:00'
+            mapped_at: '2025-12-04T01:42:04.855578+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:41.617947+00:00'
+            mapped_at: '2025-12-04T01:42:04.855580+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:41.617949+00:00'
+            mapped_at: '2025-12-04T01:42:04.855581+00:00'

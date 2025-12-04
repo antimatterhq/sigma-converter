@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Executable from Webdav",
+    "comment": "Detects executable access via webdav6. Can be seen in APT 29 such as from the emulated APT 29 hackathon https://github.com/OTRF/detection-hackathon-apt29/",
+    "annotations": {
+      "source": "sigma",
+      "product": "zeek",
+      "service": "http",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.user_agent), lower('webdav')) AND contains(lower(http_request.url), lower('webdav')) AND contains(lower(http_response.content_type), lower('dosexec')) AND endswith(lower(http_request.url), lower('.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects executable access via webdav6. Can be seen in APT 29 such as from the emulated APT 29 hackathon https://github.com/OTRF/detection-hackathon-apt29/",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: http://carnal0wnage.attackresearch.com/2012/06/webdav-server-to-download-custom.html, https://github.com/OTRF/detection-hackathon-apt29",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

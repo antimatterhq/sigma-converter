@@ -1,13 +1,9 @@
-id: 4990c2e3-f4b8-45e3-bc3c-30b14ff0ed26
 title: AWS Glue Development Endpoint Activity
+id: 4990c2e3-f4b8-45e3-bc3c-30b14ff0ed26
 status: test
 level: low
-description: Detects possible suspicious glue development endpoint activity.
 author: Austin Songer @austinsonger
-date: '2021-10-03'
-modified: '2022-12-18'
-tags:
-    - attack.privilege-escalation
+description: Detects possible suspicious glue development endpoint activity.
 references:
     - https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/
     - https://docs.aws.amazon.com/glue/latest/webapi/API_CreateDevEndpoint.html
@@ -16,7 +12,10 @@ falsepositives:
         Verify whether the user identity, user agent, and/or hostname should be making
         changes in your environment.
     - If known behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+date: '2021-10-03'
+modified: '2022-12-18'
 logsource:
     product: aws
     service: cloudtrail
@@ -35,17 +34,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:31.168754+00:00'
+            mapped_at: '2025-12-04T01:39:15.920610+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:31.168754+00:00'
+            mapped_at: '2025-12-04T01:39:15.920610+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:31.168783+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:15.920624+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:31.168787+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:15.920625+00:00'

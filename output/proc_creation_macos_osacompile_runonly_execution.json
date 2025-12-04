@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "OSACompile Run-Only Execution",
+    "comment": "Detects potential suspicious run-only executions compiled using OSACompile",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('osacompile')) AND contains(lower(process.cmd_line), lower(' -x ')) AND contains(lower(process.cmd_line), lower(' -e ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential suspicious run-only executions compiled using OSACompile",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line False positive: Unknown References: https://redcanary.com/blog/applescript/, https://ss64.com/osx/osacompile.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

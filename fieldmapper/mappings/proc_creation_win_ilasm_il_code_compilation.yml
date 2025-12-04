@@ -1,21 +1,20 @@
-id: 850d55f9-6eeb-4492-ad69-a72338f65ba4
 title: C# IL Code Compilation Via Ilasm.EXE
+id: 850d55f9-6eeb-4492-ad69-a72338f65ba4
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: Detects the use of "Ilasm.EXE" in order to compile C# intermediate (IL)
     code to EXE or DLL.
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2022-05-07'
-modified: '2022-05-16'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Ilasm/
     - https://www.echotrail.io/insights/search/ilasm.exe
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2022-05-07'
+modified: '2022-05-16'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:28.023246+00:00'
+            mapped_at: '2025-12-04T01:46:00.195618+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:28.023246+00:00'
+            mapped_at: '2025-12-04T01:46:00.195618+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:28.023265+00:00'
+            mapped_at: '2025-12-04T01:46:00.195632+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:28.023267+00:00'
+            mapped_at: '2025-12-04T01:46:00.195634+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:28.023270+00:00'
+            mapped_at: '2025-12-04T01:46:00.195636+00:00'

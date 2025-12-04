@@ -1,20 +1,19 @@
-id: 503fe26e-b5f2-4944-a126-eab405cc06e5
 title: Kerberos Network Traffic RC4 Ticket Encryption
+id: 503fe26e-b5f2-4944-a126-eab405cc06e5
 status: test
 level: medium
+author: sigma
 description: Detects kerberos TGS request using RC4 encryption which may be indicative
     of kerberoasting
-author: sigma
-date: '2020-02-12'
-modified: '2021-11-27'
-tags:
-    - attack.credential-access
-    - attack.t1558.003
 references:
     - https://adsecurity.org/?p=3458
 falsepositives:
     - Normal enterprise SPN requests activity
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1558.003
+date: '2020-02-12'
+modified: '2021-11-27'
 logsource:
     product: zeek
     service: kerberos
@@ -32,21 +31,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:01.114135+00:00'
+            mapped_at: '2025-12-04T01:35:11.972109+00:00'
         service:
             source_field: service
             source_value: kerberos
-            mapped_at: '2025-11-26T02:15:01.114135+00:00'
+            mapped_at: '2025-12-04T01:35:11.972109+00:00'
     detection_fields:
         -   source_field: request_type
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:02.513898+00:00'
+            mapped_at: '2025-12-04T01:35:11.972131+00:00'
         -   source_field: cipher
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:02.513932+00:00'
+            mapped_at: '2025-12-04T01:35:11.972134+00:00'
         -   source_field: service
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:02.513936+00:00'
+            mapped_at: '2025-12-04T01:35:11.972136+00:00'

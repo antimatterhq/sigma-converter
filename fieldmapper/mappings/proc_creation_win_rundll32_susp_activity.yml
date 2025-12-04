@@ -1,16 +1,11 @@
-id: e593cf51-88db-4ee1-b920-37e89012a3c9
 title: Potentially Suspicious Rundll32 Activity
+id: e593cf51-88db-4ee1-b920-37e89012a3c9
 status: test
 level: medium
-description: Detects suspicious execution of rundll32, with specific calls to some
-    DLLs with known LOLBIN functionalities
 author: juju4, Jonhnathan Ribeiro, oscd.community, Nasreddine Bencherchali (Nextron
     Systems)
-date: '2019-01-16'
-modified: '2023-05-17'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
+description: Detects suspicious execution of rundll32, with specific calls to some
+    DLLs with known LOLBIN functionalities
 references:
     - http://www.hexacorn.com/blog/2017/05/01/running-programs-via-proxy-jumping-on-a-edr-bypass-trampoline/
     - https://twitter.com/Hexacorn/status/885258886428725250
@@ -21,7 +16,11 @@ references:
 falsepositives:
     - False positives depend on scripts and administrative tools used in the monitored
         environment
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+date: '2019-01-16'
+modified: '2023-05-17'
 logsource:
     category: process_creation
     product: windows
@@ -96,21 +95,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:16.148206+00:00'
+            mapped_at: '2025-12-04T01:49:57.700161+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:16.148206+00:00'
+            mapped_at: '2025-12-04T01:49:57.700161+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:16.148233+00:00'
+            mapped_at: '2025-12-04T01:49:57.700178+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:16.148236+00:00'
+            mapped_at: '2025-12-04T01:49:57.700181+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:36:16.148238+00:00'
+            mapped_at: '2025-12-04T01:49:57.700183+00:00'

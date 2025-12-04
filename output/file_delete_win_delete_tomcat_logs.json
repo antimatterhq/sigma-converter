@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Tomcat WebServer Logs Deleted",
+    "comment": "Detects the deletion of tomcat WebServer logs which may indicate an attempt to destroy forensic evidence",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_delete",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND contains(lower(file.path), lower('\\\\tomcat')) AND contains(lower(file.path), lower('\\\\logs\\\\')) AND (contains(lower(file.path), lower('catalina.')) OR contains(lower(file.path), lower('_access_log.')) OR contains(lower(file.path), lower('localhost.'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the deletion of tomcat WebServer logs which may indicate an attempt to destroy forensic evidence",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. During uninstallation of the tomcat server 2. During log rotation References: Internal Research, https://linuxhint.com/view-tomcat-logs-windows/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

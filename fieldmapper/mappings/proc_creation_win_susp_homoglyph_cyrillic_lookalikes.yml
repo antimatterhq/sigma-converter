@@ -1,7 +1,8 @@
-id: 32e280f1-8ad4-46ef-9e80-910657611fbc
 title: Potential Homoglyph Attack Using Lookalike Characters
+id: 32e280f1-8ad4-46ef-9e80-910657611fbc
 status: test
 level: medium
+author: Micah Babinski, @micahbabinski
 description: 'Detects the presence of unicode characters which are homoglyphs, or
     identical in appearance, to ASCII letter characters.
 
@@ -12,19 +13,17 @@ description: 'Detects the presence of unicode characters which are homoglyphs, o
     for homoglyph attack characters.
 
     '
-author: Micah Babinski, @micahbabinski
-date: '2023-05-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
-    - attack.t1036.003
 references:
     - https://redcanary.com/threat-detection-report/threats/socgholish/#threat-socgholish
     - http://www.irongeek.com/homoglyph-attack-generator.php
 falsepositives:
     - Commandlines with legitimate Cyrillic text; will likely require tuning (or not
         be usable) in countries where these alphabets are in use.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+    - attack.t1036.003
+date: '2023-05-07'
 logsource:
     category: process_creation
     product: windows
@@ -89,13 +88,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:51.814094+00:00'
+            mapped_at: '2025-12-04T01:47:15.149653+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:51.814094+00:00'
+            mapped_at: '2025-12-04T01:47:15.149653+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:51.814126+00:00'
+            mapped_at: '2025-12-04T01:47:15.149668+00:00'

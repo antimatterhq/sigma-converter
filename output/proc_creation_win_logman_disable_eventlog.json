@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Windows Trace ETW Session Tamper Via Logman.EXE",
+    "comment": "Detects the execution of \"logman\" utility in order to disable or delete Windows trace sessions",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\logman.exe')) AND lower(process.file.name) = lower('logman.exe') AND (contains(lower(process.cmd_line), lower('stop ')) OR contains(lower(process.cmd_line), lower('delete '))) AND (contains(lower(process.cmd_line), lower('circular kernel context logger')) OR contains(lower(process.cmd_line), lower('eventlog-')) OR contains(lower(process.cmd_line), lower('sysmon trace')) OR contains(lower(process.cmd_line), lower('sysmondnsetwsession'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of \"logman\" utility in order to disable or delete Windows trace sessions",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate deactivation by administrative staff 2. Installer tools that disable services, e.g. before log collection agent installation References: https://twitter.com/0gtweet/status/1359039665232306183?s=21, https://ss64.com/nt/logman.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

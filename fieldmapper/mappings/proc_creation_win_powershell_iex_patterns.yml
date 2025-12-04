@@ -1,20 +1,19 @@
-id: 09576804-7a05-458e-a817-eb718ca91f54
 title: Suspicious PowerShell IEX Execution Patterns
+id: 09576804-7a05-458e-a817-eb718ca91f54
 status: test
 level: high
-description: Detects suspicious ways to run Invoke-Execution using IEX alias
 author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-03-24'
-modified: '2022-11-28'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects suspicious ways to run Invoke-Execution using IEX alias
 references:
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.2
     - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
 falsepositives:
     - Legitimate scripts that use IEX
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2022-03-24'
+modified: '2022-11-28'
 logsource:
     category: process_creation
     product: windows
@@ -50,17 +49,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:40.906750+00:00'
+            mapped_at: '2025-12-04T01:45:18.469834+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:40.906750+00:00'
+            mapped_at: '2025-12-04T01:45:18.469834+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:40.906766+00:00'
+            mapped_at: '2025-12-04T01:45:18.469862+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:40.906769+00:00'
+            mapped_at: '2025-12-04T01:45:18.469864+00:00'

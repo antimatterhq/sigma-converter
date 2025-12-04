@@ -1,12 +1,14 @@
-id: aa35a627-33fb-4d04-a165-d33b4afca3e8
 title: Remote LSASS Process Access Through Windows Remote Management
+id: aa35a627-33fb-4d04-a165-d33b4afca3e8
 status: stable
 level: high
+author: Patryk Prauze - ING Tech
 description: Detects remote access to the LSASS process via WinRM. This could be a
     sign of credential dumping from tools like mimikatz.
-author: Patryk Prauze - ING Tech
-date: '2019-05-20'
-modified: '2023-11-29'
+references:
+    - https://pentestlab.blog/2018/05/15/lateral-movement-winrm/
+falsepositives:
+    - Unlikely
 tags:
     - attack.credential-access
     - attack.execution
@@ -15,11 +17,8 @@ tags:
     - attack.lateral-movement
     - attack.t1021.006
     - attack.s0002
-references:
-    - https://pentestlab.blog/2018/05/15/lateral-movement-winrm/
-falsepositives:
-    - Unlikely
-taxonomy: sigma
+date: '2019-05-20'
+modified: '2023-11-29'
 logsource:
     category: process_access
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:24.783021+00:00'
+            mapped_at: '2025-12-04T01:40:30.818933+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:24.783021+00:00'
+            mapped_at: '2025-12-04T01:40:30.818933+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:24.783040+00:00'
+            mapped_at: '2025-12-04T01:40:30.818947+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:24.783041+00:00'
+            mapped_at: '2025-12-04T01:40:30.818953+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:24.783043+00:00'
+            mapped_at: '2025-12-04T01:40:30.818955+00:00'

@@ -1,22 +1,19 @@
-id: 12b8e9f5-96b2-41e1-9a42-8c6779a5c184
 title: Potentially Suspicious Execution Of PDQDeployRunner
+id: 12b8e9f5-96b2-41e1-9a42-8c6779a5c184
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious execution of "PDQDeployRunner" which is part of the
     PDQDeploy service stack that is responsible for executing commands and packages
     on a remote machines
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-22'
-modified: '2024-05-02'
-tags:
-    - attack.execution
 references:
     - https://twitter.com/malmoeb/status/1550483085472432128
 falsepositives:
     - Legitimate use of the PDQDeploy tool to execute these commands
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d679950c-abb7-43a6-80fb-2a480c4fc450''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2022-07-22'
+modified: '2024-05-02'
 logsource:
     category: process_creation
     product: windows
@@ -55,6 +52,9 @@ detection:
             - 'iex '
             - Invoke-
     condition: all of selection_*
+related:
+    -   id: d679950c-abb7-43a6-80fb-2a480c4fc450
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -62,21 +62,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:02.590217+00:00'
+            mapped_at: '2025-12-04T01:50:44.354392+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:02.590217+00:00'
+            mapped_at: '2025-12-04T01:50:44.354392+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:37:02.590237+00:00'
+            mapped_at: '2025-12-04T01:50:44.354407+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:02.590241+00:00'
+            mapped_at: '2025-12-04T01:50:44.354409+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:02.590244+00:00'
+            mapped_at: '2025-12-04T01:50:44.354410+00:00'

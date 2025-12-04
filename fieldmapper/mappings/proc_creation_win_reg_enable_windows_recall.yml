@@ -1,7 +1,8 @@
-id: 817f252c-5143-4dae-b418-48c3e9f63728
 title: Windows Recall Feature Enabled Via Reg.EXE
+id: 817f252c-5143-4dae-b418-48c3e9f63728
 status: experimental
 level: medium
+author: Sajid Nawaz Khan
 description: 'Detects the enabling of the Windows Recall feature via registry manipulation.
 
     Windows Recall can be enabled by deleting the existing "DisableAIDataAnalysis"
@@ -14,20 +15,15 @@ description: 'Detects the enabling of the Windows Recall feature via registry ma
     subsequently enabled by the adversary.
 
     '
-author: Sajid Nawaz Khan
-date: '2024-06-02'
-tags:
-    - attack.collection
-    - attack.t1113
 references:
     - https://learn.microsoft.com/en-us/windows/client-management/manage-recall
     - https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowsai#disableaidataanalysis
 falsepositives:
     - Legitimate use/activation of Windows Recall
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5dfc1465-8f65-4fde-8eb5-6194380c6a62''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''75180c5f-4ea1-461a-a4f6-6e4700c065d4''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1113
+date: '2024-06-02'
 logsource:
     category: process_creation
     product: windows
@@ -46,6 +42,11 @@ detection:
     selection_action_delete:
         CommandLine|contains: delete
     condition: selection_img and selection_value and 1 of selection_action_*
+related:
+    -   id: 5dfc1465-8f65-4fde-8eb5-6194380c6a62
+        type: similar
+    -   id: 75180c5f-4ea1-461a-a4f6-6e4700c065d4
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -53,21 +54,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:34.594680+00:00'
+            mapped_at: '2025-12-04T01:46:59.131438+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:34.594680+00:00'
+            mapped_at: '2025-12-04T01:46:59.131438+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:34.594699+00:00'
+            mapped_at: '2025-12-04T01:46:59.131452+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:34.594702+00:00'
+            mapped_at: '2025-12-04T01:46:59.131454+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:34.594704+00:00'
+            mapped_at: '2025-12-04T01:46:59.131456+00:00'

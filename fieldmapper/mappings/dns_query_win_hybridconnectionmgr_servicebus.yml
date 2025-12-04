@@ -1,21 +1,20 @@
-id: 7bd3902d-8b8b-4dd4-838a-c6862d40150d
 title: DNS HybridConnectionManager Service Bus
+id: 7bd3902d-8b8b-4dd4-838a-c6862d40150d
 status: test
 level: high
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
 description: Detects Azure Hybrid Connection Manager services querying the Azure service
     bus service
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2021-04-12'
-modified: '2023-01-16'
-tags:
-    - attack.persistence
-    - attack.t1554
 references:
     - https://twitter.com/Cyb3rWard0g/status/1381642789369286662
 falsepositives:
     - Legitimate use of Azure Hybrid Connection Manager and the Azure Service Bus
         service
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1554
+date: '2021-04-12'
+modified: '2023-01-16'
 logsource:
     category: dns_query
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:42.411935+00:00'
+            mapped_at: '2025-12-04T01:51:15.697612+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:42.411935+00:00'
+            mapped_at: '2025-12-04T01:51:15.697612+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:42.411964+00:00'
+            mapped_at: '2025-12-04T01:51:15.697635+00:00'
         -   source_field: Image
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:42.411968+00:00'
+            mapped_at: '2025-12-04T01:51:15.697639+00:00'

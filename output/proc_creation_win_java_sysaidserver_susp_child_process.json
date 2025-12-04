@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious SysAidServer Child",
+    "comment": "Detects suspicious child processes of SysAidServer (as seen in MERCURY threat actor intrusions)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\javaw.exe'))) AND contains(lower(process.parent_process.cmd_line), lower('sysaidserver')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes of SysAidServer (as seen in MERCURY threat actor intrusions)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.microsoft.com/security/blog/2022/08/25/mercury-leveraging-log4j-2-vulnerabilities-in-unpatched-systems-to-target-israeli-organizations/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1210"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

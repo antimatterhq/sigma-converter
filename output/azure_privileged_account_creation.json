@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Privileged Account Creation",
+    "comment": "Detects when a new admin is created.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "auditlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(message), lower('add user')) AND contains(lower(message), lower('add member to role')) AND lower(status_code) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a new admin is created.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: A legitimate new admin account being created Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts#changes-to-privileged-accounts",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1078",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "DumpMinitool Execution",
+    "comment": "Detects the use of \"DumpMinitool.exe\" a tool that allows the dump of process memory via the use of the \"MiniDumpWriteDump\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\dumpminitool.exe')) OR endswith(lower(process.name), lower('\\\\dumpminitool.x86.exe')) OR endswith(lower(process.name), lower('\\\\dumpminitool.arm64.exe'))) AND (lower(LOWER(process.file.name)) in ('dumpminitool\\.exe', 'dumpminitool\\.x86\\.exe', 'dumpminitool\\.arm64\\.exe')) AND (contains(lower(process.cmd_line), lower(' full')) OR contains(lower(process.cmd_line), lower(' mini')) OR contains(lower(process.cmd_line), lower(' withheap'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of \"DumpMinitool.exe\" a tool that allows the dump of process memory via the use of the \"MiniDumpWriteDump\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/mrd0x/status/1511415432888131586, https://twitter.com/mrd0x/status/1511489821247684615, https://lolbas-project.github.io/lolbas/OtherMSBinaries/DumpMinitool/, https://gist.github.com/nasbench/6d58c3c125e2fa1b8f7a09754c1b087f",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

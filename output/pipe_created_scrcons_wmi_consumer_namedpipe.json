@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "WMI Event Consumer Created Named Pipe",
+    "comment": "Detects the WMI Event Consumer service scrcons.exe creating a named pipe",
+    "annotations": {
+      "source": "sigma",
+      "category": "pipe_created",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(process.name), lower('\\\\scrcons.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the WMI Event Consumer service scrcons.exe creating a named pipe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/RiccardoAncarani/LiquidSnake",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

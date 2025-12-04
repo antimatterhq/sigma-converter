@@ -1,17 +1,10 @@
-id: aae1243f-d8af-40d8-ab20-33fc6d0c55bc
 title: Suspicious Use of PsLogList
+id: aae1243f-d8af-40d8-ab20-33fc6d0c55bc
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the PsLogList utility to dump event log in order to
     extract admin accounts and perform account discovery or delete events logs
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2021-12-18'
-modified: '2024-03-05'
-tags:
-    - attack.discovery
-    - attack.t1087
-    - attack.t1087.001
-    - attack.t1087.002
 references:
     - https://research.nccgroup.com/2021/01/12/abusing-cloud-services-to-fly-under-the-radar/
     - https://www.cybereason.com/blog/deadringer-exposing-chinese-threat-actors-targeting-major-telcos
@@ -20,7 +13,13 @@ references:
 falsepositives:
     - Another tool that uses the command line switches of PsLogList
     - Legitimate use of PsLogList by an administrator
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1087
+    - attack.t1087.001
+    - attack.t1087.002
+date: '2021-12-18'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -50,21 +49,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:27.180122+00:00'
+            mapped_at: '2025-12-04T01:51:09.651614+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:27.180122+00:00'
+            mapped_at: '2025-12-04T01:51:09.651614+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:27.180145+00:00'
+            mapped_at: '2025-12-04T01:51:09.651631+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:27.180148+00:00'
+            mapped_at: '2025-12-04T01:51:09.651632+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:27.180150+00:00'
+            mapped_at: '2025-12-04T01:51:09.651634+00:00'

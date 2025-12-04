@@ -1,19 +1,18 @@
-id: 37e8d358-6408-4853-82f4-98333fca7014
 title: Remote Access Tool - NetSupport Execution From Unusual Location
+id: 37e8d358-6408-4853-82f4-98333fca7014
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of client32.exe (NetSupport RAT) from an unusual location
     (outside of 'C:\Program Files')
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-19'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
 references:
     - https://redcanary.com/blog/misbehaving-rats/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-09-19'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -35,25 +34,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:57.591873+00:00'
+            mapped_at: '2025-12-04T01:41:26.153109+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:57.591873+00:00'
+            mapped_at: '2025-12-04T01:41:26.153109+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:57.591911+00:00'
+            mapped_at: '2025-12-04T01:41:26.153124+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:25:57.591914+00:00'
+            mapped_at: '2025-12-04T01:41:26.153126+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:57.591916+00:00'
+            mapped_at: '2025-12-04T01:41:26.153128+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:25:57.591918+00:00'
+            mapped_at: '2025-12-04T01:41:26.153129+00:00'

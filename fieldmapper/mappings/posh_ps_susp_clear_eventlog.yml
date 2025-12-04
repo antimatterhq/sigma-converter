@@ -1,14 +1,10 @@
-id: 0f017df3-8f5a-414f-ad6b-24aff1128278
 title: Suspicious Eventlog Clear
+id: 0f017df3-8f5a-414f-ad6b-24aff1128278
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of known powershell cmdlets such as "Clear-EventLog" to
     clear the Windows event logs
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-12'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.001
 references:
     - https://twitter.com/oroneequalsone/status/1568432028361830402
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.001/T1070.001.md
@@ -17,9 +13,10 @@ falsepositives:
     - Rare need to clear logs before doing something. Sometimes used by installers
         or cleaner scripts. The script should be investigated to determine if it's
         legitimate
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cc36992a-4671-4f21-a91d-6c2b72a2edf5''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.001
+date: '2022-09-12'
 logsource:
     category: ps_script
     product: windows
@@ -32,20 +29,23 @@ detection:
             - 'Limit-EventLog '
             - 'Clear-WinEvent '
     condition: selection
+related:
+    -   id: cc36992a-4671-4f21-a91d-6c2b72a2edf5
+        type: derived
 ocsf_mapping:
     class_name: script_activity
-    activity_id: 1
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:06.546810+00:00'
+            mapped_at: '2025-12-04T01:54:21.046819+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:06.546810+00:00'
+            mapped_at: '2025-12-04T01:54:21.046819+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:06.546827+00:00'
+            mapped_at: '2025-12-04T01:54:21.046863+00:00'

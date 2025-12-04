@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Powerup Write Hijack DLL",
+    "comment": "Powerup tool's Write Hijack DLL exploits DLL hijacking for privilege escalation. In it's default mode, it builds a self deleting .bat file which executes malicious command. The detection rule relies on creation of the malicious bat file (debug.bat by default).",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe'))) AND endswith(lower(file.path), lower('.bat')))"
+      }
+    },
+    "output": {
+      "summary": "Powerup tool's Write Hijack DLL exploits DLL hijacking for privilege escalation. In it's default mode, it builds a self deleting .bat file which executes malicious command. The detection rule relies on creation of the malicious bat file (debug.bat by default).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Any powershell script that creates bat files Reference: https://powersploit.readthedocs.io/en/latest/Privesc/Write-HijackDll/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1574",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

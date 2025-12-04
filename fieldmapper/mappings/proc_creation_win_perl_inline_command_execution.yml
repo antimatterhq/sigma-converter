@@ -1,20 +1,19 @@
-id: f426547a-e0f7-441a-b63e-854ac5bdf54d
 title: Perl Inline Command Execution
+id: f426547a-e0f7-441a-b63e-854ac5bdf54d
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of perl using the "-e"/"-E" flags. This is could be
     used as a way to launch a reverse shell or execute live perl code.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-02'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
     - https://www.revshells.com/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2023-01-02'
 logsource:
     category: process_creation
     product: windows
@@ -32,21 +31,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:27.400801+00:00'
+            mapped_at: '2025-12-04T01:43:36.411178+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:27.400801+00:00'
+            mapped_at: '2025-12-04T01:43:36.411178+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:27.400815+00:00'
+            mapped_at: '2025-12-04T01:43:36.411194+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:27.400817+00:00'
+            mapped_at: '2025-12-04T01:43:36.411196+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:27.400819+00:00'
+            mapped_at: '2025-12-04T01:43:36.411197+00:00'

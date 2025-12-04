@@ -1,23 +1,20 @@
-id: ebdf49d8-b89c-46c9-8fdf-2c308406f6bd
 title: Invoke-Obfuscation Via Use Clip - PowerShell Module
+id: ebdf49d8-b89c-46c9-8fdf-2c308406f6bd
 status: test
 level: high
-description: Detects Obfuscated Powershell via use Clip.exe in Scripts
 author: Nikita Nazarov, oscd.community
-date: '2020-10-09'
-modified: '2024-04-05'
+description: Detects Obfuscated Powershell via use Clip.exe in Scripts
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''db92dd33-a3ad-49cf-8c2c-608c3e30ace0''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-09'
+modified: '2024-04-05'
 logsource:
     category: ps_module
     product: windows
@@ -26,6 +23,9 @@ detection:
     selection_4103:
         Payload|re: (?i)echo.*clip.*&&.*(Clipboard|i`?n`?v`?o`?k`?e`?)
     condition: selection_4103
+related:
+    -   id: db92dd33-a3ad-49cf-8c2c-608c3e30ace0
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

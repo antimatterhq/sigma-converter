@@ -1,22 +1,19 @@
-id: 065cceea-77ec-4030-9052-fc0affea7110
 title: DNS Query for Anonfiles.com Domain - Sysmon
+id: 065cceea-77ec-4030-9052-fc0affea7110
 status: test
 level: high
+author: pH-T (Nextron Systems)
 description: Detects DNS queries for "anonfiles.com", which is an anonymous file upload
     platform often used for malicious purposes
-author: pH-T (Nextron Systems)
-date: '2022-07-15'
-modified: '2023-01-16'
-tags:
-    - attack.exfiltration
-    - attack.t1567.002
 references:
     - https://www.trendmicro.com/vinfo/us/security/news/ransomware-spotlight/ransomware-spotlight-blackbyte
 falsepositives:
     - Rare legitimate access to anonfiles.com
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''29f171d7-aa47-42c7-9c7b-3c87938164d9''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+date: '2022-07-15'
+modified: '2023-01-16'
 logsource:
     category: dns_query
     product: windows
@@ -24,6 +21,9 @@ detection:
     selection:
         QueryName|contains: .anonfiles.com
     condition: selection
+related:
+    -   id: 29f171d7-aa47-42c7-9c7b-3c87938164d9
+        type: similar
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -31,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:45.085975+00:00'
+            mapped_at: '2025-12-04T01:51:17.391281+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:45.085975+00:00'
+            mapped_at: '2025-12-04T01:51:17.391281+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:45.085988+00:00'
+            mapped_at: '2025-12-04T01:51:17.391295+00:00'

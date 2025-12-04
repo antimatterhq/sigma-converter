@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "Suspicious WmiPrvSE Child Process",
+    "comment": "Detects suspicious and uncommon child processes of WmiPrvSE",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\wbem\\\\wmiprvse.exe')) AND (endswith(lower(process.name), lower('\\\\certutil.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\msiexec.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\verclsid.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) AND (contains(lower(process.cmd_line), lower('cscript')) OR contains(lower(process.cmd_line), lower('mshta')) OR contains(lower(process.cmd_line), lower('powershell')) OR contains(lower(process.cmd_line), lower('pwsh')) OR contains(lower(process.cmd_line), lower('regsvr32')) OR contains(lower(process.cmd_line), lower('rundll32')) OR contains(lower(process.cmd_line), lower('wscript')))) AND NOT (endswith(lower(process.name), lower('\\\\werfault.exe')) OR endswith(lower(process.name), lower('\\\\wmiprvse.exe')) OR endswith(lower(process.name), lower('\\\\msiexec.exe')) AND contains(lower(process.cmd_line), lower('/i '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious and uncommon child processes of WmiPrvSE",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/, https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml, https://blog.osarmor.com/319/onenote-attachment-delivers-asyncrat-malware/, https://twitter.com/ForensicITGuy/status/1334734244120309760",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

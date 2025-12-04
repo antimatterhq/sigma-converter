@@ -1,19 +1,18 @@
-id: 7d1aaf3d-4304-425c-b7c3-162055e0b3ab
 title: Potential Data Exfiltration Activity Via CommandLine Tools
+id: 7d1aaf3d-4304-425c-b7c3-162055e0b3ab
 status: test
 level: high
-description: Detects the use of various CLI utilities exfiltrating data via web requests
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-02'
-modified: '2023-07-27'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects the use of various CLI utilities exfiltrating data via web requests
 references:
     - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2022-08-02'
+modified: '2023-07-27'
 logsource:
     category: process_creation
     product: windows
@@ -73,17 +72,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:59.613224+00:00'
+            mapped_at: '2025-12-04T01:46:30.185745+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:59.613224+00:00'
+            mapped_at: '2025-12-04T01:46:30.185745+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:59.613236+00:00'
+            mapped_at: '2025-12-04T01:46:30.185760+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:59.613238+00:00'
+            mapped_at: '2025-12-04T01:46:30.185762+00:00'

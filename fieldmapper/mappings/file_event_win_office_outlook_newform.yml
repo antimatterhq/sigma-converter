@@ -1,15 +1,10 @@
-id: c3edc6a5-d9d4-48d8-930e-aab518390917
 title: Potential Persistence Via Outlook Form
+id: c3edc6a5-d9d4-48d8-930e-aab518390917
 status: test
 level: high
+author: Tobias Michalski (Nextron Systems)
 description: Detects the creation of a new Outlook form which can contain malicious
     code
-author: Tobias Michalski (Nextron Systems)
-date: '2021-06-10'
-modified: '2023-02-22'
-tags:
-    - attack.persistence
-    - attack.t1137.003
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=76
     - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=79
@@ -17,7 +12,11 @@ references:
     - https://www.slipstick.com/developer/custom-form/clean-outlooks-forms-cache/
 falsepositives:
     - Legitimate use of outlook forms
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1137.003
+date: '2021-06-10'
+modified: '2023-02-22'
 logsource:
     category: file_event
     product: windows
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:36.148331+00:00'
+            mapped_at: '2025-12-04T01:53:12.620115+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:36.148331+00:00'
+            mapped_at: '2025-12-04T01:53:12.620115+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:36.148361+00:00'
+            mapped_at: '2025-12-04T01:53:12.620127+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:36.148365+00:00'
+            mapped_at: '2025-12-04T01:53:12.620129+00:00'

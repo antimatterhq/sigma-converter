@@ -1,14 +1,9 @@
-id: 83809e84-4475-4b69-bc3e-4aad8568612f
 title: MSExchange Transport Agent Installation
+id: 83809e84-4475-4b69-bc3e-4aad8568612f
 status: test
 level: medium
-description: Detects the Installation of a Exchange Transport Agent
 author: Tobias Michalski (Nextron Systems)
-date: '2021-06-08'
-modified: '2022-10-09'
-tags:
-    - attack.persistence
-    - attack.t1505.002
+description: Detects the Installation of a Exchange Transport Agent
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=7
 fields:
@@ -16,9 +11,11 @@ fields:
 falsepositives:
     - Legitimate installations of exchange TransportAgents. AssemblyPath is a good
         indicator for this.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''83809e84-4475-4b69-bc3e-4aad8568612f''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1505.002
+date: '2021-06-08'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -26,6 +23,9 @@ detection:
     selection:
         CommandLine|contains: Install-TransportAgent
     condition: selection
+related:
+    -   id: 83809e84-4475-4b69-bc3e-4aad8568612f
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -33,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:32.109416+00:00'
+            mapped_at: '2025-12-04T01:48:32.960906+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:32.109416+00:00'
+            mapped_at: '2025-12-04T01:48:32.960906+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:32.109428+00:00'
+            mapped_at: '2025-12-04T01:48:32.960919+00:00'

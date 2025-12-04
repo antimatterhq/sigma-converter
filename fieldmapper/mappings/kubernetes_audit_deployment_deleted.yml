@@ -1,21 +1,20 @@
-id: 40967487-139b-4811-81d9-c9767a92aa5a
 title: Deployment Deleted From Kubernetes Cluster
+id: 40967487-139b-4811-81d9-c9767a92aa5a
 status: experimental
 level: low
+author: Leo Tsaousis (@laripping)
 description: 'Detects the removal of a deployment from a Kubernetes cluster.
 
     This could indicate disruptive activity aiming to impact business operations.
 
     '
-author: Leo Tsaousis (@laripping)
-date: '2024-03-26'
-tags:
-    - attack.t1498
 references:
     - https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Data%20destruction/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1498
+date: '2024-03-26'
 logsource:
     category: application
     product: kubernetes
@@ -32,21 +31,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:50.474943+00:00'
+            mapped_at: '2025-12-04T01:40:04.974724+00:00'
         product:
             source_field: product
             source_value: kubernetes
-            mapped_at: '2025-11-26T02:23:50.474943+00:00'
+            mapped_at: '2025-12-04T01:40:04.974724+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:50.474943+00:00'
+            mapped_at: '2025-12-04T01:40:04.974724+00:00'
     detection_fields:
         -   source_field: verb
             target_table: api_activity
             target_field: api.operation
-            mapped_at: '2025-11-26T02:23:50.474958+00:00'
+            mapped_at: '2025-12-04T01:40:04.974738+00:00'
         -   source_field: objectRef.resource
             target_table: api_activity
             target_field: resources.name
-            mapped_at: '2025-11-26T02:23:50.474960+00:00'
+            mapped_at: '2025-12-04T01:40:04.974740+00:00'

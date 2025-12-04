@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Linux HackTool Execution",
+    "comment": "Detects known hacktool execution based on image name.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/crackmapexec')) OR endswith(lower(process.name), lower('/havoc')) OR endswith(lower(process.name), lower('/merlin-agent')) OR endswith(lower(process.name), lower('/merlinserver-linux-x64')) OR endswith(lower(process.name), lower('/msfconsole')) OR endswith(lower(process.name), lower('/msfvenom')) OR endswith(lower(process.name), lower('/ps-empire server')) OR endswith(lower(process.name), lower('/ps-empire')) OR endswith(lower(process.name), lower('/sliver-client')) OR endswith(lower(process.name), lower('/sliver-server')) OR endswith(lower(process.name), lower('/villain.py')) OR contains(lower(process.name), lower('/cobaltstrike')) OR contains(lower(process.name), lower('/teamserver')) OR endswith(lower(process.name), lower('/autorecon')) OR endswith(lower(process.name), lower('/httpx')) OR endswith(lower(process.name), lower('/legion')) OR endswith(lower(process.name), lower('/naabu')) OR endswith(lower(process.name), lower('/netdiscover')) OR endswith(lower(process.name), lower('/nuclei')) OR endswith(lower(process.name), lower('/recon-ng')) OR contains(lower(process.name), lower('/sniper')) OR endswith(lower(process.name), lower('/dirb')) OR endswith(lower(process.name), lower('/dirbuster')) OR endswith(lower(process.name), lower('/eyewitness')) OR endswith(lower(process.name), lower('/feroxbuster')) OR endswith(lower(process.name), lower('/ffuf')) OR endswith(lower(process.name), lower('/gobuster')) OR endswith(lower(process.name), lower('/wfuzz')) OR endswith(lower(process.name), lower('/whatweb')) OR endswith(lower(process.name), lower('/joomscan')) OR endswith(lower(process.name), lower('/nikto')) OR endswith(lower(process.name), lower('/wpscan')) OR endswith(lower(process.name), lower('/aircrack-ng')) OR endswith(lower(process.name), lower('/bloodhound-python')) OR endswith(lower(process.name), lower('/bpfdos')) OR endswith(lower(process.name), lower('/ebpfki')) OR endswith(lower(process.name), lower('/evil-winrm')) OR endswith(lower(process.name), lower('/hashcat')) OR endswith(lower(process.name), lower('/hoaxshell.py')) OR endswith(lower(process.name), lower('/hydra')) OR endswith(lower(process.name), lower('/john')) OR endswith(lower(process.name), lower('/ncrack')) OR endswith(lower(process.name), lower('/nxc-ubuntu-latest')) OR endswith(lower(process.name), lower('/pidhide')) OR endswith(lower(process.name), lower('/pspy32')) OR endswith(lower(process.name), lower('/pspy32s')) OR endswith(lower(process.name), lower('/pspy64')) OR endswith(lower(process.name), lower('/pspy64s')) OR endswith(lower(process.name), lower('/setoolkit')) OR endswith(lower(process.name), lower('/sqlmap')) OR endswith(lower(process.name), lower('/writeblocker')) OR contains(lower(process.name), lower('/linpeas'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects known hacktool execution based on image name.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://github.com/Gui774ume/ebpfkit, https://github.com/pathtofile/bad-bpf, https://github.com/carlospolop/PEASS-ng, https://github.com/t3l3machus/hoaxshell, https://github.com/t3l3machus/Villain, https://github.com/HavocFramework/Havoc, https://github.com/1N3/Sn1per, https://github.com/Ne0nd0g/merlin, https://github.com/Pennyw0rth/NetExec/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1587"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,25 +1,24 @@
-id: 74babdd6-a758-4549-9632-26535279e654
 title: Suspicious Executable File Creation
+id: 74babdd6-a758-4549-9632-26535279e654
 status: test
 level: high
+author: frack113
 description: 'Detect creation of suspicious executable file names.
 
     Some strings look for suspicious file extensions, others look for filenames that
     exploit unquoted service paths.
 
     '
-author: frack113
-date: '2022-09-05'
-modified: '2023-12-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1564
 references:
     - https://medium.com/@SumitVerma101/windows-privilege-escalation-part-1-unquoted-service-path-c7a011a8d8ae
     - https://app.any.run/tasks/76c69e2d-01e8-49d9-9aea-fb7cc0c4d3ad/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564
+date: '2022-09-05'
+modified: '2023-12-11'
 logsource:
     category: file_event
     product: windows
@@ -41,13 +40,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:28.065716+00:00'
+            mapped_at: '2025-12-04T01:52:20.462161+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:28.065716+00:00'
+            mapped_at: '2025-12-04T01:52:20.462161+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:28.065739+00:00'
+            mapped_at: '2025-12-04T01:52:20.462245+00:00'

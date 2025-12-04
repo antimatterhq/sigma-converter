@@ -1,21 +1,20 @@
-id: 5f9c7f1a-7c21-4c39-b2f3-8d8006e0e51f
 title: PowerShell Web Access Installation - PsScript
+id: 5f9c7f1a-7c21-4c39-b2f3-8d8006e0e51f
 status: test
 level: high
+author: Michael Haag
 description: Detects the installation and configuration of PowerShell Web Access,
     which could be used for remote access and potential abuse
-author: Michael Haag
-date: '2024-09-03'
-tags:
-    - attack.persistence
-    - attack.t1059.001
 references:
     - https://docs.microsoft.com/en-us/powershell/module/powershellwebaccess/install-pswawebapplication
     - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-241a
     - https://gist.github.com/MHaggis/7e67b659af9148fa593cf2402edebb41
 falsepositives:
     - Legitimate PowerShell Web Access installations by administrators
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1059.001
+date: '2024-09-03'
 logsource:
     category: ps_script
     product: windows
@@ -38,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:25.762014+00:00'
+            mapped_at: '2025-12-04T01:53:45.693256+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:25.762014+00:00'
+            mapped_at: '2025-12-04T01:53:45.693256+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:25.762025+00:00'
+            mapped_at: '2025-12-04T01:53:45.693269+00:00'

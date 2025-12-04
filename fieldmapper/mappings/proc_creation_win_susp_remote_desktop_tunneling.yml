@@ -1,20 +1,19 @@
-id: 8a3038e8-9c9d-46f8-b184-66234a160f6f
 title: Potential Remote Desktop Tunneling
+id: 8a3038e8-9c9d-46f8-b184-66234a160f6f
 status: test
 level: medium
+author: Tim Rauch, Elastic (idea)
 description: Detects potential use of an SSH utility to establish RDP over a reverse
     SSH Tunnel. This can be used by attackers to enable routing of network packets
     that would otherwise not reach their intended destination.
-author: Tim Rauch, Elastic (idea)
-date: '2022-09-27'
-tags:
-    - attack.lateral-movement
-    - attack.t1021
 references:
     - https://www.elastic.co/guide/en/security/current/potential-remote-desktop-tunneling-detected.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021
+date: '2022-09-27'
 logsource:
     category: process_creation
     product: windows
@@ -36,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:43.561296+00:00'
+            mapped_at: '2025-12-04T01:47:56.995499+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:43.561296+00:00'
+            mapped_at: '2025-12-04T01:47:56.995499+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:43.561312+00:00'
+            mapped_at: '2025-12-04T01:47:56.995515+00:00'

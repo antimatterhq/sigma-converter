@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Schtasks From Suspicious Folders",
+    "comment": "Detects scheduled task creations that have suspicious action command and folder combinations",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\schtasks.exe')) AND lower(process.file.name) = lower('schtasks.exe') AND contains(lower(process.cmd_line), lower(' /create ')) AND (contains(lower(process.cmd_line), lower('powershell')) OR contains(lower(process.cmd_line), lower('pwsh')) OR contains(lower(process.cmd_line), lower('cmd /c ')) OR contains(lower(process.cmd_line), lower('cmd /k ')) OR contains(lower(process.cmd_line), lower('cmd /r ')) OR contains(lower(process.cmd_line), lower('cmd.exe /c ')) OR contains(lower(process.cmd_line), lower('cmd.exe /k ')) OR contains(lower(process.cmd_line), lower('cmd.exe /r '))) AND (contains(lower(process.cmd_line), lower('c:\\\\programdata\\\\')) OR contains(lower(process.cmd_line), lower('%programdata%'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects scheduled task creations that have suspicious action command and folder combinations",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/lazarus-dream-job-chemical",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

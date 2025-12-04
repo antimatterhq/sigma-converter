@@ -1,21 +1,20 @@
-id: 1a2ea919-d11d-4d1e-8535-06cda13be20f
 title: Triple Cross eBPF Rootkit Default Persistence
+id: 1a2ea919-d11d-4d1e-8535-06cda13be20f
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation of "ebpfbackdoor" files in both "cron.d" and "sudoers.d"
     directories. Which both are related to the TripleCross persistence method
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-05'
-modified: '2022-12-31'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
-    - attack.t1053.003
 references:
     - https://github.com/h3xduck/TripleCross/blob/12629558b8b0a27a5488a0b98f1ea7042e76f8ab/apps/deployer.sh
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.t1053.003
+date: '2022-07-05'
+modified: '2022-12-31'
 logsource:
     category: file_event
     product: linux
@@ -30,13 +29,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:15:26.360353+00:00'
+            mapped_at: '2025-12-04T01:35:21.660059+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:26.360353+00:00'
+            mapped_at: '2025-12-04T01:35:21.660059+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:15:26.360371+00:00'
+            mapped_at: '2025-12-04T01:35:21.660079+00:00'

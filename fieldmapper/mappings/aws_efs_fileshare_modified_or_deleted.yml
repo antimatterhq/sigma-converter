@@ -1,7 +1,8 @@
-id: 25cb1ba1-8a19-4a23-a198-d252664c8cef
 title: AWS EFS Fileshare Modified or Deleted
+id: 25cb1ba1-8a19-4a23-a198-d252664c8cef
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: 'Detects when a EFS Fileshare is modified or deleted.
 
     You can''t delete a file system that is in use.
@@ -10,16 +11,14 @@ description: 'Detects when a EFS Fileshare is modified or deleted.
     so deletion of a mount will occur before deletion of a fileshare.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-08-15'
-modified: '2022-10-09'
-tags:
-    - attack.impact
 references:
     - https://docs.aws.amazon.com/efs/latest/ug/API_DeleteFileSystem.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-15'
+modified: '2022-10-09'
 logsource:
     product: aws
     service: cloudtrail
@@ -35,17 +34,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:51.615022+00:00'
+            mapped_at: '2025-12-04T01:39:25.670512+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:51.615022+00:00'
+            mapped_at: '2025-12-04T01:39:25.670512+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:51.615039+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:25.670525+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:51.615041+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:25.670527+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Access to Browser Login Data",
+    "comment": "Adversaries may acquire credentials from web browsers by reading files specific to the target browser. Web browsers commonly save credentials such as website usernames and passwords so that they do not need to be entered manually in the future. Web browsers typically store the credentials in an encrypted format within a credential store.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('copy-item')) AND contains(lower(script.script_content.value), lower('-destination')) AND (contains(lower(script.script_content.value), lower('\\\\opera software\\\\opera stable\\\\login data')) OR contains(lower(script.script_content.value), lower('\\\\mozilla\\\\firefox\\\\profiles')) OR contains(lower(script.script_content.value), lower('\\\\microsoft\\\\edge\\\\user data\\\\default')) OR contains(lower(script.script_content.value), lower('\\\\google\\\\chrome\\\\user data\\\\default\\\\login data')) OR contains(lower(script.script_content.value), lower('\\\\google\\\\chrome\\\\user data\\\\default\\\\login data for account'))))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may acquire credentials from web browsers by reading files specific to the target browser. Web browsers commonly save credentials such as website usernames and passwords so that they do not need to be entered manually in the future. Web browsers typically store the credentials in an encrypted format within a credential store.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.003/T1555.003.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1555",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Change PowerShell Policies to an Insecure Level - PowerShell",
+    "comment": "Detects changing the PowerShell script execution policy to a potentially insecure level using the \"Set-ExecutionPolicy\" cmdlet.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('set-executionpolicy')) AND (contains(lower(script.script_content.value), lower('unrestricted')) OR contains(lower(script.script_content.value), lower('bypass'))) AND NOT (contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(\\'https://community.chocolatey.org/install.ps1\\')')) OR contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(\\'https://chocolatey.org/install.ps1\\')'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects changing the PowerShell script execution policy to a potentially insecure level using the \"Set-ExecutionPolicy\" cmdlet.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrator script References: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4, https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4, https://adsecurity.org/?p=2604",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

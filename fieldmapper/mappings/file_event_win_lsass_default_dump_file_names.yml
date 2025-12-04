@@ -1,16 +1,11 @@
-id: a5a2d357-1ab8-4675-a967-ef9990a59391
 title: LSASS Process Memory Dump Files
+id: a5a2d357-1ab8-4675-a967-ef9990a59391
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects creation of files with names used by different memory dumping
     tools to create a memory dump of the LSASS process memory, which contains user
     credentials.
-author: Florian Roth (Nextron Systems)
-date: '2021-11-15'
-modified: '2024-10-08'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://www.google.com/search?q=procdump+lsass
     - https://medium.com/@markmotig/some-ways-to-dump-lsass-exe-c4a75fdc49bf
@@ -22,10 +17,11 @@ references:
     - https://github.com/ricardojoserf/NativeDump/blob/01d8cd17f31f51f5955a38e85cd3c83a17596175/NativeDump/Program.cs#L258
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''db2110f3-479d-42a6-94fb-d35bc1e46492''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''5e3d3601-0662-4af0-b1d2-36a05e90c40a''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2021-11-15'
+modified: '2024-10-08'
 logsource:
     category: file_event
     product: windows
@@ -58,6 +54,11 @@ detection:
             - \proc_
         TargetFilename|endswith: .dmp
     condition: 1 of selection_*
+related:
+    -   id: db2110f3-479d-42a6-94fb-d35bc1e46492
+        type: obsolete
+    -   id: 5e3d3601-0662-4af0-b1d2-36a05e90c40a
+        type: obsolete
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -65,13 +66,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:58.387051+00:00'
+            mapped_at: '2025-12-04T01:52:44.322919+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:58.387051+00:00'
+            mapped_at: '2025-12-04T01:52:44.322919+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:58.387106+00:00'
+            mapped_at: '2025-12-04T01:52:44.322936+00:00'

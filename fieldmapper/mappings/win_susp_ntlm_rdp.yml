@@ -1,15 +1,10 @@
-id: ce5678bb-b9aa-4fb5-be4b-e57f686256ad
 title: Potential Remote Desktop Connection to Non-Domain Host
+id: ce5678bb-b9aa-4fb5-be4b-e57f686256ad
 status: test
 level: medium
+author: James Pemberton
 description: Detects logons using NTLM to hosts that are potentially not part of the
     domain.
-author: James Pemberton
-date: '2020-05-22'
-modified: '2021-11-27'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - n/a
 fields:
@@ -21,7 +16,11 @@ falsepositives:
     - Host connections to valid domains, exclude these.
     - Host connections not using host FQDN.
     - Host connections to external legitimate domains.
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2020-05-22'
+modified: '2021-11-27'
 logsource:
     product: windows
     service: ntlm
@@ -38,17 +37,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:45.117335+00:00'
+            mapped_at: '2025-12-04T01:56:24.102114+00:00'
         service:
             source_field: service
             source_value: ntlm
-            mapped_at: '2025-11-26T02:46:45.117335+00:00'
+            mapped_at: '2025-12-04T01:56:24.102114+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: file_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:45.117348+00:00'
+            mapped_at: '2025-12-04T01:56:24.102128+00:00'
         -   source_field: TargetName
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:46:45.117350+00:00'
+            mapped_at: '2025-12-04T01:56:24.102129+00:00'

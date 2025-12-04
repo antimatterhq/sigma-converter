@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Active Directory Computers Enumeration With Get-AdComputer",
+    "comment": "Detects usage of the \"Get-AdComputer\" to enumerate Computers or properties within Active Directory.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('get-adcomputer ')) AND (contains(lower(script.script_content.value), lower('-filter ')) OR contains(lower(script.script_content.value), lower('-ldapfilter ')) OR contains(lower(script.script_content.value), lower('-properties '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the \"Get-AdComputer\" to enumerate Computers or properties within Active Directory.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/powershell/module/activedirectory/get-adcomputer, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md, https://github.com/redcanaryco/atomic-red-team/blob/02cb591f75064ffe1e0df9ac3ed5972a2e491c97/atomics/T1087.002/T1087.002.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1018"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "AWS EC2 Disable EBS Encryption",
+    "comment": "Identifies disabling of default Amazon Elastic Block Store (EBS) encryption in the current region. Disabling default encryption does not change the encryption status of your existing volumes.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('ec2.amazonaws.com') AND lower(metadata.event_code) = lower('disableebsencryptionbydefault'))"
+      }
+    },
+    "output": {
+      "summary": "Identifies disabling of default Amazon Elastic Block Store (EBS) encryption in the current region. Disabling default encryption does not change the encryption status of your existing volumes.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. System Administrator Activities 2. DEV, UAT, SAT environment. You should apply this rule with PROD account only. Reference: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DisableEbsEncryptionByDefault.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1486"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1565"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

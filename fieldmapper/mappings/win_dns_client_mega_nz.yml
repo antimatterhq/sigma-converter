@@ -1,20 +1,17 @@
-id: 66474410-b883-415f-9f8d-75345a0a66a6
 title: DNS Query To MEGA Hosting Website - DNS Client
+id: 66474410-b883-415f-9f8d-75345a0a66a6
 status: test
 level: medium
-description: Detects DNS queries for subdomains related to MEGA sharing website
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-16'
-tags:
-    - attack.exfiltration
-    - attack.t1567.002
+description: Detects DNS queries for subdomains related to MEGA sharing website
 references:
     - https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/
 falsepositives:
     - Legitimate DNS queries and usage of Mega
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''613c03ba-0779-4a53-8a1f-47f914a4ded3''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+date: '2023-01-16'
 logsource:
     product: windows
     service: dns-client
@@ -25,6 +22,9 @@ detection:
         EventID: 3008
         QueryName|contains: userstorage.mega.co.nz
     condition: selection
+related:
+    -   id: 613c03ba-0779-4a53-8a1f-47f914a4ded3
+        type: similar
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -32,17 +32,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:20.508122+00:00'
+            mapped_at: '2025-12-04T01:56:41.344479+00:00'
         service:
             source_field: service
             source_value: dns-client
-            mapped_at: '2025-11-26T02:47:20.508122+00:00'
+            mapped_at: '2025-12-04T01:56:41.344479+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: dns_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:20.508153+00:00'
+            mapped_at: '2025-12-04T01:56:41.344518+00:00'
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:47:20.508157+00:00'
+            mapped_at: '2025-12-04T01:56:41.344524+00:00'

@@ -1,7 +1,8 @@
-id: f8ed0e8f-7438-4b79-85eb-f358ef2fbebd
 title: Github Self Hosted Runner Changes Detected
+id: f8ed0e8f-7438-4b79-85eb-f358ef2fbebd
 status: test
 level: low
+author: Muhammad Faisal (@faisalusuf)
 description: 'A self-hosted runner is a system that you deploy and manage to execute
     jobs from GitHub Actions on GitHub.com.
 
@@ -12,8 +13,15 @@ description: 'A self-hosted runner is a system that you deploy and manage to exe
     context.
 
     '
-author: Muhammad Faisal (@faisalusuf)
-date: '2023-01-27'
+references:
+    - https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#about-self-hosted-runners
+    - https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#search-based-on-operation
+falsepositives:
+    - Allowed self-hosted runners changes in the environment.
+    - A self-hosted runner is automatically removed from GitHub if it has not connected
+        to GitHub Actions for more than 14 days.
+    - An ephemeral self-hosted runner is automatically removed from GitHub if it has
+        not connected to GitHub Actions for more than 1 day.
 tags:
     - attack.impact
     - attack.discovery
@@ -25,16 +33,7 @@ tags:
     - attack.t1526
     - attack.t1213.003
     - attack.t1078.004
-references:
-    - https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#about-self-hosted-runners
-    - https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#search-based-on-operation
-falsepositives:
-    - Allowed self-hosted runners changes in the environment.
-    - A self-hosted runner is automatically removed from GitHub if it has not connected
-        to GitHub Actions for more than 14 days.
-    - An ephemeral self-hosted runner is automatically removed from GitHub if it has
-        not connected to GitHub Actions for more than 1 day.
-taxonomy: sigma
+date: '2023-01-27'
 logsource:
     product: github
     service: audit
@@ -61,13 +60,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: github
-            mapped_at: '2025-11-26T02:18:14.675994+00:00'
+            mapped_at: '2025-12-04T01:37:05.998445+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:18:14.675994+00:00'
+            mapped_at: '2025-12-04T01:37:05.998445+00:00'
     detection_fields:
         -   source_field: action
             target_table: vulnerability_finding
             target_field: action
-            mapped_at: '2025-11-26T02:18:14.676039+00:00'
+            mapped_at: '2025-12-04T01:37:05.998459+00:00'

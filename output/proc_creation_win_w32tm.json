@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Use of W32tm as Timer",
+    "comment": "When configured with suitable command line arguments, w32tm can act as a delay mechanism",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\w32tm.exe')) AND lower(process.file.name) = lower('w32time.dll') AND contains(lower(process.cmd_line), lower('/stripchart')) AND contains(lower(process.cmd_line), lower('/computer:')) AND contains(lower(process.cmd_line), lower('/period:')) AND contains(lower(process.cmd_line), lower('/dataonly')) AND contains(lower(process.cmd_line), lower('/samples:')))"
+      }
+    },
+    "output": {
+      "summary": "When configured with suitable command line arguments, w32tm can act as a delay mechanism",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use References: https://github.com/redcanaryco/atomic-red-team/blob/d0dad62dbcae9c60c519368e82c196a3db577055/atomics/T1124/T1124.md, https://blogs.blackberry.com/en/2022/05/dirty-deeds-done-dirt-cheap-russian-rat-offers-backdoor-bargains",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1124"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

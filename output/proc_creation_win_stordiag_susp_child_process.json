@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Execution via stordiag.exe",
+    "comment": "Detects the use of stordiag.exe to execute schtasks.exe systeminfo.exe and fltmc.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\stordiag.exe')) AND (endswith(lower(process.name), lower('\\\\schtasks.exe')) OR endswith(lower(process.name), lower('\\\\systeminfo.exe')) OR endswith(lower(process.name), lower('\\\\fltmc.exe'))) AND NOT (startswith(lower(process.parent_process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(process.parent_process.name), lower('c:\\\\windows\\\\syswow64\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of stordiag.exe to execute schtasks.exe systeminfo.exe and fltmc.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of stordiag.exe. References: https://strontic.github.io/xcyclopedia/library/stordiag.exe-1F08FC87C373673944F6A7E8B18CD845.html, https://twitter.com/eral4m/status/1451112385041911809",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Fsutil Drive Enumeration",
+    "comment": "Attackers may leverage fsutil to enumerated connected drives.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\fsutil.exe')) AND lower(process.file.name) = lower('fsutil.exe') AND contains(lower(process.cmd_line), lower('drives')))"
+      }
+    },
+    "output": {
+      "summary": "Attackers may leverage fsutil to enumerated connected drives.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Certain software or administrative tasks may trigger false positives. References: Turla has used fsutil fsinfo drives to list connected drives., https://github.com/elastic/detection-rules/blob/414d32027632a49fb239abb8fbbb55d3fa8dd861/rules/windows/discovery_peripheral_device.toml",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1120"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

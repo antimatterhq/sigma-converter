@@ -1,16 +1,10 @@
-id: 025c9fe7-db72-49f9-af0d-31341dd7dd57
 title: Azure Firewall Rule Collection Modified or Deleted
+id: 025c9fe7-db72-49f9-af0d-31341dd7dd57
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Identifies when Rule Collections (Application, NAT, and Network) is being
     modified or deleted.
-author: Austin Songer @austinsonger
-date: '2021-08-08'
-modified: '2022-08-23'
-tags:
-    - attack.impact
-    - attack.defense-evasion
-    - attack.t1562.004
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
 falsepositives:
@@ -20,7 +14,12 @@ falsepositives:
     - Rule Collections (Application, NAT, and Network) modified or deleted from unfamiliar
         users should be investigated. If known behavior is causing false positives,
         it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.defense-evasion
+    - attack.t1562.004
+date: '2021-08-08'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -41,13 +40,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:00.932762+00:00'
+            mapped_at: '2025-12-04T01:38:26.612047+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:00.932762+00:00'
+            mapped_at: '2025-12-04T01:38:26.612047+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:00.932781+00:00'
+            mapped_at: '2025-12-04T01:38:26.612063+00:00'

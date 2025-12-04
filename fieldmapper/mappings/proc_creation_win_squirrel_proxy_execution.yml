@@ -1,20 +1,14 @@
-id: 45239e6a-b035-4aaf-b339-8ad379fcb67e
 title: Process Proxy Execution Via Squirrel.EXE
+id: 45239e6a-b035-4aaf-b339-8ad379fcb67e
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), Karneades / Markus Neis, Jonhnathan
+    Ribeiro, oscd.community
 description: 'Detects the usage of the "Squirrel.exe" binary to execute arbitrary
     processes. This binary is part of multiple Electron based software installations
     (Slack, Teams, Discord, etc.)
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Karneades / Markus Neis, Jonhnathan
-    Ribeiro, oscd.community
-date: '2022-06-09'
-modified: '2023-11-09'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Squirrel/
     - http://www.hexacorn.com/blog/2019/03/30/sqirrel-packages-manager-as-a-lolbin-a-k-a-many-electron-apps-are-lolbins-by-default/
@@ -22,10 +16,12 @@ references:
 falsepositives:
     - Expected FP with some Electron based applications such as (1Clipboard, Beaker
         Browser, Caret, Discord, GitHub Desktop, etc.)
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1e75c1cc-c5d4-42aa-ac3d-91b0b68b3b4c''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''fa4b21c9-0057-4493-b289-2556416ae4d7''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+date: '2022-06-09'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -70,6 +66,11 @@ detection:
             - --processStart
             - --createShortcut
     condition: all of selection_* and not 1 of filter_optional_*
+related:
+    -   id: 1e75c1cc-c5d4-42aa-ac3d-91b0b68b3b4c
+        type: similar
+    -   id: fa4b21c9-0057-4493-b289-2556416ae4d7
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -77,17 +78,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:54.740266+00:00'
+            mapped_at: '2025-12-04T01:50:36.234252+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:54.740266+00:00'
+            mapped_at: '2025-12-04T01:50:36.234252+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:54.740278+00:00'
+            mapped_at: '2025-12-04T01:50:36.234275+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:54.740280+00:00'
+            mapped_at: '2025-12-04T01:50:36.234277+00:00'

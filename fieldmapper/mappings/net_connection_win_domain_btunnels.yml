@@ -1,7 +1,8 @@
-id: 9e02c8ec-02b9-43e8-81eb-34a475ba7965
 title: Network Connection Initiated To BTunnels Domains
+id: 9e02c8ec-02b9-43e8-81eb-34a475ba7965
 status: experimental
 level: medium
+author: Kamran Saifullah
 description: 'Detects network connections to BTunnels domains initiated by a process
     on the system.
 
@@ -9,16 +10,14 @@ description: 'Detects network connections to BTunnels domains initiated by a pro
     a machine.
 
     '
-author: Kamran Saifullah
-date: '2024-09-13'
-tags:
-    - attack.exfiltration
-    - attack.t1567.001
 references:
     - https://defr0ggy.github.io/research/Utilizing-BTunnel-For-Data-Exfiltration/
 falsepositives:
     - Legitimate use of BTunnels will also trigger this.
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567.001
+date: '2024-09-13'
 logsource:
     category: network_connection
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:38.615427+00:00'
+            mapped_at: '2025-12-04T01:51:42.309398+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:38.615427+00:00'
+            mapped_at: '2025-12-04T01:51:42.309398+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:38.615448+00:00'
+            mapped_at: '2025-12-04T01:51:42.309459+00:00'
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:38.615451+00:00'
+            mapped_at: '2025-12-04T01:51:42.309476+00:00'

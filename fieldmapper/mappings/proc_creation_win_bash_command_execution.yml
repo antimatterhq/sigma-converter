@@ -1,26 +1,23 @@
-id: 5edc2273-c26f-406c-83f3-f4d948e740dd
 title: Indirect Inline Command Execution Via Bash.EXE
+id: 5edc2273-c26f-406c-83f3-f4d948e740dd
 status: test
 level: medium
+author: frack113
 description: 'Detects execution of Microsoft bash launcher with the "-c" flag.
 
     This can be used to potentially bypass defenses and execute Linux or Windows-based
     binaries directly via bash.
 
     '
-author: frack113
-date: '2021-11-24'
-modified: '2023-08-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1202
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Bash/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''2d22a514-e024-4428-9dba-41505bd63a5b''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+date: '2021-11-24'
+modified: '2023-08-15'
 logsource:
     category: process_creation
     product: windows
@@ -33,6 +30,9 @@ detection:
     selection_cli:
         CommandLine|contains: ' -c '
     condition: all of selection_*
+related:
+    -   id: 2d22a514-e024-4428-9dba-41505bd63a5b
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -40,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:31.604967+00:00'
+            mapped_at: '2025-12-04T01:43:39.733597+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:31.604967+00:00'
+            mapped_at: '2025-12-04T01:43:39.733597+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:31.604980+00:00'
+            mapped_at: '2025-12-04T01:43:39.733615+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:31.604982+00:00'
+            mapped_at: '2025-12-04T01:43:39.733617+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:31.604983+00:00'
+            mapped_at: '2025-12-04T01:43:39.733618+00:00'

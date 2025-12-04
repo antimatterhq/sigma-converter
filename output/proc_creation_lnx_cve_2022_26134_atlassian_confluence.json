@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Atlassian Confluence CVE-2022-26134",
+    "comment": "Detects spawning of suspicious child processes by Atlassian Confluence server which may indicate successful exploitation of CVE-2022-26134",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND startswith(lower(process.parent_process.name), lower('/opt/atlassian/confluence/')) AND endswith(lower(process.parent_process.name), lower('/java')) AND (contains(lower(process.cmd_line), lower('/bin/sh')) OR contains(lower(process.cmd_line), lower('bash')) OR contains(lower(process.cmd_line), lower('dash')) OR contains(lower(process.cmd_line), lower('ksh')) OR contains(lower(process.cmd_line), lower('zsh')) OR contains(lower(process.cmd_line), lower('csh')) OR contains(lower(process.cmd_line), lower('fish')) OR contains(lower(process.cmd_line), lower('curl')) OR contains(lower(process.cmd_line), lower('wget')) OR contains(lower(process.cmd_line), lower('python'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects spawning of suspicious child processes by Atlassian Confluence server which may indicate successful exploitation of CVE-2022-26134",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1190"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

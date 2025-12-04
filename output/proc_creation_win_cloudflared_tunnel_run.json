@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "name": "Cloudflared Tunnel Execution",
+    "comment": "Detects execution of the \"cloudflared\" tool to connect back to a tunnel. This was seen used by threat actors to maintain persistence and remote access to compromised networks.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower(' tunnel ')) AND contains(lower(process.cmd_line), lower(' run ')) AND (contains(lower(process.cmd_line), lower('-config ')) OR contains(lower(process.cmd_line), lower('-credentials-contents ')) OR contains(lower(process.cmd_line), lower('-credentials-file ')) OR contains(lower(process.cmd_line), lower('-token '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the \"cloudflared\" tool to connect back to a tunnel. This was seen used by threat actors to maintain persistence and remote access to compromised networks.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of Cloudflared tunnel. References: https://blog.reconinfosec.com/emergence-of-akira-ransomware-group, https://github.com/cloudflare/cloudflared, https://developers.cloudflare.com/cloudflare-one/connections/connect-apps",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1102"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1090"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1572"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

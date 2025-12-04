@@ -1,23 +1,20 @@
-id: 4f154fb6-27d1-4813-a759-78b93e0b9c48
 title: Operator Bloopers Cobalt Strike Modules
+id: 4f154fb6-27d1-4813-a759-78b93e0b9c48
 status: test
 level: high
-description: Detects Cobalt Strike module/commands accidentally entered in CMD shell
 author: _pete_0, TheDFIRReport
-date: '2022-05-06'
-modified: '2023-01-30'
-tags:
-    - attack.execution
-    - attack.t1059.003
+description: Detects Cobalt Strike module/commands accidentally entered in CMD shell
 references:
     - https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/cobalt-4-5-user-guide.pdf
     - https://thedfirreport.com/2021/10/04/bazarloader-and-the-conti-leaks/
     - https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''647c7b9e-d784-4fda-b9a0-45c565a7b729''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.003
+date: '2022-05-06'
+modified: '2023-01-30'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +32,9 @@ detection:
             - zerologon
             - av_query
     condition: all of selection_*
+related:
+    -   id: 647c7b9e-d784-4fda-b9a0-45c565a7b729
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -42,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:26.859807+00:00'
+            mapped_at: '2025-12-04T01:50:08.353363+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:26.859807+00:00'
+            mapped_at: '2025-12-04T01:50:08.353363+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:26.859840+00:00'
+            mapped_at: '2025-12-04T01:50:08.353392+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:26.859844+00:00'
+            mapped_at: '2025-12-04T01:50:08.353394+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:26.859847+00:00'
+            mapped_at: '2025-12-04T01:50:08.353395+00:00'

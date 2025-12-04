@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Shell Script Creation in Profile Folder",
+    "comment": "Detects the creation of shell scripts under the \"profile.d\" path.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(file.path), lower('/etc/profile.d/')) AND (endswith(lower(file.path), lower('.csh')) OR endswith(lower(file.path), lower('.sh'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of shell scripts under the \"profile.d\" path.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate shell scripts in the \"profile.d\" directory could be common in your environment. Apply additional filter accordingly via \"image\", by adding specific filenames you \"trust\" or by correlating it with other events. 2. Regular file creation during system update or software installation by the package manager References: https://blogs.jpcert.or.jp/en/2023/05/gobrat.html, https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/, https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection, https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

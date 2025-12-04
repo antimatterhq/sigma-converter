@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "HackTool - SharpUp PrivEsc Tool Execution",
+    "comment": "Detects the use of SharpUp, a tool for local privilege escalation",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sharpup.exe')) AND lower(device.desc) = lower('sharpup') AND (contains(lower(process.cmd_line), lower('hijackablepaths')) OR contains(lower(process.cmd_line), lower('unquotedservicepath')) OR contains(lower(process.cmd_line), lower('processdllhijack')) OR contains(lower(process.cmd_line), lower('modifiableservicebinaries')) OR contains(lower(process.cmd_line), lower('modifiablescheduledtask')) OR contains(lower(process.cmd_line), lower('domaingpppassword')) OR contains(lower(process.cmd_line), lower('cachedgpppassword'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of SharpUp, a tool for local privilege escalation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/GhostPack/SharpUp",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1615"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1569",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1574",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Uncommon AppX Package Locations",
+    "comment": "Detects an appx package added the pipeline of the \"to be processed\" packages which is located in uncommon locations",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "appxdeployment-server",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 854 AND NOT (contains(lower(job.file.path), lower('c:\\\\program files\\\\windowsapps\\\\')) OR contains(lower(job.file.path), lower('c:\\\\program files (x86)\\\\')) OR contains(lower(job.file.path), lower('c:\\\\windows\\\\systemapps\\\\')) OR contains(lower(job.file.path), lower('c:\\\\windows\\\\printdialog\\\\')) OR contains(lower(job.file.path), lower('c:\\\\windows\\\\immersivecontrolpanel\\\\')) OR contains(lower(job.file.path), lower('x-windowsupdate://')) OR contains(lower(job.file.path), lower('file:///c:/program%20files')) OR contains(lower(job.file.path), lower('https://statics.teams.cdn.live.net/')) OR contains(lower(job.file.path), lower('https://statics.teams.cdn.office.net/')) OR contains(lower(job.file.path), lower('microsoft.com')) OR contains(lower(job.file.path), lower('https://installer.teams.static.microsoft/'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects an appx package added the pipeline of the \"to be processed\" packages which is located in uncommon locations",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: Internal Research, https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/, https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting, https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

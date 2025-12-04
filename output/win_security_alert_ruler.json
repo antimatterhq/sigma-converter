@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "name": "Hacktool Ruler",
+    "comment": "This events that are generated when using the hacktool Ruler by Sensepost",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 4776 AND lower(device.hostname) = lower('ruler') OR (lower(LOWER(metadata.event_code)) in (4624, 4625)) AND lower(device.hostname) = lower('ruler'))"
+      }
+    },
+    "output": {
+      "summary": "This events that are generated when using the hacktool Ruler by Sensepost",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Go utilities that use staaldraad awesome NTLM library References: https://github.com/sensepost/ruler, https://github.com/sensepost/ruler/issues/47, https://github.com/staaldraad/go-ntlm/blob/cd032d41aa8ce5751c07cb7945400c0f5c81e2eb/ntlm/ntlmv1.go#L427, https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4776, https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4624",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1114"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1059"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1550",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

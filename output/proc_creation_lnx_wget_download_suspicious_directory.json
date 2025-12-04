@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Download File To Potentially Suspicious Directory Via Wget",
+    "comment": "Detects the use of wget to download content to a suspicious directory",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/wget')) AND process.cmd_line rlike '\\\\s-O\\\\s' AND contains(lower(process.cmd_line), lower('--output-document')) AND contains(lower(process.cmd_line), lower('/tmp/')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of wget to download content to a suspicious directory",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blogs.jpcert.or.jp/en/2023/05/gobrat.html, https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/, https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection, https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

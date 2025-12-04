@@ -1,23 +1,22 @@
-id: 821bcf4d-46c7-4b87-bc57-9509d3ba7c11
 title: Root Account Enable Via Dsenableroot
+id: 821bcf4d-46c7-4b87-bc57-9509d3ba7c11
 status: test
 level: medium
-description: Detects attempts to enable the root account via "dsenableroot"
 author: Sohan G (D4rkCiph3r)
-date: '2023-08-22'
-tags:
-    - attack.t1078
-    - attack.t1078.001
-    - attack.t1078.003
-    - attack.initial-access
-    - attack.persistence
+description: Detects attempts to enable the root account via "dsenableroot"
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1078.003/T1078.003.md
     - https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/persistence_enable_root_account.toml
     - https://ss64.com/osx/dsenableroot.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1078
+    - attack.t1078.001
+    - attack.t1078.003
+    - attack.initial-access
+    - attack.persistence
+date: '2023-08-22'
 logsource:
     category: process_creation
     product: macos
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:29.442278+00:00'
+            mapped_at: '2025-12-04T01:34:25.051196+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:29.442278+00:00'
+            mapped_at: '2025-12-04T01:34:25.051196+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:29.442292+00:00'
+            mapped_at: '2025-12-04T01:34:25.051219+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:29.442295+00:00'
+            mapped_at: '2025-12-04T01:34:25.051222+00:00'

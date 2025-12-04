@@ -1,21 +1,20 @@
-id: bd132164-884a-48f1-aa2d-c6d646b04c69
 title: Microsoft 365 - Potential Ransomware Activity
+id: bd132164-884a-48f1-aa2d-c6d646b04c69
 status: test
 level: medium
+author: austinsonger
 description: Detects when a Microsoft Cloud App Security reported when a user uploads
     files to the cloud that might be infected with ransomware.
-author: austinsonger
-date: '2021-08-19'
-modified: '2022-10-09'
-tags:
-    - attack.impact
-    - attack.t1486
 references:
     - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
     - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1486
+date: '2021-08-19'
+modified: '2022-10-09'
 logsource:
     product: m365
     service: threat_management
@@ -32,21 +31,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:21:59.668737+00:00'
+            mapped_at: '2025-12-04T01:39:02.008230+00:00'
         service:
             source_field: service
             source_value: threat_management
-            mapped_at: '2025-11-26T02:21:59.668737+00:00'
+            mapped_at: '2025-12-04T01:39:02.008230+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:59.668765+00:00'
+            mapped_at: '2025-12-04T01:39:02.008249+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:21:59.668770+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:02.008251+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:21:59.668774+00:00'
+            mapped_at: '2025-12-04T01:39:02.008252+00:00'

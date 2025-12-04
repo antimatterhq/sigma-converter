@@ -1,11 +1,14 @@
-id: 56c217c3-2de2-479b-990f-5c109ba8458f
 title: HackTool - Default PowerSploit/Empire Scheduled Task Creation
+id: 56c217c3-2de2-479b-990f-5c109ba8458f
 status: test
 level: high
-description: Detects the creation of a schtask via PowerSploit or Empire Default Configuration.
 author: Markus Neis, @Karneades
-date: '2018-03-06'
-modified: '2023-03-03'
+description: Detects the creation of a schtask via PowerSploit or Empire Default Configuration.
+references:
+    - https://github.com/0xdeadbeefJERKY/PowerSploit/blob/8690399ef70d2cad10213575ac67e8fa90ddf7c3/Persistence/Persistence.psm1
+    - https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/lib/modules/powershell/persistence/userland/schtasks.py
+falsepositives:
+    - Unlikely
 tags:
     - attack.execution
     - attack.persistence
@@ -16,12 +19,8 @@ tags:
     - car.2013-08-001
     - attack.t1053.005
     - attack.t1059.001
-references:
-    - https://github.com/0xdeadbeefJERKY/PowerSploit/blob/8690399ef70d2cad10213575ac67e8fa90ddf7c3/Persistence/Persistence.psm1
-    - https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/lib/modules/powershell/persistence/userland/schtasks.py
-falsepositives:
-    - Unlikely
-taxonomy: sigma
+date: '2018-03-06'
+modified: '2023-03-03'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:51.554489+00:00'
+            mapped_at: '2025-12-04T01:43:55.085065+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:51.554489+00:00'
+            mapped_at: '2025-12-04T01:43:55.085065+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:51.554512+00:00'
+            mapped_at: '2025-12-04T01:43:55.085078+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:51.554515+00:00'
+            mapped_at: '2025-12-04T01:43:55.085080+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:51.554518+00:00'
+            mapped_at: '2025-12-04T01:43:55.085081+00:00'

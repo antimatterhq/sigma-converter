@@ -1,11 +1,15 @@
-id: cd55f721-5623-4663-bd9b-5229cab5237d
 title: OpenCanary - SSH New Connection Attempt
+id: cd55f721-5623-4663-bd9b-5229cab5237d
 status: experimental
 level: high
+author: Security Onion Solutions
 description: Detects instances where an SSH service on an OpenCanary node has had
     a connection attempt.
-author: Security Onion Solutions
-date: '2024-03-08'
+references:
+    - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration
+    - https://github.com/thinkst/opencanary/blob/a0896adfcaf0328cfd5829fe10d2878c7445138e/opencanary/logger.py#L52
+falsepositives:
+    - Unlikely
 tags:
     - attack.initial-access
     - attack.lateral-movement
@@ -13,12 +17,7 @@ tags:
     - attack.t1133
     - attack.t1021
     - attack.t1078
-references:
-    - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration
-    - https://github.com/thinkst/opencanary/blob/a0896adfcaf0328cfd5829fe10d2878c7445138e/opencanary/logger.py#L52
-falsepositives:
-    - Unlikely
-taxonomy: sigma
+date: '2024-03-08'
 logsource:
     category: application
     product: opencanary
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:33.369835+00:00'
+            mapped_at: '2025-12-04T01:39:56.772513+00:00'
         product:
             source_field: product
             source_value: opencanary
-            mapped_at: '2025-11-26T02:23:33.369835+00:00'
+            mapped_at: '2025-12-04T01:39:56.772513+00:00'
     detection_fields:
         -   source_field: logtype
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:33.369850+00:00'
+            mapped_at: '2025-12-04T01:39:56.772527+00:00'

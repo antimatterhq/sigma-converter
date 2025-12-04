@@ -1,22 +1,21 @@
-id: c248c896-e412-4279-8c15-1c558067b6fa
 title: Enumerate All Information With Whoami.EXE
+id: c248c896-e412-4279-8c15-1c558067b6fa
 status: test
 level: medium
-description: Detects the execution of "whoami.exe" with the "/all" flag
 author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2023-12-04'
-modified: '2024-03-05'
-tags:
-    - attack.discovery
-    - attack.t1033
-    - car.2016-03-001
+description: Detects the execution of "whoami.exe" with the "/all" flag
 references:
     - https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/
     - https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/
     - https://www.youtube.com/watch?v=DsJ9ByX84o4&t=6s
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1033
+    - car.2016-03-001
+date: '2023-12-04'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:14.304239+00:00'
+            mapped_at: '2025-12-04T01:46:43.435410+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:14.304239+00:00'
+            mapped_at: '2025-12-04T01:46:43.435410+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:14.304270+00:00'
+            mapped_at: '2025-12-04T01:46:43.435422+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:14.304275+00:00'
+            mapped_at: '2025-12-04T01:46:43.435424+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:14.304277+00:00'
+            mapped_at: '2025-12-04T01:46:43.435425+00:00'

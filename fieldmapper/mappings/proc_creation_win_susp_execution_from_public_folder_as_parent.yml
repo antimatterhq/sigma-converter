@@ -1,25 +1,24 @@
-id: 69bd9b97-2be2-41b6-9816-fb08757a4d1a
 title: Potentially Suspicious Execution From Parent Process In Public Folder
+id: 69bd9b97-2be2-41b6-9816-fb08757a4d1a
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects a potentially suspicious execution of a parent process located
     in the "\Users\Public" folder executing a child process containing references
     to shell or scripting binaries and commandlines.
 
     '
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-02-25'
-modified: '2024-07-12'
+references:
+    - https://redcanary.com/blog/blackbyte-ransomware/
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.execution
     - attack.t1564
     - attack.t1059
-references:
-    - https://redcanary.com/blog/blackbyte-ransomware/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-02-25'
+modified: '2024-07-12'
 logsource:
     category: process_creation
     product: windows
@@ -55,21 +54,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:07.051971+00:00'
+            mapped_at: '2025-12-04T01:47:26.764727+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:07.051971+00:00'
+            mapped_at: '2025-12-04T01:47:26.764727+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:33:07.051993+00:00'
+            mapped_at: '2025-12-04T01:47:26.764742+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:07.051996+00:00'
+            mapped_at: '2025-12-04T01:47:26.764746+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:07.051998+00:00'
+            mapped_at: '2025-12-04T01:47:26.764747+00:00'

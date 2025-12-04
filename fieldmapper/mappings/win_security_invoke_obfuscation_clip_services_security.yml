@@ -1,23 +1,20 @@
-id: 4edf51e1-cb83-4e1a-bc39-800e396068e3
 title: Invoke-Obfuscation CLIP+ Launcher - Security
+id: 4edf51e1-cb83-4e1a-bc39-800e396068e3
 status: test
 level: high
-description: Detects Obfuscated use of Clip.exe to execute PowerShell
 author: Jonathan Cheong, oscd.community
-date: '2020-10-13'
-modified: '2022-11-27'
+description: Detects Obfuscated use of Clip.exe to execute PowerShell
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f7385ee2-0e0c-11eb-adc1-0242ac120002''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-13'
+modified: '2022-11-27'
 logsource:
     product: windows
     service: security
@@ -31,6 +28,9 @@ detection:
             - '&&'
             - 'clipboard]::'
     condition: selection
+related:
+    -   id: f7385ee2-0e0c-11eb-adc1-0242ac120002
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -38,17 +38,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:10.904356+00:00'
+            mapped_at: '2025-12-04T01:55:23.935789+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:10.904356+00:00'
+            mapped_at: '2025-12-04T01:55:23.935789+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:10.904371+00:00'
+            mapped_at: '2025-12-04T01:55:23.935801+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:10.904373+00:00'
+            mapped_at: '2025-12-04T01:55:23.935803+00:00'

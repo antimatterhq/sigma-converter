@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell Invocations - Generic",
+    "comment": "Detects suspicious PowerShell invocation command parameters",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower(' -enc ')) OR contains(lower(script.script_content.value), lower(' -encodedcommand ')) OR contains(lower(script.script_content.value), lower(' -ec '))) AND (contains(lower(script.script_content.value), lower(' -w hidden ')) OR contains(lower(script.script_content.value), lower(' -window hidden ')) OR contains(lower(script.script_content.value), lower(' -windowstyle hidden ')) OR contains(lower(script.script_content.value), lower(' -w 1 '))) AND (contains(lower(script.script_content.value), lower(' -noni ')) OR contains(lower(script.script_content.value), lower(' -noninteractive '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious PowerShell invocation command parameters",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Very special / sneaky PowerShell scripts Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

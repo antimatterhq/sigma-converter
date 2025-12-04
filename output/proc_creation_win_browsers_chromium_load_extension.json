@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Chromium Browser Instance Executed With Custom Extension",
+    "comment": "Detects a Chromium based browser process with the 'load-extension' flag to start a instance with a custom extension",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\brave.exe')) OR endswith(lower(process.name), lower('\\\\chrome.exe')) OR endswith(lower(process.name), lower('\\\\msedge.exe')) OR endswith(lower(process.name), lower('\\\\opera.exe')) OR endswith(lower(process.name), lower('\\\\vivaldi.exe'))) AND contains(lower(process.cmd_line), lower('--load-extension=')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a Chromium based browser process with the 'load-extension' flag to start a instance with a custom extension",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Usage of Chrome Extensions in testing tools such as BurpSuite will trigger this alert References: https://redcanary.com/blog/chromeloader/, https://emkc.org/s/RJjuLa, https://www.mandiant.com/resources/blog/lnk-between-browsers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1176"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

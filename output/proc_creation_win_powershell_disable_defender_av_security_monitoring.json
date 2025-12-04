@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Disable Windows Defender AV Security Monitoring",
+    "comment": "Detects attackers attempting to disable Windows Defender using Powershell",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower('-disablebehaviormonitoring $true')) OR contains(lower(process.cmd_line), lower('-disableruntimemonitoring $true'))) OR endswith(lower(process.name), lower('\\\\sc.exe')) AND lower(process.file.name) = lower('sc.exe') AND (contains(lower(process.cmd_line), lower('stop')) AND contains(lower(process.cmd_line), lower('windefend')) OR contains(lower(process.cmd_line), lower('delete')) AND contains(lower(process.cmd_line), lower('windefend')) OR contains(lower(process.cmd_line), lower('config')) AND contains(lower(process.cmd_line), lower('windefend')) AND contains(lower(process.cmd_line), lower('start=disabled')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects attackers attempting to disable Windows Defender using Powershell",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Minimal, for some older versions of dev tools, such as pycharm, developers were known to sometimes disable Windows Defender to improve performance, but this generally is not considered a good security practice. References: https://research.nccgroup.com/2020/06/23/wastedlocker-a-new-ransomware-variant-developed-by-the-evil-corp-group/, https://rvsec0n.wordpress.com/2020/01/24/malwares-that-bypass-windows-defender/, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

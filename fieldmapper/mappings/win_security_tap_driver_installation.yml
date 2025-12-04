@@ -1,24 +1,21 @@
-id: 9c8afa4d-0022-48f0-9456-3712466f9701
 title: Tap Driver Installation - Security
+id: 9c8afa4d-0022-48f0-9456-3712466f9701
 status: test
 level: low
+author: Daniil Yugoslavskiy, Ian Davis, oscd.community
 description: 'Detects the installation of a well-known TAP driver service. This could
     be a sign of potential preparation for data exfiltration using tunnelling techniques.
 
     '
-author: Daniil Yugoslavskiy, Ian Davis, oscd.community
-date: '2019-10-24'
-modified: '2022-11-29'
-tags:
-    - attack.exfiltration
-    - attack.t1048
 references:
     - https://community.openvpn.net/openvpn/wiki/ManagingWindowsTAPDrivers
 falsepositives:
     - Legitimate OpenVPN TAP installation
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8e4cf0e5-aa5d-4dc3-beff-dc26917744a9''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1048
+date: '2019-10-24'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -29,6 +26,9 @@ detection:
         EventID: 4697
         ServiceFileName|contains: tap0901
     condition: selection
+related:
+    -   id: 8e4cf0e5-aa5d-4dc3-beff-dc26917744a9
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -36,17 +36,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:00.623063+00:00'
+            mapped_at: '2025-12-04T01:55:21.789149+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:00.623063+00:00'
+            mapped_at: '2025-12-04T01:55:21.789149+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:00.623096+00:00'
+            mapped_at: '2025-12-04T01:55:21.789185+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:00.623100+00:00'
+            mapped_at: '2025-12-04T01:55:21.789190+00:00'

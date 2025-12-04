@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "OneNote.EXE Execution of Malicious Embedded Scripts",
+    "comment": "Detects the execution of malicious OneNote documents that contain embedded scripts. When a user clicks on a OneNote attachment and then on the malicious link inside the \".one\" file, it exports and executes the malicious embedded script from specific directories.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\onenote.exe')) AND (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))) AND (contains(lower(process.cmd_line), lower('\\\\exported\\\\')) OR contains(lower(process.cmd_line), lower('\\\\onenoteofflinecache_files\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of malicious OneNote documents that contain embedded scripts. When a user clicks on a OneNote attachment and then on the malicious link inside the \".one\" file, it exports and executes the malicious embedded script from specific directories.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://bazaar.abuse.ch/browse/tag/one/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

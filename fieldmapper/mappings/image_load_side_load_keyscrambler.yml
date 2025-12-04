@@ -1,20 +1,14 @@
-id: d2451be2-b582-4e15-8701-4196ac180260
 title: Potential DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE
+id: d2451be2-b582-4e15-8701-4196ac180260
 status: experimental
 level: high
+author: Swachchhanda Shrawan Poudel
 description: 'Detects potential DLL side loading of "KeyScramblerIE.dll" by "KeyScrambler.exe".
 
     Various threat actors and malware have been found side loading a masqueraded "KeyScramblerIE.dll"
     through "KeyScrambler.exe".
 
     '
-author: Swachchhanda Shrawan Poudel
-date: '2024-04-15'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1574.001
-    - attack.t1574.002
 references:
     - https://thehackernews.com/2024/03/two-chinese-apt-groups-ramp-up-cyber.html
     - https://csirt-cti.net/2024/02/01/stately-taurus-continued-new-information-on-cyberespionage-attacks-against-myanmar-military-junta/
@@ -23,9 +17,12 @@ references:
     - https://twitter.com/DTCERT/status/1712785426895839339
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ca5583e9-8f80-46ac-ab91-7f314d13b984''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.001
+    - attack.t1574.002
+date: '2024-04-15'
 logsource:
     category: image_load
     product: windows
@@ -46,6 +43,9 @@ detection:
         Signature: QFX Software Corporation
         SignatureStatus: Valid
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: ca5583e9-8f80-46ac-ab91-7f314d13b984
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

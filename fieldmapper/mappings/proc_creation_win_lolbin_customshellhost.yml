@@ -1,20 +1,19 @@
-id: 84b14121-9d14-416e-800b-f3b829c5a14d
 title: Suspicious CustomShellHost Execution
+id: 84b14121-9d14-416e-800b-f3b829c5a14d
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of CustomShellHost binary where the child isn't
     located in 'C:\Windows\explorer.exe'
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-19'
-tags:
-    - attack.defense-evasion
-    - attack.t1216
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/pull/180
     - https://lolbas-project.github.io/lolbas/Binaries/CustomShellHost/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1216
+date: '2022-08-19'
 logsource:
     category: process_creation
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:40.890673+00:00'
+            mapped_at: '2025-12-04T01:50:22.306926+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:40.890673+00:00'
+            mapped_at: '2025-12-04T01:50:22.306926+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:40.890706+00:00'
+            mapped_at: '2025-12-04T01:50:22.306945+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:40.890710+00:00'
+            mapped_at: '2025-12-04T01:50:22.306946+00:00'

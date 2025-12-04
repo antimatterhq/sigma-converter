@@ -1,16 +1,11 @@
-id: 0eb46774-f1ab-4a74-8238-1155855f2263
 title: Disable Windows Defender Functionalities Via Registry Keys
+id: 0eb46774-f1ab-4a74-8238-1155855f2263
 status: test
 level: high
-description: Detects when attackers or tools disable Windows Defender functionalities
-    via the Windows registry
 author: AlertIQ, Ján Trenčanský, frack113, Nasreddine Bencherchali, Swachchhanda Shrawan
     Poudel
-date: '2022-08-01'
-modified: '2024-10-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
+description: Detects when attackers or tools disable Windows Defender functionalities
+    via the Windows registry
 references:
     - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
     - https://gist.github.com/anadr/7465a9fde63d41341136949f14c21105
@@ -23,10 +18,11 @@ references:
 falsepositives:
     - Administrator actions via the Windows Defender interface
     - Third party Antivirus
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a64e4198-c1c8-46a5-bc9c-324c86455fd4''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''fd115e64-97c7-491f-951c-fc8da7e042fa''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-08-01'
+modified: '2024-10-07'
 logsource:
     category: registry_set
     product: windows
@@ -65,6 +61,11 @@ detection:
         Image|startswith: C:\Program Files\Symantec\Symantec Endpoint Protection\
         Image|endswith: \sepWscSvc64.exe
     condition: selection_main and 1 of selection_dword_* and not 1 of filter_optional_*
+related:
+    -   id: a64e4198-c1c8-46a5-bc9c-324c86455fd4
+        type: obsolete
+    -   id: fd115e64-97c7-491f-951c-fc8da7e042fa
+        type: obsolete
 ocsf_mapping:
     class_name: null
     activity_id: null

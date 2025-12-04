@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "name": "Credential Dumping Tools Service Execution - System",
+    "comment": "Detects well-known credential dumping tools execution via service execution events",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND (contains(lower(process.file.path), lower('cachedump')) OR contains(lower(process.file.path), lower('dumpsvc')) OR contains(lower(process.file.path), lower('fgexec')) OR contains(lower(process.file.path), lower('gsecdump')) OR contains(lower(process.file.path), lower('mimidrv')) OR contains(lower(process.file.path), lower('pwdump')) OR contains(lower(process.file.path), lower('servpw'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects well-known credential dumping tools execution via service execution events",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate Administrator using credential dumping tool for password recovery Reference: https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1569",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "004"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "006"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

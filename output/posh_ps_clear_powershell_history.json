@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Clear PowerShell History - PowerShell",
+    "comment": "Detects keywords that could indicate clearing PowerShell history",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('set-psreadlineoption')) AND contains(lower(script.script_content.value), lower('\u2013historysavestyle')) AND contains(lower(script.script_content.value), lower('savenothing')) OR contains(lower(script.script_content.value), lower('set-psreadlineoption')) AND contains(lower(script.script_content.value), lower('-historysavestyle')) AND contains(lower(script.script_content.value), lower('savenothing')) OR (contains(lower(script.script_content.value), lower('del')) OR contains(lower(script.script_content.value), lower('remove-item')) OR contains(lower(script.script_content.value), lower('rm'))) AND contains(lower(script.script_content.value), lower('(get-psreadlineoption).historysavepath')))"
+      }
+    },
+    "output": {
+      "summary": "Detects keywords that could indicate clearing PowerShell history",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate PowerShell scripts Reference: https://gist.github.com/hook-s3c/7363a856c3cdbadeb71085147f042c1a",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

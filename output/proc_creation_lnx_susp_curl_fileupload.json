@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Suspicious Curl File Upload - Linux",
+    "comment": "Detects a suspicious curl process start the adds a file to a web request",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/curl')) AND (contains(lower(process.cmd_line), lower(' --form')) OR contains(lower(process.cmd_line), lower(' --upload-file ')) OR contains(lower(process.cmd_line), lower(' --data ')) OR contains(lower(process.cmd_line), lower(' --data-'))) AND process.cmd_line rlike '\\\\s-\\[FTd\\]\\\\s' AND NOT (contains(lower(process.cmd_line), lower('://localhost')) OR contains(lower(process.cmd_line), lower('://127.0.0.1'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious curl process start the adds a file to a web request",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Scripts created by developers and admins References: https://twitter.com/d1r4c/status/1279042657508081664, https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1105/T1105.md#atomic-test-19---curl-upload-file, https://curl.se/docs/manpage.html, https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

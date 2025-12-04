@@ -1,20 +1,19 @@
-id: 7fd164ba-126a-4d9c-9392-0d4f7c243df0
 title: OneNote Attachment File Dropped In Suspicious Location
+id: 7fd164ba-126a-4d9c-9392-0d4f7c243df0
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of files with the ".one"/".onepkg" extension in suspicious
     or uncommon locations. This could be a sign of attackers abusing OneNote attachments
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-22'
-modified: '2023-09-19'
-tags:
-    - attack.defense-evasion
 references:
     - https://www.bleepingcomputer.com/news/security/hackers-now-use-microsoft-onenote-attachments-to-spread-malware/
     - https://blog.osarmor.com/319/onenote-attachment-delivers-asyncrat-malware/
 falsepositives:
     - Legitimate usage of ".one" or ".onepkg" files from those locations
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-01-22'
+modified: '2023-09-19'
 logsource:
     category: file_event
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:07.354013+00:00'
+            mapped_at: '2025-12-04T01:52:49.749487+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:07.354013+00:00'
+            mapped_at: '2025-12-04T01:52:49.749487+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:07.354028+00:00'
+            mapped_at: '2025-12-04T01:52:49.749500+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:07.354034+00:00'
+            mapped_at: '2025-12-04T01:52:49.749502+00:00'

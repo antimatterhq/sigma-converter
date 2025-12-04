@@ -1,20 +1,19 @@
-id: c9fbe8e9-119d-40a6-9b59-dd58a5d84429
 title: Potential Ransomware or Unauthorized MBR Tampering Via Bcdedit.EXE
+id: c9fbe8e9-119d-40a6-9b59-dd58a5d84429
 status: test
 level: medium
-description: Detects potential malicious and unauthorized usage of bcdedit.exe
 author: '@neu5ron'
-date: '2019-02-07'
-modified: '2023-02-15'
+description: Detects potential malicious and unauthorized usage of bcdedit.exe
+references:
+    - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set
+    - https://twitter.com/malwrhunterteam/status/1372536434125512712/photo/2
 tags:
     - attack.defense-evasion
     - attack.t1070
     - attack.persistence
     - attack.t1542.003
-references:
-    - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set
-    - https://twitter.com/malwrhunterteam/status/1372536434125512712/photo/2
-taxonomy: sigma
+date: '2019-02-07'
+modified: '2023-02-15'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:41.575057+00:00'
+            mapped_at: '2025-12-04T01:47:54.405914+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:41.575057+00:00'
+            mapped_at: '2025-12-04T01:47:54.405914+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:41.575072+00:00'
+            mapped_at: '2025-12-04T01:47:54.405936+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:41.575074+00:00'
+            mapped_at: '2025-12-04T01:47:54.405938+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:41.575076+00:00'
+            mapped_at: '2025-12-04T01:47:54.405939+00:00'

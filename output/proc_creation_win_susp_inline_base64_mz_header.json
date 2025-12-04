@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Base64 MZ Header In CommandLine",
+    "comment": "Detects encoded base64 MZ header in the commandline",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('tvqqaamaaaaeaaaa')) OR contains(lower(process.cmd_line), lower('tvpqaaiaaaaeaa8a')) OR contains(lower(process.cmd_line), lower('tvqaaaeaaaaeabaa')) OR contains(lower(process.cmd_line), lower('tvoaaaaaaaaaaaaa')) OR contains(lower(process.cmd_line), lower('tvptaqeaaaaeaaaa'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects encoded base64 MZ header in the commandline",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

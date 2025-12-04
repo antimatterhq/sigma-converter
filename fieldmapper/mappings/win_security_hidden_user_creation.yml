@@ -1,20 +1,19 @@
-id: 7b449a5e-1db5-4dd0-a2dc-4e3a67282538
 title: Hidden Local User Creation
+id: 7b449a5e-1db5-4dd0-a2dc-4e3a67282538
 status: test
 level: high
+author: Christian Burkard (Nextron Systems)
 description: Detects the creation of a local hidden user account which should not
     happen for event ID 4720.
-author: Christian Burkard (Nextron Systems)
-date: '2021-05-03'
-modified: '2024-01-16'
-tags:
-    - attack.persistence
-    - attack.t1136.001
 references:
     - https://twitter.com/SBousseaden/status/1387743867663958021
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1136.001
+date: '2021-05-03'
+modified: '2024-01-16'
 logsource:
     product: windows
     service: security
@@ -32,17 +31,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:37.109420+00:00'
+            mapped_at: '2025-12-04T01:55:15.981541+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:43:37.109420+00:00'
+            mapped_at: '2025-12-04T01:55:15.981541+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: account_change
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:37.109466+00:00'
+            mapped_at: '2025-12-04T01:55:15.981566+00:00'
         -   source_field: TargetUserName
             target_table: account_change
             target_field: user_result.name
-            mapped_at: '2025-11-26T02:43:37.109470+00:00'
+            mapped_at: '2025-12-04T01:55:15.981570+00:00'

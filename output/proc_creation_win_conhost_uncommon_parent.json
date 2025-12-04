@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Conhost Spawned By Uncommon Parent Process",
+    "comment": "Detects when the Console Window Host (conhost.exe) process is spawned by an uncommon parent process, which could be indicative of potential code injection activity.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\conhost.exe')) AND (endswith(lower(process.parent_process.name), lower('\\\\explorer.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\lsass.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\services.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\smss.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\spoolsv.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\svchost.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\userinit.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wininit.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\winlogon.exe'))) AND NOT (contains(lower(process.parent_process.cmd_line), lower('-k apphost -s apphostsvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k imgsvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k localservice -p -s remoteregistry')) OR contains(lower(process.parent_process.cmd_line), lower('-k localsystemnetworkrestricted -p -s ngcsvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k netsvcs -p -s ncasvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k netsvcs -p -s netsetupsvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k netsvcs -p -s wlidsvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k networkservice -p -s dosvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k wsappx -p -s appxsvc')) OR contains(lower(process.parent_process.cmd_line), lower('-k wsappx -p -s clipsvc'))) AND NOT (contains(lower(process.parent_process.cmd_line), lower('c:\\\\program files (x86)\\\\dropbox\\\\client\\\\')) OR contains(lower(process.parent_process.cmd_line), lower('c:\\\\program files\\\\dropbox\\\\client\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when the Console Window Host (conhost.exe) process is spawned by an uncommon parent process, which could be indicative of potential code injection activity.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.elastic.co/guide/en/security/current/conhost-spawned-by-suspicious-parent-process.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

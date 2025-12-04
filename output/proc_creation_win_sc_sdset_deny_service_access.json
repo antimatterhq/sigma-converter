@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Deny Service Access Using Security Descriptor Tampering Via Sc.EXE",
+    "comment": "Detects suspicious DACL modifications to deny access to a service that affects critical trustees. This can be used to hide services or make them unstoppable.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sc.exe')) AND lower(process.file.name) = lower('sc.exe') AND contains(lower(process.cmd_line), lower('sdset')) AND contains(lower(process.cmd_line), lower('d;')) AND (contains(lower(process.cmd_line), lower(';iu')) OR contains(lower(process.cmd_line), lower(';su')) OR contains(lower(process.cmd_line), lower(';ba')) OR contains(lower(process.cmd_line), lower(';sy')) OR contains(lower(process.cmd_line), lower(';wd'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious DACL modifications to deny access to a service that affects critical trustees. This can be used to hide services or make them unstoppable.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.sans.org/blog/red-team-tactics-hiding-windows-services/, https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/, https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-strings",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1543",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

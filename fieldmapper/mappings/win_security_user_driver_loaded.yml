@@ -1,7 +1,8 @@
-id: f63508a0-c809-4435-b3be-ed819394d612
 title: Potential Privileged System Service Operation - SeLoadDriverPrivilege
+id: f63508a0-c809-4435-b3be-ed819394d612
 status: test
 level: medium
+author: xknow (@xknow_infosec), xorxes (@xor_xes)
 description: 'Detects the usage of the ''SeLoadDriverPrivilege'' privilege. This privilege
     is required to load or unload a device driver.
 
@@ -18,12 +19,6 @@ description: 'Detects the usage of the ''SeLoadDriverPrivilege'' privilege. This
     a whitelist to find the bad stuff.
 
     '
-author: xknow (@xknow_infosec), xorxes (@xor_xes)
-date: '2019-04-08'
-modified: '2023-01-20'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://web.archive.org/web/20230331181619/https://blog.dylan.codes/evading-sysmon-and-windows-event-logging/
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4673
@@ -32,7 +27,11 @@ falsepositives:
         CPU-Z, AVs etc. A baseline needs to be created according to the used products
         and allowed tools. A good thing to do is to try and exclude users who are
         allowed to load drivers.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2019-04-08'
+modified: '2023-01-20'
 logsource:
     product: windows
     service: security
@@ -71,25 +70,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:55.146915+00:00'
+            mapped_at: '2025-12-04T01:55:38.324124+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:55.146915+00:00'
+            mapped_at: '2025-12-04T01:55:38.324124+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:56.258245+00:00'
+            mapped_at: '2025-12-04T01:55:38.324141+00:00'
         -   source_field: PrivilegeList
             target_table: process_activity
             target_field: device.groups.privileges
-            mapped_at: '2025-11-26T02:44:56.258258+00:00'
+            mapped_at: '2025-12-04T01:55:38.324143+00:00'
         -   source_field: Service
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:56.258260+00:00'
+            mapped_at: '2025-12-04T01:55:38.324145+00:00'
         -   source_field: ProcessName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:44:56.258261+00:00'
+            mapped_at: '2025-12-04T01:55:38.324146+00:00'

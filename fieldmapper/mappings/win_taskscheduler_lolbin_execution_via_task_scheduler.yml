@@ -1,23 +1,22 @@
-id: f0767f15-0fb3-44b9-851e-e8d9a6d0005d
 title: Scheduled Task Executed Uncommon LOLBIN
+id: f0767f15-0fb3-44b9-851e-e8d9a6d0005d
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of Scheduled Tasks where the program being run
     is located in a suspicious location or where it is an unusual program to be run
     from a Scheduled Task
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-05'
-modified: '2023-02-07'
-tags:
-    - attack.persistence
-    - attack.t1053.005
 references:
     - Internal Research
 falsepositives:
     - False positives may occur with some of the selected binaries if you have tasks
         using them (which could be very common in your environment). Exclude all the
         specific trusted tasks before using this rule
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1053.005
+date: '2022-12-05'
+modified: '2023-02-07'
 logsource:
     product: windows
     service: taskscheduler
@@ -43,17 +42,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:24.657944+00:00'
+            mapped_at: '2025-12-04T01:55:13.087996+00:00'
         service:
             source_field: service
             source_value: taskscheduler
-            mapped_at: '2025-11-26T02:43:24.657944+00:00'
+            mapped_at: '2025-12-04T01:55:13.087996+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:25.652772+00:00'
+            mapped_at: '2025-12-04T01:55:13.088030+00:00'
         -   source_field: Path
             target_table: scheduled_job_activity
             target_field: job.file.path
-            mapped_at: '2025-11-26T02:43:25.652791+00:00'
+            mapped_at: '2025-12-04T01:55:13.088035+00:00'

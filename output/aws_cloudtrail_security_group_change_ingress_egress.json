@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Ingress/Egress Security Group Modification",
+    "comment": "Detects when an account makes changes to the ingress or egress rules of a security group. This can indicate that an attacker is attempting to open up new attack vectors in the account, that they are trying to exfiltrate data over the network, or that they are trying to allow machines in that VPC/Subnet to contact a C&C server.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('ec2.amazonaws.com') AND (lower(LOWER(metadata.event_code)) in ('authorizesecuritygroupegress', 'authorizesecuritygroupingress', 'revokesecuritygroupegress', 'revokesecuritygroupingress')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when an account makes changes to the ingress or egress rules of a security group. This can indicate that an attacker is attempting to open up new attack vectors in the account, that they are trying to exfiltrate data over the network, or that they are trying to allow machines in that VPC/Subnet to contact a C&C server.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. New VPCs and Subnets being setup requiring a different security profile to those already defined 2. A single port being opened for a new service that is known to be deploying 3. Administrators closing unused ports to reduce the attack surface Reference: https://www.gorillastack.com/blog/real-time-events/important-aws-cloudtrail-security-events-tracking/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1190"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

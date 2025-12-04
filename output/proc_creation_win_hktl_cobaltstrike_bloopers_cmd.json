@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Operator Bloopers Cobalt Strike Commands",
+    "comment": "Detects use of Cobalt Strike commands accidentally entered in the CMD shell",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('cmd.exe') AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND (startswith(lower(process.cmd_line), lower('cmd ')) OR startswith(lower(process.cmd_line), lower('cmd.exe')) OR startswith(lower(process.cmd_line), lower('c:\\\\windows\\\\system32\\\\cmd.exe'))) AND (contains(lower(process.cmd_line), lower('psinject')) OR contains(lower(process.cmd_line), lower('spawnas')) OR contains(lower(process.cmd_line), lower('make_token')) OR contains(lower(process.cmd_line), lower('remote-exec')) OR contains(lower(process.cmd_line), lower('rev2self')) OR contains(lower(process.cmd_line), lower('dcsync')) OR contains(lower(process.cmd_line), lower('logonpasswords')) OR contains(lower(process.cmd_line), lower('execute-assembly')) OR contains(lower(process.cmd_line), lower('getsystem'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects use of Cobalt Strike commands accidentally entered in the CMD shell",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/cobalt-4-5-user-guide.pdf, https://thedfirreport.com/2021/10/04/bazarloader-and-the-conti-leaks/, https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

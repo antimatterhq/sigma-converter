@@ -1,25 +1,24 @@
-id: 9a019ffc-3580-4c9d-8d87-079f7e8d3fd4
 title: Cloudflared Tunnel Execution
+id: 9a019ffc-3580-4c9d-8d87-079f7e8d3fd4
 status: test
 level: medium
+author: Janantha Marasinghe, Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of the "cloudflared" tool to connect back to a tunnel.
     This was seen used by threat actors to maintain persistence and remote access
     to compromised networks.
-author: Janantha Marasinghe, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-17'
-modified: '2023-12-20'
-tags:
-    - attack.command-and-control
-    - attack.t1102
-    - attack.t1090
-    - attack.t1572
 references:
     - https://blog.reconinfosec.com/emergence-of-akira-ransomware-group
     - https://github.com/cloudflare/cloudflared
     - https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
 falsepositives:
     - Legitimate usage of Cloudflared tunnel.
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1102
+    - attack.t1090
+    - attack.t1572
+date: '2023-05-17'
+modified: '2023-12-20'
 logsource:
     category: process_creation
     product: windows
@@ -41,13 +40,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:22.776069+00:00'
+            mapped_at: '2025-12-04T01:45:54.730530+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:22.776069+00:00'
+            mapped_at: '2025-12-04T01:45:54.730530+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:22.776095+00:00'
+            mapped_at: '2025-12-04T01:45:54.730567+00:00'

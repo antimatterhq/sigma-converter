@@ -1,27 +1,24 @@
-id: 7ec2c172-dceb-4c10-92c9-87c1881b7e18
 title: HackTool - Rubeus Execution
+id: 7ec2c172-dceb-4c10-92c9-87c1881b7e18
 status: stable
 level: critical
+author: Florian Roth (Nextron Systems)
 description: Detects the execution of the hacktool Rubeus via PE information of command
     line parameters
-author: Florian Roth (Nextron Systems)
-date: '2018-12-19'
-modified: '2023-04-20'
-tags:
-    - attack.credential-access
-    - attack.t1003
-    - attack.t1558.003
-    - attack.lateral-movement
-    - attack.t1550.003
 references:
     - https://blog.harmj0y.net/redteaming/from-kekeo-to-rubeus
     - https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html
     - https://github.com/GhostPack/Rubeus
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7ec2c172-dceb-4c10-92c9-87c1881b7e18''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.t1558.003
+    - attack.lateral-movement
+    - attack.t1550.003
+date: '2018-12-19'
+modified: '2023-04-20'
 logsource:
     category: process_creation
     product: windows
@@ -47,6 +44,9 @@ detection:
             - 'golden /aes256:'
             - 'silver /user:'
     condition: selection
+related:
+    -   id: 7ec2c172-dceb-4c10-92c9-87c1881b7e18
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -54,25 +54,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:55.177772+00:00'
+            mapped_at: '2025-12-04T01:46:24.536191+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:55.177772+00:00'
+            mapped_at: '2025-12-04T01:46:24.536191+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:55.177785+00:00'
+            mapped_at: '2025-12-04T01:46:24.536204+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:55.177787+00:00'
+            mapped_at: '2025-12-04T01:46:24.536206+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:31:55.177788+00:00'
+            mapped_at: '2025-12-04T01:46:24.536207+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:55.177790+00:00'
+            mapped_at: '2025-12-04T01:46:24.536209+00:00'

@@ -1,20 +1,19 @@
-id: c3a99af4-35a9-4668-879e-c09aeb4f2bdf
 title: Rundll32 Execution With Uncommon DLL Extension
+id: c3a99af4-35a9-4668-879e-c09aeb4f2bdf
 status: experimental
 level: medium
+author: Tim Shelton, Florian Roth (Nextron Systems), Yassine Oukessou
 description: Detects the execution of rundll32 with a command line that doesn't contain
     a common extension
-author: Tim Shelton, Florian Roth (Nextron Systems), Yassine Oukessou
-date: '2022-01-13'
-modified: '2024-04-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
 references:
     - https://twitter.com/mrd0x/status/1481630810495139841?s=12
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+date: '2022-01-13'
+modified: '2024-04-04'
 logsource:
     category: process_creation
     product: windows
@@ -69,29 +68,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:31.871844+00:00'
+            mapped_at: '2025-12-04T01:42:50.619302+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:31.871844+00:00'
+            mapped_at: '2025-12-04T01:42:50.619302+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:31.871877+00:00'
+            mapped_at: '2025-12-04T01:42:50.619320+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:31.871882+00:00'
+            mapped_at: '2025-12-04T01:42:50.619335+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:31.871887+00:00'
+            mapped_at: '2025-12-04T01:42:50.619339+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:31.871891+00:00'
+            mapped_at: '2025-12-04T01:42:50.619340+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:27:31.871894+00:00'
+            mapped_at: '2025-12-04T01:42:50.619341+00:00'

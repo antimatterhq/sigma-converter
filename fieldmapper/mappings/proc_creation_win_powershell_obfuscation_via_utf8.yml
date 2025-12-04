@@ -1,21 +1,20 @@
-id: e312efd0-35a1-407f-8439-b8d434b438a6
 title: Potential PowerShell Obfuscation Via WCHAR
+id: e312efd0-35a1-407f-8439-b8d434b438a6
 status: test
 level: high
-description: Detects suspicious encoded character syntax often used for defense evasion
 author: Florian Roth (Nextron Systems)
-date: '2020-07-09'
-modified: '2023-01-05'
+description: Detects suspicious encoded character syntax often used for defense evasion
+references:
+    - https://twitter.com/0gtweet/status/1281103918693482496
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.t1059.001
     - attack.defense-evasion
     - attack.t1027
-references:
-    - https://twitter.com/0gtweet/status/1281103918693482496
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2020-07-09'
+modified: '2023-01-05'
 logsource:
     category: process_creation
     product: windows
@@ -30,13 +29,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:09.828544+00:00'
+            mapped_at: '2025-12-04T01:46:38.325044+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:09.828544+00:00'
+            mapped_at: '2025-12-04T01:46:38.325044+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:09.828563+00:00'
+            mapped_at: '2025-12-04T01:46:38.325060+00:00'

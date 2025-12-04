@@ -1,16 +1,10 @@
-id: a8f29a7b-b137-4446-80a0-b804272f3da2
 title: Persistence and Execution at Scale via GPO Scheduled Task
+id: a8f29a7b-b137-4446-80a0-b804272f3da2
 status: test
 level: high
+author: Samir Bousseaden
 description: Detect lateral movement using GPO scheduled task, usually used to deploy
     ransomware at scale
-author: Samir Bousseaden
-date: '2019-04-03'
-modified: '2024-09-04'
-tags:
-    - attack.persistence
-    - attack.lateral-movement
-    - attack.t1053.005
 references:
     - https://twitter.com/menasec1/status/1106899890377052160
     - https://www.secureworks.com/blog/ransomware-as-a-distraction
@@ -18,7 +12,12 @@ references:
 falsepositives:
     - If the source IP is not localhost then it's super suspicious, better to monitor
         both local and remote changes to GPO scheduled tasks.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.lateral-movement
+    - attack.t1053.005
+date: '2019-04-03'
+modified: '2024-09-04'
 logsource:
     product: windows
     service: security
@@ -48,33 +47,33 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:55.277932+00:00'
+            mapped_at: '2025-12-04T01:55:20.844138+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:43:55.277932+00:00'
+            mapped_at: '2025-12-04T01:55:20.844138+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:56.922243+00:00'
+            mapped_at: '2025-12-04T01:55:20.844159+00:00'
         -   source_field: AttributeLDAPDisplayName
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:56.922251+00:00'
+            mapped_at: '2025-12-04T01:55:20.844162+00:00'
         -   source_field: AttributeValue
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:56.922252+00:00'
+            mapped_at: '2025-12-04T01:55:20.844164+00:00'
         -   source_field: ShareName
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:56.922253+00:00'
+            mapped_at: '2025-12-04T01:55:20.844165+00:00'
         -   source_field: RelativeTargetName
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:56.922254+00:00'
+            mapped_at: '2025-12-04T01:55:20.844167+00:00'
         -   source_field: AccessList
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:56.922256+00:00'
+            mapped_at: '2025-12-04T01:55:20.844169+00:00'

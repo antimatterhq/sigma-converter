@@ -1,22 +1,19 @@
-id: 5e6a80c8-2d45-4633-9ef4-fa2671a39c5c
 title: Suspicious Parent Double Extension File Execution
+id: 5e6a80c8-2d45-4633-9ef4-fa2671a39c5c
 status: test
 level: high
-description: Detect execution of suspicious double extension files in ParentCommandLine
 author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-06'
-modified: '2023-02-28'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.007
+description: Detect execution of suspicious double extension files in ParentCommandLine
 references:
     - https://www.virustotal.com/gui/file/7872d8845a332dce517adae9c3389fde5313ff2fed38c2577f3b498da786db68/behavior
     - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bluebottle-banks-targeted-africa
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1cdd9a09-06c9-4769-99ff-626e2b3991b8''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.007
+date: '2023-01-06'
+modified: '2023-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -61,6 +58,9 @@ detection:
             - .pdf.js
             - .txt.js
     condition: selection
+related:
+    -   id: 1cdd9a09-06c9-4769-99ff-626e2b3991b8
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -68,17 +68,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:21.844697+00:00'
+            mapped_at: '2025-12-04T01:42:35.999428+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:21.844697+00:00'
+            mapped_at: '2025-12-04T01:42:35.999428+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:21.844757+00:00'
+            mapped_at: '2025-12-04T01:42:35.999441+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:27:21.844761+00:00'
+            mapped_at: '2025-12-04T01:42:35.999443+00:00'

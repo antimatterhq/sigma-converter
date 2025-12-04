@@ -1,23 +1,22 @@
-id: b69888d4-380c-45ce-9cf9-d9ce46e67821
 title: Hidden Executable In NTFS Alternate Data Stream
+id: b69888d4-380c-45ce-9cf9-d9ce46e67821
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), @0xrawsec
 description: Detects the creation of an ADS (Alternate Data Stream) that contains
     an executable by looking at a non-empty Imphash
-author: Florian Roth (Nextron Systems), @0xrawsec
-date: '2018-06-03'
-modified: '2023-02-10'
-tags:
-    - attack.defense-evasion
-    - attack.s0139
-    - attack.t1564.004
 references:
     - https://twitter.com/0xrawsec/status/1002478725605273600?s=21
 falsepositives:
     - This rule isn't looking for any particular binary characteristics. As legitimate
         installers and programs were seen embedding hidden binaries in their ADS.
         Some false positives are expected from browser processes and similar.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.s0139
+    - attack.t1564.004
+date: '2018-06-03'
+modified: '2023-02-10'
 logsource:
     category: create_stream_hash
     product: windows
@@ -35,13 +34,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_stream_hash
-            mapped_at: '2025-11-26T02:39:00.616212+00:00'
+            mapped_at: '2025-12-04T01:51:53.794200+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:00.616212+00:00'
+            mapped_at: '2025-12-04T01:51:53.794200+00:00'
     detection_fields:
         -   source_field: Hash
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:39:01.401754+00:00'
+            mapped_at: '2025-12-04T01:51:53.794214+00:00'

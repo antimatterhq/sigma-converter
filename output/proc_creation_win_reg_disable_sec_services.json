@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Security Service Disabled Via Reg.EXE",
+    "comment": "Detects execution of \"reg.exe\" to disable security services such as Windows Defender.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('reg')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('d 4')) AND contains(lower(process.cmd_line), lower('v start')) AND (contains(lower(process.cmd_line), lower('\\\\appidsvc')) OR contains(lower(process.cmd_line), lower('\\\\msmpsvc')) OR contains(lower(process.cmd_line), lower('\\\\nissrv')) OR contains(lower(process.cmd_line), lower('\\\\securityhealthservice')) OR contains(lower(process.cmd_line), lower('\\\\sense')) OR contains(lower(process.cmd_line), lower('\\\\usosvc')) OR contains(lower(process.cmd_line), lower('\\\\wdboot')) OR contains(lower(process.cmd_line), lower('\\\\wdfilter')) OR contains(lower(process.cmd_line), lower('\\\\wdnisdrv')) OR contains(lower(process.cmd_line), lower('\\\\wdnissvc')) OR contains(lower(process.cmd_line), lower('\\\\windefend')) OR contains(lower(process.cmd_line), lower('\\\\wscsvc')) OR contains(lower(process.cmd_line), lower('\\\\wuauserv'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"reg.exe\" to disable security services such as Windows Defender.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://twitter.com/JohnLaTwC/status/1415295021041979392, https://github.com/gordonbay/Windows-On-Reins/blob/e587ac7a0407847865926d575e3c46f68cf7c68d/wor.ps1, https://vms.drweb.fr/virus/?i=24144899, https://bidouillesecurity.com/disable-windows-defender-in-powershell/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

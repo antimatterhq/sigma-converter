@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious desktop.ini Action",
+    "comment": "Detects unusual processes accessing desktop.ini, which can be leveraged to alter how Explorer displays a folder's content (i.e. renaming files) without changing them on disk.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND endswith(lower(file.path), lower('\\\\desktop.ini')) AND NOT (startswith(lower(actor.process.name), lower('c:\\\\windows\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\program files\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\program files (x86)\\\\')) OR endswith(lower(actor.process.name), lower('\\\\appdata\\\\local\\\\jetbrains\\\\toolbox\\\\bin\\\\7z.exe')) AND contains(lower(file.path), lower('\\\\jetbrains\\\\apps\\\\')) OR startswith(lower(file.path), lower('c:\\\\$windows.~bt\\\\newos\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects unusual processes accessing desktop.ini, which can be leveraged to alter how Explorer displays a folder's content (i.e. renaming files) without changing them on disk.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Operations performed through Windows SCCM or equivalent 2. Read only access list authority Reference: https://isc.sans.edu/forums/diary/Desktopini+as+a+postexploitation+tool/25912/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1547",
+          "subTechniqueId": "009"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

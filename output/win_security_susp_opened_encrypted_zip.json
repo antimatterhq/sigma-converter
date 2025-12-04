@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Password Protected ZIP File Opened",
+    "comment": "Detects the extraction of password protected ZIP archives. See the filename variable for more details on which file has been opened.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND metadata.event_code = 5379 AND contains(lower(file.name), lower('microsoft_windows_shell_zipfolder:filename')) AND NOT contains(lower(file.name), lower('\\\\temporary internet files\\\\content.outlook')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the extraction of password protected ZIP archives. See the filename variable for more details on which file has been opened.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate used of encrypted ZIP files Reference: https://twitter.com/sbousseaden/status/1523383197513379841",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

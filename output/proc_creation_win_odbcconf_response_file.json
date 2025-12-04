@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Response File Execution Via Odbcconf.EXE",
+    "comment": "Detects execution of \"odbcconf\" with the \"-f\" flag in order to load a response file which might contain a malicious action.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\odbcconf.exe')) AND lower(process.file.name) = lower('odbcconf.exe') AND (contains(lower(process.cmd_line), lower(' -f ')) OR contains(lower(process.cmd_line), lower(' /f ')) OR contains(lower(process.cmd_line), lower(' \u2013f ')) OR contains(lower(process.cmd_line), lower(' \u2014f ')) OR contains(lower(process.cmd_line), lower(' \u2015f '))) AND contains(lower(process.cmd_line), lower('.rsp')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"odbcconf\" with the \"-f\" flag in order to load a response file which might contain a malicious action.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: The rule is looking for any usage of response file, which might generate false positive when this function is used legitimately. Investigate the contents of the \".rsp\" file to determine if it is malicious and apply additional filters if necessary. References: https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16, https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/, https://www.cybereason.com/blog/threat-analysis-report-bumblebee-loader-the-high-road-to-enterprise-domain-control, https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "008"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

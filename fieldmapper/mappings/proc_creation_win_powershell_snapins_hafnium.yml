@@ -1,24 +1,23 @@
-id: 25676e10-2121-446e-80a4-71ff8506af47
 title: Exchange PowerShell Snap-Ins Usage
+id: 25676e10-2121-446e-80a4-71ff8506af47
 status: test
 level: high
+author: FPT.EagleEye, Nasreddine Bencherchali (Nextron Systems)
 description: Detects adding and using Exchange PowerShell snap-ins to export mailbox
     data. As seen used by HAFNIUM and APT27
-author: FPT.EagleEye, Nasreddine Bencherchali (Nextron Systems)
-date: '2021-03-03'
-modified: '2023-03-24'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.collection
-    - attack.t1114
 references:
     - https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/
     - https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/
     - https://www.intrinsec.com/apt27-analysis/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.collection
+    - attack.t1114
+date: '2021-03-03'
+modified: '2023-03-24'
 logsource:
     category: process_creation
     product: windows
@@ -48,25 +47,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:30.133469+00:00'
+            mapped_at: '2025-12-04T01:41:54.860962+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:30.133469+00:00'
+            mapped_at: '2025-12-04T01:41:54.860962+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:30.133517+00:00'
+            mapped_at: '2025-12-04T01:41:54.860977+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:30.133521+00:00'
+            mapped_at: '2025-12-04T01:41:54.860978+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:30.133524+00:00'
+            mapped_at: '2025-12-04T01:41:54.860979+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:30.133526+00:00'
+            mapped_at: '2025-12-04T01:41:54.860981+00:00'

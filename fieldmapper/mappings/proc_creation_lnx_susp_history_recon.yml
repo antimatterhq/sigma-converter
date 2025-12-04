@@ -1,21 +1,20 @@
-id: d7821ff1-4527-4e33-9f84-d0d57fa2fb66
 title: Print History File Contents
+id: d7821ff1-4527-4e33-9f84-d0d57fa2fb66
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects events in which someone prints the contents of history files
     to the commandline or redirects it to a file for reconnaissance
-author: Florian Roth (Nextron Systems)
-date: '2022-06-20'
-modified: '2022-09-15'
-tags:
-    - attack.reconnaissance
-    - attack.t1592.004
 references:
     - https://github.com/sleventyeleven/linuxprivchecker/
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.003/T1552.003.md
 falsepositives:
     - Legitimate administration activities
-taxonomy: sigma
+tags:
+    - attack.reconnaissance
+    - attack.t1592.004
+date: '2022-06-20'
+modified: '2022-09-15'
 logsource:
     category: process_creation
     product: linux
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:43.870265+00:00'
+            mapped_at: '2025-12-04T01:36:51.531601+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:43.870265+00:00'
+            mapped_at: '2025-12-04T01:36:51.531601+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:43.870300+00:00'
+            mapped_at: '2025-12-04T01:36:51.533773+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:43.870305+00:00'
+            mapped_at: '2025-12-04T01:36:51.533775+00:00'

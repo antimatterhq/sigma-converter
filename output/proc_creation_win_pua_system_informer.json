@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "name": "PUA - System Informer Execution",
+    "comment": "Detects the execution of System Informer, a task manager tool to view and manipulate processes, kernel options and other low level operations",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\systeminformer.exe')) AND lower(process.file.name) = lower('systeminformer.exe') AND lower(device.desc) = lower('system informer') AND lower(metadata.product.name) = lower('system informer') AND (contains(lower(process.file.hashes.value), lower('md5=19426363a37c03c3ed6fedf57b6696ec')) OR contains(lower(process.file.hashes.value), lower('sha1=8b12c6da8fac0d5e8ab999c31e5ea04af32d53dc')) OR contains(lower(process.file.hashes.value), lower('sha256=8ee9d84de50803545937a63c686822388a3338497cddb660d5d69cf68b68f287')) OR contains(lower(process.file.hashes.value), lower('imphash=b68908adaeb5d662f87f2528af318f12'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of System Informer, a task manager tool to view and manipulate processes, kernel options and other low level operations",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: System Informer is regularly used legitimately by system administrators or developers. Apply additional filters accordingly Reference: https://github.com/winsiderss/systeminformer",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1082"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1564"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1543"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,7 +1,8 @@
-id: 634b00d5-ccc3-4a06-ae3b-0ec8444dd51b
 title: Malicious Windows Script Components File Execution by TAEF Detection
+id: 634b00d5-ccc3-4a06-ae3b-0ec8444dd51b
 status: test
 level: low
+author: Agro (@agro_sev) oscd.community
 description: 'Windows Test Authoring and Execution Framework (TAEF) framework allows
     you to run automation by executing tests files written on different languages
     (C, C#, Microsoft COM Scripting interfaces
@@ -10,19 +11,17 @@ description: 'Windows Test Authoring and Execution Framework (TAEF) framework al
     so on) directly by running te.exe
 
     '
-author: Agro (@agro_sev) oscd.community
-date: '2020-10-13'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Te/
     - https://twitter.com/pabraeken/status/993298228840992768
     - https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/
 falsepositives:
     - It's not an uncommon to use te.exe directly to execute legal TAEF tests
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-13'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:48.350526+00:00'
+            mapped_at: '2025-12-04T01:42:11.224021+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:48.350526+00:00'
+            mapped_at: '2025-12-04T01:42:11.224021+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:48.350554+00:00'
+            mapped_at: '2025-12-04T01:42:11.224046+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:48.350558+00:00'
+            mapped_at: '2025-12-04T01:42:11.224049+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:48.350561+00:00'
+            mapped_at: '2025-12-04T01:42:11.224050+00:00'

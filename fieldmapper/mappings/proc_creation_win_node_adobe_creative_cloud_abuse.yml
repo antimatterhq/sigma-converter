@@ -1,15 +1,10 @@
-id: df1f26d3-bea7-4700-9ea2-ad3e990cf90e
 title: Node Process Executions
+id: df1f26d3-bea7-4700-9ea2-ad3e990cf90e
 status: test
 level: medium
+author: Max Altgelt (Nextron Systems)
 description: Detects the execution of other scripts using the Node executable packaged
     with Adobe Creative Cloud
-author: Max Altgelt (Nextron Systems)
-date: '2022-04-06'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
-    - attack.t1059.007
 references:
     - https://twitter.com/mttaggart/status/1511804863293784064
 fields:
@@ -18,7 +13,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+    - attack.t1059.007
+date: '2022-04-06'
 logsource:
     category: process_creation
     product: windows
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:25.856658+00:00'
+            mapped_at: '2025-12-04T01:50:07.379455+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:25.856658+00:00'
+            mapped_at: '2025-12-04T01:50:07.379455+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:25.856691+00:00'
+            mapped_at: '2025-12-04T01:50:07.379479+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:25.856695+00:00'
+            mapped_at: '2025-12-04T01:50:07.379481+00:00'

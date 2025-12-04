@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Curl Change User Agents - Linux",
+    "comment": "Detects a suspicious curl process start on linux with set useragent options",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/curl')) AND (contains(lower(process.cmd_line), lower(' -a ')) OR contains(lower(process.cmd_line), lower(' --user-agent '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious curl process start on linux with set useragent options",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Scripts created by developers and admins 2. Administrative activity Reference: https://curl.se/docs/manpage.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

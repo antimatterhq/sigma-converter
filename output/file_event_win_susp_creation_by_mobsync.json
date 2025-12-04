@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Created Files by Microsoft Sync Center",
+    "comment": "This rule detects suspicious files created by Microsoft Sync Center (mobsync)",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(actor.process.name), lower('\\\\mobsync.exe')) AND (endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "This rule detects suspicious files created by Microsoft Sync Center (mobsync)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://redcanary.com/blog/intelligence-insights-november-2021/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1055"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

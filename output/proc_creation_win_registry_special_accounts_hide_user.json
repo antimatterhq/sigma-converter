@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Hiding User Account Via SpecialAccounts Registry Key - CommandLine",
+    "comment": "Detects changes to the registry key \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\SpecialAccounts\\Userlist\" where the value is set to \"0\" in order to hide user account from being listed on the logon screen.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\reg.exe')) AND contains(lower(process.cmd_line), lower('\\\\software\\\\microsoft\\\\windows nt\\\\currentversion\\\\winlogon\\\\specialaccounts\\\\userlist')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('/v')) AND contains(lower(process.cmd_line), lower('/d 0')))"
+      }
+    },
+    "output": {
+      "summary": "Detects changes to the registry key \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\SpecialAccounts\\Userlist\" where the value is set to \"0\" in order to hide user account from being listed on the logon screen.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: System administrator activities References: https://thedfirreport.com/2024/01/29/buzzing-on-christmas-eve-trigona-ransomware-in-3-hours/, https://thedfirreport.com/2024/04/01/from-onenote-to-ransomnote-an-ice-cold-intrusion/, https://thedfirreport.com/2024/04/29/from-icedid-to-dagon-locker-ransomware-in-29-days/, https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1564",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

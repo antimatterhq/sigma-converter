@@ -1,14 +1,9 @@
-id: c4e49831-1496-40cf-8ce1-b53f942b02f9
 title: Renamed PAExec Execution
+id: c4e49831-1496-40cf-8ce1-b53f942b02f9
 status: test
 level: high
-description: Detects execution of renamed version of PAExec. Often used by attackers
 author: Florian Roth (Nextron Systems), Jason Lynch
-date: '2021-05-22'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1202
+description: Detects execution of renamed version of PAExec. Often used by attackers
 references:
     - https://www.poweradmin.com/paexec/
     - https://summit.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf
@@ -18,9 +13,11 @@ falsepositives:
         that it is less embarrassing
     - When executed with the "-s" flag. PAExec will copy itself to the "C:\Windows\"
         directory with a different name. Usually like this "PAExec-[XXXXX]-[ComputerName]"
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7b0666ad-3e38-4e3d-9bab-78b06de85f7b''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+date: '2021-05-22'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +35,9 @@ detection:
         Image|endswith: \paexec.exe
         Image|startswith: C:\Windows\PAExec-
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 7b0666ad-3e38-4e3d-9bab-78b06de85f7b
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,29 +45,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:22.118939+00:00'
+            mapped_at: '2025-12-04T01:48:26.829003+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:22.118939+00:00'
+            mapped_at: '2025-12-04T01:48:26.829003+00:00'
     detection_fields:
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:34:22.118952+00:00'
+            mapped_at: '2025-12-04T01:48:26.829020+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:22.118953+00:00'
+            mapped_at: '2025-12-04T01:48:26.829022+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:34:22.118955+00:00'
+            mapped_at: '2025-12-04T01:48:26.829023+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:34:22.118956+00:00'
+            mapped_at: '2025-12-04T01:48:26.829025+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:22.118957+00:00'
+            mapped_at: '2025-12-04T01:48:26.829026+00:00'

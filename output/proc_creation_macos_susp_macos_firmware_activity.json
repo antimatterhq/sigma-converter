@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious MacOS Firmware Activity",
+    "comment": "Detects when a user manipulates with Firmward Password on MacOS. NOTE - this command has been disabled on silicon-based apple computers.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.name) = lower('/usr/sbin/firmwarepasswd') AND (contains(lower(process.cmd_line), lower('setpasswd')) OR contains(lower(process.cmd_line), lower('full')) OR contains(lower(process.cmd_line), lower('delete')) OR contains(lower(process.cmd_line), lower('check'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a user manipulates with Firmward Password on MacOS. NOTE - this command has been disabled on silicon-based apple computers.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://github.com/usnistgov/macos_security/blob/932a51f3e819dd3e02ebfcf3ef433cfffafbe28b/rules/os/os_firmware_password_require.yaml, https://www.manpagez.com/man/8/firmwarepasswd/, https://support.apple.com/guide/security/firmware-password-protection-sec28382c9ca/web",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "File Download Via Windows Defender MpCmpRun.EXE",
+    "comment": "Detects the use of Windows Defender MpCmdRun.EXE to download files",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('mpcmdrun.exe') AND endswith(lower(process.name), lower('\\\\mpcmdrun.exe')) AND contains(lower(process.cmd_line), lower('mpcmdrun.exe')) AND lower(device.desc) = lower('microsoft malware protection command line utility') AND contains(lower(process.cmd_line), lower('downloadfile')) AND contains(lower(process.cmd_line), lower('url')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of Windows Defender MpCmdRun.EXE to download files",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://web.archive.org/web/20200903194959/https://twitter.com/djmtshepana/status/1301608169496612866, https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,22 +1,21 @@
-id: cd951fdc-4b2f-47f5-ba99-a33bf61e3770
 title: Always Install Elevated Windows Installer
+id: cd951fdc-4b2f-47f5-ba99-a33bf61e3770
 status: test
 level: medium
+author: Teymur Kheirkhabarov (idea), Mangatas Tondang (rule), oscd.community
 description: Detects Windows Installer service (msiexec.exe) trying to install MSI
     packages with SYSTEM privilege
-author: Teymur Kheirkhabarov (idea), Mangatas Tondang (rule), oscd.community
-date: '2020-10-13'
-modified: '2024-12-01'
-tags:
-    - attack.privilege-escalation
-    - attack.t1548.002
 references:
     - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-48-638.jpg
 falsepositives:
     - System administrator usage
     - Anti virus products
     - WindowsApps located in "C:\Program Files\WindowsApps\"
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1548.002
+date: '2020-10-13'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -60,33 +59,33 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:32.132075+00:00'
+            mapped_at: '2025-12-04T01:43:40.156087+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:32.132075+00:00'
+            mapped_at: '2025-12-04T01:43:40.156087+00:00'
     detection_fields:
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:28:32.132114+00:00'
+            mapped_at: '2025-12-04T01:43:40.156104+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:32.132118+00:00'
+            mapped_at: '2025-12-04T01:43:40.156106+00:00'
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:32.132120+00:00'
+            mapped_at: '2025-12-04T01:43:40.156108+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:32.132124+00:00'
+            mapped_at: '2025-12-04T01:43:40.156109+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:32.132126+00:00'
+            mapped_at: '2025-12-04T01:43:40.156111+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:28:32.132128+00:00'
+            mapped_at: '2025-12-04T01:43:40.156112+00:00'

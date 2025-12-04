@@ -1,21 +1,20 @@
-id: 5cdb711b-5740-4fb2-ba88-f7945027afac
 title: Rundll32 UNC Path Execution
+id: 5cdb711b-5740-4fb2-ba88-f7945027afac
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects rundll32 execution where the DLL is located on a remote location
     (share)
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-10'
+references:
+    - https://www.cybereason.com/blog/rundll32-the-infamous-proxy-for-executing-malicious-code
+falsepositives:
+    - Unlikely
 tags:
     - attack.defense-evasion
     - attack.execution
     - attack.t1021.002
     - attack.t1218.011
-references:
-    - https://www.cybereason.com/blog/rundll32-the-infamous-proxy-for-executing-malicious-code
-falsepositives:
-    - Unlikely
-taxonomy: sigma
+date: '2022-08-10'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:50.414266+00:00'
+            mapped_at: '2025-12-04T01:48:48.697396+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:50.414266+00:00'
+            mapped_at: '2025-12-04T01:48:48.697396+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:50.414296+00:00'
+            mapped_at: '2025-12-04T01:48:48.697413+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:50.414300+00:00'
+            mapped_at: '2025-12-04T01:48:48.697415+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:50.414303+00:00'
+            mapped_at: '2025-12-04T01:48:48.697416+00:00'

@@ -1,23 +1,20 @@
-id: 65c3ca2c-525f-4ced-968e-246a713d164f
 title: Visual Studio NodejsTools PressAnyKey Renamed Execution
+id: 65c3ca2c-525f-4ced-968e-246a713d164f
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), Florian Roth (Nextron Systems)
 description: Detects renamed execution of "Microsoft.NodejsTools.PressAnyKey.exe",
     which can be abused as a LOLBIN to execute arbitrary binaries
-author: Nasreddine Bencherchali (Nextron Systems), Florian Roth (Nextron Systems)
-date: '2023-04-11'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://twitter.com/mrd0x/status/1463526834918854661
     - https://gist.github.com/nasbench/a989ce64cefa8081bd50cf6ad8c491b5
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a20391f8-76fb-437b-abc0-dba2df1952c6''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1218
+date: '2023-04-11'
 logsource:
     category: process_creation
     product: windows
@@ -27,6 +24,9 @@ detection:
     filter_main_legit_name:
         Image|endswith: \Microsoft.NodejsTools.PressAnyKey.exe
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: a20391f8-76fb-437b-abc0-dba2df1952c6
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -34,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:05.278215+00:00'
+            mapped_at: '2025-12-04T01:46:35.289057+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:05.278215+00:00'
+            mapped_at: '2025-12-04T01:46:35.289057+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:05.278235+00:00'
+            mapped_at: '2025-12-04T01:46:35.289081+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:05.278238+00:00'
+            mapped_at: '2025-12-04T01:46:35.289083+00:00'

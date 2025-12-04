@@ -1,20 +1,17 @@
-id: d443095b-a221-4957-a2c4-cd1756c9b747
 title: Suspicious Base64 Encoded User-Agent
+id: d443095b-a221-4957-a2c4-cd1756c9b747
 status: test
 level: medium
-description: Detects suspicious encoded User-Agent strings, as seen used by some malware.
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-04'
-tags:
-    - attack.command-and-control
-    - attack.t1071.001
+description: Detects suspicious encoded User-Agent strings, as seen used by some malware.
 references:
     - https://deviceatlas.com/blog/list-of-user-agent-strings#desktop
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''894a8613-cf12-48b3-8e57-9085f54aa0c3''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+date: '2023-05-04'
 logsource:
     category: proxy
 detection:
@@ -25,6 +22,9 @@ detection:
             - RGFsdmlr
             - TW96aWxsY
     condition: selection
+related:
+    -   id: 894a8613-cf12-48b3-8e57-9085f54aa0c3
+        type: derived
 ocsf_mapping:
     class_name: http_activity
     activity_id: <UNMAPPED>
@@ -32,9 +32,9 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:21.443997+00:00'
+            mapped_at: '2025-12-04T01:34:59.074634+00:00'
     detection_fields:
         -   source_field: c-useragent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:14:21.444018+00:00'
+            mapped_at: '2025-12-04T01:34:59.074646+00:00'

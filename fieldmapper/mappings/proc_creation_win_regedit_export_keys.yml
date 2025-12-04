@@ -1,14 +1,9 @@
-id: f0e53e89-8d22-46ea-9db5-9d4796ee2f8a
 title: Exports Registry Key To a File
+id: f0e53e89-8d22-46ea-9db5-9d4796ee2f8a
 status: test
 level: low
-description: Detects the export of the target Registry key to a file.
 author: Oddvar Moe, Sander Wiebing, oscd.community
-date: '2020-10-07'
-modified: '2024-03-13'
-tags:
-    - attack.exfiltration
-    - attack.t1012
+description: Detects the export of the target Registry key to a file.
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Regedit/
     - https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
@@ -17,9 +12,11 @@ fields:
     - CommandLine
 falsepositives:
     - Legitimate export of keys
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''82880171-b475-4201-b811-e9c826cd5eaa''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1012
+date: '2020-10-07'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -39,6 +36,9 @@ detection:
             - \sam
             - \security
     condition: all of selection_* and not all of filter_*
+related:
+    -   id: 82880171-b475-4201-b811-e9c826cd5eaa
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -46,21 +46,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:09.754044+00:00'
+            mapped_at: '2025-12-04T01:44:08.013299+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:09.754044+00:00'
+            mapped_at: '2025-12-04T01:44:08.013299+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:09.754059+00:00'
+            mapped_at: '2025-12-04T01:44:08.013319+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:09.754061+00:00'
+            mapped_at: '2025-12-04T01:44:08.013321+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:09.754063+00:00'
+            mapped_at: '2025-12-04T01:44:08.013322+00:00'

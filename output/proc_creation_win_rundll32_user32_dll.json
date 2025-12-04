@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious Workstation Locking via Rundll32",
+    "comment": "Detects a suspicious call to the user32.dll function that locks the user workstation",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) AND contains(lower(process.cmd_line), lower('user32.dll,')) AND contains(lower(process.cmd_line), lower('lockworkstation')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious call to the user32.dll function that locks the user workstation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.name, process.parent_process.name False positive: Scripts or links on the user desktop used to lock the workstation instead of Windows+L or the menu option Reference: https://app.any.run/tasks/2aef9c63-f944-4763-b3ef-81eee209d128/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

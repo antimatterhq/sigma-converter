@@ -1,23 +1,20 @@
-id: 1816994b-42e1-4fb1-afd2-134d88184f71
 title: PowerShell Base64 Encoded WMI Classes
+id: 1816994b-42e1-4fb1-afd2-134d88184f71
 status: test
 level: high
+author: Christian Burkard (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects calls to base64 encoded WMI class such as "Win32_ShadowCopy",
     "Win32_ScheduledJob", etc.
-author: Christian Burkard (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-30'
+references:
+    - https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/mal_revil.yar
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.t1059.001
     - attack.defense-evasion
     - attack.t1027
-references:
-    - https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/mal_revil.yar
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''47688f1b-9f51-4656-b013-3cc49a166a36''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+date: '2023-01-30'
 logsource:
     category: process_creation
     product: windows
@@ -70,6 +67,9 @@ detection:
             - dpbjMyX0xvZ2dlZE9uVXNlc
             - XaW4zMl9Mb2dnZWRPblVzZX
     condition: selection_img and 1 of selection_cli_*
+related:
+    -   id: 47688f1b-9f51-4656-b013-3cc49a166a36
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -77,21 +77,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:52.148223+00:00'
+            mapped_at: '2025-12-04T01:41:22.155325+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:52.148223+00:00'
+            mapped_at: '2025-12-04T01:41:22.155325+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:52.148256+00:00'
+            mapped_at: '2025-12-04T01:41:22.155344+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:52.148259+00:00'
+            mapped_at: '2025-12-04T01:41:22.155346+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:52.148262+00:00'
+            mapped_at: '2025-12-04T01:41:22.155348+00:00'

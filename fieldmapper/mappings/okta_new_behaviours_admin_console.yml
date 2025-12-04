@@ -1,21 +1,20 @@
-id: a0b38b70-3cb5-484b-a4eb-c4d8e7bcc0a9
 title: Okta New Admin Console Behaviours
+id: a0b38b70-3cb5-484b-a4eb-c4d8e7bcc0a9
 status: experimental
 level: high
-description: Detects when Okta identifies new activity in the Admin Console.
 author: kelnage
-date: '2023-09-07'
-modified: '2024-06-26'
-tags:
-    - attack.initial-access
-    - attack.t1078.004
+description: Detects when Okta identifies new activity in the Admin Console.
 references:
     - https://developer.okta.com/docs/reference/api/system-log/
     - https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection
 falsepositives:
     - When an admin begins using the Admin Console and one of Okta's heuristics incorrectly
         identifies the behavior as being unusual.
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1078.004
+date: '2023-09-07'
+modified: '2024-06-26'
 logsource:
     product: okta
     service: okta
@@ -34,25 +33,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: okta
-            mapped_at: '2025-11-26T02:18:33.588995+00:00'
+            mapped_at: '2025-12-04T01:37:16.588464+00:00'
         service:
             source_field: service
             source_value: okta
-            mapped_at: '2025-11-26T02:18:33.588995+00:00'
+            mapped_at: '2025-12-04T01:37:16.588464+00:00'
     detection_fields:
         -   source_field: eventtype
             target_table: user_access
             target_field: action
-            mapped_at: '2025-11-26T02:18:34.876205+00:00'
+            mapped_at: '2025-12-04T01:37:16.588483+00:00'
         -   source_field: target.displayname
             target_table: user_access
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:18:34.876214+00:00'
+            mapped_at: '2025-12-04T01:37:16.588485+00:00'
         -   source_field: debugcontext.debugdata.behaviors
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:18:34.876216+00:00'
+            mapped_at: '2025-12-04T01:37:16.588486+00:00'
         -   source_field: debugcontext.debugdata.logonlysecuritydata
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:18:34.876217+00:00'
+            mapped_at: '2025-12-04T01:37:16.588487+00:00'

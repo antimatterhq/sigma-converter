@@ -1,21 +1,20 @@
-id: ec52985a-d024-41e3-8ff6-14169039a0b3
 title: Mount Execution With Hidepid Parameter
+id: ec52985a-d024-41e3-8ff6-14169039a0b3
 status: test
 level: medium
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
 description: Detects execution of the "mount" command with "hidepid" parameter to
     make invisible processes to other users from the system
-author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2023-01-12'
-tags:
-    - attack.credential-access
-    - attack.t1564
 references:
     - https://blogs.blackberry.com/
     - https://www.cyberciti.biz/faq/linux-hide-processes-from-other-users/
     - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1564
+date: '2023-01-12'
 logsource:
     category: process_creation
     product: linux
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:22.600350+00:00'
+            mapped_at: '2025-12-04T01:36:29.112690+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:22.600350+00:00'
+            mapped_at: '2025-12-04T01:36:29.112690+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:22.600366+00:00'
+            mapped_at: '2025-12-04T01:36:29.112704+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:22.600368+00:00'
+            mapped_at: '2025-12-04T01:36:29.112706+00:00'

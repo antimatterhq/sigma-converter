@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PowerShell Get-Process LSASS in ScriptBlock",
+    "comment": "Detects a Get-Process command on lsass process, which is in almost all cases a sign of malicious activity",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('get-process lsass')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a Get-Process command on lsass process, which is in almost all cases a sign of malicious activity",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate certificate exports invoked by administrators or users (depends on processes in the environment - filter if unusable) Reference: https://web.archive.org/web/20220205033028/https://twitter.com/PythonResponder/status/1385064506049630211",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

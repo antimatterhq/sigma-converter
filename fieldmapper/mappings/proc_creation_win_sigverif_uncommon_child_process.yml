@@ -1,24 +1,23 @@
-id: 7d4aaec2-08ed-4430-8b96-28420e030e04
 title: Uncommon Sigverif.EXE Child Process
+id: 7d4aaec2-08ed-4430-8b96-28420e030e04
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects uncommon child processes spawning from "sigverif.exe", which
     could indicate potential abuse of the latter as a living of the land binary in
     order to proxy execution.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-19'
-modified: '2024-08-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1216
 references:
     - https://www.hexacorn.com/blog/2018/04/27/i-shot-the-sigverif-exe-the-gui-based-lolbin/
     - https://twitter.com/0gtweet/status/1457676633809330184
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1216
+date: '2022-08-19'
+modified: '2024-08-27'
 logsource:
     category: process_creation
     product: windows
@@ -37,17 +36,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:44.768935+00:00'
+            mapped_at: '2025-12-04T01:43:02.842425+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:44.768935+00:00'
+            mapped_at: '2025-12-04T01:43:02.842425+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:44.768956+00:00'
+            mapped_at: '2025-12-04T01:43:02.842438+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:44.768960+00:00'
+            mapped_at: '2025-12-04T01:43:02.842440+00:00'

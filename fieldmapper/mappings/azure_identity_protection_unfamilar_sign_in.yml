@@ -1,23 +1,22 @@
-id: 128faeef-79dd-44ca-b43c-a9e236a60f49
 title: Unfamiliar Sign-In Properties
+id: 128faeef-79dd-44ca-b43c-a9e236a60f49
 status: test
 level: high
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
 description: Detects sign-in with properties that are unfamiliar to the user. The
     detection considers past sign-in history to look for anomalous sign-ins.
-author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
-date: '2023-09-03'
+references:
+    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#unfamiliar-sign-in-properties
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
+falsepositives:
+    - User changing to a new device, location, browser, etc.
 tags:
     - attack.t1078
     - attack.persistence
     - attack.defense-evasion
     - attack.privilege-escalation
     - attack.initial-access
-references:
-    - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#unfamiliar-sign-in-properties
-    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
-falsepositives:
-    - User changing to a new device, location, browser, etc.
-taxonomy: sigma
+date: '2023-09-03'
 logsource:
     product: azure
     service: riskdetection
@@ -32,13 +31,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:18:53.927860+00:00'
+            mapped_at: '2025-12-04T01:37:24.821130+00:00'
         service:
             source_field: service
             source_value: riskdetection
-            mapped_at: '2025-11-26T02:18:53.927860+00:00'
+            mapped_at: '2025-12-04T01:37:24.821130+00:00'
     detection_fields:
         -   source_field: riskEventType
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:18:53.927880+00:00'
+            mapped_at: '2025-12-04T01:37:24.821160+00:00'

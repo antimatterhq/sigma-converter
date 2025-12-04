@@ -1,26 +1,23 @@
-id: f5d19838-41b5-476c-98d8-ba8af4929ee2
 title: LOL-Binary Copied From System Directory
+id: f5d19838-41b5-476c-98d8-ba8af4929ee2
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects a suspicious copy operation that tries to copy a known LOLBIN
     from system (System32, SysWOW64, WinSxS) directories to another on disk in order
     to bypass detections based on locations.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-08-29'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.003
 references:
     - https://www.hybrid-analysis.com/sample/8da5b75b6380a41eee3a399c43dfe0d99eeefaa1fd21027a07b1ecaa4cd96fdd?environmentId=120
     - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
     - https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fff9d2b7-e11c-4a69-93d3-40ef66189767''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.003
+date: '2023-08-29'
 logsource:
     category: process_creation
     product: windows
@@ -60,6 +57,9 @@ detection:
             - \rundll32.exe
             - \wscript.exe
     condition: 1 of selection_tools_* and all of selection_target_*
+related:
+    -   id: fff9d2b7-e11c-4a69-93d3-40ef66189767
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -67,21 +67,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:26.821028+00:00'
+            mapped_at: '2025-12-04T01:48:30.053318+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:26.821028+00:00'
+            mapped_at: '2025-12-04T01:48:30.053318+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:26.821058+00:00'
+            mapped_at: '2025-12-04T01:48:30.053334+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:26.821062+00:00'
+            mapped_at: '2025-12-04T01:48:30.053336+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:26.821064+00:00'
+            mapped_at: '2025-12-04T01:48:30.053337+00:00'

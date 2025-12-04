@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Sdiagnhost Calling Suspicious Child Process",
+    "comment": "Detects sdiagnhost.exe calling a suspicious child process (e.g. used in exploits for Follina / CVE-2022-30190)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\sdiagnhost.exe')) AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR endswith(lower(process.name), lower('\\\\taskkill.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\calc.exe'))) AND NOT (endswith(lower(process.name), lower('\\\\cmd.exe')) AND contains(lower(process.cmd_line), lower('bits')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) AND (endswith(lower(process.cmd_line), lower('-noprofile -')) OR endswith(lower(process.cmd_line), lower('-noprofile')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects sdiagnhost.exe calling a suspicious child process (e.g. used in exploits for Follina / CVE-2022-30190)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/nao_sec/status/1530196847679401984, https://doublepulsar.com/follina-a-microsoft-office-code-execution-vulnerability-1a47fce5629e, https://app.any.run/tasks/713f05d2-fe78-4b9d-a744-f7c133e3fafb/, https://app.any.run/tasks/f420d295-0457-4e9b-9b9e-6732be227583/, https://app.any.run/tasks/c4117d9a-f463-461a-b90f-4cd258746798/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

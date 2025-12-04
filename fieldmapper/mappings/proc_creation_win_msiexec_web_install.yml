@@ -1,24 +1,21 @@
-id: f7b5f842-a6af-4da5-9e95-e32478f3cd2f
 title: MsiExec Web Install
+id: f7b5f842-a6af-4da5-9e95-e32478f3cd2f
 status: test
 level: medium
-description: Detects suspicious msiexec process starts with web addresses as parameter
 author: Florian Roth (Nextron Systems)
-date: '2018-02-09'
-modified: '2022-01-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.007
-    - attack.command-and-control
-    - attack.t1105
+description: Detects suspicious msiexec process starts with web addresses as parameter
 references:
     - https://blog.trendmicro.com/trendlabs-security-intelligence/attack-using-windows-installer-msiexec-exe-leads-lokibot/
 falsepositives:
     - False positives depend on scripts and administrative tools used in the monitored
         environment
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8150732a-0c9d-4a99-82b9-9efb9b90c40c''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.007
+    - attack.command-and-control
+    - attack.t1105
+date: '2018-02-09'
+modified: '2022-01-07'
 logsource:
     category: process_creation
     product: windows
@@ -28,6 +25,9 @@ detection:
             - ' msiexec'
             - ://
     condition: selection
+related:
+    -   id: 8150732a-0c9d-4a99-82b9-9efb9b90c40c
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -35,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:16.174881+00:00'
+            mapped_at: '2025-12-04T01:44:13.472239+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:16.174881+00:00'
+            mapped_at: '2025-12-04T01:44:13.472239+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:16.174901+00:00'
+            mapped_at: '2025-12-04T01:44:13.472253+00:00'

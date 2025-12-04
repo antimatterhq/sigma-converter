@@ -1,22 +1,21 @@
-id: 37c1333a-a0db-48be-b64b-7393b2386e3b
 title: Hacktool Execution - PE Metadata
+id: 37c1333a-a0db-48be-b64b-7393b2386e3b
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the execution of different Windows based hacktools via PE metadata
     (company, product, etc.) even if the files have been renamed
-author: Florian Roth (Nextron Systems)
-date: '2022-04-27'
-modified: '2024-01-15'
-tags:
-    - attack.credential-access
-    - attack.t1588.002
-    - attack.t1003
 references:
     - https://github.com/cube0x0
     - https://www.virustotal.com/gui/search/metadata%253ACube0x0/files
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1588.002
+    - attack.t1003
+date: '2022-04-27'
+modified: '2024-01-15'
 logsource:
     category: process_creation
     product: windows
@@ -31,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:00.661468+00:00'
+            mapped_at: '2025-12-04T01:42:18.298620+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:00.661468+00:00'
+            mapped_at: '2025-12-04T01:42:18.298620+00:00'
     detection_fields:
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:27:00.661501+00:00'
+            mapped_at: '2025-12-04T01:42:18.298636+00:00'

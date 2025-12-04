@@ -1,7 +1,8 @@
-id: 6a53d871-682d-40b6-83e0-b7c1a6c4e3a5
 title: PetitPotam Suspicious Kerberos TGT Request
+id: 6a53d871-682d-40b6-83e0-b7c1a6c4e3a5
 status: test
 level: high
+author: Mauricio Velazco, Michael Haag
 description: 'Detect suspicious Kerberos TGT requests.
 
     Once an attacer obtains a computer certificate by abusing Active Directory Certificate
@@ -18,12 +19,6 @@ description: 'Detect suspicious Kerberos TGT requests.
     Domain Controller computer accounts.
 
     '
-author: Mauricio Velazco, Michael Haag
-date: '2021-09-02'
-modified: '2022-10-05'
-tags:
-    - attack.credential-access
-    - attack.t1187
 references:
     - https://github.com/topotam/PetitPotam
     - https://isc.sans.edu/forums/diary/Active+Directory+Certificate+Services+ADCS+PKI+domain+admin+vulnerability/27668/
@@ -31,7 +26,11 @@ references:
 falsepositives:
     - False positives are possible if the environment is using certificates for authentication.
         We recommend filtering Account_Name to the Domain Controller computer accounts.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1187
+date: '2021-09-02'
+modified: '2022-10-05'
 logsource:
     product: windows
     service: security
@@ -54,25 +53,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:15.725163+00:00'
+            mapped_at: '2025-12-04T01:56:12.726803+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:15.725163+00:00'
+            mapped_at: '2025-12-04T01:56:12.726803+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:16.628661+00:00'
+            mapped_at: '2025-12-04T01:56:12.726835+00:00'
         -   source_field: TargetUserName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:16.628681+00:00'
+            mapped_at: '2025-12-04T01:56:12.726839+00:00'
         -   source_field: CertThumbprint
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:16.628685+00:00'
+            mapped_at: '2025-12-04T01:56:12.726842+00:00'
         -   source_field: IpAddress
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:16.628688+00:00'
+            mapped_at: '2025-12-04T01:56:12.726845+00:00'

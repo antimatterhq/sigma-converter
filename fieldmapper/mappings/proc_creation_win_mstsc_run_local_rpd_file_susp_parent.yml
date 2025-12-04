@@ -1,20 +1,19 @@
-id: ff3b6b39-e765-42f9-bb2c-ea6761e0e0f6
 title: Mstsc.EXE Execution From Uncommon Parent
+id: ff3b6b39-e765-42f9-bb2c-ea6761e0e0f6
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potential RDP connection via Mstsc using a local ".rdp" file
     located in suspicious locations.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-04-18'
-modified: '2023-04-18'
-tags:
-    - attack.lateral-movement
 references:
     - https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/
     - https://web.archive.org/web/20230726144748/https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+date: '2023-04-18'
+modified: '2023-04-18'
 logsource:
     category: process_creation
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:42.288568+00:00'
+            mapped_at: '2025-12-04T01:41:12.752952+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:42.288568+00:00'
+            mapped_at: '2025-12-04T01:41:12.752952+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:42.288584+00:00'
+            mapped_at: '2025-12-04T01:41:12.752967+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:42.288587+00:00'
+            mapped_at: '2025-12-04T01:41:12.752969+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:42.288588+00:00'
+            mapped_at: '2025-12-04T01:41:12.752970+00:00'

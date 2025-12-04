@@ -1,21 +1,18 @@
-id: 999c3b12-0a8c-40b6-8e13-dd7d62b75c7a
 title: Potentially Suspicious Named Pipe Created Via Mkfifo
+id: 999c3b12-0a8c-40b6-8e13-dd7d62b75c7a
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation of a new named pipe using the "mkfifo" utility in
     a potentially suspicious location
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-06-16'
-tags:
-    - attack.execution
 references:
     - https://dev.to/0xbf/use-mkfifo-to-create-named-pipe-linux-tips-5bbk
     - https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9d779ce8-5256-4b13-8b6f-b91c602b43f4''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-06-16'
 logsource:
     category: process_creation
     product: linux
@@ -24,6 +21,9 @@ detection:
         Image|endswith: /mkfifo
         CommandLine|contains: ' /tmp/'
     condition: selection
+related:
+    -   id: 9d779ce8-5256-4b13-8b6f-b91c602b43f4
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -31,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:14.811494+00:00'
+            mapped_at: '2025-12-04T01:36:23.945330+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:14.811494+00:00'
+            mapped_at: '2025-12-04T01:36:23.945330+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:14.811522+00:00'
+            mapped_at: '2025-12-04T01:36:23.945355+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:14.811526+00:00'
+            mapped_at: '2025-12-04T01:36:23.945360+00:00'

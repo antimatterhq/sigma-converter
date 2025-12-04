@@ -1,23 +1,20 @@
-id: e9f8f8cc-07cc-4e81-b724-f387db9175e4
 title: Potentially Suspicious Execution Of Regasm/Regsvcs With Uncommon Extension
+id: e9f8f8cc-07cc-4e81-b724-f387db9175e4
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potentially suspicious execution of the Regasm/Regsvcs utilities
     with an uncommon extension.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.009
 references:
     - https://www.fortiguard.com/threat-signal-report/4718?s=09
     - https://lolbas-project.github.io/lolbas/Binaries/Regasm/
     - https://lolbas-project.github.io/lolbas/Binaries/Regsvcs/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cc368ed0-2411-45dc-a222-510ace303cb2''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.009
+date: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +35,9 @@ detection:
             - .png
             - .txt
     condition: all of selection_*
+related:
+    -   id: cc368ed0-2411-45dc-a222-510ace303cb2
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:53.341132+00:00'
+            mapped_at: '2025-12-04T01:42:14.471476+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:53.341132+00:00'
+            mapped_at: '2025-12-04T01:42:14.471476+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:53.341148+00:00'
+            mapped_at: '2025-12-04T01:42:14.471490+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:53.341151+00:00'
+            mapped_at: '2025-12-04T01:42:14.471492+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:53.341153+00:00'
+            mapped_at: '2025-12-04T01:42:14.471493+00:00'

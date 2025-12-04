@@ -1,21 +1,20 @@
-id: 16ab6143-510a-44e2-a615-bdb80b8317fc
 title: Bitbucket Global SSH Settings Changed
+id: 16ab6143-510a-44e2-a615-bdb80b8317fc
 status: test
 level: medium
-description: Detects Bitbucket global SSH access configuration changes.
 author: Muhammad Faisal (@faisalusuf)
-date: '2024-02-25'
-tags:
-    - attack.lateral-movement
-    - attack.defense-evasion
-    - attack.t1562.001
-    - attack.t1021.004
+description: Detects Bitbucket global SSH access configuration changes.
 references:
     - https://confluence.atlassian.com/bitbucketserver/audit-log-events-776640423.html
     - https://confluence.atlassian.com/bitbucketserver/enable-ssh-access-to-git-repositories-776640358.html
 falsepositives:
     - Legitimate user activity.
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.defense-evasion
+    - attack.t1562.001
+    - attack.t1021.004
+date: '2024-02-25'
 logsource:
     product: bitbucket
     service: audit
@@ -33,17 +32,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: bitbucket
-            mapped_at: '2025-11-26T02:23:08.107773+00:00'
+            mapped_at: '2025-12-04T01:39:34.788616+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:08.107773+00:00'
+            mapped_at: '2025-12-04T01:39:34.788616+00:00'
     detection_fields:
         -   source_field: auditType.category
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:08.107805+00:00'
+            mapped_at: '2025-12-04T01:39:34.788632+00:00'
         -   source_field: auditType.action
             target_table: entity_management
             target_field: action
-            mapped_at: '2025-11-26T02:23:08.107807+00:00'
+            mapped_at: '2025-12-04T01:39:34.788634+00:00'

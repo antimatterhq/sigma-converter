@@ -1,7 +1,8 @@
-id: dbe4b9c5-c254-4258-9688-d6af0b7967fd
 title: Screen Capture with Import Tool
+id: dbe4b9c5-c254-4258-9688-d6af0b7967fd
 status: test
 level: low
+author: Pawel Mazur
 description: 'Detects adversary creating screen capture of a desktop with Import Tool.
 
     Highly recommended using rule on servers, due to high usage of screenshot utilities
@@ -10,19 +11,17 @@ description: 'Detects adversary creating screen capture of a desktop with Import
     ImageMagick must be installed.
 
     '
-author: Pawel Mazur
-date: '2021-09-21'
-modified: '2022-10-09'
-tags:
-    - attack.collection
-    - attack.t1113
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1113/T1113.md
     - https://linux.die.net/man/1/import
     - https://imagemagick.org/
 falsepositives:
     - Legitimate use of screenshot utility
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1113
+date: '2021-09-21'
+modified: '2022-10-09'
 logsource:
     product: linux
     service: auditd
@@ -50,29 +49,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:57.006582+00:00'
+            mapped_at: '2025-12-04T01:35:33.092733+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:15:57.006582+00:00'
+            mapped_at: '2025-12-04T01:35:33.092733+00:00'
     detection_fields:
         -   source_field: type
             target_table: process_activity
             target_field: action
-            mapped_at: '2025-11-26T02:15:57.006615+00:00'
+            mapped_at: '2025-12-04T01:35:33.092752+00:00'
         -   source_field: a0
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:57.006620+00:00'
+            mapped_at: '2025-12-04T01:35:33.092754+00:00'
         -   source_field: a1
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:57.006622+00:00'
+            mapped_at: '2025-12-04T01:35:33.092756+00:00'
         -   source_field: a2
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:57.006624+00:00'
+            mapped_at: '2025-12-04T01:35:33.092758+00:00'
         -   source_field: a3
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:57.006626+00:00'
+            mapped_at: '2025-12-04T01:35:33.092760+00:00'

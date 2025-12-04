@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Ufw Force Stop Using Ufw-Init",
+    "comment": "Detects attempts to force stop the ufw using ufw-init",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND (contains(lower(process.cmd_line), lower('-ufw-init')) AND contains(lower(process.cmd_line), lower('force-stop')) OR contains(lower(process.cmd_line), lower('ufw')) AND contains(lower(process.cmd_line), lower('disable'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects attempts to force stop the ufw using ufw-init",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Network administrators References: https://blogs.blackberry.com/, https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

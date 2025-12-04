@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PUA - DIT Snapshot Viewer",
+    "comment": "Detects the use of Ditsnap tool, an inspection tool for Active Directory database, ntds.dit.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\ditsnap.exe')) AND contains(lower(process.cmd_line), lower('ditsnap.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of Ditsnap tool, an inspection tool for Active Directory database, ntds.dit.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate admin usage References: https://thedfirreport.com/2020/06/21/snatch-ransomware/, https://web.archive.org/web/20201124182207/https://github.com/yosqueoy/ditsnap",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

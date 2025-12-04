@@ -1,23 +1,22 @@
-id: 5687f942-867b-4578-ade7-1e341c46e99a
 title: VMToolsd Suspicious Child Process
+id: 5687f942-867b-4578-ade7-1e341c46e99a
 status: test
 level: high
+author: bohops, Bhabesh Raj
 description: Detects suspicious child process creations of VMware Tools process which
     may indicate persistence setup
-author: bohops, Bhabesh Raj
-date: '2021-10-08'
-modified: '2023-07-25'
-tags:
-    - attack.execution
-    - attack.persistence
-    - attack.t1059
 references:
     - https://bohops.com/2021/10/08/analyzing-and-detecting-a-vmtools-persistence-technique/
     - https://user-images.githubusercontent.com/61026070/136518004-b68cce7d-f9b8-4e9a-9b7b-53b1568a9a94.png
     - https://github.com/vmware/open-vm-tools/blob/master/open-vm-tools/tools.conf
 falsepositives:
     - Legitimate use by VM administrator
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1059
+date: '2021-10-08'
+modified: '2023-07-25'
 logsource:
     category: process_creation
     product: windows
@@ -64,25 +63,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:09.502588+00:00'
+            mapped_at: '2025-12-04T01:47:28.852847+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:09.502588+00:00'
+            mapped_at: '2025-12-04T01:47:28.852847+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:33:09.502607+00:00'
+            mapped_at: '2025-12-04T01:47:28.852862+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:09.502610+00:00'
+            mapped_at: '2025-12-04T01:47:28.852864+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:09.502612+00:00'
+            mapped_at: '2025-12-04T01:47:28.852865+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:09.502614+00:00'
+            mapped_at: '2025-12-04T01:47:28.852867+00:00'

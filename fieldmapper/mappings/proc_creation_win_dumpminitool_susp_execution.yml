@@ -1,22 +1,21 @@
-id: eb1c4225-1c23-4241-8dd4-051389fde4ce
 title: Suspicious DumpMinitool Execution
+id: eb1c4225-1c23-4241-8dd4-051389fde4ce
 status: test
 level: high
-description: Detects suspicious ways to use the "DumpMinitool.exe" binary
 author: Florian Roth (Nextron Systems)
-date: '2022-04-06'
-modified: '2023-04-12'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
-    - attack.t1003.001
+description: Detects suspicious ways to use the "DumpMinitool.exe" binary
 references:
     - https://twitter.com/mrd0x/status/1511415432888131586
     - https://twitter.com/mrd0x/status/1511489821247684615
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/DumpMinitool/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+    - attack.t1003.001
+date: '2022-04-06'
+modified: '2023-04-12'
 logsource:
     category: process_creation
     product: windows
@@ -52,21 +51,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:38.532556+00:00'
+            mapped_at: '2025-12-04T01:42:57.021009+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:38.532556+00:00'
+            mapped_at: '2025-12-04T01:42:57.021009+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:38.532573+00:00'
+            mapped_at: '2025-12-04T01:42:57.021023+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:38.532575+00:00'
+            mapped_at: '2025-12-04T01:42:57.021025+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:38.532577+00:00'
+            mapped_at: '2025-12-04T01:42:57.021026+00:00'

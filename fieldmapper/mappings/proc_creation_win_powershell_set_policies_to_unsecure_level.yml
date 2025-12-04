@@ -1,15 +1,10 @@
-id: 87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180
 title: Change PowerShell Policies to an Insecure Level
+id: 87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180
 status: test
 level: medium
+author: frack113
 description: Detects changing the PowerShell script execution policy to a potentially
     insecure level using the "-ExecutionPolicy" flag.
-author: frack113
-date: '2021-11-01'
-modified: '2023-12-13'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4
@@ -17,11 +12,11 @@ references:
     - https://thedfirreport.com/2021/11/01/from-zero-to-domain-admin/
 falsepositives:
     - Administrator scripts
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cf2e938e-9a3e-4fe8-a347-411642b28a9f''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''61d0475c-173f-4844-86f7-f3eebae1c66b''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''fad91067-08c5-4d1a-8d8c-d96a21b37814''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2021-11-01'
+modified: '2023-12-13'
 logsource:
     category: process_creation
     product: windows
@@ -43,6 +38,13 @@ detection:
             - Bypass
             - Unrestricted
     condition: all of selection_*
+related:
+    -   id: cf2e938e-9a3e-4fe8-a347-411642b28a9f
+        type: similar
+    -   id: 61d0475c-173f-4844-86f7-f3eebae1c66b
+        type: similar
+    -   id: fad91067-08c5-4d1a-8d8c-d96a21b37814
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -50,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:46.415744+00:00'
+            mapped_at: '2025-12-04T01:41:17.207723+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:46.415744+00:00'
+            mapped_at: '2025-12-04T01:41:17.207723+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:46.415772+00:00'
+            mapped_at: '2025-12-04T01:41:17.207738+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:46.415776+00:00'
+            mapped_at: '2025-12-04T01:41:17.207740+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:46.415779+00:00'
+            mapped_at: '2025-12-04T01:41:17.207741+00:00'

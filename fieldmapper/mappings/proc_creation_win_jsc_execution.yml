@@ -1,26 +1,25 @@
-id: 52788a70-f1da-40dd-8fbd-73b5865d6568
 title: JScript Compiler Execution
+id: 52788a70-f1da-40dd-8fbd-73b5865d6568
 status: test
 level: low
+author: frack113
 description: 'Detects the execution of the "jsc.exe" (JScript Compiler).
 
     Attacker might abuse this in order to compile JScript files on the fly and bypassing
     application whitelisting.
 
     '
-author: frack113
-date: '2022-05-02'
-modified: '2024-04-24'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Jsc/
     - https://www.phpied.com/make-your-javascript-a-windows-exe/
     - https://twitter.com/DissectMalware/status/998797808907046913
 falsepositives:
     - Legitimate use to compile JScript by developers.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2022-05-02'
+modified: '2024-04-24'
 logsource:
     category: process_creation
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:01.835070+00:00'
+            mapped_at: '2025-12-04T01:42:18.704656+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:01.835070+00:00'
+            mapped_at: '2025-12-04T01:42:18.704656+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:01.835092+00:00'
+            mapped_at: '2025-12-04T01:42:18.704681+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:01.835096+00:00'
+            mapped_at: '2025-12-04T01:42:18.704684+00:00'

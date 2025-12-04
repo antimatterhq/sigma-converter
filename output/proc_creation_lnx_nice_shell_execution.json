@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Shell Execution via Nice - Linux",
+    "comment": "Detects the use of the \"nice\" utility to execute a shell. Such behavior may be associated with privilege escalation, unauthorized command execution, or to break out from restricted environments.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/nice')) AND (endswith(lower(process.cmd_line), lower('/bin/bash')) OR endswith(lower(process.cmd_line), lower('/bin/dash')) OR endswith(lower(process.cmd_line), lower('/bin/fish')) OR endswith(lower(process.cmd_line), lower('/bin/sh')) OR endswith(lower(process.cmd_line), lower('/bin/zsh'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of the \"nice\" utility to execute a shell. Such behavior may be associated with privilege escalation, unauthorized command execution, or to break out from restricted environments.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://gtfobins.github.io/gtfobins/nice/#shell, https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1083"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

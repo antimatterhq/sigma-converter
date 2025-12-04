@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "System Information Discovery Using sw_vers",
+    "comment": "Detects the use of \"sw_vers\" for system information discovery",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/sw_vers')) AND (contains(lower(process.cmd_line), lower('-buildversion')) OR contains(lower(process.cmd_line), lower('-productname')) OR contains(lower(process.cmd_line), lower('-productversion'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of \"sw_vers\" for system information discovery",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrative activities References: https://www.virustotal.com/gui/file/d3fa64f63563fe958b75238742d1e473800cb5f49f5cb79d38d4aa3c93709026/behavior, https://www.virustotal.com/gui/file/03b71eaceadea05bc0eea5cddecaa05f245126d6b16cfcd0f3ba0442ac58dab3/behavior, https://ss64.com/osx/sw_vers.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

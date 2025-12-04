@@ -1,17 +1,10 @@
-id: ae9d710f-dcd1-4f75-a0a5-93a73b5dda0e
 title: Launch Agent/Daemon Execution Via Launchctl
+id: ae9d710f-dcd1-4f75-a0a5-93a73b5dda0e
 status: experimental
 level: medium
+author: Pratinav Chandra
 description: Detects the execution of programs as Launch Agents or Launch Daemons
     using launchctl on macOS.
-author: Pratinav Chandra
-date: '2024-05-13'
-tags:
-    - attack.execution
-    - attack.persistence
-    - attack.t1569.001
-    - attack.t1543.001
-    - attack.t1543.004
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1569.001/T1569.001.md
     - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
@@ -22,7 +15,13 @@ falsepositives:
     - Legitimate administration activities is expected to trigger false positives.
         Investigate the command line being passed to determine if the service or launch
         agent are suspicious.
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1569.001
+    - attack.t1543.001
+    - attack.t1543.004
+date: '2024-05-13'
 logsource:
     category: process_creation
     product: macos
@@ -41,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:07.017954+00:00'
+            mapped_at: '2025-12-04T01:34:05.106686+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:07.017954+00:00'
+            mapped_at: '2025-12-04T01:34:05.106686+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:07.017990+00:00'
+            mapped_at: '2025-12-04T01:34:05.106721+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:07.017994+00:00'
+            mapped_at: '2025-12-04T01:34:05.106725+00:00'

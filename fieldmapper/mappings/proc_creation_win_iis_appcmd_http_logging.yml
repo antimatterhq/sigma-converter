@@ -1,20 +1,19 @@
-id: e4ed6030-ffe5-4e6a-8a8a-ab3c1ab9d94e
 title: Disable Windows IIS HTTP Logging
+id: e4ed6030-ffe5-4e6a-8a8a-ab3c1ab9d94e
 status: test
 level: high
+author: frack113
 description: Disables HTTP logging on a Windows IIS web server as seen by Threat Group
     3390 (Bronze Union)
-author: frack113
-date: '2022-01-09'
-modified: '2023-01-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.002/T1562.002.md#atomic-test-1---disable-windows-iis-http-logging
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2022-01-09'
+modified: '2023-01-22'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:25.034689+00:00'
+            mapped_at: '2025-12-04T01:46:53.371889+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:25.034689+00:00'
+            mapped_at: '2025-12-04T01:46:53.371889+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:25.034709+00:00'
+            mapped_at: '2025-12-04T01:46:53.371903+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:25.034712+00:00'
+            mapped_at: '2025-12-04T01:46:53.371905+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:25.034714+00:00'
+            mapped_at: '2025-12-04T01:46:53.371906+00:00'

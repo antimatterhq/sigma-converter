@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "CobaltStrike Load by Rundll32",
+    "comment": "Rundll32 can be use by Cobalt Strike with StartW function to load DLLs from the command line.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND (contains(lower(process.cmd_line), lower('rundll32.exe')) OR contains(lower(process.cmd_line), lower('rundll32 '))) AND contains(lower(process.cmd_line), lower('.dll')) AND (endswith(lower(process.cmd_line), lower(' startw')) OR endswith(lower(process.cmd_line), lower(',startw'))))"
+      }
+    },
+    "output": {
+      "summary": "Rundll32 can be use by Cobalt Strike with StartW function to load DLLs from the command line.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.cobaltstrike.com/help-windows-executable, https://redcanary.com/threat-detection-report/, https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Shim Database Persistence via Sdbinst.EXE",
+    "comment": "Detects installation of a new shim using sdbinst.exe. Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by application shims",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sdbinst.exe')) AND lower(process.file.name) = lower('sdbinst.exe') AND contains(lower(process.cmd_line), lower('.sdb')) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\msiexec.exe')) AND (contains(lower(process.cmd_line), lower(':\\\\program files (x86)\\\\iis express\\\\iisexpressshim.sdb')) OR contains(lower(process.cmd_line), lower(':\\\\program files\\\\iis express\\\\iisexpressshim.sdb')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects installation of a new shim using sdbinst.exe. Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by application shims",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.mandiant.com/resources/blog/fin7-shim-databases-persistence",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1546",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

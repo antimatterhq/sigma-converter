@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Scheduled Task Executed From A Suspicious Location",
+    "comment": "Detects the execution of Scheduled Tasks where the Program being run is located in a suspicious location or it's an unusale program to be run from a Scheduled Task",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "taskscheduler",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 129 AND (contains(lower(job.file.path), lower('c:\\\\windows\\\\temp\\\\')) OR contains(lower(job.file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(job.file.path), lower('\\\\desktop\\\\')) OR contains(lower(job.file.path), lower('\\\\downloads\\\\')) OR contains(lower(job.file.path), lower('\\\\users\\\\public\\\\')) OR contains(lower(job.file.path), lower('c:\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of Scheduled Tasks where the Program being run is located in a suspicious location or it's an unusale program to be run from a Scheduled Task",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

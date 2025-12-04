@@ -1,24 +1,23 @@
-id: 2c99737c-585d-4431-b61a-c911d86ff32f
 title: Powerview Add-DomainObjectAcl DCSync AD Extend Right
+id: 2c99737c-585d-4431-b61a-c911d86ff32f
 status: test
 level: high
+author: Samir Bousseaden, Roberto Rodriguez @Cyb3rWard0g, oscd.community, Tim Shelton,
+    Maxence Fossat
 description: Backdooring domain object to grant the rights associated with DCSync
     to a regular user or machine account using Powerview\Add-DomainObjectAcl DCSync
     Extended Right cmdlet, will allow to re-obtain the pwd hashes of any user/computer
-author: Samir Bousseaden, Roberto Rodriguez @Cyb3rWard0g, oscd.community, Tim Shelton,
-    Maxence Fossat
-date: '2019-04-03'
-modified: '2022-08-16'
-tags:
-    - attack.persistence
-    - attack.t1098
 references:
     - https://twitter.com/menasec1/status/1111556090137903104
     - https://www.specterops.io/assets/resources/an_ace_up_the_sleeve.pdf
 falsepositives:
     - New Domain Controller computer account, check user SIDs within the value attribute
         of event 5136 and verify if it's a regular user or DC computer account.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1098
+date: '2019-04-03'
+modified: '2022-08-16'
 logsource:
     product: windows
     service: security
@@ -51,25 +50,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:36.210578+00:00'
+            mapped_at: '2025-12-04T01:55:56.641682+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:36.210578+00:00'
+            mapped_at: '2025-12-04T01:55:56.641682+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: account_change
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:37.191137+00:00'
+            mapped_at: '2025-12-04T01:55:56.641708+00:00'
         -   source_field: AttributeLDAPDisplayName
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:37.191163+00:00'
+            mapped_at: '2025-12-04T01:55:56.641711+00:00'
         -   source_field: AttributeValue
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:37.191168+00:00'
+            mapped_at: '2025-12-04T01:55:56.641714+00:00'
         -   source_field: ObjectClass
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:37.191172+00:00'
+            mapped_at: '2025-12-04T01:55:56.641716+00:00'

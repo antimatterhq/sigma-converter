@@ -1,23 +1,20 @@
-id: 1ddc1472-8e52-4f7d-9f11-eab14fc171f5
 title: PowerShell Decompress Commands
+id: 1ddc1472-8e52-4f7d-9f11-eab14fc171f5
 status: test
 level: informational
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
 description: A General detection for specific decompress commands in PowerShell logs.
     This could be an adversary decompressing files.
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2020-05-02'
-modified: '2022-12-25'
-tags:
-    - attack.defense-evasion
-    - attack.t1140
 references:
     - https://github.com/OTRF/detection-hackathon-apt29/issues/8
     - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/4.A.3_09F29912-8E93-461E-9E89-3F06F6763383.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''81fbdce6-ee49-485a-908d-1a728c5dcb09''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1140
+date: '2020-05-02'
+modified: '2022-12-25'
 logsource:
     category: ps_module
     product: windows
@@ -26,6 +23,9 @@ detection:
     selection_4103:
         Payload|contains: Expand-Archive
     condition: selection_4103
+related:
+    -   id: 81fbdce6-ee49-485a-908d-1a728c5dcb09
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

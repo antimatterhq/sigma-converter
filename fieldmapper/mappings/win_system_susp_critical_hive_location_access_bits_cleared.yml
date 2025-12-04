@@ -1,7 +1,8 @@
-id: 39f919f3-980b-4e6f-a975-8af7e507ef2b
 title: Critical Hive In Suspicious Location Access Bits Cleared
+id: 39f919f3-980b-4e6f-a975-8af7e507ef2b
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects events from the Kernel-General ETW indicating that the access
     bits of a hive with a system like hive name located in the temp directory have
     been reset.
@@ -12,19 +13,15 @@ description: 'Detects events from the Kernel-General ETW indicating that the acc
     Registry hive dumping utilities such as QuarksPwDump were seen emitting this behavior.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2017-05-15'
-modified: '2024-01-18'
-tags:
-    - attack.credential-access
-    - attack.t1003.002
 references:
     - https://github.com/nasbench/Misc-Research/blob/b20da2336de0f342d31ef4794959d28c8d3ba5ba/ETW/Microsoft-Windows-Kernel-General.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''839dd1e8-eda8-4834-8145-01beeee33acd''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+date: '2017-05-15'
+modified: '2024-01-18'
 logsource:
     product: windows
     service: system
@@ -36,6 +33,9 @@ detection:
             - \Temp\SAM
             - \Temp\SECURITY
     condition: selection
+related:
+    -   id: 839dd1e8-eda8-4834-8145-01beeee33acd
+        type: obsolete
 ocsf_mapping:
     class_name: file_activity
     activity_id: <UNMAPPED>
@@ -43,21 +43,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:37.144848+00:00'
+            mapped_at: '2025-12-04T01:57:24.587965+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:37.144848+00:00'
+            mapped_at: '2025-12-04T01:57:24.587965+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: file_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:37.824531+00:00'
+            mapped_at: '2025-12-04T01:57:24.587984+00:00'
         -   source_field: Provider_Name
             target_table: file_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:37.824542+00:00'
+            mapped_at: '2025-12-04T01:57:24.587986+00:00'
         -   source_field: HiveName
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:37.824544+00:00'
+            mapped_at: '2025-12-04T01:57:24.587988+00:00'

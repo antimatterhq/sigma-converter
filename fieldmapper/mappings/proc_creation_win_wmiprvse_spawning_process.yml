@@ -1,22 +1,18 @@
-id: d21374ff-f574-44a7-9998-4a8c8bf33d7d
 title: WmiPrvSE Spawned A Process
+id: d21374ff-f574-44a7-9998-4a8c8bf33d7d
 status: stable
 level: medium
-description: Detects WmiPrvSE spawning a process
 author: Roberto Rodriguez @Cyb3rWard0g
-date: '2019-08-15'
-modified: '2023-03-23'
-tags:
-    - attack.execution
-    - attack.t1047
+description: Detects WmiPrvSE spawning a process
 references:
     - https://threathunterplaybook.com/hunts/windows/190815-RemoteServiceInstallation/notebook.html
 falsepositives:
     - False positives are expected (e.g. in environments where WinRM is used legitimately)
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8a582fe2-0882-4b89-a82a-da6b2dc32937''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''692f0bec-83ba-4d04-af7e-e884a96059b6''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+date: '2019-08-15'
+modified: '2023-03-23'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +34,11 @@ detection:
     filter_null:
         LogonId: null
     condition: selection and not 1 of filter_*
+related:
+    -   id: 8a582fe2-0882-4b89-a82a-da6b2dc32937
+        type: similar
+    -   id: 692f0bec-83ba-4d04-af7e-e884a96059b6
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,25 +46,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:30.271999+00:00'
+            mapped_at: '2025-12-04T01:44:25.620872+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:30.271999+00:00'
+            mapped_at: '2025-12-04T01:44:25.620872+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:29:30.272026+00:00'
+            mapped_at: '2025-12-04T01:44:25.620894+00:00'
         -   source_field: LogonId
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:29:30.272029+00:00'
+            mapped_at: '2025-12-04T01:44:25.620896+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:29:30.272032+00:00'
+            mapped_at: '2025-12-04T01:44:25.620897+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:30.272034+00:00'
+            mapped_at: '2025-12-04T01:44:25.620899+00:00'

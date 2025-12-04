@@ -1,15 +1,9 @@
-id: 00b90cc1-17ec-402c-96ad-3a8117d7a582
 title: Suspicious Curl File Upload - Linux
+id: 00b90cc1-17ec-402c-96ad-3a8117d7a582
 status: test
 level: medium
-description: Detects a suspicious curl process start the adds a file to a web request
 author: Nasreddine Bencherchali (Nextron Systems), Cedric MAURUGEON (Update)
-date: '2022-09-15'
-modified: '2023-05-02'
-tags:
-    - attack.exfiltration
-    - attack.t1567
-    - attack.t1105
+description: Detects a suspicious curl process start the adds a file to a web request
 references:
     - https://twitter.com/d1r4c/status/1279042657508081664
     - https://medium.com/@petehouston/upload-files-with-curl-93064dcccc76
@@ -18,9 +12,12 @@ references:
     - https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html
 falsepositives:
     - Scripts created by developers and admins
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''00bca14a-df4e-4649-9054-3f2aa676bc04''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567
+    - attack.t1105
+date: '2022-09-15'
+modified: '2023-05-02'
 logsource:
     category: process_creation
     product: linux
@@ -39,6 +36,9 @@ detection:
             - ://localhost
             - ://127.0.0.1
     condition: all of selection_* and not 1 of filter_optional_*
+related:
+    -   id: 00bca14a-df4e-4649-9054-3f2aa676bc04
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -46,17 +46,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:13.053084+00:00'
+            mapped_at: '2025-12-04T01:36:22.852191+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:13.053084+00:00'
+            mapped_at: '2025-12-04T01:36:22.852191+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:13.053107+00:00'
+            mapped_at: '2025-12-04T01:36:22.852206+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:13.053109+00:00'
+            mapped_at: '2025-12-04T01:36:22.852208+00:00'

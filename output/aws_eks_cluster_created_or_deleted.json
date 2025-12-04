@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "AWS EKS Cluster Created or Deleted",
+    "comment": "Identifies when an EKS cluster is created or deleted.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('eks.amazonaws.com') AND (lower(LOWER(metadata.event_code)) in ('createcluster', 'deletecluster')))"
+      }
+    },
+    "output": {
+      "summary": "Identifies when an EKS cluster is created or deleted.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. EKS Cluster being created or deleted may be performed by a system administrator. 2. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 3. EKS Cluster created or deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule. Reference: https://any-api.com/amazonaws_com/eks/docs/API_Description",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1485"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

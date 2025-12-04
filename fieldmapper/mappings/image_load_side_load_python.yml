@@ -1,20 +1,19 @@
-id: d36f7c12-14a3-4d48-b6b8-774b9c66f44d
 title: Potential Python DLL SideLoading
+id: d36f7c12-14a3-4d48-b6b8-774b9c66f44d
 status: experimental
 level: medium
-description: Detects potential DLL sideloading of Python DLL files.
 author: Swachchhanda Shrawan Poudel
-date: '2024-10-06'
-tags:
-    - attack.defense-evasion
-    - attack.t1574.002
+description: Detects potential DLL sideloading of Python DLL files.
 references:
     - https://www.securonix.com/blog/seolurker-attack-campaign-uses-seo-poisoning-fake-google-ads-to-install-malware/
     - https://thedfirreport.com/2024/09/30/nitrogen-campaign-drops-sliver-and-ends-with-blackcat-ransomware/
     - https://github.com/wietze/HijackLibs/tree/dc9c9f2f94e6872051dab58fbafb043fdd8b4176/yml/3rd_party/python
 falsepositives:
     - Legitimate software using Python DLLs
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+date: '2024-10-06'
 logsource:
     category: image_load
     product: windows
@@ -49,29 +48,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: image_load
-            mapped_at: '2025-11-26T02:24:42.679564+00:00'
+            mapped_at: '2025-12-04T01:40:38.389666+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:42.679564+00:00'
+            mapped_at: '2025-12-04T01:40:38.389666+00:00'
     detection_fields:
         -   source_field: ImageLoaded
             target_table: process_activity
             target_field: module.file.path
-            mapped_at: '2025-11-26T02:24:43.753870+00:00'
+            mapped_at: '2025-12-04T01:40:38.389687+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:24:43.753880+00:00'
+            mapped_at: '2025-12-04T01:40:38.389690+00:00'
         -   source_field: Signed
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:43.753882+00:00'
+            mapped_at: '2025-12-04T01:40:38.389691+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:24:43.753884+00:00'
+            mapped_at: '2025-12-04T01:40:38.389693+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:43.753886+00:00'
+            mapped_at: '2025-12-04T01:40:38.389694+00:00'

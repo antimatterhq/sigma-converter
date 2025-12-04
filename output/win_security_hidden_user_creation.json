@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Hidden Local User Creation",
+    "comment": "Detects the creation of a local hidden user account which should not happen for event ID 4720.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 4720 AND endswith(lower(user_result.name), lower('$')) AND NOT lower(user_result.name) = lower('homegroupuser$'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a local hidden user account which should not happen for event ID 4720.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/SBousseaden/status/1387743867663958021",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1136",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

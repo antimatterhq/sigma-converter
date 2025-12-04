@@ -58,7 +58,7 @@ class DatabricksBaseBackend(TextQueryBackend):
         time_column: str = "time",
         catalog: str = None,
         schema: str = None,
-        time_filter: str = "24h",
+        time_filter: str = "24 HOUR",
         **backend_options: Dict,
     ):
         super().__init__(

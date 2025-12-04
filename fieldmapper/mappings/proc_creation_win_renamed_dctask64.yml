@@ -1,29 +1,28 @@
-id: 340a090b-c4e9-412e-bb36-b4b16fe96f9b
 title: Renamed ZOHO Dctask64 Execution
+id: 340a090b-c4e9-412e-bb36-b4b16fe96f9b
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects a renamed "dctask64.exe" execution, a signed binary by ZOHO
     Corporation part of ManageEngine Endpoint Central.
 
     This binary can be abused for DLL injection, arbitrary command and process execution.
 
     '
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2020-01-28'
-modified: '2024-04-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
-    - attack.t1055.001
-    - attack.t1202
-    - attack.t1218
 references:
     - https://twitter.com/gN3mes1s/status/1222088214581825540
     - https://twitter.com/gN3mes1s/status/1222095963789111296
     - https://twitter.com/gN3mes1s/status/1222095371175911424
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+    - attack.t1055.001
+    - attack.t1202
+    - attack.t1218
+date: '2020-01-28'
+modified: '2024-04-22'
 logsource:
     category: process_creation
     product: windows
@@ -44,17 +43,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:02.946723+00:00'
+            mapped_at: '2025-12-04T01:49:00.376657+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:02.946723+00:00'
+            mapped_at: '2025-12-04T01:49:00.376657+00:00'
     detection_fields:
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:35:02.946739+00:00'
+            mapped_at: '2025-12-04T01:49:00.376733+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:02.946742+00:00'
+            mapped_at: '2025-12-04T01:49:00.376746+00:00'

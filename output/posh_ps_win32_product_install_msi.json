@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PowerShell WMI Win32_Product Install MSI",
+    "comment": "Detects the execution of an MSI file using PowerShell and the WMI Win32_Product class",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('invoke-cimmethod ')) AND contains(lower(script.script_content.value), lower('-classname ')) AND contains(lower(script.script_content.value), lower('win32_product ')) AND contains(lower(script.script_content.value), lower('-methodname ')) AND contains(lower(script.script_content.value), lower('.msi')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of an MSI file using PowerShell and the WMI Win32_Product class",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

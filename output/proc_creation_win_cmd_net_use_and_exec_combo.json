@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious File Execution From Internet Hosted WebDav Share",
+    "comment": "Detects the execution of the \"net use\" command to mount a WebDAV server and then immediately execute some content in it. As seen being used in malicious LNK files",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND contains(lower(process.cmd_line), lower(' net use http')) AND contains(lower(process.cmd_line), lower('& start /b ')) AND contains(lower(process.cmd_line), lower('\\\\davwwwroot\\\\')) AND (contains(lower(process.cmd_line), lower('.exe ')) OR contains(lower(process.cmd_line), lower('.dll ')) OR contains(lower(process.cmd_line), lower('.bat ')) OR contains(lower(process.cmd_line), lower('.vbs ')) OR contains(lower(process.cmd_line), lower('.ps1 '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the \"net use\" command to mount a WebDAV server and then immediately execute some content in it. As seen being used in malicious LNK files",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/ShadowChasing1/status/1552595370961944576, https://www.virustotal.com/gui/file/a63376ee1dba76361df73338928e528ca5b20171ea74c24581605366dcaa0104/behavior",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

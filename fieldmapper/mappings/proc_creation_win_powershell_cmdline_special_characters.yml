@@ -1,23 +1,22 @@
-id: d7bcd677-645d-4691-a8d4-7a5602b780d1
 title: Potential PowerShell Command Line Obfuscation
+id: d7bcd677-645d-4691-a8d4-7a5602b780d1
 status: test
 level: high
-description: Detects the PowerShell command lines with special characters
 author: Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton
     (fp)
-date: '2020-10-15'
-modified: '2024-04-15'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1027
-    - attack.t1059.001
+description: Detects the PowerShell command lines with special characters
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=64
 falsepositives:
     - Amazon SSM Document Worker
     - Windows Defender ATP
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.t1059.001
+date: '2020-10-15'
+modified: '2024-04-15'
 logsource:
     category: process_creation
     product: windows
@@ -50,25 +49,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:15.722927+00:00'
+            mapped_at: '2025-12-04T01:48:20.567565+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:15.722927+00:00'
+            mapped_at: '2025-12-04T01:48:20.567565+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:15.722961+00:00'
+            mapped_at: '2025-12-04T01:48:20.567581+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:15.722965+00:00'
+            mapped_at: '2025-12-04T01:48:20.567583+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:15.722968+00:00'
+            mapped_at: '2025-12-04T01:48:20.567591+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:34:15.722971+00:00'
+            mapped_at: '2025-12-04T01:48:20.567592+00:00'

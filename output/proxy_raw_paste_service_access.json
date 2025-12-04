@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Raw Paste Service Access",
+    "comment": "Detects direct access to raw pastes in different paste services often used by malware in their second stages to download malicious code in encrypted or encoded form",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (contains(lower(http_request.url), lower('.paste.ee/r/')) OR contains(lower(http_request.url), lower('.pastebin.com/raw/')) OR contains(lower(http_request.url), lower('.hastebin.com/raw/')) OR lower(http_request.url) regexp '.*\\.ghostbin\\.co/paste/.*/raw/.*' OR contains(lower(http_request.url), lower('pastetext.net/')) OR contains(lower(http_request.url), lower('pastebin.pl/')) OR contains(lower(http_request.url), lower('paste.ee/'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects direct access to raw pastes in different paste services often used by malware in their second stages to download malicious code in encrypted or encoded form",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: User activity (e.g. developer that shared and copied code snippets and used the raw link instead of just copy & paste) Reference: https://www.virustotal.com/gui/domain/paste.ee/relations",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1102",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1102",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,16 +1,10 @@
-id: bef37fa2-f205-4a7b-b484-0759bfd5f86f
 title: PUA - Advanced IP Scanner Execution
+id: bef37fa2-f205-4a7b-b484-0759bfd5f86f
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), @ROxPinTeddy
 description: Detects the use of Advanced IP Scanner. Seems to be a popular tool for
     ransomware groups.
-author: Nasreddine Bencherchali (Nextron Systems), @ROxPinTeddy
-date: '2020-05-12'
-modified: '2023-02-07'
-tags:
-    - attack.discovery
-    - attack.t1046
-    - attack.t1135
 references:
     - https://news.sophos.com/en-us/2019/12/09/snatch-ransomware-reboots-pcs-into-safe-mode-to-bypass-protection/
     - https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
@@ -20,7 +14,12 @@ references:
     - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/Advanced%20IP%20Scanner
 falsepositives:
     - Legitimate administrative use
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1046
+    - attack.t1135
+date: '2020-05-12'
+modified: '2023-02-07'
 logsource:
     category: process_creation
     product: windows
@@ -41,25 +40,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:44.333280+00:00'
+            mapped_at: '2025-12-04T01:42:06.634062+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:44.333280+00:00'
+            mapped_at: '2025-12-04T01:42:06.634062+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:44.333313+00:00'
+            mapped_at: '2025-12-04T01:42:06.634074+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:44.333317+00:00'
+            mapped_at: '2025-12-04T01:42:06.634082+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:26:44.333319+00:00'
+            mapped_at: '2025-12-04T01:42:06.634083+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:44.333322+00:00'
+            mapped_at: '2025-12-04T01:42:06.634084+00:00'

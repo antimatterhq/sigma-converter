@@ -1,22 +1,19 @@
-id: 114de787-4eb2-48cc-abdb-c0b449f93ea4
 title: Suspicious X509Enrollment - Process Creation
+id: 114de787-4eb2-48cc-abdb-c0b449f93ea4
 status: test
 level: medium
-description: Detect use of X509Enrollment
 author: frack113
-date: '2022-12-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1553.004
+description: Detect use of X509Enrollment
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=42
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=41
     - https://learn.microsoft.com/en-us/dotnet/api/microsoft.hpc.scheduler.store.cx509enrollmentwebclassfactoryclass?view=hpc-sdk-5.1.6115
 falsepositives:
     - Legitimate administrative script
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''504d63cb-0dba-4d02-8531-e72981aace2c''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1553.004
+date: '2022-12-23'
 logsource:
     category: process_creation
     product: windows
@@ -26,6 +23,9 @@ detection:
             - X509Enrollment.CBinaryConverter
             - 884e2002-217d-11da-b2a4-000e7bbb2b09
     condition: selection
+related:
+    -   id: 504d63cb-0dba-4d02-8531-e72981aace2c
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -33,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:45.382480+00:00'
+            mapped_at: '2025-12-04T01:42:07.963246+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:45.382480+00:00'
+            mapped_at: '2025-12-04T01:42:07.963246+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:45.382493+00:00'
+            mapped_at: '2025-12-04T01:42:07.963259+00:00'

@@ -1,15 +1,10 @@
-id: 8834e2f7-6b4b-4f09-8906-d2276470ee23
 title: PsExec/PAExec Escalation to LOCAL SYSTEM
+id: 8834e2f7-6b4b-4f09-8906-d2276470ee23
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious commandline flags used by PsExec and PAExec to escalate
     a command line to LOCAL_SYSTEM rights
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2021-11-23'
-modified: '2024-03-05'
-tags:
-    - attack.resource-development
-    - attack.t1587.001
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
     - https://www.poweradmin.com/paexec/
@@ -19,9 +14,11 @@ falsepositives:
         purposes (rare)
     - Users that debug Microsoft Intune issues using the commands mentioned in the
         official documentation; see https://learn.microsoft.com/en-us/mem/intune/apps/intune-management-extension
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''207b0396-3689-42d9-8399-4222658efc99''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.resource-development
+    - attack.t1587.001
+date: '2021-11-23'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -43,6 +40,9 @@ detection:
             - paexec
             - accepteula
     condition: all of selection_*
+related:
+    -   id: 207b0396-3689-42d9-8399-4222658efc99
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -50,13 +50,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:14.290321+00:00'
+            mapped_at: '2025-12-04T01:48:19.567021+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:14.290321+00:00'
+            mapped_at: '2025-12-04T01:48:19.567021+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:14.290353+00:00'
+            mapped_at: '2025-12-04T01:48:19.567040+00:00'

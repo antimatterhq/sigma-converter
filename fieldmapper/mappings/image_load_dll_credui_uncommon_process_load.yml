@@ -1,17 +1,11 @@
-id: 9ae01559-cf7e-4f8e-8e14-4c290a1b4784
 title: CredUI.DLL Loaded By Uncommon Process
+id: 9ae01559-cf7e-4f8e-8e14-4c290a1b4784
 status: test
 level: medium
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
 description: Detects loading of "credui.dll" and related DLLs by an uncommon process.
     Attackers might leverage this DLL for potential use of "CredUIPromptForCredentials"
     or "CredUnPackAuthenticationBufferW".
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2020-10-20'
-modified: '2023-07-28'
-tags:
-    - attack.credential-access
-    - attack.collection
-    - attack.t1056.002
 references:
     - https://securitydatasets.com/notebooks/atomic/windows/credential_access/SDWIN-201020013208.html
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.002/T1056.002.md#atomic-test-2---powershell---prompt-user-for-password
@@ -19,7 +13,12 @@ references:
     - https://github.com/S12cybersecurity/RDPCredentialStealer
 falsepositives:
     - Other legitimate processes loading those DLLs in your environment.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.collection
+    - attack.t1056.002
+date: '2020-10-20'
+modified: '2023-07-28'
 logsource:
     category: image_load
     product: windows
@@ -63,21 +62,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: image_load
-            mapped_at: '2025-11-26T02:24:39.951867+00:00'
+            mapped_at: '2025-12-04T01:40:37.770779+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:39.951867+00:00'
+            mapped_at: '2025-12-04T01:40:37.770779+00:00'
     detection_fields:
         -   source_field: ImageLoaded
             target_table: process_activity
             target_field: module.file.path
-            mapped_at: '2025-11-26T02:24:39.951882+00:00'
+            mapped_at: '2025-12-04T01:40:37.770812+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:24:39.951884+00:00'
+            mapped_at: '2025-12-04T01:40:37.770816+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:24:39.951886+00:00'
+            mapped_at: '2025-12-04T01:40:37.770819+00:00'

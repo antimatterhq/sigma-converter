@@ -1,20 +1,19 @@
-id: c9d8b7fd-78e4-44fe-88f6-599135d46d60
 title: Security Software Discovery - Linux
+id: c9d8b7fd-78e4-44fe-88f6-599135d46d60
 status: test
 level: low
+author: Daniil Yugoslavskiy, oscd.community
 description: Detects usage of system utilities (only grep and egrep for now) to discover
     security software discovery
-author: Daniil Yugoslavskiy, oscd.community
-date: '2020-10-19'
-modified: '2022-11-27'
-tags:
-    - attack.discovery
-    - attack.t1518.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md
 falsepositives:
     - Legitimate activities
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1518.001
+date: '2020-10-19'
+modified: '2022-11-27'
 logsource:
     category: process_creation
     product: linux
@@ -40,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:56.616035+00:00'
+            mapped_at: '2025-12-04T01:36:11.138088+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:56.616035+00:00'
+            mapped_at: '2025-12-04T01:36:11.138088+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:56.616048+00:00'
+            mapped_at: '2025-12-04T01:36:11.138102+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:56.616051+00:00'
+            mapped_at: '2025-12-04T01:36:11.138104+00:00'

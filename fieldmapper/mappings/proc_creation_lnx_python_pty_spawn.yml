@@ -1,24 +1,21 @@
-id: c4042d54-110d-45dd-a0e1-05c47822c937
 title: Python Spawning Pretty TTY Via PTY Module
+id: c4042d54-110d-45dd-a0e1-05c47822c937
 status: test
 level: medium
+author: Nextron Systems
 description: 'Detects a python process calling to the PTY module in order to spawn
     a pretty tty which could be indicative of potential reverse shell activity.
 
     '
-author: Nextron Systems
-date: '2022-06-03'
-modified: '2024-11-04'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''32e62bc7-3de0-4bb1-90af-532978fe42c0''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-06-03'
+modified: '2024-11-04'
 logsource:
     category: process_creation
     product: linux
@@ -38,6 +35,9 @@ detection:
     selection_cli_spawn:
         CommandLine|contains: spawn
     condition: all of selection_*
+related:
+    -   id: 32e62bc7-3de0-4bb1-90af-532978fe42c0
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,17 +45,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:52.658381+00:00'
+            mapped_at: '2025-12-04T01:36:09.024042+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:52.658381+00:00'
+            mapped_at: '2025-12-04T01:36:09.024042+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:52.658420+00:00'
+            mapped_at: '2025-12-04T01:36:09.024061+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:52.658423+00:00'
+            mapped_at: '2025-12-04T01:36:09.024062+00:00'

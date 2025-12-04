@@ -1,21 +1,20 @@
-id: fb843269-508c-4b76-8b8d-88679db22ce7
 title: Suspicious Execution of Powershell with Base64
+id: fb843269-508c-4b76-8b8d-88679db22ce7
 status: test
 level: medium
-description: Commandline to launch powershell with a base64 payload
 author: frack113
-date: '2022-01-02'
-modified: '2023-01-05'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Commandline to launch powershell with a base64 payload
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.001/T1059.001.md#atomic-test-20---powershell-invoke-known-malicious-cmdlets
     - https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
     - https://mikefrobbins.com/2017/06/15/simple-obfuscation-with-powershell-using-base64-encoding/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2022-01-02'
+modified: '2023-01-05'
 logsource:
     category: process_creation
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:29.208792+00:00'
+            mapped_at: '2025-12-04T01:41:02.197113+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:29.208792+00:00'
+            mapped_at: '2025-12-04T01:41:02.197113+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:29.208813+00:00'
+            mapped_at: '2025-12-04T01:41:02.197125+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:29.208816+00:00'
+            mapped_at: '2025-12-04T01:41:02.197127+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:29.208817+00:00'
+            mapped_at: '2025-12-04T01:41:02.197128+00:00'

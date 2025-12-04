@@ -1,7 +1,8 @@
-id: 37e4024a-6c80-4d8f-b95d-2e7e94f3a8d1
 title: Outbound Network Connection Initiated By Microsoft Dialer
+id: 37e4024a-6c80-4d8f-b95d-2e7e94f3a8d1
 status: experimental
 level: high
+author: CertainlyP
 description: 'Detects outbound network connection initiated by Microsoft Dialer.
 
     The Microsoft Dialer, also known as Phone Dialer, is a built-in utility application
@@ -14,11 +15,6 @@ description: 'Detects outbound network connection initiated by Microsoft Dialer.
     common example is "Rhadamanthys"
 
     '
-author: CertainlyP
-date: '2024-04-26'
-tags:
-    - attack.execution
-    - attack.t1071.001
 references:
     - https://tria.ge/240301-rk34sagf5x/behavioral2
     - https://app.any.run/tasks/6720b85b-9c53-4a12-b1dc-73052a78477d
@@ -27,7 +23,10 @@ references:
 falsepositives:
     - In Modern Windows systems, unable to see legitimate usage of this process, However,
         if an organization has legitimate purpose for this there can be false positives.
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1071.001
+date: '2024-04-26'
 logsource:
     category: network_connection
     product: windows
@@ -53,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:37.068423+00:00'
+            mapped_at: '2025-12-04T01:51:40.387331+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:37.068423+00:00'
+            mapped_at: '2025-12-04T01:51:40.387331+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:37.068440+00:00'
+            mapped_at: '2025-12-04T01:51:40.387352+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:37.068442+00:00'
+            mapped_at: '2025-12-04T01:51:40.387381+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:37.068443+00:00'
+            mapped_at: '2025-12-04T01:51:40.387382+00:00'

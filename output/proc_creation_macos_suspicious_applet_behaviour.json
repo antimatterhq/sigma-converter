@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Osacompile Execution By Potentially Suspicious Applet/Osascript",
+    "comment": "Detects potential suspicious applet or osascript executing \"osacompile\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('/applet')) OR endswith(lower(process.parent_process.name), lower('/osascript'))) AND contains(lower(process.cmd_line), lower('osacompile')))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential suspicious applet or osascript executing \"osacompile\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://redcanary.com/blog/mac-application-bundles/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

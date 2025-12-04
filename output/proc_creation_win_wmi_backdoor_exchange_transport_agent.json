@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "WMI Backdoor Exchange Transport Agent",
+    "comment": "Detects a WMI backdoor in Exchange Transport Agents via WMI event filters",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\edgetransport.exe')) AND NOT (lower(process.name) = lower('c:\\\\windows\\\\system32\\\\conhost.exe') OR startswith(lower(process.name), lower('c:\\\\program files\\\\microsoft\\\\exchange server\\\\')) AND endswith(lower(process.name), lower('\\\\bin\\\\oleconverter.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a WMI backdoor in Exchange Transport Agents via WMI event filters",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/cglyer/status/1182389676876980224, https://twitter.com/cglyer/status/1182391019633029120",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1546",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

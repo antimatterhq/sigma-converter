@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Rundll32 Setupapi.dll Activity",
+    "comment": "setupapi.dll library provide InstallHinfSection function for processing INF files. INF file may contain instructions allowing to create values in the registry, modify files and install drivers. This technique could be used to obtain persistence via modifying one of Run or RunOnce registry keys, run process or use other DLLs chain calls (see references) InstallHinfSection function in setupapi.dll calls runonce.exe executable regardless of actual content of INF file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\runonce.exe')) AND endswith(lower(process.parent_process.name), lower('\\\\rundll32.exe')) AND contains(lower(process.parent_process.cmd_line), lower('setupapi.dll')) AND contains(lower(process.parent_process.cmd_line), lower('installhinfsection')))"
+      }
+    },
+    "output": {
+      "summary": "setupapi.dll library provide InstallHinfSection function for processing INF files. INF file may contain instructions allowing to create values in the registry, modify files and install drivers. This technique could be used to obtain persistence via modifying one of Run or RunOnce registry keys, run process or use other DLLs chain calls (see references) InstallHinfSection function in setupapi.dll calls runonce.exe executable regardless of actual content of INF file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ComputerName, actor.user.name, process.cmd_line, process.parent_process.cmd_line False positive: Scripts and administrative tools that use INF files for driver installation with setupapi.dll References: https://lolbas-project.github.io/lolbas/Libraries/Setupapi/, https://gist.githubusercontent.com/bohops/0cc6586f205f3691e04a1ebf1806aabd/raw/baf7b29891bb91e76198e30889fbf7d6642e8974/calc_exe.inf, https://raw.githubusercontent.com/huntresslabs/evading-autoruns/master/shady.inf, https://twitter.com/Z3Jpa29z/status/1313742350292746241?s=20",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

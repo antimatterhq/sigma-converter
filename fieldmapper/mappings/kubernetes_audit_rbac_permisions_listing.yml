@@ -1,7 +1,8 @@
-id: 84b777bd-c946-4d17-aa2e-c39f5a454325
 title: RBAC Permission Enumeration Attempt
+id: 84b777bd-c946-4d17-aa2e-c39f5a454325
 status: experimental
 level: low
+author: Leo Tsaousis (@laripping)
 description: 'Detects identities attempting to enumerate their Kubernetes RBAC permissions.
 
     In the early stages of a breach, attackers will aim to list the permissions they
@@ -15,16 +16,14 @@ description: 'Detects identities attempting to enumerate their Kubernetes RBAC p
     user''s authorization.
 
     '
-author: Leo Tsaousis (@laripping)
-date: '2024-03-26'
-tags:
-    - attack.t1069.003
-    - attack.t1087.004
 references:
     - https://www.elastic.co/guide/en/security/current/kubernetes-suspicious-self-subject-review.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1069.003
+    - attack.t1087.004
+date: '2024-03-26'
 logsource:
     category: application
     product: kubernetes
@@ -42,25 +41,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:45.574493+00:00'
+            mapped_at: '2025-12-04T01:40:02.704018+00:00'
         product:
             source_field: product
             source_value: kubernetes
-            mapped_at: '2025-11-26T02:23:45.574493+00:00'
+            mapped_at: '2025-12-04T01:40:02.704018+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:45.574493+00:00'
+            mapped_at: '2025-12-04T01:40:02.704018+00:00'
     detection_fields:
         -   source_field: verb
             target_table: api_activity
             target_field: api.operation
-            mapped_at: '2025-11-26T02:23:45.574508+00:00'
+            mapped_at: '2025-12-04T01:40:02.704031+00:00'
         -   source_field: apiGroup
             target_table: api_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:45.574510+00:00'
+            mapped_at: '2025-12-04T01:40:02.704033+00:00'
         -   source_field: objectRef.resource
             target_table: api_activity
             target_field: resources.name
-            mapped_at: '2025-11-26T02:23:45.574512+00:00'
+            mapped_at: '2025-12-04T01:40:02.704035+00:00'

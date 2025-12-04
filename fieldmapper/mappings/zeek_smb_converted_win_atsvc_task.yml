@@ -1,25 +1,22 @@
-id: dde85b37-40cd-4a94-b00c-0b8794f956b5
 title: Remote Task Creation via ATSVC Named Pipe - Zeek
+id: dde85b37-40cd-4a94-b00c-0b8794f956b5
 status: test
 level: medium
+author: Samir Bousseaden, @neu5rn
 description: Detects remote task creation via at.exe or API interacting with ATSVC
     namedpipe
-author: Samir Bousseaden, @neu5rn
-date: '2020-04-03'
-modified: '2022-12-27'
+references:
+    - https://web.archive.org/web/20230409194125/https://blog.menasec.net/2019/03/threat-hunting-25-scheduled-tasks-for.html
+falsepositives:
+    - Unknown
 tags:
     - attack.lateral-movement
     - attack.persistence
     - car.2013-05-004
     - car.2015-04-001
     - attack.t1053.002
-references:
-    - https://web.archive.org/web/20230409194125/https://blog.menasec.net/2019/03/threat-hunting-25-scheduled-tasks-for.html
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f6de6525-4509-495a-8a82-1f8b0ed73a00''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-04-03'
+modified: '2022-12-27'
 logsource:
     product: zeek
     service: smb_files
@@ -28,6 +25,9 @@ detection:
         path: \\*\IPC$
         name: atsvc
     condition: selection
+related:
+    -   id: f6de6525-4509-495a-8a82-1f8b0ed73a00
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: <UNMAPPED>
@@ -35,17 +35,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:09.817427+00:00'
+            mapped_at: '2025-12-04T01:35:14.644125+00:00'
         service:
             source_field: service
             source_value: smb_files
-            mapped_at: '2025-11-26T02:15:09.817427+00:00'
+            mapped_at: '2025-12-04T01:35:14.644125+00:00'
     detection_fields:
         -   source_field: path
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:15:09.817441+00:00'
+            mapped_at: '2025-12-04T01:35:14.644140+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:15:09.817450+00:00'
+            mapped_at: '2025-12-04T01:35:14.644142+00:00'

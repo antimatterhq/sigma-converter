@@ -1,7 +1,8 @@
-id: 0c9b3bda-41a6-4442-9345-356ae86343dc
 title: Kubernetes CronJob/Job Modification
+id: 0c9b3bda-41a6-4442-9345-356ae86343dc
 status: experimental
 level: medium
+author: kelnage
 description: 'Detects when a Kubernetes CronJob or Job is created or modified.
 
     A Kubernetes Job creates one or more pods to accomplish a specific task, and a
@@ -12,21 +13,17 @@ description: 'Detects when a Kubernetes CronJob or Job is created or modified.
     achieve persistence.
 
     '
-author: kelnage
-date: '2024-07-11'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.execution
 references:
     - https://kubernetes.io/docs/reference/config-api/apiserver-audit.v1/
     - https://www.redhat.com/en/blog/protecting-kubernetes-against-mitre-attck-persistence#technique-33-kubernetes-cronjob
 falsepositives:
     - Modifying a Kubernetes Job or CronJob may need to be done by a system administrator.
     - Automated processes may need to take these actions and may need to be filtered.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cd3a808c-c7b7-4c50-a2f3-f4cfcd436435''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.execution
+date: '2024-07-11'
 logsource:
     product: kubernetes
     service: audit
@@ -43,6 +40,9 @@ detection:
             - replace
             - update
     condition: selection
+related:
+    -   id: cd3a808c-c7b7-4c50-a2f3-f4cfcd436435
+        type: similar
 ocsf_mapping:
     class_name: scheduled_job_activity
     activity_id: 2
@@ -50,21 +50,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: kubernetes
-            mapped_at: '2025-11-26T02:23:36.193964+00:00'
+            mapped_at: '2025-12-04T01:39:58.999828+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:36.193964+00:00'
+            mapped_at: '2025-12-04T01:39:58.999828+00:00'
     detection_fields:
         -   source_field: objectRef.apiGroup
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:37.288990+00:00'
+            mapped_at: '2025-12-04T01:39:58.999842+00:00'
         -   source_field: objectRef.resource
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:37.289007+00:00'
+            mapped_at: '2025-12-04T01:39:58.999844+00:00'
         -   source_field: verb
             target_table: scheduled_job_activity
             target_field: action
-            mapped_at: '2025-11-26T02:23:37.289009+00:00'
+            mapped_at: '2025-12-04T01:39:58.999845+00:00'

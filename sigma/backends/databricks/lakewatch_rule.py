@@ -215,7 +215,7 @@ class RuleMetadata:
 class Schedule:
     """When and how often the rule runs"""
     atLeastEvery: str
-    enabled: bool = field(default=True)
+    enabled: bool = field(default=False)
 
 @dataclass
 class Watermark:
@@ -323,7 +323,7 @@ class RuleSpec:
     output: Output
     metadata: Optional[SpecMetadata] = field(default=None)
     observables: Optional[List[Observable]] = field(default=None)
-    computeMode: Optional[Literal["standard", "high"]] = field(default="standard")
+    computeMode: Optional[Literal["standard", "high"]] = field(default="high")
 
 @dataclass
 class Rule:
@@ -367,7 +367,7 @@ class Rule:
             LakeWatch Rule object
         """
         # Build annotations with logsource fields
-        annotations = {"source": "Sigma"}
+        annotations = {"source": "sigma"}
         
         # Add logsource fields to annotations if available
         if hasattr(rule, 'logsource') and rule.logsource:
@@ -377,6 +377,10 @@ class Rule:
                 annotations["product"] = str(rule.logsource.product)
             if rule.logsource.service:
                 annotations["service"] = str(rule.logsource.service)
+
+        # add the sigma status: since the vast majority are either test or experimental not stable. 
+        # experimental and test rules sometimes lack enough quality information for AI mapping to be accurate.
+        annotations["sigma_status"] = str(rule.status)
         
         # Build metadata
         rule_metadata = RuleMetadata(

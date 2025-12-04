@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Security Tools Keyword Lookup Via Findstr.EXE",
+    "comment": "Detects execution of \"findstr\" to search for common names of security tools. Attackers often pipe the results of recon commands such as \"tasklist\" or \"whoami\" to \"findstr\" in order to filter out the results. This detection focuses on the keywords that the attacker might use as a filter.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\find.exe')) OR endswith(lower(process.name), lower('\\\\findstr.exe'))) AND (lower(LOWER(process.file.name)) in ('find\\.exe', 'findstr\\.exe')) AND (endswith(lower(process.cmd_line), lower(' avira')) OR endswith(lower(process.cmd_line), lower(' avira\"')) OR endswith(lower(process.cmd_line), lower(' cb')) OR endswith(lower(process.cmd_line), lower(' cb\"')) OR endswith(lower(process.cmd_line), lower(' cylance')) OR endswith(lower(process.cmd_line), lower(' cylance\"')) OR endswith(lower(process.cmd_line), lower(' defender')) OR endswith(lower(process.cmd_line), lower(' defender\"')) OR endswith(lower(process.cmd_line), lower(' kaspersky')) OR endswith(lower(process.cmd_line), lower(' kaspersky\"')) OR endswith(lower(process.cmd_line), lower(' kes')) OR endswith(lower(process.cmd_line), lower(' kes\"')) OR endswith(lower(process.cmd_line), lower(' mc')) OR endswith(lower(process.cmd_line), lower(' mc\"')) OR endswith(lower(process.cmd_line), lower(' sec')) OR endswith(lower(process.cmd_line), lower(' sec\"')) OR endswith(lower(process.cmd_line), lower(' sentinel')) OR endswith(lower(process.cmd_line), lower(' sentinel\"')) OR endswith(lower(process.cmd_line), lower(' symantec')) OR endswith(lower(process.cmd_line), lower(' symantec\"')) OR endswith(lower(process.cmd_line), lower(' virus')) OR endswith(lower(process.cmd_line), lower(' virus\"'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"findstr\" to search for common names of security tools. Attackers often pipe the results of recon commands such as \"tasklist\" or \"whoami\" to \"findstr\" in order to filter out the results. This detection focuses on the keywords that the attacker might use as a filter.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/987e3ca988ae3cff4b9f6e388c139c05bf44bbb8/atomics/T1518.001/T1518.001.md#atomic-test-1---security-software-discovery, https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/, https://www.hhs.gov/sites/default/files/manage-engine-vulnerability-sector-alert-tlpclear.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1518",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

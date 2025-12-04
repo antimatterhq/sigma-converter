@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "name": "Cleartext Protocol Usage Via Netflow",
+    "comment": "Ensure that all account usernames and authentication credentials are transmitted across networks using encrypted channels Ensure that an encryption is used for all sensitive information in transit. Ensure that an encrypted channels is used for all administrative account access.",
+    "annotations": {
+      "source": "sigma",
+      "service": "netflow",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM network_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(dst_endpoint.port)) in (8080, 21, 80, 23, 50000, 1521, 27017, 1433, 11211, 3306, 15672, 5900, 5901, 5902, 5903, 5904))"
+      }
+    },
+    "output": {
+      "summary": "Ensure that all account usernames and authentication credentials are transmitted across networks using encrypted channels Ensure that an encryption is used for all sensitive information in transit. Ensure that an encrypted channels is used for all administrative account access.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.cisecurity.org/controls/cis-controls-list/, https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf, https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Credential Dumping Via WER",
+    "comment": "Detects potential credential dumping via Windows Error Reporting LSASS Shtinkering technique which uses the Windows Error Reporting to dump lsass",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\werfault.exe')) AND lower(process.file.name) = lower('werfault.exe') AND (contains(lower(process.parent_process.session.issuer), lower('authori')) OR contains(lower(process.parent_process.session.issuer), lower('autori'))) AND (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))) AND contains(lower(process.cmd_line), lower(' -u -p ')) AND contains(lower(process.cmd_line), lower(' -ip ')) AND contains(lower(process.cmd_line), lower(' -s ')) AND NOT lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\lsass.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential credential dumping via Windows Error Reporting LSASS Shtinkering technique which uses the Windows Error Reporting to dump lsass",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Windows Error Reporting might produce similar behavior. In that case, check the PID associated with the \"-p\" parameter in the CommandLine. References: https://github.com/deepinstinct/Lsass-Shtinkering, https://media.defcon.org/DEF%20CON%2030/DEF%20CON%2030%20presentations/Asaf%20Gilboa%20-%20LSASS%20Shtinkering%20Abusing%20Windows%20Error%20Reporting%20to%20Dump%20LSASS.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

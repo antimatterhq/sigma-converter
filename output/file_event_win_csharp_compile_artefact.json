@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Dynamic CSharp Compile Artefact",
+    "comment": "When C# is compiled dynamically, a .cmdline file will be created as a part of the process. Certain processes are not typically observed compiling C# code, but can do so without touching disk. This can be used to unpack a payload for execution",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND endswith(lower(file.path), lower('.cmdline')))"
+      }
+    },
+    "output": {
+      "summary": "When C# is compiled dynamically, a .cmdline file will be created as a part of the process. Certain processes are not typically observed compiling C# code, but can do so without touching disk. This can be used to unpack a payload for execution",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027.004/T1027.004.md#atomic-test-2---dynamic-c-compile",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

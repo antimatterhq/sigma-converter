@@ -1,7 +1,8 @@
-id: 41f407b5-3096-44ea-a74f-96d04fbc41be
 title: Remote Access Tool - AnyDesk Execution With Known Revoked Signing Certificate
+id: 41f407b5-3096-44ea-a74f-96d04fbc41be
 status: test
 level: medium
+author: Sai Prashanth Pulisetti, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of an AnyDesk binary with a version prior to 8.0.8.
 
     Prior to version 8.0.8, the Anydesk application used a signing certificate that
@@ -14,17 +15,15 @@ description: 'Detects the execution of an AnyDesk binary with a version prior to
     signing their binaries to bypass detections.
 
     '
-author: Sai Prashanth Pulisetti, Nasreddine Bencherchali (Nextron Systems)
-date: '2024-02-08'
-tags:
-    - attack.execution
-    - attack.initial-access
 references:
     - https://www.bleepingcomputer.com/news/security/anydesk-says-hackers-breached-its-production-servers-reset-passwords/
     - https://anydesk.com/en/changelog/windows
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.initial-access
+date: '2024-02-08'
 logsource:
     category: process_creation
     product: windows
@@ -57,33 +56,33 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:02.328967+00:00'
+            mapped_at: '2025-12-04T01:43:16.466297+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:02.328967+00:00'
+            mapped_at: '2025-12-04T01:43:16.466297+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:03.006185+00:00'
+            mapped_at: '2025-12-04T01:43:16.466322+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:28:03.006195+00:00'
+            mapped_at: '2025-12-04T01:43:16.466324+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:28:03.006197+00:00'
+            mapped_at: '2025-12-04T01:43:16.466326+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:03.006198+00:00'
+            mapped_at: '2025-12-04T01:43:16.466327+00:00'
         -   source_field: FileVersion
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:03.006199+00:00'
+            mapped_at: '2025-12-04T01:43:16.466328+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:03.006200+00:00'
+            mapped_at: '2025-12-04T01:43:16.466329+00:00'

@@ -1,21 +1,20 @@
-id: f53714ec-5077-420e-ad20-907ff9bb2958
 title: Forfiles.EXE Child Process Masquerading
+id: f53714ec-5077-420e-ad20-907ff9bb2958
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), Anish Bogati
 description: 'Detects the execution of "forfiles" from a non-default location, in
     order to potentially spawn a custom "cmd.exe" from the current working directory.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Anish Bogati
-date: '2024-01-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://www.hexacorn.com/blog/2023/12/31/1-little-known-secret-of-forfiles-exe/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2024-01-05'
 logsource:
     category: process_creation
     product: windows
@@ -43,25 +42,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:27.203576+00:00'
+            mapped_at: '2025-12-04T01:49:21.052569+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:27.203576+00:00'
+            mapped_at: '2025-12-04T01:49:21.052569+00:00'
     detection_fields:
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:35:27.203600+00:00'
+            mapped_at: '2025-12-04T01:49:21.052587+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:27.203604+00:00'
+            mapped_at: '2025-12-04T01:49:21.052589+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:27.203606+00:00'
+            mapped_at: '2025-12-04T01:49:21.052590+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:27.203608+00:00'
+            mapped_at: '2025-12-04T01:49:21.052594+00:00'

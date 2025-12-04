@@ -1,21 +1,18 @@
-id: a383dec4-deec-4e6e-913b-ed9249670848
 title: Potential Signing Bypass Via Windows Developer Features
+id: a383dec4-deec-4e6e-913b-ed9249670848
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects when a user enable developer features such as "Developer Mode"
     or "Application Sideloading". Which allows the user to install untrusted packages.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-11'
-tags:
-    - attack.defense-evasion
 references:
     - Internal Research
     - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b110ebaf-697f-4da1-afd5-b536fa27a2c1''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-01-11'
 logsource:
     category: process_creation
     product: windows
@@ -30,6 +27,9 @@ detection:
             - DeveloperUnlock
             - EnableSideloading
     condition: all of selection_*
+related:
+    -   id: b110ebaf-697f-4da1-afd5-b536fa27a2c1
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -37,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:31.209519+00:00'
+            mapped_at: '2025-12-04T01:48:32.005529+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:31.209519+00:00'
+            mapped_at: '2025-12-04T01:48:32.005529+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:31.209531+00:00'
+            mapped_at: '2025-12-04T01:48:32.005558+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:31.209533+00:00'
+            mapped_at: '2025-12-04T01:48:32.005563+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:31.209534+00:00'
+            mapped_at: '2025-12-04T01:48:32.005565+00:00'

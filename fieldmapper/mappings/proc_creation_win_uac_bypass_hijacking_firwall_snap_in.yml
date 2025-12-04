@@ -1,19 +1,18 @@
-id: e52cb31c-10ed-4aea-bcb7-593c9f4a315b
 title: UAC Bypass via Windows Firewall Snap-In Hijack
+id: e52cb31c-10ed-4aea-bcb7-593c9f4a315b
 status: test
 level: medium
+author: Tim Rauch, Elastic (idea)
 description: Detects attempts to bypass User Account Control (UAC) by hijacking the
     Microsoft Management Console (MMC) Windows Firewall snap-in
-author: Tim Rauch, Elastic (idea)
-date: '2022-09-27'
-tags:
-    - attack.privilege-escalation
-    - attack.t1548
 references:
     - https://www.elastic.co/guide/en/security/current/uac-bypass-via-windows-firewall-snap-in-hijack.html#uac-bypass-via-windows-firewall-snap-in-hijack
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+date: '2022-09-27'
 logsource:
     category: process_creation
     product: windows
@@ -31,21 +30,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:34.571935+00:00'
+            mapped_at: '2025-12-04T01:42:53.709431+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:34.571935+00:00'
+            mapped_at: '2025-12-04T01:42:53.709431+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:34.571965+00:00'
+            mapped_at: '2025-12-04T01:42:53.709445+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:27:34.571970+00:00'
+            mapped_at: '2025-12-04T01:42:53.709447+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:34.571973+00:00'
+            mapped_at: '2025-12-04T01:42:53.709448+00:00'

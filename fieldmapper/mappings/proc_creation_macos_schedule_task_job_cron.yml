@@ -1,23 +1,22 @@
-id: 7c3b43d8-d794-47d2-800a-d277715aa460
 title: Scheduled Cron Task/Job - MacOs
+id: 7c3b43d8-d794-47d2-800a-d277715aa460
 status: test
 level: medium
+author: Alejandro Ortuno, oscd.community
 description: Detects abuse of the cron utility to perform task scheduling for initial
     or recurring execution of malicious code. Detection will focus on crontab jobs
     uploaded from the tmp folder.
-author: Alejandro Ortuno, oscd.community
-date: '2020-10-06'
-modified: '2022-11-27'
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.003/T1053.003.md
+falsepositives:
+    - Legitimate administration activities
 tags:
     - attack.execution
     - attack.persistence
     - attack.privilege-escalation
     - attack.t1053.003
-references:
-    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.003/T1053.003.md
-falsepositives:
-    - Legitimate administration activities
-taxonomy: sigma
+date: '2020-10-06'
+modified: '2022-11-27'
 logsource:
     category: process_creation
     product: macos
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:49.312290+00:00'
+            mapped_at: '2025-12-04T01:34:42.644803+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:49.312290+00:00'
+            mapped_at: '2025-12-04T01:34:42.644803+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:49.312321+00:00'
+            mapped_at: '2025-12-04T01:34:42.644817+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:49.312325+00:00'
+            mapped_at: '2025-12-04T01:34:42.644825+00:00'

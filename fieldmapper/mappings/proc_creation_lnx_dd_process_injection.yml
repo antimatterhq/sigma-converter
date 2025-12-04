@@ -1,20 +1,19 @@
-id: 4cad6c64-d6df-42d6-8dae-eb78defdc415
 title: Potential Linux Process Code Injection Via DD Utility
+id: 4cad6c64-d6df-42d6-8dae-eb78defdc415
 status: test
 level: medium
+author: Joseph Kamau
 description: Detects the injection of code by overwriting the memory map of a Linux
     process using the "dd" Linux command.
-author: Joseph Kamau
-date: '2023-12-01'
-tags:
-    - attack.defense-evasion
-    - attack.t1055.009
 references:
     - https://www.aon.com/cyber-solutions/aon_cyber_labs/linux-based-inter-process-code-injection-without-ptrace2/
     - https://github.com/AonCyberLabs/Cexigua/blob/34d338620afae4c6335ba8d8d499e1d7d3d5d7b5/overwrite.sh
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1055.009
+date: '2023-12-01'
 logsource:
     category: process_creation
     product: linux
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:44.822571+00:00'
+            mapped_at: '2025-12-04T01:36:53.029620+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:44.822571+00:00'
+            mapped_at: '2025-12-04T01:36:53.029620+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:44.822623+00:00'
+            mapped_at: '2025-12-04T01:36:53.029640+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:44.822627+00:00'
+            mapped_at: '2025-12-04T01:36:53.029643+00:00'

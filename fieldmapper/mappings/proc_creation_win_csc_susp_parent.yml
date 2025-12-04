@@ -1,13 +1,17 @@
-id: b730a276-6b63-41b8-bcf8-55930c8fc6ee
 title: Csc.EXE Execution Form Potentially Suspicious Parent
+id: b730a276-6b63-41b8-bcf8-55930c8fc6ee
 status: test
 level: high
-description: Detects a potentially suspicious parent of "csc.exe", which could be
-    a sign of payload delivery.
 author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
     X__Junior (Nextron Systems)
-date: '2019-02-11'
-modified: '2024-05-27'
+description: Detects a potentially suspicious parent of "csc.exe", which could be
+    a sign of payload delivery.
+references:
+    - https://www.uptycs.com/blog/warzonerat-can-now-evade-with-process-hollowing
+    - https://reaqta.com/2017/11/short-journey-darkvnc/
+    - https://www.pwc.com/gx/en/issues/cybersecurity/cyber-threat-intelligence/yellow-liderc-ships-its-scripts-delivers-imaploader-malware.html
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.t1059.005
@@ -15,13 +19,8 @@ tags:
     - attack.defense-evasion
     - attack.t1218.005
     - attack.t1027.004
-references:
-    - https://www.uptycs.com/blog/warzonerat-can-now-evade-with-process-hollowing
-    - https://reaqta.com/2017/11/short-journey-darkvnc/
-    - https://www.pwc.com/gx/en/issues/cybersecurity/cyber-threat-intelligence/yellow-liderc-ships-its-scripts-delivers-imaploader-malware.html
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2019-02-11'
+modified: '2024-05-27'
 logsource:
     category: process_creation
     product: windows
@@ -89,25 +88,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:48.116116+00:00'
+            mapped_at: '2025-12-04T01:41:18.271763+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:48.116116+00:00'
+            mapped_at: '2025-12-04T01:41:18.271763+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:48.116141+00:00'
+            mapped_at: '2025-12-04T01:41:18.272613+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:48.116143+00:00'
+            mapped_at: '2025-12-04T01:41:18.272619+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:48.116145+00:00'
+            mapped_at: '2025-12-04T01:41:18.272620+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:25:48.116146+00:00'
+            mapped_at: '2025-12-04T01:41:18.272622+00:00'

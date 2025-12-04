@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Indicator Removal on Host - Clear Mac System Logs",
+    "comment": "Detects deletion of local audit logs",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/rm')) OR endswith(lower(process.name), lower('/unlink')) OR endswith(lower(process.name), lower('/shred'))) AND (contains(lower(process.cmd_line), lower('/var/log')) OR contains(lower(process.cmd_line), lower('/users/')) AND contains(lower(process.cmd_line), lower('/library/logs/'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects deletion of local audit logs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.002/T1070.002.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

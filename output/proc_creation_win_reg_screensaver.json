@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious ScreenSave Change by Reg.exe",
+    "comment": "Adversaries may establish persistence by executing malicious content triggered by user inactivity. Screensavers are programs that execute after a configurable time of user inactivity and consist of Portable Executable (PE) files with a .scr file extension",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\reg.exe')) AND (contains(lower(process.cmd_line), lower('hkey_current_user\\\\control panel\\\\desktop')) OR contains(lower(process.cmd_line), lower('hkcu\\\\control panel\\\\desktop'))) AND (contains(lower(process.cmd_line), lower('/v screensaveactive')) AND contains(lower(process.cmd_line), lower('/t reg_sz')) AND contains(lower(process.cmd_line), lower('/d 1')) AND contains(lower(process.cmd_line), lower('/f')) OR contains(lower(process.cmd_line), lower('/v screensavetimeout')) AND contains(lower(process.cmd_line), lower('/t reg_sz')) AND contains(lower(process.cmd_line), lower('/d ')) AND contains(lower(process.cmd_line), lower('/f')) OR contains(lower(process.cmd_line), lower('/v screensaverissecure')) AND contains(lower(process.cmd_line), lower('/t reg_sz')) AND contains(lower(process.cmd_line), lower('/d 0')) AND contains(lower(process.cmd_line), lower('/f')) OR contains(lower(process.cmd_line), lower('/v scrnsave.exe')) AND contains(lower(process.cmd_line), lower('/t reg_sz')) AND contains(lower(process.cmd_line), lower('/d ')) AND contains(lower(process.cmd_line), lower('.scr')) AND contains(lower(process.cmd_line), lower('/f'))))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may establish persistence by executing malicious content triggered by user inactivity. Screensavers are programs that execute after a configurable time of user inactivity and consist of Portable Executable (PE) files with a .scr file extension",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: GPO References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.002/T1546.002.md, https://www.welivesecurity.com/wp-content/uploads/2017/08/eset-gazer.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1546",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

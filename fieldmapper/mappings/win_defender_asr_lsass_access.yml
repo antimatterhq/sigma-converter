@@ -1,20 +1,19 @@
-id: a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98
 title: LSASS Access Detected via Attack Surface Reduction
+id: a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98
 status: test
 level: high
-description: Detects Access to LSASS Process
 author: Markus Neis
-date: '2018-08-26'
-modified: '2022-08-13'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
+description: Detects Access to LSASS Process
 references:
     - https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction
 falsepositives:
     - Google Chrome GoogleUpdate.exe
     - Some Taskmgr.exe related activity
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2018-08-26'
+modified: '2022-08-13'
 logsource:
     product: windows
     service: windefend
@@ -54,21 +53,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:10.441091+00:00'
+            mapped_at: '2025-12-04T01:56:31.502881+00:00'
         service:
             source_field: service
             source_value: windefend
-            mapped_at: '2025-11-26T02:47:10.441091+00:00'
+            mapped_at: '2025-12-04T01:56:31.502881+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:11.543497+00:00'
+            mapped_at: '2025-12-04T01:56:31.502914+00:00'
         -   source_field: Path
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:47:11.543507+00:00'
+            mapped_at: '2025-12-04T01:56:31.502918+00:00'
         -   source_field: ProcessName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:47:11.543509+00:00'
+            mapped_at: '2025-12-04T01:56:31.502921+00:00'

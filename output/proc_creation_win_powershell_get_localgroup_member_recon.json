@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Reconnaissance Activity Using Get-LocalGroupMember Cmdlet",
+    "comment": "Detects suspicious reconnaissance command line activity on Windows systems using the PowerShell Get-LocalGroupMember Cmdlet",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('get-localgroupmember ')) AND (contains(lower(process.cmd_line), lower('domain admins')) OR contains(lower(process.cmd_line), lower(' administrator')) OR contains(lower(process.cmd_line), lower(' administrateur')) OR contains(lower(process.cmd_line), lower('enterprise admins')) OR contains(lower(process.cmd_line), lower('exchange trusted subsystem')) OR contains(lower(process.cmd_line), lower('remote desktop users')) OR contains(lower(process.cmd_line), lower('utilisateurs du bureau \u00e0 distance')) OR contains(lower(process.cmd_line), lower('usuarios de escritorio remoto'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious reconnaissance command line activity on Windows systems using the PowerShell Get-LocalGroupMember Cmdlet",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Administrative activity Reference: https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

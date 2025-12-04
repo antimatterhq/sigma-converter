@@ -1,15 +1,10 @@
-id: faa031b5-21ed-4e02-8881-2591f98d82ed
 title: Unauthorized System Time Modification
+id: faa031b5-21ed-4e02-8881-2591f98d82ed
 status: test
 level: low
+author: '@neu5ron'
 description: Detect scenarios where a potentially unauthorized application or user
     is modifying the system time.
-author: '@neu5ron'
-date: '2019-02-05'
-modified: '2022-08-03'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.006
 references:
     - Private Cuckoo Sandbox (from many years ago, no longer have hash, NDA as well)
     - Live environment caused by malware
@@ -17,7 +12,11 @@ references:
 falsepositives:
     - HyperV or other virtualization technologies with binary not listed in filter
         portion of detection
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.006
+date: '2019-02-05'
+modified: '2022-08-03'
 logsource:
     product: windows
     service: security
@@ -43,21 +42,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:02.975370+00:00'
+            mapped_at: '2025-12-04T01:55:22.432623+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:02.975370+00:00'
+            mapped_at: '2025-12-04T01:55:22.432623+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:03.805448+00:00'
+            mapped_at: '2025-12-04T01:55:22.432642+00:00'
         -   source_field: ProcessName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:44:03.805463+00:00'
+            mapped_at: '2025-12-04T01:55:22.432645+00:00'
         -   source_field: SubjectUserSid
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:03.805466+00:00'
+            mapped_at: '2025-12-04T01:55:22.432646+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PUA - Wsudo Suspicious Execution",
+    "comment": "Detects usage of wsudo (Windows Sudo Utility). Which is a tool that let the user execute programs with different permissions (System, Trusted Installer, Administrator...etc)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\wsudo.exe')) AND lower(process.file.name) = lower('wsudo.exe') AND lower(device.desc) = lower('windows sudo utility') AND endswith(lower(process.parent_process.name), lower('\\\\wsudo-bridge.exe')) OR contains(lower(process.cmd_line), lower('-u system')) OR contains(lower(process.cmd_line), lower('-usystem')) OR contains(lower(process.cmd_line), lower('-u trustedinstaller')) OR contains(lower(process.cmd_line), lower('-utrustedinstaller')) OR contains(lower(process.cmd_line), lower(' --ti '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of wsudo (Windows Sudo Utility). Which is a tool that let the user execute programs with different permissions (System, Trusted Installer, Administrator...etc)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/M2Team/Privexec/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

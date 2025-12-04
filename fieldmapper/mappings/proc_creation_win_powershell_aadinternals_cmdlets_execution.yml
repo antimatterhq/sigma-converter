@@ -1,26 +1,23 @@
-id: c86500e9-a645-4680-98d7-f882c70c1ea3
 title: AADInternals PowerShell Cmdlets Execution - ProccessCreation
+id: c86500e9-a645-4680-98d7-f882c70c1ea3
 status: test
 level: high
+author: Austin Songer (@austinsonger), Nasreddine Bencherchali (Nextron Systems)
 description: Detects ADDInternals Cmdlet execution. A tool for administering Azure
     AD and Office 365. Which can be abused by threat actors to attack Azure AD or
     Office 365.
-author: Austin Songer (@austinsonger), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-23'
+references:
+    - https://o365blog.com/aadinternals/
+    - https://github.com/Gerenios/AADInternals
+falsepositives:
+    - Legitimate use of the library for administrative activity
 tags:
     - attack.execution
     - attack.reconnaissance
     - attack.discovery
     - attack.credential-access
     - attack.impact
-references:
-    - https://o365blog.com/aadinternals/
-    - https://github.com/Gerenios/AADInternals
-falsepositives:
-    - Legitimate use of the library for administrative activity
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''91e69562-2426-42ce-a647-711b8152ced6''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2022-12-23'
 logsource:
     category: process_creation
     product: windows
@@ -56,6 +53,9 @@ detection:
             - Start-AADInt
             - Update-AADInt
     condition: all of selection_*
+related:
+    -   id: 91e69562-2426-42ce-a647-711b8152ced6
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -63,21 +63,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:49.662394+00:00'
+            mapped_at: '2025-12-04T01:45:28.320157+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:49.662394+00:00'
+            mapped_at: '2025-12-04T01:45:28.320157+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:49.662408+00:00'
+            mapped_at: '2025-12-04T01:45:28.320171+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:49.662410+00:00'
+            mapped_at: '2025-12-04T01:45:28.320173+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:49.662422+00:00'
+            mapped_at: '2025-12-04T01:45:28.320174+00:00'

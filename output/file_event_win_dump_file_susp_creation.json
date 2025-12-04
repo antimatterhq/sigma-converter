@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious DMP/HDMP File Creation",
+    "comment": "Detects the creation of a file with the \".dmp\"/\".hdmp\" extension by a shell or scripting application such as \"cmd\", \"powershell\", etc. Often created by software during a crash. Memory dumps can sometimes contain sensitive information such as credentials. It's best to determine the source of the crash.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\cmd.exe')) OR endswith(lower(actor.process.name), lower('\\\\cscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\mshta.exe')) OR endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe')) OR endswith(lower(actor.process.name), lower('\\\\wscript.exe'))) AND (endswith(lower(file.path), lower('.dmp')) OR endswith(lower(file.path), lower('.dump')) OR endswith(lower(file.path), lower('.hdmp'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a file with the \".dmp\"/\".hdmp\" extension by a shell or scripting application such as \"cmd\", \"powershell\", etc. Often created by software during a crash. Memory dumps can sometimes contain sensitive information such as credentials. It's best to determine the source of the crash.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some administrative PowerShell or VB scripts might have the ability to collect dumps and move them to other folders which might trigger a false positive. Reference: https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

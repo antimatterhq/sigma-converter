@@ -1,21 +1,20 @@
-id: d9367cbb-c2e0-47ce-bdc0-128cb6da898d
 title: HackTool - SharpLdapWhoami Execution
+id: d9367cbb-c2e0-47ce-bdc0-128cb6da898d
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects SharpLdapWhoami, a whoami alternative that queries the LDAP service
     on a domain controller
-author: Florian Roth (Nextron Systems)
-date: '2022-08-29'
-modified: '2023-02-04'
-tags:
-    - attack.discovery
-    - attack.t1033
-    - car.2016-03-001
 references:
     - https://github.com/bugch3ck/SharpLdapWhoami
 falsepositives:
     - Programs that use the same command line flags
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1033
+    - car.2016-03-001
+date: '2022-08-29'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -41,25 +40,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:03.516669+00:00'
+            mapped_at: '2025-12-04T01:42:19.682479+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:03.516669+00:00'
+            mapped_at: '2025-12-04T01:42:19.682479+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:03.516687+00:00'
+            mapped_at: '2025-12-04T01:42:19.682513+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:03.516690+00:00'
+            mapped_at: '2025-12-04T01:42:19.682517+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:27:03.516692+00:00'
+            mapped_at: '2025-12-04T01:42:19.682521+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:03.516694+00:00'
+            mapped_at: '2025-12-04T01:42:19.682523+00:00'

@@ -1,19 +1,18 @@
-id: 45a594aa-1fbd-4972-a809-ff5a99dd81b8
 title: Run PowerShell Script from ADS
+id: 45a594aa-1fbd-4972-a809-ff5a99dd81b8
 status: test
 level: high
-description: Detects PowerShell script execution from Alternate Data Stream (ADS)
 author: Sergey Soldatov, Kaspersky Lab, oscd.community
-date: '2019-10-30'
-modified: '2022-07-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.004
+description: Detects PowerShell script execution from Alternate Data Stream (ADS)
 references:
     - https://github.com/p0shkatz/Get-ADS/blob/1c3a3562e713c254edce1995a7d9879c687c7473/Get-ADS.ps1
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.004
+date: '2019-10-30'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:25.337222+00:00'
+            mapped_at: '2025-12-04T01:49:18.955991+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:25.337222+00:00'
+            mapped_at: '2025-12-04T01:49:18.955991+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:25.337242+00:00'
+            mapped_at: '2025-12-04T01:49:18.956004+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:25.337243+00:00'
+            mapped_at: '2025-12-04T01:49:18.956006+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:25.337245+00:00'
+            mapped_at: '2025-12-04T01:49:18.956014+00:00'

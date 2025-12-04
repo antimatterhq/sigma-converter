@@ -1,20 +1,19 @@
-id: 6e22722b-dfb1-4508-a911-49ac840b40f8
 title: Suspicious Mstsc.EXE Execution With Local RDP File
+id: 6e22722b-dfb1-4508-a911-49ac840b40f8
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potential RDP connection via Mstsc using a local ".rdp" file
     located in suspicious locations.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-04-18'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/
     - https://web.archive.org/web/20230726144748/https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/
 falsepositives:
     - Likelihood is related to how often the paths are used in the environment
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2023-04-18'
 logsource:
     category: process_creation
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:11.315397+00:00'
+            mapped_at: '2025-12-04T01:48:16.930394+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:11.315397+00:00'
+            mapped_at: '2025-12-04T01:48:16.930394+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:11.315410+00:00'
+            mapped_at: '2025-12-04T01:48:16.930416+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:11.315411+00:00'
+            mapped_at: '2025-12-04T01:48:16.930419+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:11.315413+00:00'
+            mapped_at: '2025-12-04T01:48:16.930420+00:00'

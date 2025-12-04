@@ -1,23 +1,20 @@
-id: a20def93-0709-4eae-9bd2-31206e21e6b2
 title: DriverQuery.EXE Execution
+id: a20def93-0709-4eae-9bd2-31206e21e6b2
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detect usage of the "driverquery" utility. Which can be used to perform
     reconnaissance on installed drivers
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-19'
-modified: '2023-09-29'
-tags:
-    - attack.discovery
 references:
     - https://thedfirreport.com/2023/01/09/unwrapping-ursnifs-gifts/
     - https://www.vmray.com/cyber-security-blog/analyzing-ursnif-behavior-malware-sandbox/
     - https://www.fireeye.com/blog/threat-research/2020/01/saigon-mysterious-ursnif-fork.html
 falsepositives:
     - Legitimate use by third party tools in order to investigate installed drivers
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9fc3072c-dc8f-4bf7-b231-18950000fadd''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+date: '2023-01-19'
+modified: '2023-09-29'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
             - \Users\Public\
             - \Windows\Temp\
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 9fc3072c-dc8f-4bf7-b231-18950000fadd
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:49.496810+00:00'
+            mapped_at: '2025-12-04T01:42:12.215952+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:49.496810+00:00'
+            mapped_at: '2025-12-04T01:42:12.215952+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:49.496824+00:00'
+            mapped_at: '2025-12-04T01:42:12.215971+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:49.496826+00:00'
+            mapped_at: '2025-12-04T01:42:12.215973+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:49.496827+00:00'
+            mapped_at: '2025-12-04T01:42:12.215975+00:00'

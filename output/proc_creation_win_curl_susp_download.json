@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Curl.EXE Download",
+    "comment": "Detects a suspicious curl process start on Windows and outputs the requested document to a local file",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\curl.exe')) AND lower(metadata.product.name) = lower('the curl executable') AND (contains(lower(process.cmd_line), lower('%appdata%')) OR contains(lower(process.cmd_line), lower('%public%')) OR contains(lower(process.cmd_line), lower('%temp%')) OR contains(lower(process.cmd_line), lower('%tmp%')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\')) OR contains(lower(process.cmd_line), lower('\\\\desktop\\\\')) OR contains(lower(process.cmd_line), lower('\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\perflogs\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\programdata\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\windows\\\\temp\\\\')) OR endswith(lower(process.cmd_line), lower('.dll')) OR endswith(lower(process.cmd_line), lower('.gif')) OR endswith(lower(process.cmd_line), lower('.jpeg')) OR endswith(lower(process.cmd_line), lower('.jpg')) OR endswith(lower(process.cmd_line), lower('.png')) OR endswith(lower(process.cmd_line), lower('.temp')) OR endswith(lower(process.cmd_line), lower('.tmp')) OR endswith(lower(process.cmd_line), lower('.txt')) OR endswith(lower(process.cmd_line), lower('.vbe')) OR endswith(lower(process.cmd_line), lower('.vbs'))) AND NOT (lower(process.parent_process.name) = lower('c:\\\\program files\\\\git\\\\usr\\\\bin\\\\sh.exe') AND lower(process.name) = lower('c:\\\\program files\\\\git\\\\mingw64\\\\bin\\\\curl.exe') AND contains(lower(process.cmd_line), lower('--silent --show-error --output ')) AND contains(lower(process.cmd_line), lower('gfw-httpget-')) AND contains(lower(process.cmd_line), lower('appdata'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious curl process start on Windows and outputs the requested document to a local file",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/max_mal_/status/1542461200797163522, https://web.archive.org/web/20200128160046/https://twitter.com/reegun21/status/1222093798009790464, https://github.com/pr0xylife/Qakbot/blob/4f0795d79dabee5bc9dd69f17a626b48852e7869/Qakbot_AA_23.06.2022.txt, https://www.volexity.com/blog/2022/07/28/sharptongue-deploys-clever-mail-stealing-browser-extension-sharpext/, https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1105/T1105.md#atomic-test-18---curl-download-file",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

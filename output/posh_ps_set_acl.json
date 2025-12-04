@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PowerShell Script Change Permission Via Set-Acl - PsScript",
+    "comment": "Detects PowerShell scripts set ACL to of a file or a folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('set-acl ')) AND contains(lower(script.script_content.value), lower('-aclobject ')) AND contains(lower(script.script_content.value), lower('-path ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell scripts set ACL to of a file or a folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/74438b0237d141ee9c99747976447dc884cb1a39/atomics/T1505.005/T1505.005.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1222"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Webshell Tool Reconnaissance Activity",
+    "comment": "Detects processes spawned from web servers (PHP, Tomcat, IIS, etc.) that perform reconnaissance looking for the existence of popular scripting tools (perl, python, wget) on the system via the help commands",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\caddy.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\httpd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\nginx.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\php-cgi.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\w3wp.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\ws_tomcatservice.exe')) OR (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\javaw.exe'))) AND (contains(lower(process.parent_process.name), lower('-tomcat-')) OR contains(lower(process.parent_process.name), lower('\\\\tomcat'))) OR (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\javaw.exe'))) AND (contains(lower(process.cmd_line), lower('catalina_home')) OR contains(lower(process.cmd_line), lower('catalina.jar')))) AND (contains(lower(process.cmd_line), lower('perl --help')) OR contains(lower(process.cmd_line), lower('perl -h')) OR contains(lower(process.cmd_line), lower('python --help')) OR contains(lower(process.cmd_line), lower('python -h')) OR contains(lower(process.cmd_line), lower('python3 --help')) OR contains(lower(process.cmd_line), lower('python3 -h')) OR contains(lower(process.cmd_line), lower('wget --help'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects processes spawned from web servers (PHP, Tomcat, IIS, etc.) that perform reconnaissance looking for the existence of popular scripting tools (perl, python, wget) on the system via the help commands",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://ragged-lab.blogspot.com/2020/07/webshells-automating-reconnaissance.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

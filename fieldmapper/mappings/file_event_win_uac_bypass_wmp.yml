@@ -1,21 +1,20 @@
-id: 68578b43-65df-4f81-9a9b-92f32711a951
 title: UAC Bypass Using Windows Media Player - File
+id: 68578b43-65df-4f81-9a9b-92f32711a951
 status: test
 level: high
+author: Christian Burkard (Nextron Systems)
 description: Detects the pattern of UAC Bypass using Windows Media Player osksupport.dll
     (UACMe 32)
-author: Christian Burkard (Nextron Systems)
-date: '2021-08-23'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1548.002
 references:
     - https://github.com/hfiref0x/UACME
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+date: '2021-08-23'
+modified: '2022-10-09'
 logsource:
     category: file_event
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:10.016747+00:00'
+            mapped_at: '2025-12-04T01:52:00.771591+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:10.016747+00:00'
+            mapped_at: '2025-12-04T01:52:00.771591+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:10.016772+00:00'
+            mapped_at: '2025-12-04T01:52:00.771608+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:10.016775+00:00'
+            mapped_at: '2025-12-04T01:52:00.771610+00:00'

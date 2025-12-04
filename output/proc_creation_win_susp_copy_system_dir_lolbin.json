@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "LOL-Binary Copied From System Directory",
+    "comment": "Detects a suspicious copy operation that tries to copy a known LOLBIN from system (System32, SysWOW64, WinSxS) directories to another on disk in order to bypass detections based on locations.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\cmd.exe')) AND contains(lower(process.cmd_line), lower('copy ')) OR (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (contains(lower(process.cmd_line), lower('copy-item')) OR contains(lower(process.cmd_line), lower(' copy ')) OR contains(lower(process.cmd_line), lower('cpi ')) OR contains(lower(process.cmd_line), lower(' cp '))) OR (endswith(lower(process.name), lower('\\\\robocopy.exe')) OR endswith(lower(process.name), lower('\\\\xcopy.exe'))) AND (lower(LOWER(process.file.name)) in ('robocopy\\.exe', 'xcopy\\.exe'))) AND (contains(lower(process.cmd_line), lower('\\\\system32')) OR contains(lower(process.cmd_line), lower('\\\\syswow64')) OR contains(lower(process.cmd_line), lower('\\\\winsxs'))) AND (contains(lower(process.cmd_line), lower('\\\\bitsadmin.exe')) OR contains(lower(process.cmd_line), lower('\\\\calc.exe')) OR contains(lower(process.cmd_line), lower('\\\\certutil.exe')) OR contains(lower(process.cmd_line), lower('\\\\cmdl32.exe')) OR contains(lower(process.cmd_line), lower('\\\\cscript.exe')) OR contains(lower(process.cmd_line), lower('\\\\mshta.exe')) OR contains(lower(process.cmd_line), lower('\\\\rundll32.exe')) OR contains(lower(process.cmd_line), lower('\\\\wscript.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious copy operation that tries to copy a known LOLBIN from system (System32, SysWOW64, WinSxS) directories to another on disk in order to bypass detections based on locations.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.hybrid-analysis.com/sample/8da5b75b6380a41eee3a399c43dfe0d99eeefaa1fd21027a07b1ecaa4cd96fdd?environmentId=120, https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html, https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

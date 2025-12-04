@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious Usage Of ShellExec_RunDLL",
+    "comment": "Detects suspicious usage of the ShellExec_RunDLL function to launch other commands as seen in the the raspberry-robin attack",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('shellexec_rundll')) AND (contains(lower(process.cmd_line), lower('\\\\desktop\\\\')) OR contains(lower(process.cmd_line), lower('\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower('comspec')) OR contains(lower(process.cmd_line), lower('iex')) OR contains(lower(process.cmd_line), lower('invoke-')) OR contains(lower(process.cmd_line), lower('msiexec')) OR contains(lower(process.cmd_line), lower('odbcconf')) OR contains(lower(process.cmd_line), lower('regsvr32'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious usage of the ShellExec_RunDLL function to launch other commands as seen in the the raspberry-robin attack",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://redcanary.com/blog/raspberry-robin/, https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/, https://github.com/SigmaHQ/sigma/issues/1009",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

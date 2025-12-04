@@ -1,19 +1,18 @@
-id: c1d147ae-a951-48e5-8b41-dcd0170c7213
 title: App Granted Microsoft Permissions
+id: c1d147ae-a951-48e5-8b41-dcd0170c7213
 status: test
 level: high
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
 description: Detects when an application is granted delegated or app role permissions
     for Microsoft Graph, Exchange, Sharepoint, or Azure AD
-author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
-date: '2022-07-10'
-tags:
-    - attack.credential-access
-    - attack.t1528
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-granted-highly-privileged-permissions
 falsepositives:
     - When the permission is legitimately needed for the app
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1528
+date: '2022-07-10'
 logsource:
     product: azure
     service: auditlogs
@@ -30,13 +29,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:25.805807+00:00'
+            mapped_at: '2025-12-04T01:37:45.741722+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:25.805807+00:00'
+            mapped_at: '2025-12-04T01:37:45.741722+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:19:25.805819+00:00'
+            mapped_at: '2025-12-04T01:37:45.741737+00:00'

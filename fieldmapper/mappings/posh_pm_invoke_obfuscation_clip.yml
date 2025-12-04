@@ -1,23 +1,20 @@
-id: a136cde0-61ad-4a61-9b82-8dc490e60dd2
 title: Invoke-Obfuscation CLIP+ Launcher - PowerShell Module
+id: a136cde0-61ad-4a61-9b82-8dc490e60dd2
 status: test
 level: high
-description: Detects Obfuscated use of Clip.exe to execute PowerShell
 author: Jonathan Cheong, oscd.community
-date: '2020-10-13'
-modified: '2024-04-05'
+description: Detects Obfuscated use of Clip.exe to execute PowerShell
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''73e67340-0d25-11eb-adc1-0242ac120002''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-13'
+modified: '2024-04-05'
 logsource:
     category: ps_module
     product: windows
@@ -26,6 +23,9 @@ detection:
     selection_4103:
         Payload|re: cmd.{0,5}(?:/c|/r).+clip(?:\.exe)?.{0,4}&&.+clipboard]::\(\s\\"\{\d\}.+-f.+"
     condition: selection_4103
+related:
+    -   id: 73e67340-0d25-11eb-adc1-0242ac120002
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,22 +1,21 @@
-id: b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5
 title: HackTool - HandleKatz Duplicating LSASS Handle
+id: b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5
 status: test
 level: high
+author: Bhabesh Raj (rule), @thefLinkk
 description: Detects HandleKatz opening LSASS to duplicate its handle to later dump
     the memory without opening any new handles
-author: Bhabesh Raj (rule), @thefLinkk
-date: '2022-06-27'
-modified: '2023-11-28'
+references:
+    - https://github.com/codewhitesec/HandleKatz
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.t1106
     - attack.defense-evasion
     - attack.t1003.001
-references:
-    - https://github.com/codewhitesec/HandleKatz
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-06-27'
+modified: '2023-11-28'
 logsource:
     category: process_access
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:14.760007+00:00'
+            mapped_at: '2025-12-04T01:40:22.408575+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:14.760007+00:00'
+            mapped_at: '2025-12-04T01:40:22.408575+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:14.760033+00:00'
+            mapped_at: '2025-12-04T01:40:22.408614+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:14.760037+00:00'
+            mapped_at: '2025-12-04T01:40:22.408616+00:00'
         -   source_field: CallTrace
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:14.760040+00:00'
+            mapped_at: '2025-12-04T01:40:22.408617+00:00'

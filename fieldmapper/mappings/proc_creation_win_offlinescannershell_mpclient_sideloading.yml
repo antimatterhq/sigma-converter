@@ -1,7 +1,8 @@
-id: 02b18447-ea83-4b1b-8805-714a8a34546a
 title: Potential Mpclient.DLL Sideloading Via OfflineScannerShell.EXE Execution
+id: 02b18447-ea83-4b1b-8805-714a8a34546a
 status: test
 level: medium
+author: frack113
 description: 'Detects execution of Windows Defender "OfflineScannerShell.exe" from
     its non standard directory.
 
@@ -9,17 +10,15 @@ description: 'Detects execution of Windows Defender "OfflineScannerShell.exe" fr
     load any DLL named "mpclient.dll" from the current working directory.
 
     '
-author: frack113
-date: '2022-03-06'
-modified: '2023-08-03'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/OfflineScannerShell/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-03-06'
+modified: '2023-08-03'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:50.533317+00:00'
+            mapped_at: '2025-12-04T01:43:54.217610+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:50.533317+00:00'
+            mapped_at: '2025-12-04T01:43:54.217610+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:50.533339+00:00'
+            mapped_at: '2025-12-04T01:43:54.217627+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:50.533342+00:00'
+            mapped_at: '2025-12-04T01:43:54.217629+00:00'
         -   source_field: CurrentDirectory
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:50.533344+00:00'
+            mapped_at: '2025-12-04T01:43:54.217631+00:00'

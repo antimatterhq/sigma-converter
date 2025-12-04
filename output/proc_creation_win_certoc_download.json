@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "File Download via CertOC.EXE",
+    "comment": "Detects when a user downloads a file by using CertOC.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certoc.exe')) AND lower(process.file.name) = lower('certoc.exe') AND contains(lower(process.cmd_line), lower('-getcacaps')) AND contains(lower(process.cmd_line), lower('http')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a user downloads a file by using CertOC.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://lolbas-project.github.io/lolbas/Binaries/Certoc/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

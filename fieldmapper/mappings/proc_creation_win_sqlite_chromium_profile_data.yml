@@ -1,24 +1,23 @@
-id: 24c77512-782b-448a-8950-eddb0785fc71
 title: SQLite Chromium Profile Data DB Access
+id: 24c77512-782b-448a-8950-eddb0785fc71
 status: test
 level: high
+author: TropChaud
 description: Detect usage of the "sqlite" binary to query databases in Chromium-based
     browsers for potential data stealing.
-author: TropChaud
-date: '2022-12-19'
-modified: '2023-01-19'
+references:
+    - https://github.com/redcanaryco/atomic-red-team/blob/84d9edaaaa2c5511144521b0e4af726d1c7276ce/atomics/T1539/T1539.md#atomic-test-2---steal-chrome-cookies-windows
+    - https://blog.cyble.com/2022/04/21/prynt-stealer-a-new-info-stealer-performing-clipper-and-keylogger-activities/
+falsepositives:
+    - Unknown
 tags:
     - attack.credential-access
     - attack.t1539
     - attack.t1555.003
     - attack.collection
     - attack.t1005
-references:
-    - https://github.com/redcanaryco/atomic-red-team/blob/84d9edaaaa2c5511144521b0e4af726d1c7276ce/atomics/T1539/T1539.md#atomic-test-2---steal-chrome-cookies-windows
-    - https://blog.cyble.com/2022/04/21/prynt-stealer-a-new-info-stealer-performing-clipper-and-keylogger-activities/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-12-19'
+modified: '2023-01-19'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:36.144797+00:00'
+            mapped_at: '2025-12-04T01:48:36.870697+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:36.144797+00:00'
+            mapped_at: '2025-12-04T01:48:36.870697+00:00'
     detection_fields:
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:34:36.144827+00:00'
+            mapped_at: '2025-12-04T01:48:36.870714+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:36.144831+00:00'
+            mapped_at: '2025-12-04T01:48:36.870716+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:36.144834+00:00'
+            mapped_at: '2025-12-04T01:48:36.870717+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious JWT Token Search Via CLI",
+    "comment": "Detects possible search for JWT tokens via CLI by looking for the string \"eyJ0eX\" or \"eyJhbG\". This string is used as an anchor to look for the start of the JWT token used by microsoft office and similar apps.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('eyj0exaioi')) OR contains(lower(process.cmd_line), lower('eyjhbgcioi')) OR contains(lower(process.cmd_line), lower(' eyj0ex')) OR contains(lower(process.cmd_line), lower(' \"eyj0ex\"')) OR contains(lower(process.cmd_line), lower(' \\'eyj0ex\\'')) OR contains(lower(process.cmd_line), lower(' eyjhbg')) OR contains(lower(process.cmd_line), lower(' \"eyjhbg\"')) OR contains(lower(process.cmd_line), lower(' \\'eyjhbg\\''))))"
+      }
+    },
+    "output": {
+      "summary": "Detects possible search for JWT tokens via CLI by looking for the string \"eyJ0eX\" or \"eyJhbG\". This string is used as an anchor to look for the start of the JWT token used by microsoft office and similar apps.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://mrd0x.com/stealing-tokens-from-office-applications/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1528"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

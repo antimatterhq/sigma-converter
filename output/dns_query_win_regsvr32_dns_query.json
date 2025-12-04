@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "DNS Query Request By Regsvr32.EXE",
+    "comment": "Detects DNS queries initiated by \"Regsvr32.exe\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns_query",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(process.name), lower('\\\\regsvr32.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects DNS queries initiated by \"Regsvr32.exe\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://pentestlab.blog/2017/05/11/applocker-bypass-regsvr32/, https://oddvar.moe/2017/12/13/applocker-case-study-how-insecure-is-it-really-part-1/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1559",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

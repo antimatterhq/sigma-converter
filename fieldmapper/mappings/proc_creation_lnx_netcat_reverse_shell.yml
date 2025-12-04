@@ -1,14 +1,10 @@
-id: 7f734ed0-4f47-46c0-837f-6ee62505abd9
 title: Potential Netcat Reverse Shell Execution
+id: 7f734ed0-4f47-46c0-837f-6ee62505abd9
 status: test
 level: high
+author: '@d4ns4n_, Nasreddine Bencherchali (Nextron Systems)'
 description: Detects execution of netcat with the "-e" flag followed by common shells.
     This could be a sign of a potential reverse shell setup.
-author: '@d4ns4n_, Nasreddine Bencherchali (Nextron Systems)'
-date: '2023-04-07'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
     - https://www.revshells.com/
@@ -17,7 +13,10 @@ references:
     - https://man7.org/linux/man-pages/man1/ncat.1.html
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2023-04-07'
 logsource:
     category: process_creation
     product: linux
@@ -66,17 +65,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:50.009731+00:00'
+            mapped_at: '2025-12-04T01:36:04.370373+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:50.009731+00:00'
+            mapped_at: '2025-12-04T01:36:04.370373+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:50.009756+00:00'
+            mapped_at: '2025-12-04T01:36:04.370389+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:50.009760+00:00'
+            mapped_at: '2025-12-04T01:36:04.370391+00:00'

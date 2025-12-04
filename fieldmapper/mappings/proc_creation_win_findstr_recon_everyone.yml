@@ -1,24 +1,23 @@
-id: 47e4bab7-c626-47dc-967b-255608c9a920
 title: Permission Misconfiguration Reconnaissance Via Findstr.EXE
+id: 47e4bab7-c626-47dc-967b-255608c9a920
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects usage of findstr with the "EVERYONE" or "BUILTIN" keywords.
 
     This was seen being used in combination with "icacls" and other utilities to spot
     misconfigured files or folders permissions.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-12'
-modified: '2023-11-11'
-tags:
-    - attack.credential-access
-    - attack.t1552.006
 references:
     - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1552.006
+date: '2022-08-12'
+modified: '2023-11-11'
 logsource:
     category: process_creation
     product: windows
@@ -49,21 +48,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:05.625220+00:00'
+            mapped_at: '2025-12-04T01:50:49.248873+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:05.625220+00:00'
+            mapped_at: '2025-12-04T01:50:49.248873+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:05.625236+00:00'
+            mapped_at: '2025-12-04T01:50:49.248898+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:05.625239+00:00'
+            mapped_at: '2025-12-04T01:50:49.248900+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:05.625241+00:00'
+            mapped_at: '2025-12-04T01:50:49.248902+00:00'

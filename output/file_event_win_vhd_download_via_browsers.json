@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "VHD Image Download Via Browser",
+    "comment": "Detects creation of \".vhd\"/\".vhdx\" files by browser processes. Malware can use mountable Virtual Hard Disk \".vhd\" files to encapsulate payloads and evade security controls.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\brave.exe')) OR endswith(lower(actor.process.name), lower('\\\\chrome.exe')) OR endswith(lower(actor.process.name), lower('\\\\firefox.exe')) OR endswith(lower(actor.process.name), lower('\\\\iexplore.exe')) OR endswith(lower(actor.process.name), lower('\\\\maxthon.exe')) OR endswith(lower(actor.process.name), lower('\\\\microsoftedge.exe')) OR endswith(lower(actor.process.name), lower('\\\\msedge.exe')) OR endswith(lower(actor.process.name), lower('\\\\msedgewebview2.exe')) OR endswith(lower(actor.process.name), lower('\\\\opera.exe')) OR endswith(lower(actor.process.name), lower('\\\\safari.exe')) OR endswith(lower(actor.process.name), lower('\\\\seamonkey.exe')) OR endswith(lower(actor.process.name), lower('\\\\vivaldi.exe')) OR endswith(lower(actor.process.name), lower('\\\\whale.exe'))) AND contains(lower(file.path), lower('.vhd')))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of \".vhd\"/\".vhdx\" files by browser processes. Malware can use mountable Virtual Hard Disk \".vhd\" files to encapsulate payloads and evade security controls.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate downloads of \".vhd\" files would also trigger this References: https://redcanary.com/blog/intelligence-insights-october-2021/, https://www.kaspersky.com/blog/lazarus-vhd-ransomware/36559/, https://securelist.com/lazarus-on-the-hunt-for-big-game/97757/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Resource-Development",
+          "techniqueId": "T1587",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Remote Desktop Connection to Non-Domain Host",
+    "comment": "Detects logons using NTLM to hosts that are potentially not part of the domain.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "ntlm",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 8001 AND startswith(lower(file.name), lower('termsrv')))"
+      }
+    },
+    "output": {
+      "summary": "Detects logons using NTLM to hosts that are potentially not part of the domain.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: Computer, UserName, DomainName, file.name False positives: 1. Host connections to valid domains, exclude these. 2. Host connections not using host FQDN. 3. Host connections to external legitimate domains. Reference: n/a",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1219"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

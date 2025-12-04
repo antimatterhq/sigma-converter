@@ -1,26 +1,22 @@
-id: 514e4c3a-c77d-4cde-a00f-046425e2301e
 title: Abuse of Service Permissions to Hide Services Via Set-Service
+id: 514e4c3a-c77d-4cde-a00f-046425e2301e
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the "Set-Service" powershell cmdlet to configure a new
     SecurityDescriptor that allows a service to be hidden from other utilities such
     as "sc.exe", "Get-Service"...etc. (Works only in powershell 7)
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-17'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1574.011
 references:
     - https://twitter.com/Alh4zr3d/status/1580925761996828672
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2
 falsepositives:
     - Rare intended use of hidden services
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a537cfc3-4297-4789-92b5-345bfd845ad0''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''953945c5-22fe-4a92-9f8a-a9edc1e522da''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.011
+date: '2022-10-17'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +33,11 @@ detection:
             - '-SecurityDescriptorSddl '
             - '-sd '
     condition: all of selection_*
+related:
+    -   id: a537cfc3-4297-4789-92b5-345bfd845ad0
+        type: derived
+    -   id: 953945c5-22fe-4a92-9f8a-a9edc1e522da
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:08.476750+00:00'
+            mapped_at: '2025-12-04T01:42:24.051092+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:08.476750+00:00'
+            mapped_at: '2025-12-04T01:42:24.051092+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:08.476778+00:00'
+            mapped_at: '2025-12-04T01:42:24.051105+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:08.476782+00:00'
+            mapped_at: '2025-12-04T01:42:24.051107+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:08.476785+00:00'
+            mapped_at: '2025-12-04T01:42:24.051108+00:00'

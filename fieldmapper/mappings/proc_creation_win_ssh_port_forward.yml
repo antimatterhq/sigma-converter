@@ -1,22 +1,21 @@
-id: 327f48c1-a6db-4eb8-875a-f6981f1b0183
 title: Port Forwarding Activity Via SSH.EXE
+id: 327f48c1-a6db-4eb8-875a-f6981f1b0183
 status: test
 level: medium
-description: Detects port forwarding activity via SSH.exe
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-12'
-modified: '2024-03-05'
+description: Detects port forwarding activity via SSH.exe
+references:
+    - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+falsepositives:
+    - Administrative activity using a remote port forwarding to a local port
 tags:
     - attack.command-and-control
     - attack.lateral-movement
     - attack.t1572
     - attack.t1021.001
     - attack.t1021.004
-references:
-    - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
-falsepositives:
-    - Administrative activity using a remote port forwarding to a local port
-taxonomy: sigma
+date: '2022-10-12'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:38.187159+00:00'
+            mapped_at: '2025-12-04T01:50:19.510476+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:38.187159+00:00'
+            mapped_at: '2025-12-04T01:50:19.510476+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:38.187188+00:00'
+            mapped_at: '2025-12-04T01:50:19.510491+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:38.187192+00:00'
+            mapped_at: '2025-12-04T01:50:19.510493+00:00'

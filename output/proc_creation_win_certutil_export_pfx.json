@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Certificate Exported Via Certutil.EXE",
+    "comment": "Detects the execution of the certutil with the \"exportPFX\" flag which allows the utility to export certificates.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certutil.exe')) AND lower(process.file.name) = lower('certutil.exe') AND (contains(lower(process.cmd_line), lower('-exportpfx ')) OR contains(lower(process.cmd_line), lower('/exportpfx ')) OR contains(lower(process.cmd_line), lower('\u2013exportpfx ')) OR contains(lower(process.cmd_line), lower('\u2014exportpfx ')) OR contains(lower(process.cmd_line), lower('\u2015exportpfx '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the certutil with the \"exportPFX\" flag which allows the utility to export certificates.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: There legitimate reasons to export certificates. Investigate the activity to determine if it's benign Reference: https://www.splunk.com/en_us/blog/security/a-golden-saml-journey-solarwinds-continued.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

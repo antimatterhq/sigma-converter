@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Rundll32 Execution Without Parameters",
+    "comment": "Detects rundll32 execution without parameters as observed when running Metasploit windows/smb/psexec exploit module",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(process.cmd_line)) in ('rundll32\\.exe', 'rundll32')))"
+      }
+    },
+    "output": {
+      "summary": "Detects rundll32 execution without parameters as observed when running Metasploit windows/smb/psexec exploit module",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ComputerName, actor.user.name, process.cmd_line, process.name, process.parent_process.name False positive: False positives may occur if a user called rundll32 from CLI with no options Reference: https://bczyz1.github.io/2021/01/30/psexec.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1569",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1570"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

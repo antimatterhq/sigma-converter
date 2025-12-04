@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Defense Evasion Via Rename Of Highly Relevant Binaries",
+    "comment": "Detects the execution of a renamed binary often used by attackers or malware leveraging new Sysmon OriginalFileName datapoint.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(device.desc) = lower('execute processes remotely') AND lower(metadata.product.name) = lower('sysinternals psexec') AND (startswith(lower(device.desc), lower('windows powershell')) OR startswith(lower(device.desc), lower('pwsh'))) AND (lower(LOWER(process.file.name)) in ('certutil\\.exe', 'cmstp\\.exe', 'cscript\\.exe', 'ie4uinit\\.exe', 'mshta\\.exe', 'msiexec\\.exe', 'msxsl\\.exe', 'powershell_ise\\.exe', 'powershell\\.exe', 'psexec\\.c', 'psexec\\.exe', 'psexesvc\\.exe', 'pwsh\\.dll', 'reg\\.exe', 'regsvr32\\.exe', 'rundll32\\.exe', 'wermgr', 'wmic\\.exe', 'wscript\\.exe')) AND NOT (endswith(lower(process.name), lower('\\\\certutil.exe')) OR endswith(lower(process.name), lower('\\\\cmstp.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\ie4uinit.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\msiexec.exe')) OR endswith(lower(process.name), lower('\\\\msxsl.exe')) OR endswith(lower(process.name), lower('\\\\powershell_ise.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\psexec.exe')) OR endswith(lower(process.name), lower('\\\\psexec64.exe')) OR endswith(lower(process.name), lower('\\\\psexesvc.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\reg.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\wermgr.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a renamed binary often used by attackers or malware leveraging new Sysmon OriginalFileName datapoint.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Custom applications use renamed binaries adding slight change to binary name. Typically this is easy to spot and add to whitelist 2. PsExec installed via Windows Store doesn't contain original filename field (False negative) References: https://mgreen27.github.io/posts/2019/05/12/BinaryRename.html, https://mgreen27.github.io/posts/2019/05/29/BinaryRename2.html, https://www.trendmicro.com/vinfo/hk-en/security/news/cybercrime-and-digital-threats/megacortex-ransomware-spotted-attacking-enterprise-networks, https://twitter.com/christophetd/status/1164506034720952320, https://threatresearch.ext.hp.com/svcready-a-new-loader-reveals-itself/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

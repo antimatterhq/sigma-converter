@@ -1,21 +1,18 @@
-id: 241e802a-b65e-484f-88cd-c2dc10f9206d
 title: Read Contents From Stdin Via Cmd.EXE
+id: 241e802a-b65e-484f-88cd-c2dc10f9206d
 status: test
 level: medium
-description: Detect the use of "<" to read and potentially execute a file via cmd.exe
 author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-03-07'
-tags:
-    - attack.execution
-    - attack.t1059.003
+description: Detect the use of "<" to read and potentially execute a file via cmd.exe
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1059.003/T1059.003.md
     - https://web.archive.org/web/20220306121156/https://www.x86matthew.com/view_post?id=ntdll_pipe
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''00a4bacd-6db4-46d5-9258-a7d5ebff4003''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.003
+date: '2023-03-07'
 logsource:
     category: process_creation
     product: windows
@@ -26,6 +23,9 @@ detection:
     selection_cli:
         CommandLine|contains: <
     condition: all of selection_*
+related:
+    -   id: 00a4bacd-6db4-46d5-9258-a7d5ebff4003
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -33,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:51.475090+00:00'
+            mapped_at: '2025-12-04T01:50:32.421347+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:51.475090+00:00'
+            mapped_at: '2025-12-04T01:50:32.421347+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:51.475102+00:00'
+            mapped_at: '2025-12-04T01:50:32.421360+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:51.475104+00:00'
+            mapped_at: '2025-12-04T01:50:32.421363+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:51.475105+00:00'
+            mapped_at: '2025-12-04T01:50:32.421364+00:00'

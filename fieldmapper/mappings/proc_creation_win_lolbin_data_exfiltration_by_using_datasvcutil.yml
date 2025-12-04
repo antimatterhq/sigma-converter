@@ -1,14 +1,9 @@
-id: e290b10b-1023-4452-a4a9-eb31a9013b3a
 title: LOLBAS Data Exfiltration by DataSvcUtil.exe
+id: e290b10b-1023-4452-a4a9-eb31a9013b3a
 status: test
 level: medium
-description: Detects when a user performs data exfiltration by using DataSvcUtil.exe
 author: Ialle Teixeira @teixeira0xfffff, Austin Songer @austinsonger
-date: '2021-09-30'
-modified: '2022-05-16'
-tags:
-    - attack.exfiltration
-    - attack.t1567
+description: Detects when a user performs data exfiltration by using DataSvcUtil.exe
 references:
     - https://gist.github.com/teixeira0xfffff/837e5bfed0d1b0a29a7cb1e5dbdd9ca6
     - https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/wcf/wcf-data-service-client-utility-datasvcutil-exe
@@ -27,7 +22,11 @@ falsepositives:
     - DataSvcUtil.exe being executed from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567
+date: '2021-09-30'
+modified: '2022-05-16'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:10.720140+00:00'
+            mapped_at: '2025-12-04T01:43:22.803304+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:10.720140+00:00'
+            mapped_at: '2025-12-04T01:43:22.803304+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:10.720169+00:00'
+            mapped_at: '2025-12-04T01:43:22.803334+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:10.720173+00:00'
+            mapped_at: '2025-12-04T01:43:22.803338+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:10.720176+00:00'
+            mapped_at: '2025-12-04T01:43:22.803341+00:00'

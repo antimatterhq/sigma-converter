@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Schedule Task Creation From Env Variable Or Potentially Suspicious Path Via S...",
+    "comment": "Detects Schtask creations that point to a suspicious folder or an environment variable often used by malware",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\schtasks.exe')) AND contains(lower(process.cmd_line), lower(' /create ')) AND (contains(lower(process.cmd_line), lower(':\\\\perflogs')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\all users\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\default\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\roaming\\\\')) OR contains(lower(process.cmd_line), lower('%appdata%')) OR contains(lower(process.cmd_line), lower('%public%'))) OR endswith(lower(process.parent_process.cmd_line), lower('\\\\svchost.exe -k netsvcs -p -s schedule')) AND (contains(lower(process.cmd_line), lower(':\\\\perflogs')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp')) OR contains(lower(process.cmd_line), lower('\\\\users\\\\public')) OR contains(lower(process.cmd_line), lower('%public%')))) AND NOT (contains(lower(process.parent_process.cmd_line), lower('unattended.ini')) AND contains(lower(process.cmd_line), lower('update_task.xml')) OR contains(lower(process.cmd_line), lower('/create /tn tvinstallrestore /tr')) OR contains(lower(process.cmd_line), lower('/create /xml \"c:\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\.cr.')) AND contains(lower(process.cmd_line), lower('avira_security_installation.xml')) OR contains(lower(process.cmd_line), lower('/create /f /tn')) AND contains(lower(process.cmd_line), lower('/xml ')) AND contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\is-')) AND contains(lower(process.cmd_line), lower('avira_')) AND (contains(lower(process.cmd_line), lower('.tmp\\\\updatefallbacktask.xml')) OR contains(lower(process.cmd_line), lower('.tmp\\\\watchdogservicecontrolmanagertimeout.xml')) OR contains(lower(process.cmd_line), lower('.tmp\\\\systrayautostart.xml')) OR contains(lower(process.cmd_line), lower('.tmp\\\\maintenancetask.xml'))) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\')) AND contains(lower(process.cmd_line), lower('/create /tn \"klcp_update\" /xml ')) AND contains(lower(process.cmd_line), lower('\\\\klcp_update_task.xml'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Schtask creations that point to a suspicious folder or an environment variable often used by malware",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Benign scheduled tasks creations or executions that happen often during software installations 2. Software that uses the AppData folder and scheduled tasks to update the software in the AppData folders References: https://www.welivesecurity.com/2022/01/18/donot-go-do-not-respawn/, https://www.joesandbox.com/analysis/514608/0/html#324415FF7D8324231381BAD48A052F85DF04, https://blog.talosintelligence.com/gophish-powerrat-dcrat/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

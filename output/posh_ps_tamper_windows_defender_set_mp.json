@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Tamper Windows Defender - ScriptBlockLogging",
+    "comment": "Detects PowerShell scripts attempting to disable scheduled scanning and other parts of Windows Defender ATP or set default actions to allow.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('set-mppreference')) AND (contains(lower(script.script_content.value), lower('-dbaf $true')) OR contains(lower(script.script_content.value), lower('-dbaf 1')) OR contains(lower(script.script_content.value), lower('-dbm $true')) OR contains(lower(script.script_content.value), lower('-dbm 1')) OR contains(lower(script.script_content.value), lower('-dips $true')) OR contains(lower(script.script_content.value), lower('-dips 1')) OR contains(lower(script.script_content.value), lower('-disablearchivescanning $true')) OR contains(lower(script.script_content.value), lower('-disablearchivescanning 1')) OR contains(lower(script.script_content.value), lower('-disablebehaviormonitoring $true')) OR contains(lower(script.script_content.value), lower('-disablebehaviormonitoring 1')) OR contains(lower(script.script_content.value), lower('-disableblockatfirstseen $true')) OR contains(lower(script.script_content.value), lower('-disableblockatfirstseen 1')) OR contains(lower(script.script_content.value), lower('-disablecatchupfullscan $true')) OR contains(lower(script.script_content.value), lower('-disablecatchupfullscan 1')) OR contains(lower(script.script_content.value), lower('-disablecatchupquickscan $true')) OR contains(lower(script.script_content.value), lower('-disablecatchupquickscan 1')) OR contains(lower(script.script_content.value), lower('-disableintrusionpreventionsystem $true')) OR contains(lower(script.script_content.value), lower('-disableintrusionpreventionsystem 1')) OR contains(lower(script.script_content.value), lower('-disableioavprotection $true')) OR contains(lower(script.script_content.value), lower('-disableioavprotection 1')) OR contains(lower(script.script_content.value), lower('-disablerealtimemonitoring $true')) OR contains(lower(script.script_content.value), lower('-disablerealtimemonitoring 1')) OR contains(lower(script.script_content.value), lower('-disableremovabledrivescanning $true')) OR contains(lower(script.script_content.value), lower('-disableremovabledrivescanning 1')) OR contains(lower(script.script_content.value), lower('-disablescanningmappednetworkdrivesforfullscan $true')) OR contains(lower(script.script_content.value), lower('-disablescanningmappednetworkdrivesforfullscan 1')) OR contains(lower(script.script_content.value), lower('-disablescanningnetworkfiles $true')) OR contains(lower(script.script_content.value), lower('-disablescanningnetworkfiles 1')) OR contains(lower(script.script_content.value), lower('-disablescriptscanning $true')) OR contains(lower(script.script_content.value), lower('-disablescriptscanning 1')) OR contains(lower(script.script_content.value), lower('-mapsreporting $false')) OR contains(lower(script.script_content.value), lower('-mapsreporting 0')) OR contains(lower(script.script_content.value), lower('-drdsc $true')) OR contains(lower(script.script_content.value), lower('-drdsc 1')) OR contains(lower(script.script_content.value), lower('-drtm $true')) OR contains(lower(script.script_content.value), lower('-drtm 1')) OR contains(lower(script.script_content.value), lower('-dscrptsc $true')) OR contains(lower(script.script_content.value), lower('-dscrptsc 1')) OR contains(lower(script.script_content.value), lower('-dsmndf $true')) OR contains(lower(script.script_content.value), lower('-dsmndf 1')) OR contains(lower(script.script_content.value), lower('-dsnf $true')) OR contains(lower(script.script_content.value), lower('-dsnf 1')) OR contains(lower(script.script_content.value), lower('-dss $true')) OR contains(lower(script.script_content.value), lower('-dss 1'))) OR contains(lower(script.script_content.value), lower('set-mppreference')) AND (contains(lower(script.script_content.value), lower('highthreatdefaultaction allow')) OR contains(lower(script.script_content.value), lower('htdefac allow')) OR contains(lower(script.script_content.value), lower('lowthreatdefaultaction allow')) OR contains(lower(script.script_content.value), lower('ltdefac allow')) OR contains(lower(script.script_content.value), lower('moderatethreatdefaultaction allow')) OR contains(lower(script.script_content.value), lower('mtdefac allow')) OR contains(lower(script.script_content.value), lower('severethreatdefaultaction allow')) OR contains(lower(script.script_content.value), lower('stdefac allow'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell scripts attempting to disable scheduled scanning and other parts of Windows Defender ATP or set default actions to allow.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate PowerShell scripts that disable Windows Defender for troubleshooting purposes. Must be investigated. References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md, https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps, https://bidouillesecurity.com/disable-windows-defender-in-powershell/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

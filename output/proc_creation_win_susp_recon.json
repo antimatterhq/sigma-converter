@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Recon Information for Export with Command Prompt",
+    "comment": "Once established within a system or network, an adversary may use automated techniques for collecting internal data.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\tree.com')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\doskey.exe')) OR endswith(lower(process.name), lower('\\\\sc.exe'))) AND (lower(LOWER(process.file.name)) in ('wmic\\.exe', 'doskey\\.exe', 'sc\\.exe')) AND (contains(lower(process.parent_process.cmd_line), lower(' > %temp%\\\\')) OR contains(lower(process.parent_process.cmd_line), lower(' > %tmp%\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Once established within a system or network, an adversary may use automated techniques for collecting internal data.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1119"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

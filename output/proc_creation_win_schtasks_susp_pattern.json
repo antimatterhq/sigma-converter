@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Command Patterns In Scheduled Task Creation",
+    "comment": "Detects scheduled task creation using \"schtasks\" that contain potentially suspicious or uncommon commands",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\schtasks.exe')) AND contains(lower(process.cmd_line), lower('/create ')) AND ((contains(lower(process.cmd_line), lower('/sc minute ')) OR contains(lower(process.cmd_line), lower('/ru system '))) AND (contains(lower(process.cmd_line), lower('cmd /c')) OR contains(lower(process.cmd_line), lower('cmd /k')) OR contains(lower(process.cmd_line), lower('cmd /r')) OR contains(lower(process.cmd_line), lower('cmd.exe /c ')) OR contains(lower(process.cmd_line), lower('cmd.exe /k ')) OR contains(lower(process.cmd_line), lower('cmd.exe /r '))) OR contains(lower(process.cmd_line), lower(' -decode ')) OR contains(lower(process.cmd_line), lower(' -enc ')) OR contains(lower(process.cmd_line), lower(' -w hidden ')) OR contains(lower(process.cmd_line), lower(' bypass ')) OR contains(lower(process.cmd_line), lower(' iex')) OR contains(lower(process.cmd_line), lower('.downloaddata')) OR contains(lower(process.cmd_line), lower('.downloadfile')) OR contains(lower(process.cmd_line), lower('.downloadstring')) OR contains(lower(process.cmd_line), lower('/c start /min ')) OR contains(lower(process.cmd_line), lower('frombase64string')) OR contains(lower(process.cmd_line), lower('mshta http')) OR contains(lower(process.cmd_line), lower('mshta.exe http')) OR (contains(lower(process.cmd_line), lower(':\\\\programdata\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\tmp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\')) OR contains(lower(process.cmd_line), lower('%appdata%')) OR contains(lower(process.cmd_line), lower('%temp%')) OR contains(lower(process.cmd_line), lower('%tmp%'))) AND (contains(lower(process.cmd_line), lower('cscript')) OR contains(lower(process.cmd_line), lower('curl')) OR contains(lower(process.cmd_line), lower('wscript')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects scheduled task creation using \"schtasks\" that contain potentially suspicious or uncommon commands",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Software installers that run from temporary folders and also install scheduled tasks are expected to generate some false positives References: https://app.any.run/tasks/512c1352-6380-4436-b27d-bb62f0c020d6/, https://twitter.com/RedDrip7/status/1506480588827467785, https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/devil-bait/NCSC-MAR-Devil-Bait.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

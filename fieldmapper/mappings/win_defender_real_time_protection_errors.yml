@@ -1,15 +1,10 @@
-id: dd80db93-6ec2-4f4c-a017-ad40da6ffe81
 title: Windows Defender Real-Time Protection Failure/Restart
+id: dd80db93-6ec2-4f4c-a017-ad40da6ffe81
 status: stable
 level: medium
-description: Detects issues with Windows Defender Real-Time Protection features
 author: Nasreddine Bencherchali (Nextron Systems), Christopher Peacock '@securepeacock'
     (Update)
-date: '2023-03-28'
-modified: '2023-05-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
+description: Detects issues with Windows Defender Real-Time Protection features
 references:
     - Internal Research
     - https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/
@@ -17,7 +12,11 @@ references:
 falsepositives:
     - Some crashes can occur sometimes and the event doesn't provide enough information
         to tune out these cases. Manual exception is required
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2023-03-28'
+modified: '2023-05-05'
 logsource:
     product: windows
     service: windefend
@@ -39,21 +38,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:12.592312+00:00'
+            mapped_at: '2025-12-04T01:56:32.304350+00:00'
         service:
             source_field: service
             source_value: windefend
-            mapped_at: '2025-11-26T02:47:12.592312+00:00'
+            mapped_at: '2025-12-04T01:56:32.304350+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:13.516739+00:00'
+            mapped_at: '2025-12-04T01:56:32.304381+00:00'
         -   source_field: Feature_Name
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:13.516753+00:00'
+            mapped_at: '2025-12-04T01:56:32.304385+00:00'
         -   source_field: Reason
             target_table: process_activity
             target_field: process.session.expiration_reason
-            mapped_at: '2025-11-26T02:47:13.516756+00:00'
+            mapped_at: '2025-12-04T01:56:32.304388+00:00'

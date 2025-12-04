@@ -1,20 +1,19 @@
-id: 54b9a76a-3c71-4673-b4b3-2edb4566ea7b
 title: AWS EC2 VM Export Failure
+id: 54b9a76a-3c71-4673-b4b3-2edb4566ea7b
 status: test
 level: low
+author: Diogo Braz
 description: An attempt to export an AWS EC2 instance has been detected. A VM Export
     might indicate an attempt to extract information from an instance.
-author: Diogo Braz
-date: '2020-04-16'
-modified: '2022-10-05'
+references:
+    - https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance
 tags:
     - attack.collection
     - attack.t1005
     - attack.exfiltration
     - attack.t1537
-references:
-    - https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance
-taxonomy: sigma
+date: '2020-04-16'
+modified: '2022-10-05'
 logsource:
     product: aws
     service: cloudtrail
@@ -36,29 +35,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:26.479594+00:00'
+            mapped_at: '2025-12-04T01:39:13.954575+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:26.479594+00:00'
+            mapped_at: '2025-12-04T01:39:13.954575+00:00'
     detection_fields:
         -   source_field: eventName
             target_table: datastore_activity
             target_field: api.operation
-            mapped_at: '2025-11-26T02:22:27.463150+00:00'
+            mapped_at: '2025-12-04T01:39:13.954631+00:00'
         -   source_field: eventSource
             target_table: datastore_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:22:27.463167+00:00'
+            mapped_at: '2025-12-04T01:39:13.954638+00:00'
         -   source_field: errorMessage
             target_table: datastore_activity
             target_field: api.response.message
-            mapped_at: '2025-11-26T02:22:27.463171+00:00'
+            mapped_at: '2025-12-04T01:39:13.954640+00:00'
         -   source_field: errorCode
             target_table: datastore_activity
             target_field: api.response.code
-            mapped_at: '2025-11-26T02:22:27.463184+00:00'
+            mapped_at: '2025-12-04T01:39:13.954641+00:00'
         -   source_field: responseElements
             target_table: datastore_activity
             target_field: api.response.data
-            mapped_at: '2025-11-26T02:22:27.463188+00:00'
+            mapped_at: '2025-12-04T01:39:13.954642+00:00'

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious Electron Application Child Processes",
+    "comment": "Detects suspicious child processes of electron apps (teams, discord, slack, etc.). This could be a potential sign of \".asar\" file tampering (See reference section for more information) or binary execution proxy through specific CLI arguments (see related rule)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\chrome.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\discord.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\githubdesktop.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\keybase.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msedge.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msedgewebview2.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msteams.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\slack.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\teams.exe'))) AND (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\whoami.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR contains(lower(process.name), lower(':\\\\programdata\\\\')) OR contains(lower(process.name), lower(':\\\\temp\\\\')) OR contains(lower(process.name), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.name), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower('\\\\windows\\\\temp\\\\'))) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\discord.exe')) AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND contains(lower(process.cmd_line), lower('\\\\nvsmi\\\\nvidia-smi.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes of electron apps (teams, discord, slack, etc.). This could be a potential sign of \".asar\" file tampering (See reference section for more information) or binary execution proxy through specific CLI arguments (see related rule)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://taggart-tech.com/quasar-electron/, https://github.com/mttaggart/quasar, https://positive.security/blog/ms-officecmd-rce, https://lolbas-project.github.io/lolbas/Binaries/Msedge/, https://lolbas-project.github.io/lolbas/Binaries/Teams/, https://lolbas-project.github.io/lolbas/Binaries/msedgewebview2/, https://medium.com/@MalFuzzer/one-electron-to-rule-them-all-dc2e9b263daf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Access To Windows DPAPI Master Keys By Uncommon Applications",
+    "comment": "Detects file access requests to the the Windows Data Protection API Master keys by an uncommon application. This can be a sign of credential stealing. Example case would be usage of mimikatz \"dpapi::masterkey\" function",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_access",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND (contains(lower(file.name), lower('\\\\microsoft\\\\protect\\\\s-1-5-18\\\\')) OR contains(lower(file.name), lower('\\\\microsoft\\\\protect\\\\s-1-5-21-'))) AND NOT (startswith(lower(actor.process.name), lower('c:\\\\program files\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\program files (x86)\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\windows\\\\syswow64\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects file access requests to the the Windows Data Protection API Master keys by an uncommon application. This can be a sign of credential stealing. Example case would be usage of mimikatz \"dpapi::masterkey\" function",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: http://blog.harmj0y.net/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/, https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1555",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

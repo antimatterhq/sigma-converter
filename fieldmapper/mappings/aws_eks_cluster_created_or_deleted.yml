@@ -1,14 +1,9 @@
-id: 33d50d03-20ec-4b74-a74e-1e65a38af1c0
 title: AWS EKS Cluster Created or Deleted
+id: 33d50d03-20ec-4b74-a74e-1e65a38af1c0
 status: test
 level: low
-description: Identifies when an EKS cluster is created or deleted.
 author: Austin Songer
-date: '2021-08-16'
-modified: '2022-10-09'
-tags:
-    - attack.impact
-    - attack.t1485
+description: Identifies when an EKS cluster is created or deleted.
 references:
     - https://any-api.com/amazonaws_com/eks/docs/API_Description
 falsepositives:
@@ -18,7 +13,11 @@ falsepositives:
     - EKS Cluster created or deleted from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1485
+date: '2021-08-16'
+modified: '2022-10-09'
 logsource:
     product: aws
     service: cloudtrail
@@ -36,17 +35,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:44.867855+00:00'
+            mapped_at: '2025-12-04T01:39:23.105459+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:44.867855+00:00'
+            mapped_at: '2025-12-04T01:39:23.105459+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:44.867917+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:23.105493+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:44.867922+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:23.105498+00:00'

@@ -1,23 +1,20 @@
-id: 07ad2ea8-6a55-4ac6-bf3e-91b8e59676eb
 title: Invoke-Obfuscation Via Use MSHTA - PowerShell Module
+id: 07ad2ea8-6a55-4ac6-bf3e-91b8e59676eb
 status: test
 level: high
-description: Detects Obfuscated Powershell via use MSHTA in Scripts
 author: Nikita Nazarov, oscd.community
-date: '2020-10-08'
-modified: '2023-01-04'
+description: Detects Obfuscated Powershell via use MSHTA in Scripts
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e55a5195-4724-480e-a77e-3ebe64bd3759''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-08'
+modified: '2023-01-04'
 logsource:
     category: ps_module
     product: windows
@@ -32,6 +29,9 @@ detection:
             - .run
             - (window.close)
     condition: selection
+related:
+    -   id: e55a5195-4724-480e-a77e-3ebe64bd3759
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

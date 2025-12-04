@@ -1,20 +1,17 @@
-id: 480e7e51-e797-47e3-8d72-ebfce65b6d8d
 title: Python Spawning Pretty TTY on Windows
+id: 480e7e51-e797-47e3-8d72-ebfce65b6d8d
 status: test
 level: high
-description: Detects python spawning a pretty tty
 author: Nextron Systems
-date: '2022-06-03'
-tags:
-    - attack.execution
-    - attack.t1059
+description: Detects python spawning a pretty tty
 references:
     - https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''899133d5-4d7c-4a7f-94ee-27355c879d90''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-06-03'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +28,9 @@ detection:
     selection_cli_2:
         CommandLine|contains: from pty import spawn
     condition: selection_img and 1 of selection_cli_*
+related:
+    -   id: 899133d5-4d7c-4a7f-94ee-27355c879d90
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:59.255085+00:00'
+            mapped_at: '2025-12-04T01:49:45.954533+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:59.255085+00:00'
+            mapped_at: '2025-12-04T01:49:45.954533+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:59.255109+00:00'
+            mapped_at: '2025-12-04T01:49:45.954549+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:59.255112+00:00'
+            mapped_at: '2025-12-04T01:49:45.954551+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PUA - SoftPerfect Netscan Execution",
+    "comment": "Detects usage of SoftPerfect's \"netscan.exe\". An application for scanning networks. It is actively used in-the-wild by threat actors to inspect and understand the network architecture of a victim.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\netscan.exe')) AND lower(metadata.product.name) = lower('network scanner') AND lower(device.desc) = lower('application for scanning networks'))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of SoftPerfect's \"netscan.exe\". An application for scanning networks. It is actively used in-the-wild by threat actors to inspect and understand the network architecture of a victim.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrator activity References: https://www.protect.airbus.com/blog/uncovering-cyber-intruders-netscan/, https://secjoes-reports.s3.eu-central-1.amazonaws.com/Sockbot%2Bin%2BGoLand.pdf, https://www.sentinelone.com/labs/black-basta-ransomware-attacks-deploy-custom-edr-evasion-tools-tied-to-fin7-threat-actor/, https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/yanluowang-ransomware-attacks-continue, https://research.nccgroup.com/2022/07/13/climbing-mount-everest-black-byte-bytes-back/, https://www.bleepingcomputer.com/news/security/microsoft-exchange-servers-hacked-to-deploy-hive-ransomware/, https://www.softperfect.com/products/networkscanner/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1046"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

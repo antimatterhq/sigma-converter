@@ -1,19 +1,18 @@
-id: e0d1ad53-c7eb-48ec-a87a-72393cc6cedc
 title: Mesh Agent Service Installation
+id: e0d1ad53-c7eb-48ec-a87a-72393cc6cedc
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects a Mesh Agent service installation. Mesh Agent is used to remotely
     manage computers
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-11-28'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
 falsepositives:
     - Legitimate use of the tool
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2022-11-28'
 logsource:
     product: windows
     service: system
@@ -32,25 +31,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:03.173832+00:00'
+            mapped_at: '2025-12-04T01:56:59.284144+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:03.173832+00:00'
+            mapped_at: '2025-12-04T01:56:59.284144+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:03.173847+00:00'
+            mapped_at: '2025-12-04T01:56:59.284161+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:03.173849+00:00'
+            mapped_at: '2025-12-04T01:56:59.284163+00:00'
         -   source_field: ImagePath
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:48:03.173851+00:00'
+            mapped_at: '2025-12-04T01:56:59.284165+00:00'
         -   source_field: ServiceName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:03.173853+00:00'
+            mapped_at: '2025-12-04T01:56:59.284166+00:00'

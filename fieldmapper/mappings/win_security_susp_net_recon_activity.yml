@@ -1,23 +1,22 @@
-id: 968eef52-9cff-4454-8992-1e74b9cbad6c
 title: Reconnaissance Activity
+id: 968eef52-9cff-4454-8992-1e74b9cbad6c
 status: test
 level: high
-description: Detects activity as "net user administrator /domain" and "net group domain
-    admins /domain"
 author: Florian Roth (Nextron Systems), Jack Croock (method), Jonhnathan Ribeiro (improvements),
     oscd.community
-date: '2017-03-07'
-modified: '2022-08-22'
+description: Detects activity as "net user administrator /domain" and "net group domain
+    admins /domain"
+references:
+    - https://findingbad.blogspot.de/2017/01/hunting-what-does-it-look-like.html
+falsepositives:
+    - Administrator activity
 tags:
     - attack.discovery
     - attack.t1087.002
     - attack.t1069.002
     - attack.s0039
-references:
-    - https://findingbad.blogspot.de/2017/01/hunting-what-does-it-look-like.html
-falsepositives:
-    - Administrator activity
-taxonomy: sigma
+date: '2017-03-07'
+modified: '2022-08-22'
 logsource:
     product: windows
     service: security
@@ -43,25 +42,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:26.258660+00:00'
+            mapped_at: '2025-12-04T01:55:50.086142+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:26.258660+00:00'
+            mapped_at: '2025-12-04T01:55:50.086142+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:26.258672+00:00'
+            mapped_at: '2025-12-04T01:55:50.086158+00:00'
         -   source_field: AccessMask
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:26.258674+00:00'
+            mapped_at: '2025-12-04T01:55:50.086160+00:00'
         -   source_field: ObjectType
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:26.258676+00:00'
+            mapped_at: '2025-12-04T01:55:50.086162+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:26.258677+00:00'
+            mapped_at: '2025-12-04T01:55:50.086163+00:00'

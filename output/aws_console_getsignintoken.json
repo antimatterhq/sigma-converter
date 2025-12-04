@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "AWS Console GetSigninToken Potential Abuse",
+    "comment": "Detects potentially suspicious events involving \"GetSigninToken\". An adversary using the \"aws_consoler\" tool can leverage this console API to create temporary federated credential that help obfuscate which AWS credential is compromised (the original access key) and enables the adversary to pivot from the AWS CLI to console sessions without the need for MFA using the new access key issued in this request.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('signin.amazonaws.com') AND lower(api.operation) = lower('getsignintoken') AND NOT contains(lower(http_request.user_agent), lower('jersey/${project.version}')))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially suspicious events involving \"GetSigninToken\". An adversary using the \"aws_consoler\" tool can leverage this console API to create temporary federated credential that help obfuscate which AWS credential is compromised (the original access key) and enables the adversary to pivot from the AWS CLI to console sessions without the need for MFA using the new access key issued in this request.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: GetSigninToken events will occur when using AWS SSO portal to login and will generate false positives if you do not filter for the expected user agent(s), see filter. Non-SSO configured roles would be abnormal and should be investigated. References: https://github.com/NetSPI/aws_consoler, https://www.crowdstrike.com/blog/analysis-of-intrusion-campaign-targeting-telecom-and-bpo-companies/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1021",
+          "subTechniqueId": "007"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1550",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

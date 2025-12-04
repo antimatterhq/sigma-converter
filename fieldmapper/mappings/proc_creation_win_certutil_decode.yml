@@ -1,16 +1,11 @@
-id: cc9cbe82-7bc0-4ef5-bc23-bbfb83947be7
 title: File Decoded From Base64/Hex Via Certutil.EXE
+id: cc9cbe82-7bc0-4ef5-bc23-bbfb83947be7
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
 description: Detects the execution of certutil with either the "decode" or "decodehex"
     flags to decode base64 or hex encoded files. This can be abused by attackers to
     decode an encoded payload before execution
-author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
-date: '2023-02-15'
-modified: '2024-03-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1027
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
     - https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/
@@ -20,7 +15,11 @@ references:
     - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+date: '2023-02-15'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:46.130777+00:00'
+            mapped_at: '2025-12-04T01:43:03.807414+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:46.130777+00:00'
+            mapped_at: '2025-12-04T01:43:03.807414+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:46.130792+00:00'
+            mapped_at: '2025-12-04T01:43:03.807428+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:46.130794+00:00'
+            mapped_at: '2025-12-04T01:43:03.807430+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:46.130795+00:00'
+            mapped_at: '2025-12-04T01:43:03.807431+00:00'

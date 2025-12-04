@@ -1,19 +1,18 @@
-id: 148431ce-4b70-403d-8525-fcc2993f29ea
 title: Potential DLL Injection Or Execution Using Tracker.exe
+id: 148431ce-4b70-403d-8525-fcc2993f29ea
 status: test
 level: medium
-description: Detects potential DLL injection and execution using "Tracker.exe"
 author: Avneet Singh @v3t0_, oscd.community
-date: '2020-10-18'
-modified: '2023-01-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1055.001
+description: Detects potential DLL injection and execution using "Tracker.exe"
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Tracker/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1055.001
+date: '2020-10-18'
+modified: '2023-01-09'
 logsource:
     category: process_creation
     product: windows
@@ -39,25 +38,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:09.016367+00:00'
+            mapped_at: '2025-12-04T01:49:52.238273+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:09.016367+00:00'
+            mapped_at: '2025-12-04T01:49:52.238273+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:09.016410+00:00'
+            mapped_at: '2025-12-04T01:49:52.238323+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:36:09.016415+00:00'
+            mapped_at: '2025-12-04T01:49:52.238338+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:09.016418+00:00'
+            mapped_at: '2025-12-04T01:49:52.238340+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:09.016421+00:00'
+            mapped_at: '2025-12-04T01:49:52.238342+00:00'

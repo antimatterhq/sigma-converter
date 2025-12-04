@@ -1,13 +1,9 @@
-id: b9d9b652-d8ed-4697-89a2-a1186ee680ac
 title: OSACompile Run-Only Execution
+id: b9d9b652-d8ed-4697-89a2-a1186ee680ac
 status: test
 level: high
-description: Detects potential suspicious run-only executions compiled using OSACompile
 author: Sohan G (D4rkCiph3r)
-date: '2023-01-31'
-tags:
-    - attack.t1059.002
-    - attack.execution
+description: Detects potential suspicious run-only executions compiled using OSACompile
 references:
     - https://redcanary.com/blog/applescript/
     - https://ss64.com/osx/osacompile.html
@@ -15,7 +11,10 @@ fields:
     - CommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1059.002
+    - attack.execution
+date: '2023-01-31'
 logsource:
     category: process_creation
     product: macos
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:47.146536+00:00'
+            mapped_at: '2025-12-04T01:34:40.588755+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:47.146536+00:00'
+            mapped_at: '2025-12-04T01:34:40.588755+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:47.146565+00:00'
+            mapped_at: '2025-12-04T01:34:40.588770+00:00'

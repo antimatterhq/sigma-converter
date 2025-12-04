@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "File Download Via Bitsadmin To An Uncommon Target Folder",
+    "comment": "Detects usage of bitsadmin downloading a file to uncommon target folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\bitsadmin.exe')) AND lower(process.file.name) = lower('bitsadmin.exe') AND (contains(lower(process.cmd_line), lower(' /transfer ')) OR contains(lower(process.cmd_line), lower(' /create ')) OR contains(lower(process.cmd_line), lower(' /addfile '))) AND (contains(lower(process.cmd_line), lower('%appdata%')) OR contains(lower(process.cmd_line), lower('%temp%')) OR contains(lower(process.cmd_line), lower('%tmp%')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\windows\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of bitsadmin downloading a file to uncommon target folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Unknown References: https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin, https://isc.sans.edu/diary/22264, https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/, https://blog.talosintelligence.com/breaking-the-silence-recent-truebot-activity/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1197"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

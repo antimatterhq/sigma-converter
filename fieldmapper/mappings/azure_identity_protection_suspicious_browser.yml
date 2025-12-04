@@ -1,24 +1,23 @@
-id: 944f6adb-7a99-4c69-80c1-b712579e93e6
 title: Suspicious Browser Activity
+id: 944f6adb-7a99-4c69-80c1-b712579e93e6
 status: test
 level: high
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
 description: Indicates anomalous behavior based on suspicious sign-in activity across
     multiple tenants from different countries in the same browser
-author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
-date: '2023-09-03'
-tags:
-    - attack.t1078
-    - attack.persistence
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.initial-access
 references:
     - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#suspicious-browser
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
 falsepositives:
     - We recommend investigating the sessions flagged by this detection in the context
         of other sign-ins from the user.
-taxonomy: sigma
+tags:
+    - attack.t1078
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.initial-access
+date: '2023-09-03'
 logsource:
     product: azure
     service: riskdetection
@@ -33,13 +32,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:18:52.612473+00:00'
+            mapped_at: '2025-12-04T01:37:23.598760+00:00'
         service:
             source_field: service
             source_value: riskdetection
-            mapped_at: '2025-11-26T02:18:52.612473+00:00'
+            mapped_at: '2025-12-04T01:37:23.598760+00:00'
     detection_fields:
         -   source_field: riskEventType
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:18:52.612487+00:00'
+            mapped_at: '2025-12-04T01:37:23.598773+00:00'

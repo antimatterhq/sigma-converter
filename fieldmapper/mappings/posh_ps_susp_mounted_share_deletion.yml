@@ -1,21 +1,20 @@
-id: 66a4d409-451b-4151-94f4-a55d559c49b0
 title: PowerShell Deleted Mounted Share
+id: 66a4d409-451b-4151-94f4-a55d559c49b0
 status: test
 level: medium
+author: oscd.community, @redcanary, Zach Stanford @svch0st
 description: Detects when when a mounted share is removed. Adversaries may remove
     share connections that are no longer useful in order to clean up traces of their
     operation
-author: oscd.community, @redcanary, Zach Stanford @svch0st
-date: '2020-10-08'
-modified: '2022-12-25'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.005
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.005/T1070.005.md
 falsepositives:
     - Administrators or Power users may remove their shares via cmd line
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.005
+date: '2020-10-08'
+modified: '2022-12-25'
 logsource:
     category: ps_script
     product: windows
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:29.685535+00:00'
+            mapped_at: '2025-12-04T01:54:38.807577+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:29.685535+00:00'
+            mapped_at: '2025-12-04T01:54:38.807577+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:29.685551+00:00'
+            mapped_at: '2025-12-04T01:54:38.807595+00:00'

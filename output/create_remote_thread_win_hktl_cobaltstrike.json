@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Potential CobaltStrike Process Injection",
+    "comment": "Detects a potential remote threat creation with certain characteristics which are typical for Cobalt Strike beacons",
+    "annotations": {
+      "source": "sigma",
+      "category": "create_remote_thread",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND (endswith(lower(module.start_address), lower('0b80')) OR endswith(lower(module.start_address), lower('0c7c')) OR endswith(lower(module.start_address), lower('0c88'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a potential remote threat creation with certain characteristics which are typical for Cobalt Strike beacons",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://medium.com/@olafhartong/cobalt-strike-remote-threads-detection-206372d11d0f, https://blog.cobaltstrike.com/2018/04/09/cobalt-strike-3-11-the-snake-that-eats-its-tail/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "name": "Download From Suspicious TLD - Blacklist",
+    "comment": "Detects download of certain file types from hosts in suspicious TLDs",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (lower(LOWER(http_request.url)) in ('exe', 'vbs', 'bat', 'rar', 'ps1', 'doc', 'docm', 'xls', 'xlsm', 'pptm', 'rtf', 'hta', 'dll', 'ws', 'wsf', 'sct', 'zip')) AND (endswith(lower(dst_endpoint.hostname), lower('.country')) OR endswith(lower(dst_endpoint.hostname), lower('.stream')) OR endswith(lower(dst_endpoint.hostname), lower('.gdn')) OR endswith(lower(dst_endpoint.hostname), lower('.mom')) OR endswith(lower(dst_endpoint.hostname), lower('.xin')) OR endswith(lower(dst_endpoint.hostname), lower('.kim')) OR endswith(lower(dst_endpoint.hostname), lower('.men')) OR endswith(lower(dst_endpoint.hostname), lower('.loan')) OR endswith(lower(dst_endpoint.hostname), lower('.download')) OR endswith(lower(dst_endpoint.hostname), lower('.racing')) OR endswith(lower(dst_endpoint.hostname), lower('.online')) OR endswith(lower(dst_endpoint.hostname), lower('.science')) OR endswith(lower(dst_endpoint.hostname), lower('.ren')) OR endswith(lower(dst_endpoint.hostname), lower('.gb')) OR endswith(lower(dst_endpoint.hostname), lower('.win')) OR endswith(lower(dst_endpoint.hostname), lower('.top')) OR endswith(lower(dst_endpoint.hostname), lower('.review')) OR endswith(lower(dst_endpoint.hostname), lower('.vip')) OR endswith(lower(dst_endpoint.hostname), lower('.party')) OR endswith(lower(dst_endpoint.hostname), lower('.tech')) OR endswith(lower(dst_endpoint.hostname), lower('.xyz')) OR endswith(lower(dst_endpoint.hostname), lower('.date')) OR endswith(lower(dst_endpoint.hostname), lower('.faith')) OR endswith(lower(dst_endpoint.hostname), lower('.zip')) OR endswith(lower(dst_endpoint.hostname), lower('.cricket')) OR endswith(lower(dst_endpoint.hostname), lower('.space')) OR endswith(lower(dst_endpoint.hostname), lower('.info')) OR endswith(lower(dst_endpoint.hostname), lower('.vn')) OR endswith(lower(dst_endpoint.hostname), lower('.cm')) OR endswith(lower(dst_endpoint.hostname), lower('.am')) OR endswith(lower(dst_endpoint.hostname), lower('.cc')) OR endswith(lower(dst_endpoint.hostname), lower('.asia')) OR endswith(lower(dst_endpoint.hostname), lower('.ws')) OR endswith(lower(dst_endpoint.hostname), lower('.tk')) OR endswith(lower(dst_endpoint.hostname), lower('.biz')) OR endswith(lower(dst_endpoint.hostname), lower('.su')) OR endswith(lower(dst_endpoint.hostname), lower('.st')) OR endswith(lower(dst_endpoint.hostname), lower('.ro')) OR endswith(lower(dst_endpoint.hostname), lower('.ge')) OR endswith(lower(dst_endpoint.hostname), lower('.ms')) OR endswith(lower(dst_endpoint.hostname), lower('.pk')) OR endswith(lower(dst_endpoint.hostname), lower('.nu')) OR endswith(lower(dst_endpoint.hostname), lower('.me')) OR endswith(lower(dst_endpoint.hostname), lower('.ph')) OR endswith(lower(dst_endpoint.hostname), lower('.to')) OR endswith(lower(dst_endpoint.hostname), lower('.tt')) OR endswith(lower(dst_endpoint.hostname), lower('.name')) OR endswith(lower(dst_endpoint.hostname), lower('.tv')) OR endswith(lower(dst_endpoint.hostname), lower('.kz')) OR endswith(lower(dst_endpoint.hostname), lower('.tc')) OR endswith(lower(dst_endpoint.hostname), lower('.mobi')) OR endswith(lower(dst_endpoint.hostname), lower('.study')) OR endswith(lower(dst_endpoint.hostname), lower('.click')) OR endswith(lower(dst_endpoint.hostname), lower('.link')) OR endswith(lower(dst_endpoint.hostname), lower('.trade')) OR endswith(lower(dst_endpoint.hostname), lower('.accountant')) OR endswith(lower(dst_endpoint.hostname), lower('.cf')) OR endswith(lower(dst_endpoint.hostname), lower('.gq')) OR endswith(lower(dst_endpoint.hostname), lower('.ml')) OR endswith(lower(dst_endpoint.hostname), lower('.ga')) OR endswith(lower(dst_endpoint.hostname), lower('.pw'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects download of certain file types from hosts in suspicious TLDs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ClientIP, http_request.url False positive: All kinds of software downloads References: https://www.symantec.com/connect/blogs/shady-tld-research-gdn-and-our-2016-wrap, https://promos.mcafee.com/en-US/PDF/MTMW_Report.pdf, https://www.spamhaus.org/statistics/tlds/, https://krebsonsecurity.com/2018/06/bad-men-at-work-please-dont-click/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1203"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,20 +1,19 @@
-id: 49be8799-7b4d-4fda-ad23-cafbefdebbc5
 title: Use of Wfc.exe
+id: 49be8799-7b4d-4fda-ad23-cafbefdebbc5
 status: test
 level: medium
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
 description: The Workflow Command-line Compiler can be used for AWL bypass and is
     listed in Microsoft's recommended block rules.
-author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
-date: '2022-06-01'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Wfc/
     - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac
 falsepositives:
     - Legitimate use by a software developer
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2022-06-01'
 logsource:
     category: process_creation
     product: windows
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:55.480129+00:00'
+            mapped_at: '2025-12-04T01:44:43.359415+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:55.480129+00:00'
+            mapped_at: '2025-12-04T01:44:43.359415+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:55.480146+00:00'
+            mapped_at: '2025-12-04T01:44:43.359431+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:55.480148+00:00'
+            mapped_at: '2025-12-04T01:44:43.359432+00:00'

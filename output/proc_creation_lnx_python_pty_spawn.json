@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Python Spawning Pretty TTY Via PTY Module",
+    "comment": "Detects a python process calling to the PTY module in order to spawn a pretty tty which could be indicative of potential reverse shell activity.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/python')) OR endswith(lower(process.name), lower('/python2')) OR endswith(lower(process.name), lower('/python3'))) AND (contains(lower(process.name), lower('/python2.')) OR contains(lower(process.name), lower('/python3.'))) AND (contains(lower(process.cmd_line), lower('import pty')) OR contains(lower(process.cmd_line), lower('from pty '))) AND contains(lower(process.cmd_line), lower('spawn')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a python process calling to the PTY module in order to spawn a pretty tty which could be indicative of potential reverse shell activity.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

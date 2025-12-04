@@ -1,20 +1,19 @@
-id: 4ae81040-fc1c-4249-bfa3-938d260214d9
 title: Use Icacls to Hide File to Everyone
+id: 4ae81040-fc1c-4249-bfa3-938d260214d9
 status: test
 level: medium
+author: frack113
 description: Detect use of icacls to deny access for everyone in Users folder sometimes
     used to hide malicious files
-author: frack113
-date: '2022-07-18'
-modified: '2024-04-29'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.001
 references:
     - https://app.any.run/tasks/1df999e6-1cb8-45e3-8b61-499d1b7d5a9b/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.001
+date: '2022-07-18'
+modified: '2024-04-29'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:45.207840+00:00'
+            mapped_at: '2025-12-04T01:49:36.716086+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:45.207840+00:00'
+            mapped_at: '2025-12-04T01:49:36.716086+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:45.207857+00:00'
+            mapped_at: '2025-12-04T01:49:36.716127+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:45.207860+00:00'
+            mapped_at: '2025-12-04T01:49:36.716134+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:45.207863+00:00'
+            mapped_at: '2025-12-04T01:49:36.716137+00:00'

@@ -1,23 +1,22 @@
-id: 98b53e78-ebaf-46f8-be06-421aafd176d9
 title: HackTool - winPEAS Execution
+id: 98b53e78-ebaf-46f8-be06-421aafd176d9
 status: test
 level: high
+author: Georg Lauenstein (sure[secure])
 description: WinPEAS is a script that search for possible paths to escalate privileges
     on Windows hosts. The checks are explained on book.hacktricks.xyz
-author: Georg Lauenstein (sure[secure])
-date: '2022-09-19'
-modified: '2023-03-23'
-tags:
-    - attack.privilege-escalation
-    - attack.t1082
-    - attack.t1087
-    - attack.t1046
 references:
     - https://github.com/carlospolop/PEASS-ng
     - https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1082
+    - attack.t1087
+    - attack.t1046
+date: '2022-09-19'
+modified: '2023-03-23'
 logsource:
     category: process_creation
     product: windows
@@ -54,25 +53,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:58.589925+00:00'
+            mapped_at: '2025-12-04T01:42:17.871266+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:58.589925+00:00'
+            mapped_at: '2025-12-04T01:42:17.871266+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:58.589982+00:00'
+            mapped_at: '2025-12-04T01:42:17.871343+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:58.589987+00:00'
+            mapped_at: '2025-12-04T01:42:17.871345+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:58.589991+00:00'
+            mapped_at: '2025-12-04T01:42:17.871347+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:26:58.589994+00:00'
+            mapped_at: '2025-12-04T01:42:17.871363+00:00'

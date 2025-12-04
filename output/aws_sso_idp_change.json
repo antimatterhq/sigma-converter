@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "AWS Identity Center Identity Provider Change",
+    "comment": "Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider. A change in identity provider allows an attacker to establish persistent access or escalate privileges via user impersonation.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(metadata.product.name)) in ('sso-directory\\.amazonaws\\.com', 'sso\\.amazonaws\\.com')) AND (lower(LOWER(metadata.event_code)) in ('associatedirectory', 'disableexternalidpconfigurationfordirectory', 'disassociatedirectory', 'enableexternalidpconfigurationfordirectory')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider. A change in identity provider allows an attacker to establish persistent access or escalate privileges via user impersonation.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Authorized changes to the AWS account's identity provider References: https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html, https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html, https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1556"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

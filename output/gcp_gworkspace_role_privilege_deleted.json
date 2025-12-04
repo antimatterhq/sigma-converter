@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Google Workspace Role Privilege Deleted",
+    "comment": "Detects when an a role privilege is deleted in Google Workspace.",
+    "annotations": {
+      "source": "sigma",
+      "product": "gcp",
+      "service": "google_workspace.admin",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND lower(metadata.product.name) = lower('admin.googleapis.com') AND lower(api.operation) = lower('remove_privilege'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when an a role privilege is deleted in Google Workspace.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3, https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-delegated-admin-settings",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

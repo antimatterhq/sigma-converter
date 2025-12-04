@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Windows PowerShell User Agent",
+    "comment": "Detects Windows PowerShell Web Access",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.user_agent), lower(' windowspowershell/')))"
+      }
+    },
+    "output": {
+      "summary": "Detects Windows PowerShell Web Access",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Administrative scripts that download files from the Internet 2. Administrative scripts that retrieve certain website contents Reference: https://msdn.microsoft.com/powershell/reference/5.1/microsoft.powershell.utility/Invoke-WebRequest",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

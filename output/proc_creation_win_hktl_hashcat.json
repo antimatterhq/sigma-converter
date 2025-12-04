@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Hashcat Password Cracker Execution",
+    "comment": "Execute Hashcat.exe with provided SAM file from registry of Windows and Password list to crack against",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\hashcat.exe')) OR contains(lower(process.cmd_line), lower('-a ')) AND contains(lower(process.cmd_line), lower('-m 1000 ')) AND contains(lower(process.cmd_line), lower('-r '))))"
+      }
+    },
+    "output": {
+      "summary": "Execute Hashcat.exe with provided SAM file from registry of Windows and Password list to crack against",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Tools that use similar command line flags and values References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1110.002/T1110.002.md#atomic-test-1---password-cracking-with-hashcat, https://hashcat.net/wiki/doku.php?id=hashcat",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1110",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

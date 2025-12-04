@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "name": "Silence.EDA Detection",
+    "comment": "Detects Silence EmpireDNSAgent as described in the Group-IP report",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('system.diagnostics.process')) AND contains(lower(script.script_content.value), lower('stop-computer')) AND contains(lower(script.script_content.value), lower('restart-computer')) AND contains(lower(script.script_content.value), lower('exception in execution')) AND contains(lower(script.script_content.value), lower('$cmdargs')) AND contains(lower(script.script_content.value), lower('close-dnscat2tunnel')) AND contains(lower(script.script_content.value), lower('set type=$lookuptype`nserver')) AND contains(lower(script.script_content.value), lower('$command | nslookup 2>&1 | out-string')) AND contains(lower(script.script_content.value), lower('new-randomdnsfield')) AND contains(lower(script.script_content.value), lower('[convert]::tostring($synoptions, 16)')) AND contains(lower(script.script_content.value), lower('$session.dead = $true')) AND contains(lower(script.script_content.value), lower('$session[\"driver\"] -eq')))"
+      }
+    },
+    "output": {
+      "summary": "Detects Silence EmpireDNSAgent as described in the Group-IP report",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.group-ib.com/resources/threat-research/silence_2.0.going_global.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1071",
+          "subTechniqueId": "004"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1572"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1529"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

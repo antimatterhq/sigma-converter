@@ -1,15 +1,10 @@
-id: 5f1573a7-363b-4114-9208-ad7a61de46eb
 title: ESXi VM List Discovery Via ESXCLI
+id: 5f1573a7-363b-4114-9208-ad7a61de46eb
 status: test
 level: medium
+author: Cedric Maurugeon
 description: Detects execution of the "esxcli" command with the "vm" flag in order
     to retrieve information about the installed VMs.
-author: Cedric Maurugeon
-date: '2023-09-04'
-tags:
-    - attack.discovery
-    - attack.t1033
-    - attack.t1007
 references:
     - https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/
     - https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_vm.html
@@ -17,7 +12,11 @@ references:
     - https://www.trendmicro.com/en_us/research/22/e/new-linux-based-ransomware-cheerscrypt-targets-exsi-devices.html
 falsepositives:
     - Legitimate administration activities
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1033
+    - attack.t1007
+date: '2023-09-04'
 logsource:
     category: process_creation
     product: linux
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:24.938687+00:00'
+            mapped_at: '2025-12-04T01:36:31.830043+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:24.938687+00:00'
+            mapped_at: '2025-12-04T01:36:31.830043+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:24.938705+00:00'
+            mapped_at: '2025-12-04T01:36:31.830059+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:24.938708+00:00'
+            mapped_at: '2025-12-04T01:36:31.830061+00:00'

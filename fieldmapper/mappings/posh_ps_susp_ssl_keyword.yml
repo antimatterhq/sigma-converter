@@ -1,21 +1,20 @@
-id: 195626f3-5f1b-4403-93b7-e6cfd4d6a078
 title: Suspicious SSL Connection
+id: 195626f3-5f1b-4403-93b7-e6cfd4d6a078
 status: test
 level: low
+author: frack113
 description: Adversaries may employ a known encryption algorithm to conceal command
     and control traffic rather than relying on any inherent protections provided by
     a communication protocol.
-author: frack113
-date: '2022-01-23'
-tags:
-    - attack.command-and-control
-    - attack.t1573
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1573/T1573.md#atomic-test-1---openssl-c2
     - https://medium.com/walmartglobaltech/openssl-server-reverse-shell-from-windows-client-aee2dbfa0926
 falsepositives:
     - Legitimate administrative script
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1573
+date: '2022-01-23'
 logsource:
     category: ps_script
     product: windows
@@ -34,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:27.080242+00:00'
+            mapped_at: '2025-12-04T01:53:46.781812+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:27.080242+00:00'
+            mapped_at: '2025-12-04T01:53:46.781812+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:27.080259+00:00'
+            mapped_at: '2025-12-04T01:53:46.781827+00:00'

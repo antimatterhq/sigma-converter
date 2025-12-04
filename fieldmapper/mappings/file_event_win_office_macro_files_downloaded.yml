@@ -1,24 +1,21 @@
-id: 0e29e3a7-1ad8-40aa-b691-9f82ecd33d66
 title: Office Macro File Download
+id: 0e29e3a7-1ad8-40aa-b691-9f82ecd33d66
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation of a new office macro files on the systems via an
     application (browser, mail client).
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-01-23'
-modified: '2023-04-18'
-tags:
-    - attack.initial-access
-    - attack.t1566.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1566.001/T1566.001.md
     - https://learn.microsoft.com/en-us/deployoffice/compat/office-file-format-reference
 falsepositives:
     - Legitimate macro files downloaded from the internet
     - Legitimate macro files sent as attachments via emails
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''91174a41-dc8f-401b-be89-7bfc140612a0''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1566.001
+date: '2022-01-23'
+modified: '2023-04-18'
 logsource:
     category: file_event
     product: windows
@@ -57,6 +54,9 @@ detection:
             - .potm:Zone
             - .pptm:Zone
     condition: all of selection_*
+related:
+    -   id: 91174a41-dc8f-401b-be89-7bfc140612a0
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -64,17 +64,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:34.455274+00:00'
+            mapped_at: '2025-12-04T01:52:26.694328+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:34.455274+00:00'
+            mapped_at: '2025-12-04T01:52:26.694328+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:34.455303+00:00'
+            mapped_at: '2025-12-04T01:52:26.694343+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:34.455306+00:00'
+            mapped_at: '2025-12-04T01:52:26.694345+00:00'

@@ -1,23 +1,20 @@
-id: 6385697e-9f1b-40bd-8817-f4a91f40508e
 title: PowerShell Base64 Encoded Invoke Keyword
+id: 6385697e-9f1b-40bd-8817-f4a91f40508e
 status: test
 level: high
-description: Detects UTF-8 and UTF-16 Base64 encoded powershell 'Invoke-' calls
 author: pH-T (Nextron Systems), Harjot Singh, @cyb3rjy0t
-date: '2022-05-20'
-modified: '2023-04-06'
+description: Detects UTF-8 and UTF-16 Base64 encoded powershell 'Invoke-' calls
+references:
+    - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.t1059.001
     - attack.defense-evasion
     - attack.t1027
-references:
-    - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fd6e2919-3936-40c9-99db-0aa922c356f7''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+date: '2022-05-20'
+modified: '2023-04-06'
 logsource:
     category: process_creation
     product: windows
@@ -40,6 +37,9 @@ detection:
             - ludm9rZS
             - JbnZva2Ut
     condition: all of selection_*
+related:
+    -   id: fd6e2919-3936-40c9-99db-0aa922c356f7
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -47,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:02.226504+00:00'
+            mapped_at: '2025-12-04T01:45:38.512937+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:02.226504+00:00'
+            mapped_at: '2025-12-04T01:45:38.512937+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:02.226536+00:00'
+            mapped_at: '2025-12-04T01:45:38.512959+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:02.226540+00:00'
+            mapped_at: '2025-12-04T01:45:38.512961+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:02.226543+00:00'
+            mapped_at: '2025-12-04T01:45:38.512962+00:00'

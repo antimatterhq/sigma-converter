@@ -1,17 +1,10 @@
-id: ad1f4bb9-8dfb-4765-adb6-2a7cfb6c0f94
 title: Suspicious WSMAN Provider Image Loads
+id: ad1f4bb9-8dfb-4765-adb6-2a7cfb6c0f94
 status: test
 level: medium
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
 description: Detects signs of potential use of the WSMAN provider from uncommon processes
     locally and remote execution.
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2020-06-24'
-modified: '2022-10-07'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.lateral-movement
-    - attack.t1021.003
 references:
     - https://twitter.com/chadtilbury/status/1275851297770610688
     - https://bohops.com/2020/05/12/ws-management-com-another-approach-for-winrm-lateral-movement/
@@ -19,7 +12,13 @@ references:
     - https://github.com/bohops/WSMan-WinRM
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.lateral-movement
+    - attack.t1021.003
+date: '2020-06-24'
+modified: '2022-10-07'
 logsource:
     category: image_load
     product: windows
@@ -77,25 +76,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: image_load
-            mapped_at: '2025-11-26T02:24:33.928810+00:00'
+            mapped_at: '2025-12-04T01:40:34.915238+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:33.928810+00:00'
+            mapped_at: '2025-12-04T01:40:34.915238+00:00'
     detection_fields:
         -   source_field: ImageLoaded
             target_table: process_activity
             target_field: module.file.path
-            mapped_at: '2025-11-26T02:24:34.885823+00:00'
+            mapped_at: '2025-12-04T01:40:34.915256+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:24:34.885849+00:00'
+            mapped_at: '2025-12-04T01:40:34.915259+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:24:34.885852+00:00'
+            mapped_at: '2025-12-04T01:40:34.915261+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:24:34.885855+00:00'
+            mapped_at: '2025-12-04T01:40:34.915262+00:00'

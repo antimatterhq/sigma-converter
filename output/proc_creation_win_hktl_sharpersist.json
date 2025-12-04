@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "HackTool - SharPersist Execution",
+    "comment": "Detects the execution of the hacktool SharPersist - used to deploy various different kinds of persistence mechanisms",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\sharpersist.exe')) AND lower(metadata.product.name) = lower('sharpersist') OR contains(lower(process.cmd_line), lower(' -t schtask -c ')) OR contains(lower(process.cmd_line), lower(' -t startupfolder -c ')) OR contains(lower(process.cmd_line), lower(' -t reg -c ')) AND contains(lower(process.cmd_line), lower(' -m add')) OR contains(lower(process.cmd_line), lower(' -t service -c ')) AND contains(lower(process.cmd_line), lower(' -m add')) OR contains(lower(process.cmd_line), lower(' -t schtask -c ')) AND contains(lower(process.cmd_line), lower(' -m add'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the hacktool SharPersist - used to deploy various different kinds of persistence mechanisms",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.mandiant.com/resources/blog/sharpersist-windows-persistence-toolkit, https://github.com/mandiant/SharPersist",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1053"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

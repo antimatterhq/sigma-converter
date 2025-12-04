@@ -1,21 +1,20 @@
-id: 166e9c50-8cd9-44af-815d-d1f0c0e90dde
 title: Suspicious Svchost Process Access
+id: 166e9c50-8cd9-44af-815d-d1f0c0e90dde
 status: test
 level: high
+author: Tim Burrell
 description: Detects suspicious access to the "svchost" process such as that used
     by Invoke-Phantom to kill the thread of the Windows event logging service.
-author: Tim Burrell
-date: '2020-01-02'
-modified: '2023-01-30'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://github.com/hlldz/Invoke-Phant0m
     - https://twitter.com/timbmsft/status/900724491076214784
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2020-01-02'
+modified: '2023-01-30'
 logsource:
     category: process_access
     product: windows
@@ -38,25 +37,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:25.335233+00:00'
+            mapped_at: '2025-12-04T01:40:31.697564+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:25.335233+00:00'
+            mapped_at: '2025-12-04T01:40:31.697564+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:25.335248+00:00'
+            mapped_at: '2025-12-04T01:40:31.697578+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:25.335249+00:00'
+            mapped_at: '2025-12-04T01:40:31.697579+00:00'
         -   source_field: CallTrace
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:25.335251+00:00'
+            mapped_at: '2025-12-04T01:40:31.697581+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:25.335252+00:00'
+            mapped_at: '2025-12-04T01:40:31.697582+00:00'

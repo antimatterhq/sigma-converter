@@ -1,7 +1,8 @@
-id: 13c02350-4177-4e45-ac17-cf7ca628ff5e
 title: Files With System DLL Name In Unsuspected Locations
+id: 13c02350-4177-4e45-ac17-cf7ca628ff5e
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the creation of a file with the ".dll" extension that has the
     name of a System DLL in uncommon or unsuspected locations. (Outisde of "System32",
     "SysWOW64", etc.).
@@ -10,16 +11,14 @@ description: 'Detects the creation of a file with the ".dll" extension that has 
     in production.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-06-24'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.005
 references:
     - Internal Research
 falsepositives:
     - Third party software might bundle specific versions of system DLLs.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.005
+date: '2024-06-24'
 logsource:
     category: file_event
     product: windows
@@ -45,13 +44,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:15.013122+00:00'
+            mapped_at: '2025-12-04T01:52:07.132394+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:15.013122+00:00'
+            mapped_at: '2025-12-04T01:52:07.132394+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:15.013146+00:00'
+            mapped_at: '2025-12-04T01:52:07.132422+00:00'

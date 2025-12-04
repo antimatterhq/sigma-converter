@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Shell Execution Of Process Located In Tmp Directory",
+    "comment": "Detects execution of shells from a parent process located in a temporary (/tmp) directory",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND startswith(lower(process.parent_process.name), lower('/tmp/')) AND (endswith(lower(process.name), lower('/bash')) OR endswith(lower(process.name), lower('/csh')) OR endswith(lower(process.name), lower('/dash')) OR endswith(lower(process.name), lower('/fish')) OR endswith(lower(process.name), lower('/ksh')) OR endswith(lower(process.name), lower('/sh')) OR endswith(lower(process.name), lower('/zsh'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of shells from a parent process located in a temporary (/tmp) directory",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blogs.jpcert.or.jp/en/2023/05/gobrat.html, https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/, https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection, https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

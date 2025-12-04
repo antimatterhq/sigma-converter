@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Teams Application Related ObjectAcess Event",
+    "comment": "Detects an access to authentication tokens and accounts of Microsoft Teams desktop application.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 4663 AND (contains(lower(file.path), lower('\\\\microsoft\\\\teams\\\\cookies')) OR contains(lower(file.path), lower('\\\\microsoft\\\\teams\\\\local storage\\\\leveldb'))) AND NOT contains(lower(actor.process.name), lower('\\\\microsoft\\\\teams\\\\current\\\\teams.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects an access to authentication tokens and accounts of Microsoft Teams desktop application.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/, https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1528"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

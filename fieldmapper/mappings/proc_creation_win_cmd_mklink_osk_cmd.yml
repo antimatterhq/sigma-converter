@@ -1,24 +1,23 @@
-id: e9b61244-893f-427c-b287-3e708f321c6b
 title: Potential Privilege Escalation Using Symlink Between Osk and Cmd
+id: e9b61244-893f-427c-b287-3e708f321c6b
 status: test
 level: high
+author: frack113
 description: Detects the creation of a symbolic link between "cmd.exe" and the accessibility
     on-screen keyboard binary (osk.exe) using "mklink". This technique provides an
     elevated command prompt to the user from the login screen without the need to
     log in.
-author: frack113
-date: '2022-12-11'
-modified: '2022-12-20'
-tags:
-    - attack.privilege-escalation
-    - attack.persistence
-    - attack.t1546.008
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/5c1e6f1b4fafd01c8d1ece85f510160fc1275fbf/atomics/T1546.008/T1546.008.md
     - https://ss64.com/nt/mklink.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1546.008
+date: '2022-12-11'
+modified: '2022-12-20'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:57.290846+00:00'
+            mapped_at: '2025-12-04T01:48:55.395916+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:57.290846+00:00'
+            mapped_at: '2025-12-04T01:48:55.395916+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:57.290871+00:00'
+            mapped_at: '2025-12-04T01:48:55.395932+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:57.290874+00:00'
+            mapped_at: '2025-12-04T01:48:55.395934+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:57.290877+00:00'
+            mapped_at: '2025-12-04T01:48:55.395939+00:00'

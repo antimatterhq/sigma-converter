@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "IIS Native-Code Module Command Line Installation",
+    "comment": "Detects suspicious IIS native-code module installations via command line",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\appcmd.exe')) AND lower(process.file.name) = lower('appcmd.exe') AND contains(lower(process.cmd_line), lower('install')) AND contains(lower(process.cmd_line), lower('module')) AND (contains(lower(process.cmd_line), lower('-name:')) OR contains(lower(process.cmd_line), lower('/name:')) OR contains(lower(process.cmd_line), lower('\u2013name:')) OR contains(lower(process.cmd_line), lower('\u2014name:')) OR contains(lower(process.cmd_line), lower('\u2015name:'))) AND NOT lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\inetsrv\\\\iissetup.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious IIS native-code module installations via command line",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown as it may vary from organisation to organisation how admins use to install IIS modules References: https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/, https://www.microsoft.com/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

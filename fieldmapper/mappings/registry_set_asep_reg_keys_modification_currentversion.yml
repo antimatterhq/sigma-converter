@@ -1,15 +1,10 @@
-id: 20f0ee37-5942-4e45-b7d5-c5b5db9df5cd
 title: CurrentVersion Autorun Keys Modification
+id: 20f0ee37-5942-4e45-b7d5-c5b5db9df5cd
 status: test
 level: medium
-description: Detects modification of autostart extensibility point (ASEP) in registry.
 author: Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin,
     oscd.community, Tim Shelton, frack113 (split)
-date: '2019-10-25'
-modified: '2023-08-17'
-tags:
-    - attack.persistence
-    - attack.t1547.001
+description: Detects modification of autostart extensibility point (ASEP) in registry.
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md
     - https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns
@@ -19,9 +14,11 @@ falsepositives:
     - Legitimate software automatically (mostly, during installation) sets up autorun
         keys for legitimate reason
     - Legitimate administrator sets up autorun keys for legitimate reason
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''17f878b8-9968-4578-b814-c4217fc5768c''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.001
+date: '2019-10-25'
+modified: '2023-08-17'
 logsource:
     category: registry_set
     product: windows
@@ -146,6 +143,9 @@ detection:
         TargetObject|endswith: \Microsoft\Windows\CurrentVersion\Run\Everything
         Details|endswith: \Everything\Everything.exe" -startup
     condition: all of current_version_* and not 1 of filter_*
+related:
+    -   id: 17f878b8-9968-4578-b814-c4217fc5768c
+        type: obsolete
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,23 +1,22 @@
-id: 7892ec59-c5bb-496d-8968-e5d210ca3ac4
 title: DPAPI Backup Keys And Certificate Export Activity IOC
+id: 7892ec59-c5bb-496d-8968-e5d210ca3ac4
 status: experimental
 level: high
+author: Nounou Mbeiri, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects file names with specific patterns seen generated and used by
     tools such as Mimikatz and DSInternals related to exported or stolen DPAPI backup
     keys and certificates.
 
     '
-author: Nounou Mbeiri, Nasreddine Bencherchali (Nextron Systems)
-date: '2024-06-26'
-tags:
-    - attack.t1555
-    - attack.t1552.004
 references:
     - https://www.dsinternals.com/en/dpapi-backup-key-theft-auditing/
     - https://github.com/MichaelGrafnetter/DSInternals/blob/39ee8a69bbdc1cfd12c9afdd7513b4788c4895d4/Src/DSInternals.Common/Data/DPAPI/DPAPIBackupKey.cs#L28-L32
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.t1555
+    - attack.t1552.004
+date: '2024-06-26'
 logsource:
     category: file_event
     product: windows
@@ -40,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:16.264583+00:00'
+            mapped_at: '2025-12-04T01:52:56.338130+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:16.264583+00:00'
+            mapped_at: '2025-12-04T01:52:56.338130+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:16.264612+00:00'
+            mapped_at: '2025-12-04T01:52:56.338145+00:00'

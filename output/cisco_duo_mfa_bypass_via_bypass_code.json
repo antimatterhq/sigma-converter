@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Cisco Duo Successful MFA Authentication Via Bypass Code",
+    "comment": "Detects when a successful MFA authentication occurs due to the use of a bypass code. A bypass code is a temporary passcode created by an administrator for a specific user to access a Duo-protected application. These are generally used as \"backup codes,\" so that enrolled users who are having problems with their mobile devices (e.g., mobile service is disrupted, the device is lost or stolen, etc.) or who temporarily can't use their enrolled devices (on a plane without mobile data services) can still access their Duo-protected systems.",
+    "annotations": {
+      "source": "sigma",
+      "product": "cisco",
+      "service": "duo",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(action) = lower('authentication') AND lower(actor.process.session.expiration_reason) = lower('bypass_user'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a successful MFA authentication occurs due to the use of a bypass code. A bypass code is a temporary passcode created by an administrator for a specific user to access a Duo-protected application. These are generally used as \"backup codes,\" so that enrolled users who are having problems with their mobile devices (e.g., mobile service is disrupted, the device is lost or stolen, etc.) or who temporarily can't use their enrolled devices (on a plane without mobile data services) can still access their Duo-protected systems.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate user that was assigned on purpose to a bypass group References: https://duo.com/docs/adminapi#logs, https://help.duo.com/s/article/6327?language=en_US",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,20 +1,19 @@
-id: 8f02c935-effe-45b3-8fc9-ef8696a9e41d
 title: Non-privileged Usage of Reg or Powershell
+id: 8f02c935-effe-45b3-8fc9-ef8696a9e41d
 status: test
 level: high
+author: Teymur Kheirkhabarov (idea), Ryan Plas (rule), oscd.community
 description: Search for usage of reg or Powershell by non-privileged users to modify
     service configuration in registry
-author: Teymur Kheirkhabarov (idea), Ryan Plas (rule), oscd.community
-date: '2020-10-05'
-modified: '2024-12-01'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
 references:
     - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-20-638.jpg
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+date: '2020-10-05'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -47,17 +46,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:07.511482+00:00'
+            mapped_at: '2025-12-04T01:49:03.741853+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:07.511482+00:00'
+            mapped_at: '2025-12-04T01:49:03.741853+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:07.511509+00:00'
+            mapped_at: '2025-12-04T01:49:03.741867+00:00'
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:35:07.511512+00:00'
+            mapped_at: '2025-12-04T01:49:03.741869+00:00'

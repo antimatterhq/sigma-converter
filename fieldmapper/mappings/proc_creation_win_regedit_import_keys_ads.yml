@@ -1,14 +1,9 @@
-id: 0b80ade5-6997-4b1d-99a1-71701778ea61
 title: Imports Registry Key From an ADS
+id: 0b80ade5-6997-4b1d-99a1-71701778ea61
 status: test
 level: high
-description: Detects the import of a alternate datastream to the registry with regedit.exe.
 author: Oddvar Moe, Sander Wiebing, oscd.community
-date: '2020-10-12'
-modified: '2024-03-13'
-tags:
-    - attack.t1112
-    - attack.defense-evasion
+description: Detects the import of a alternate datastream to the registry with regedit.exe.
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Regedit/
     - https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
@@ -17,9 +12,11 @@ fields:
     - CommandLine
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''73bba97f-a82d-42ce-b315-9182e76c57b1''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.t1112
+    - attack.defense-evasion
+date: '2020-10-12'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +35,9 @@ detection:
             - ' -a '
             - ' -c '
     condition: all of selection_* and not filter
+related:
+    -   id: 73bba97f-a82d-42ce-b315-9182e76c57b1
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:41.417348+00:00'
+            mapped_at: '2025-12-04T01:42:59.563161+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:41.417348+00:00'
+            mapped_at: '2025-12-04T01:42:59.563161+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:41.417369+00:00'
+            mapped_at: '2025-12-04T01:42:59.563176+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:41.417372+00:00'
+            mapped_at: '2025-12-04T01:42:59.563178+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:41.417375+00:00'
+            mapped_at: '2025-12-04T01:42:59.563179+00:00'

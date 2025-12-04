@@ -1,23 +1,20 @@
-id: b110ebaf-697f-4da1-afd5-b536fa27a2c1
 title: Potential Signing Bypass Via Windows Developer Features - Registry
+id: b110ebaf-697f-4da1-afd5-b536fa27a2c1
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects when the enablement of developer features such as "Developer
     Mode" or "Application Sideloading". Which allows the user to install untrusted
     packages.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-12'
-modified: '2023-08-17'
-tags:
-    - attack.defense-evasion
 references:
     - https://twitter.com/malmoeb/status/1560536653709598721
     - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a383dec4-deec-4e6e-913b-ed9249670848''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-01-12'
+modified: '2023-08-17'
 logsource:
     category: registry_set
     product: windows
@@ -31,6 +28,9 @@ detection:
             - \AllowDevelopmentWithoutDevLicense
         Details: DWORD (0x00000001)
     condition: selection
+related:
+    -   id: a383dec4-deec-4e6e-913b-ed9249670848
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

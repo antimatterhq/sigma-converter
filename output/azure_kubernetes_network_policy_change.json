@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "Azure Kubernetes Network Policy Change",
+    "comment": "Identifies when a Azure Kubernetes network policy is modified or deleted.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "activitylogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (lower(LOWER(api.operation)) in ('microsoft\\.kubernetes/connectedclusters/networking\\.k8s\\.io/networkpolicies/write', 'microsoft\\.kubernetes/connectedclusters/networking\\.k8s\\.io/networkpolicies/delete', 'microsoft\\.kubernetes/connectedclusters/extensions/networkpolicies/write', 'microsoft\\.kubernetes/connectedclusters/extensions/networkpolicies/delete')))"
+      }
+    },
+    "output": {
+      "summary": "Identifies when a Azure Kubernetes network policy is modified or deleted.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Network Policy being modified and deleted may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 2. Network Policy being modified and deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule. References: https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes, https://www.microsoft.com/security/blog/2021/03/23/secure-containerized-environments-with-updated-threat-matrix-for-kubernetes/, https://www.microsoft.com/security/blog/2020/04/02/attack-matrix-kubernetes/, https://medium.com/mitre-engenuity/att-ck-for-containers-now-available-4c2359654bf1, https://attack.mitre.org/matrices/enterprise/cloud/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,21 +1,20 @@
-id: fbc5e92f-3044-4e73-a5c6-1c4359b539de
 title: PowerShell Script With File Hostname Resolving Capabilities
+id: fbc5e92f-3044-4e73-a5c6-1c4359b539de
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects PowerShell scripts that have capabilities to read files, loop
     through them and resolve DNS host entries.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-05'
-tags:
-    - attack.exfiltration
-    - attack.t1020
 references:
     - https://www.fortypoundhead.com/showcontent.asp?artid=24022
     - https://labs.withsecure.com/publications/fin7-target-veeam-servers
 falsepositives:
     - The same functionality can be implemented by admin scripts, correlate with name
         and creator
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1020
+date: '2023-05-05'
 logsource:
     category: ps_script
     product: windows
@@ -35,13 +34,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:33.116429+00:00'
+            mapped_at: '2025-12-04T01:54:41.934317+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:33.116429+00:00'
+            mapped_at: '2025-12-04T01:54:41.934317+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:33.116444+00:00'
+            mapped_at: '2025-12-04T01:54:41.934331+00:00'

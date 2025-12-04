@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential CommandLine Obfuscation Using Unicode Characters From Suspicious Image",
+    "comment": "Detects potential commandline obfuscation using unicode characters. Adversaries may attempt to make an executable or file difficult to discover or analyze by encrypting, encoding, or otherwise obfuscating its contents on the system or in transit.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))) AND (lower(LOWER(process.file.name)) in ('cmd\\.exe', 'cscript\\.exe', 'powershell\\.exe', 'pwsh\\.dll', 'wscript\\.exe')) AND (contains(lower(process.cmd_line), lower('\u02e3')) OR contains(lower(process.cmd_line), lower('\u02ea')) OR contains(lower(process.cmd_line), lower('\u02e2')) OR contains(lower(process.cmd_line), lower('\u2215')) OR contains(lower(process.cmd_line), lower('\u2044')) OR contains(lower(process.cmd_line), lower('\u2015')) OR contains(lower(process.cmd_line), lower('\u2014')) OR contains(lower(process.cmd_line), lower('\u00a0')) OR contains(lower(process.cmd_line), lower('\u00af')) OR contains(lower(process.cmd_line), lower('\u00ae')) OR contains(lower(process.cmd_line), lower('\u00b6'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential commandline obfuscation using unicode characters. Adversaries may attempt to make an executable or file difficult to discover or analyze by encrypting, encoding, or otherwise obfuscating its contents on the system or in transit.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027/T1027.md#atomic-test-6---dlp-evasion-via-sensitive-data-in-vba-macro-over-http",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

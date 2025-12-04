@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Call To Win32_NTEventlogFile Class - PSScript",
+    "comment": "Detects usage of the WMI class \"Win32_NTEventlogFile\" in a potentially suspicious way (delete, backup, change permissions, etc.) from a PowerShell script",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('win32_nteventlogfile')) AND (contains(lower(script.script_content.value), lower('.backupeventlog(')) OR contains(lower(script.script_content.value), lower('.changesecuritypermissions(')) OR contains(lower(script.script_content.value), lower('.changesecuritypermissionsex(')) OR contains(lower(script.script_content.value), lower('.cleareventlog(')) OR contains(lower(script.script_content.value), lower('.delete(')) OR contains(lower(script.script_content.value), lower('.deleteex(')) OR contains(lower(script.script_content.value), lower('.rename(')) OR contains(lower(script.script_content.value), lower('.takeownership(')) OR contains(lower(script.script_content.value), lower('.takeownershipex('))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the WMI class \"Win32_NTEventlogFile\" in a potentially suspicious way (delete, backup, change permissions, etc.) from a PowerShell script",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration and backup scripts Reference: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394225(v=vs.85)",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

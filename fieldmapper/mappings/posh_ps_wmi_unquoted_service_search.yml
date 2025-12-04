@@ -1,24 +1,21 @@
-id: 09658312-bc27-4a3b-91c5-e49ab9046d1b
 title: WMIC Unquoted Services Path Lookup - PowerShell
+id: 09658312-bc27-4a3b-91c5-e49ab9046d1b
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects known WMI recon method to look for unquoted service paths, often
     used by pentest inside of powershell scripts attackers enum scripts
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-20'
-modified: '2022-11-25'
-tags:
-    - attack.execution
-    - attack.t1047
 references:
     - https://github.com/nccgroup/redsnarf/blob/35949b30106ae543dc6f2bc3f1be10c6d9a8d40e/redsnarf.py
     - https://github.com/S3cur3Th1sSh1t/Creds/blob/eac23d67f7f90c7fc8e3130587d86158c22aa398/PowershellScripts/jaws-enum.ps1
     - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''68bcd73b-37ef-49cb-95fc-edc809730be6''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+date: '2022-06-20'
+modified: '2022-11-25'
 logsource:
     category: ps_script
     product: windows
@@ -35,6 +32,9 @@ detection:
             - PathName
             - StartMode
     condition: selection
+related:
+    -   id: 68bcd73b-37ef-49cb-95fc-edc809730be6
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -42,13 +42,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:57.414959+00:00'
+            mapped_at: '2025-12-04T01:55:05.046131+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:57.414959+00:00'
+            mapped_at: '2025-12-04T01:55:05.046131+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:57.414981+00:00'
+            mapped_at: '2025-12-04T01:55:05.046158+00:00'

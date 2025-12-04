@@ -1,22 +1,19 @@
-id: b9f0e6f5-09b4-4358-bae4-08408705bd5c
 title: New User Created Via Net.EXE With Never Expire Option
+id: b9f0e6f5-09b4-4358-bae4-08408705bd5c
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of local users via the net.exe command with the option
     "never expire"
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-12'
-modified: '2023-02-21'
-tags:
-    - attack.persistence
-    - attack.t1136.001
 references:
     - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cd219ff3-fa99-45d4-8380-a7d15116c6dc''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1136.001
+date: '2022-07-12'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -34,6 +31,9 @@ detection:
             - add
             - expires:never
     condition: all of selection_*
+related:
+    -   id: cd219ff3-fa99-45d4-8380-a7d15116c6dc
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -41,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:18.337467+00:00'
+            mapped_at: '2025-12-04T01:51:03.465839+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:18.337467+00:00'
+            mapped_at: '2025-12-04T01:51:03.465839+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:18.337484+00:00'
+            mapped_at: '2025-12-04T01:51:03.465856+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:18.337486+00:00'
+            mapped_at: '2025-12-04T01:51:03.465858+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:18.337488+00:00'
+            mapped_at: '2025-12-04T01:51:03.465859+00:00'

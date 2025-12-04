@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential SPN Enumeration Via Setspn.EXE",
+    "comment": "Detects service principal name (SPN) enumeration used for Kerberoasting",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\setspn.exe')) AND lower(process.file.name) = lower('setspn.exe') AND contains(lower(device.desc), lower('query or reset the computer')) AND contains(lower(device.desc), lower('spn attribute')) AND (contains(lower(process.cmd_line), lower(' -q ')) OR contains(lower(process.cmd_line), lower(' /q '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects service principal name (SPN) enumeration used for Kerberoasting",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administration activity References: https://web.archive.org/web/20200329173843/https://p16.praetorian.com/blog/how-to-use-kerberoasting-t1208-for-privilege-escalation, https://www.praetorian.com/blog/how-to-use-kerberoasting-t1208-for-privilege-escalation/?edition=2019",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1558",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

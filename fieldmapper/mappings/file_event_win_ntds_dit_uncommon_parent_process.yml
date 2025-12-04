@@ -1,15 +1,10 @@
-id: 4e7050dd-e548-483f-b7d6-527ab4fa784d
 title: NTDS.DIT Creation By Uncommon Parent Process
+id: 4e7050dd-e548-483f-b7d6-527ab4fa784d
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects creation of a file named "ntds.dit" (Active Directory Database)
     by an uncommon parent process or directory
-author: Florian Roth (Nextron Systems)
-date: '2022-03-11'
-modified: '2023-01-05'
-tags:
-    - attack.credential-access
-    - attack.t1003.003
 references:
     - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration
     - https://www.n00py.io/2022/03/manipulating-user-passwords-without-mimikatz/
@@ -17,9 +12,11 @@ references:
     - https://github.com/samratashok/nishang/blob/414ee1104526d7057f9adaeee196d91ae447283e/Gather/Copy-VSS.ps1
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''11b1ed55-154d-4e82-8ad7-83739298f720''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+date: '2022-03-11'
+modified: '2023-01-05'
 logsource:
     category: file_event
     product: windows
@@ -48,6 +45,9 @@ detection:
             - \Public\
             - \PerfLogs\
     condition: selection_file and 1 of selection_process_*
+related:
+    -   id: 11b1ed55-154d-4e82-8ad7-83739298f720
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -55,17 +55,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:46.574892+00:00'
+            mapped_at: '2025-12-04T01:53:20.391456+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:46.574892+00:00'
+            mapped_at: '2025-12-04T01:53:20.391456+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:46.574921+00:00'
+            mapped_at: '2025-12-04T01:53:20.391470+00:00'
         -   source_field: ParentImage
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:40:46.574925+00:00'
+            mapped_at: '2025-12-04T01:53:20.391473+00:00'

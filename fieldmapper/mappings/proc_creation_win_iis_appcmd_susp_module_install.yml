@@ -1,21 +1,20 @@
-id: 9465ddf4-f9e4-4ebd-8d98-702df3a93239
 title: IIS Native-Code Module Command Line Installation
+id: 9465ddf4-f9e4-4ebd-8d98-702df3a93239
 status: test
 level: medium
-description: Detects suspicious IIS native-code module installations via command line
 author: Florian Roth (Nextron Systems)
-date: '2019-12-11'
-modified: '2024-03-13'
-tags:
-    - attack.persistence
-    - attack.t1505.003
+description: Detects suspicious IIS native-code module installations via command line
 references:
     - https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/
     - https://www.microsoft.com/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/
 falsepositives:
     - Unknown as it may vary from organisation to organisation how admins use to install
         IIS modules
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1505.003
+date: '2019-12-11'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -38,25 +37,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:39.332541+00:00'
+            mapped_at: '2025-12-04T01:50:20.363968+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:39.332541+00:00'
+            mapped_at: '2025-12-04T01:50:20.363968+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:39.332568+00:00'
+            mapped_at: '2025-12-04T01:50:20.363984+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:39.332572+00:00'
+            mapped_at: '2025-12-04T01:50:20.363986+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:39.332575+00:00'
+            mapped_at: '2025-12-04T01:50:20.363987+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:39.332577+00:00'
+            mapped_at: '2025-12-04T01:50:20.363989+00:00'

@@ -1,20 +1,19 @@
-id: 1cf98dc2-fcb0-47c9-8aea-654c9284d1ae
 title: Disk Image Creation Via Hdiutil - MacOS
+id: 1cf98dc2-fcb0-47c9-8aea-654c9284d1ae
 status: experimental
 level: medium
+author: Omar Khaled (@beacon_exe)
 description: Detects the execution of the hdiutil utility in order to create a disk
     image.
-author: Omar Khaled (@beacon_exe)
-date: '2024-08-10'
-tags:
-    - attack.exfiltration
 references:
     - https://www.loobins.io/binaries/hdiutil/
     - https://www.sentinelone.com/blog/from-the-front-linesunsigned-macos-orat-malware-gambles-for-the-win/
     - https://ss64.com/mac/hdiutil.html
 falsepositives:
     - Legitimate usage of hdiutil by administrators and users.
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+date: '2024-08-10'
 logsource:
     category: process_creation
     product: macos
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:10.911355+00:00'
+            mapped_at: '2025-12-04T01:34:09.264935+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:10.911355+00:00'
+            mapped_at: '2025-12-04T01:34:09.264935+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:10.911372+00:00'
+            mapped_at: '2025-12-04T01:34:09.264954+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:10.911375+00:00'
+            mapped_at: '2025-12-04T01:34:09.264965+00:00'

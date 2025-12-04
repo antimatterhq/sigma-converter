@@ -1,14 +1,10 @@
-id: 3ce8e9a4-bc61-4c9b-8e69-d7e2492a8781
 title: OpenSSH Server Listening On Socket
+id: 3ce8e9a4-bc61-4c9b-8e69-d7e2492a8781
 status: test
 level: medium
+author: mdecrevoisier
 description: Detects scenarios where an attacker enables the OpenSSH server and server
     starts to listening on SSH socket.
-author: mdecrevoisier
-date: '2022-10-25'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.004
 references:
     - https://github.com/mdecrevoisier/EVTX-to-MITRE-Attack/tree/master/TA0008-Lateral%20Movement/T1021.004-Remote%20Service%20SSH
     - https://winaero.com/enable-openssh-server-windows-10/
@@ -17,7 +13,10 @@ references:
     - https://medium.com/threatpunter/detecting-adversary-tradecraft-with-image-load-event-logging-and-eql-8de93338c16
 falsepositives:
     - Legitimate administrator activity
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.004
+date: '2022-10-25'
 logsource:
     product: windows
     service: openssh
@@ -34,21 +33,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:50.361335+00:00'
+            mapped_at: '2025-12-04T01:56:26.120353+00:00'
         service:
             source_field: service
             source_value: openssh
-            mapped_at: '2025-11-26T02:46:50.361335+00:00'
+            mapped_at: '2025-12-04T01:56:26.120353+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: ssh_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:51.251634+00:00'
+            mapped_at: '2025-12-04T01:56:26.120368+00:00'
         -   source_field: process
             target_table: ssh_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:51.251655+00:00'
+            mapped_at: '2025-12-04T01:56:26.120369+00:00'
         -   source_field: payload
             target_table: ssh_activity
             target_field: raw_data
-            mapped_at: '2025-11-26T02:46:51.251658+00:00'
+            mapped_at: '2025-12-04T01:56:26.120370+00:00'

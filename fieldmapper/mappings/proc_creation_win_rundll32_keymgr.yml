@@ -1,20 +1,19 @@
-id: a4694263-59a8-4608-a3a0-6f8d3a51664c
 title: Suspicious Key Manager Access
+id: a4694263-59a8-4608-a3a0-6f8d3a51664c
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the invocation of the Stored User Names and Passwords dialogue
     (Key Manager)
-author: Florian Roth (Nextron Systems)
-date: '2022-04-21'
-modified: '2023-02-09'
-tags:
-    - attack.credential-access
-    - attack.t1555.004
 references:
     - https://twitter.com/NinjaParanoid/status/1516442028963659777
 falsepositives:
     - Administrative activity
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1555.004
+date: '2022-04-21'
+modified: '2023-02-09'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:32.526412+00:00'
+            mapped_at: '2025-12-04T01:41:56.842240+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:32.526412+00:00'
+            mapped_at: '2025-12-04T01:41:56.842240+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:32.526435+00:00'
+            mapped_at: '2025-12-04T01:41:56.842256+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:32.526438+00:00'
+            mapped_at: '2025-12-04T01:41:56.842259+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:32.526439+00:00'
+            mapped_at: '2025-12-04T01:41:56.842262+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Powershell Local Email Collection",
+    "comment": "Adversaries may target user email on local systems to collect sensitive information. Files containing email data can be acquired from a users local system, such as Outlook storage or cache files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('get-inbox.ps1')) OR contains(lower(script.script_content.value), lower('microsoft.office.interop.outlook')) OR contains(lower(script.script_content.value), lower('microsoft.office.interop.outlook.oldefaultfolders')) OR contains(lower(script.script_content.value), lower('-comobject outlook.application')))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may target user email on local systems to collect sensitive information. Files containing email data can be acquired from a users local system, such as Outlook storage or cache files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1114.001/T1114.001.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1114",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

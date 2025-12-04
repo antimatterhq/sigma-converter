@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Uncommon File Creation By Mysql Daemon Process",
+    "comment": "Detects the creation of files with scripting or executable extensions by Mysql daemon. Which could be an indicator of \"User Defined Functions\" abuse to download malware.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\mysqld.exe')) OR endswith(lower(actor.process.name), lower('\\\\mysqld-nt.exe'))) AND (endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.dat')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.psm1')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.vbs'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of files with scripting or executable extensions by Mysql daemon. Which could be an indicator of \"User Defined Functions\" abuse to download malware.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://asec.ahnlab.com/en/58878/, https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/honeypot-recon-mysql-malware-infection-via-user-defined-functions-udf/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

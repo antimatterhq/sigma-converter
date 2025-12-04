@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Command Targeting Teams Sensitive Files",
+    "comment": "Detects a commandline containing references to the Microsoft Teams database or cookies files from a process other than Teams. The database might contain authentication tokens and other sensitive information about the logged in accounts.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('\\\\microsoft\\\\teams\\\\cookies')) OR contains(lower(process.cmd_line), lower('\\\\microsoft\\\\teams\\\\local storage\\\\leveldb'))) AND NOT endswith(lower(process.name), lower('\\\\microsoft\\\\teams\\\\current\\\\teams.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a commandline containing references to the Microsoft Teams database or cookies files from a process other than Teams. The database might contain authentication tokens and other sensitive information about the logged in accounts.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/, https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1528"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

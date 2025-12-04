@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Abused Debug Privilege by Arbitrary Parent Processes",
+    "comment": "Detection of unusual child processes by different system processes",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\winlogon.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\services.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\lsass.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\csrss.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\smss.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wininit.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\spoolsv.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\searchindexer.exe'))) AND (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))) AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll', 'cmd\\.exe')) AND NOT (contains(lower(process.cmd_line), lower(' route ')) AND contains(lower(process.cmd_line), lower(' add '))))"
+      }
+    },
+    "output": {
+      "summary": "Detection of unusual child processes by different system processes",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.parent_process.name, process.name, actor.user.name, process.cmd_line False positive: Unknown Reference: https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-74-638.jpg",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1548"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

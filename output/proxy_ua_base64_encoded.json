@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Base64 Encoded User-Agent",
+    "comment": "Detects suspicious encoded User-Agent strings, as seen used by some malware.",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (startswith(lower(http_request.user_agent), lower('q2hyb21l')) OR startswith(lower(http_request.user_agent), lower('qxbwbgvxzwjlax')) OR startswith(lower(http_request.user_agent), lower('rgfsdmlr')) OR startswith(lower(http_request.user_agent), lower('tw96awxsy')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious encoded User-Agent strings, as seen used by some malware.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://deviceatlas.com/blog/list-of-user-agent-strings#desktop",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

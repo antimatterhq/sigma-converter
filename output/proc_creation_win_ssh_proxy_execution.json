@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Program Executed Using Proxy/Local Command Via SSH.EXE",
+    "comment": "Detect usage of the \"ssh.exe\" binary as a proxy to launch other programs.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\openssh\\\\sshd.exe') OR endswith(lower(process.name), lower('\\\\ssh.exe')) AND contains(lower(process.cmd_line), lower('proxycommand=')) AND contains(lower(process.cmd_line), lower('permitlocalcommand')) AND contains(lower(process.cmd_line), lower('localcommand'))))"
+      }
+    },
+    "output": {
+      "summary": "Detect usage of the \"ssh.exe\" binary as a proxy to launch other programs.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage for administration purposes References: https://lolbas-project.github.io/lolbas/Binaries/Ssh/, https://github.com/LOLBAS-Project/LOLBAS/pull/211/files, https://gtfobins.github.io/gtfobins/ssh/, https://man.openbsd.org/ssh_config#ProxyCommand, https://man.openbsd.org/ssh_config#LocalCommand",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Files in Default GPO Folder",
+    "comment": "Detects the creation of copy of suspicious files (EXE/DLL) to the default GPO storage folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(file.path), lower('\\\\policies\\\\{31b2f340-016d-11d2-945f-00c04fb984f9}\\\\')) AND (endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of copy of suspicious files (EXE/DLL) to the default GPO storage folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://redcanary.com/blog/intelligence-insights-november-2021/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

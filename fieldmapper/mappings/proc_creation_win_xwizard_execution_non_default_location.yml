@@ -1,25 +1,24 @@
-id: 193d5ccd-6f59-40c6-b5b0-8e32d5ddd3d1
 title: Xwizard.EXE Execution From Non-Default Location
+id: 193d5ccd-6f59-40c6-b5b0-8e32d5ddd3d1
 status: test
 level: high
+author: Christian Burkard (Nextron Systems)
 description: 'Detects the execution of Xwizard tool from a non-default directory.
 
     When executed from a non-default directory, this utility can be abused in order
     to side load a custom version of "xwizards.dll".
 
     '
-author: Christian Burkard (Nextron Systems)
-date: '2021-09-20'
-modified: '2024-08-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1574.002
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Xwizard/
     - http://www.hexacorn.com/blog/2017/07/31/the-wizard-of-x-oppa-plugx-style/
 falsepositives:
     - Windows installed on non-C drive
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+date: '2021-09-20'
+modified: '2024-08-15'
 logsource:
     category: process_creation
     product: windows
@@ -40,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:56.494589+00:00'
+            mapped_at: '2025-12-04T01:41:25.812993+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:56.494589+00:00'
+            mapped_at: '2025-12-04T01:41:25.812993+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:56.494610+00:00'
+            mapped_at: '2025-12-04T01:41:25.813008+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:56.494612+00:00'
+            mapped_at: '2025-12-04T01:41:25.813010+00:00'

@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "Root Account Enable Via Dsenableroot",
+    "comment": "Detects attempts to enable the root account via \"dsenableroot\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/dsenableroot')) AND NOT contains(lower(process.cmd_line), lower(' -d ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects attempts to enable the root account via \"dsenableroot\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1078.003/T1078.003.md, https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/persistence_enable_root_account.toml, https://ss64.com/osx/dsenableroot.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1078"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1078",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1078",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

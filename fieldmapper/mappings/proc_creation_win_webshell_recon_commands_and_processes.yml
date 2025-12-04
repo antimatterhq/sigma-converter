@@ -1,26 +1,25 @@
-id: bed2a484-9348-4143-8a8a-b801c979301c
 title: Webshell Detection With Command Line Keywords
+id: bed2a484-9348-4143-8a8a-b801c979301c
 status: test
 level: high
-description: Detects certain command line parameters often used during reconnaissance
-    activity via web shells
 author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, Anton Kutepov, oscd.community,
     Chad Hudson, Matt Anderson
-date: '2017-01-01'
-modified: '2024-12-14'
-tags:
-    - attack.persistence
-    - attack.t1505.003
-    - attack.t1018
-    - attack.t1033
-    - attack.t1087
+description: Detects certain command line parameters often used during reconnaissance
+    activity via web shells
 references:
     - https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-ii.html
     - https://unit42.paloaltonetworks.com/bumblebee-webshell-xhunt-campaign/
     - https://www.huntress.com/blog/threat-advisory-oh-no-cleo-cleo-software-actively-being-exploited-in-the-wild
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1505.003
+    - attack.t1018
+    - attack.t1033
+    - attack.t1087
+date: '2017-01-01'
+modified: '2024-12-14'
 logsource:
     category: process_creation
     product: windows
@@ -122,25 +121,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:33.393669+00:00'
+            mapped_at: '2025-12-04T01:50:15.073634+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:33.393669+00:00'
+            mapped_at: '2025-12-04T01:50:15.073634+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:33.393685+00:00'
+            mapped_at: '2025-12-04T01:50:15.073662+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:33.393688+00:00'
+            mapped_at: '2025-12-04T01:50:15.073665+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:33.393690+00:00'
+            mapped_at: '2025-12-04T01:50:15.073667+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:33.393691+00:00'
+            mapped_at: '2025-12-04T01:50:15.073668+00:00'

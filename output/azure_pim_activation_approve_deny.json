@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PIM Approvals And Deny Elevation",
+    "comment": "Detects when a PIM elevation is approved or denied. Outside of normal operations should be investigated.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "auditlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(message) = lower('request approved/denied'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a PIM elevation is approved or denied. Outside of normal operations should be investigated.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Actual admin using PIM. Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-identity-management#azure-ad-roles-assignment",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1078",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

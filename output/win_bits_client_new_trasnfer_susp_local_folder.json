@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "BITS Transfer Job Download To Potential Suspicious Folder",
+    "comment": "Detects new BITS transfer job where the LocalName/Saved file is stored in a potentially suspicious location",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "bits-client",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 16403 AND (contains(lower(job.name), lower('\\\\desktop\\\\')) OR contains(lower(job.name), lower('c:\\\\users\\\\public\\\\')) OR contains(lower(job.name), lower('c:\\\\perflogs\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects new BITS transfer job where the LocalName/Saved file is stored in a potentially suspicious location",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1197"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,15 +1,10 @@
-id: 554601fb-9b71-4bcc-abf4-21a611be4fde
 title: Suspicious Recursive Takeown
+id: 554601fb-9b71-4bcc-abf4-21a611be4fde
 status: test
 level: medium
+author: frack113
 description: Adversaries can interact with the DACLs using built-in Windows commands
     takeown which can grant adversaries higher permissions on specific files and folders
-author: frack113
-date: '2022-01-30'
-modified: '2022-11-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1222.001
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/takeown
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.001/T1222.001.md#atomic-test-1---take-ownership-using-takeown-utility
@@ -19,7 +14,11 @@ fields:
 falsepositives:
     - Scripts created by developers and admins
     - Administrative activity
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1222.001
+date: '2022-01-30'
+modified: '2022-11-21'
 logsource:
     category: process_creation
     product: windows
@@ -37,17 +36,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:25.696713+00:00'
+            mapped_at: '2025-12-04T01:49:19.416040+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:25.696713+00:00'
+            mapped_at: '2025-12-04T01:49:19.416040+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:25.696732+00:00'
+            mapped_at: '2025-12-04T01:49:19.416057+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:25.696734+00:00'
+            mapped_at: '2025-12-04T01:49:19.416059+00:00'

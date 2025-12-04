@@ -1,15 +1,9 @@
-id: 410d2a41-1e6d-452f-85e5-abdd8257a823
 title: Azure Application Deleted
+id: 410d2a41-1e6d-452f-85e5-abdd8257a823
 status: test
 level: medium
-description: Identifies when a application is deleted in Azure.
 author: Austin Songer @austinsonger
-date: '2021-09-03'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.impact
-    - attack.t1489
+description: Identifies when a application is deleted in Azure.
 references:
     - https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities#application-proxy
 falsepositives:
@@ -18,7 +12,12 @@ falsepositives:
         changes in your environment.
     - Application deleted from unfamiliar users should be investigated. If known behavior
         is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.impact
+    - attack.t1489
+date: '2021-09-03'
+modified: '2022-10-09'
 logsource:
     product: azure
     service: activitylogs
@@ -35,13 +34,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:13.679611+00:00'
+            mapped_at: '2025-12-04T01:38:38.147109+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:13.679611+00:00'
+            mapped_at: '2025-12-04T01:38:38.147109+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:21:13.679632+00:00'
+            mapped_at: '2025-12-04T01:38:38.147143+00:00'

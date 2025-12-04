@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION",
+    "comment": "Detects Obfuscated Powershell via VAR++ LAUNCHER",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('&&set')) AND contains(lower(process.cmd_line), lower('cmd')) AND contains(lower(process.cmd_line), lower('/c')) AND contains(lower(process.cmd_line), lower('-f')) AND (contains(lower(process.cmd_line), lower('{0}')) OR contains(lower(process.cmd_line), lower('{1}')) OR contains(lower(process.cmd_line), lower('{2}')) OR contains(lower(process.cmd_line), lower('{3}')) OR contains(lower(process.cmd_line), lower('{4}')) OR contains(lower(process.cmd_line), lower('{5}'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Obfuscated Powershell via VAR++ LAUNCHER",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/SigmaHQ/sigma/issues/1009",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

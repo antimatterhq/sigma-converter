@@ -1,12 +1,21 @@
-id: 42a993dd-bb3e-48c8-b372-4d6684c4106c
 title: HackTool - CrackMapExec Execution
+id: 42a993dd-bb3e-48c8-b372-4d6684c4106c
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: This rule detect common flag combinations used by CrackMapExec in order
     to detect its use even if the binary has been replaced.
-author: Florian Roth (Nextron Systems)
-date: '2022-02-25'
-modified: '2023-03-08'
+references:
+    - https://mpgn.gitbook.io/crackmapexec/smb-protocol/authentication/checking-credentials-local
+    - https://www.mandiant.com/resources/telegram-malware-iranian-espionage
+    - https://www.infosecmatter.com/crackmapexec-module-library/?cmem=mssql-mimikatz
+    - https://www.infosecmatter.com/crackmapexec-module-library/?cmem=smb-pe_inject
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.persistence
@@ -19,18 +28,8 @@ tags:
     - attack.t1059.001
     - attack.t1110
     - attack.t1201
-references:
-    - https://mpgn.gitbook.io/crackmapexec/smb-protocol/authentication/checking-credentials-local
-    - https://www.mandiant.com/resources/telegram-malware-iranian-espionage
-    - https://www.infosecmatter.com/crackmapexec-module-library/?cmem=mssql-mimikatz
-    - https://www.infosecmatter.com/crackmapexec-module-library/?cmem=smb-pe_inject
-fields:
-    - ComputerName
-    - User
-    - CommandLine
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-02-25'
+modified: '2023-03-08'
 logsource:
     category: process_creation
     product: windows
@@ -88,17 +87,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:49.585946+00:00'
+            mapped_at: '2025-12-04T01:50:30.744221+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:49.585946+00:00'
+            mapped_at: '2025-12-04T01:50:30.744221+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:49.585980+00:00'
+            mapped_at: '2025-12-04T01:50:30.744251+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:49.585984+00:00'
+            mapped_at: '2025-12-04T01:50:30.744255+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell Encoded Command Patterns",
+    "comment": "Detects PowerShell command line patterns in combincation with encoded commands that often appear in malware infection chains",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower(' -e ')) OR contains(lower(process.cmd_line), lower(' -en ')) OR contains(lower(process.cmd_line), lower(' -enc ')) OR contains(lower(process.cmd_line), lower(' -enco'))) AND (contains(lower(process.cmd_line), lower(' jab')) OR contains(lower(process.cmd_line), lower(' suvyi')) OR contains(lower(process.cmd_line), lower(' sqbfafga')) OR contains(lower(process.cmd_line), lower(' awv4i')) OR contains(lower(process.cmd_line), lower(' iab')) OR contains(lower(process.cmd_line), lower(' paa')) OR contains(lower(process.cmd_line), lower(' aqblahga'))) AND NOT (contains(lower(process.parent_process.name), lower('c:\\\\packages\\\\plugins\\\\microsoft.guestconfiguration.configurationforwindows\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\gc_worker.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell command line patterns in combincation with encoded commands that often appear in malware infection chains",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Other tools that work with encoded scripts in the command line instead of script files Reference: https://app.any.run/tasks/b9040c63-c140-479b-ad59-f1bb56ce7a97/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

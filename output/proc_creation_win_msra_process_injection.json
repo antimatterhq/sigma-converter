@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Process Injection Via Msra.EXE",
+    "comment": "Detects potential process injection via Microsoft Remote Asssistance (Msra.exe) by looking at suspicious child processes spawned from the aforementioned process. It has been a target used by many threat actors and used for discovery and persistence tactics",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND endswith(lower(process.parent_process.name), lower('\\\\msra.exe')) AND endswith(lower(process.parent_process.cmd_line), lower('msra.exe')) AND (endswith(lower(process.name), lower('\\\\arp.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\netstat.exe')) OR endswith(lower(process.name), lower('\\\\nslookup.exe')) OR endswith(lower(process.name), lower('\\\\route.exe')) OR endswith(lower(process.name), lower('\\\\schtasks.exe')) OR endswith(lower(process.name), lower('\\\\whoami.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential process injection via Microsoft Remote Asssistance (Msra.exe) by looking at suspicious child processes spawned from the aforementioned process. It has been a target used by many threat actors and used for discovery and persistence tactics",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of Msra.exe References: https://www.microsoft.com/security/blog/2021/12/09/a-closer-look-at-qakbots-latest-building-blocks-and-how-to-knock-them-down/, https://www.fortinet.com/content/dam/fortinet/assets/analyst-reports/ar-qakbot.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

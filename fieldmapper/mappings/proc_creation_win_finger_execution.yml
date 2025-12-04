@@ -1,7 +1,8 @@
-id: af491bca-e752-4b44-9c86-df5680533dbc
 title: Finger.EXE Execution
+id: af491bca-e752-4b44-9c86-df5680533dbc
 status: test
 level: high
+author: Florian Roth (Nextron Systems), omkar72, oscd.community
 description: 'Detects execution of the "finger.exe" utility.
 
     Finger.EXE or "TCPIP Finger Command" is an old utility that is still present on
@@ -14,19 +15,17 @@ description: 'Detects execution of the "finger.exe" utility.
     worth investigating.
 
     '
-author: Florian Roth (Nextron Systems), omkar72, oscd.community
-date: '2021-02-24'
-modified: '2024-06-27'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://twitter.com/bigmacjpg/status/1349727699863011328?s=12
     - https://app.any.run/tasks/40115012-a919-4208-bfed-41e82cb3dadf/
     - http://hyp3rlinx.altervista.org/advisories/Windows_TCPIP_Finger_Command_C2_Channel_and_Bypassing_Security_Software.txt
 falsepositives:
     - Admin activity (unclear what they do nowadays with finger.exe)
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2021-02-24'
+modified: '2024-06-27'
 logsource:
     category: process_creation
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:15.937792+00:00'
+            mapped_at: '2025-12-04T01:43:27.246884+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:15.937792+00:00'
+            mapped_at: '2025-12-04T01:43:27.246884+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:15.937817+00:00'
+            mapped_at: '2025-12-04T01:43:27.246898+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:15.937821+00:00'
+            mapped_at: '2025-12-04T01:43:27.246904+00:00'

@@ -1,15 +1,10 @@
-id: fed85bf9-e075-4280-9159-fbe8a023d6fa
 title: Advanced IP Scanner - File Event
+id: fed85bf9-e075-4280-9159-fbe8a023d6fa
 status: test
 level: medium
+author: '@ROxPinTeddy'
 description: Detects the use of Advanced IP Scanner. Seems to be a popular tool for
     ransomware groups.
-author: '@ROxPinTeddy'
-date: '2020-05-12'
-modified: '2022-11-29'
-tags:
-    - attack.discovery
-    - attack.t1046
 references:
     - https://news.sophos.com/en-us/2019/12/09/snatch-ransomware-reboots-pcs-into-safe-mode-to-bypass-protection/
     - https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
@@ -18,9 +13,11 @@ references:
     - https://thedfirreport.com/2021/01/18/all-that-for-a-coinminer
 falsepositives:
     - Legitimate administrative use
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''bef37fa2-f205-4a7b-b484-0759bfd5f86f''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1046
+date: '2020-05-12'
+modified: '2022-11-29'
 logsource:
     category: file_event
     product: windows
@@ -28,6 +25,9 @@ detection:
     selection:
         TargetFilename|contains: \AppData\Local\Temp\Advanced IP Scanner 2
     condition: selection
+related:
+    -   id: bef37fa2-f205-4a7b-b484-0759bfd5f86f
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 3
@@ -35,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:02.925970+00:00'
+            mapped_at: '2025-12-04T01:52:47.624496+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:02.925970+00:00'
+            mapped_at: '2025-12-04T01:52:47.624496+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:02.925986+00:00'
+            mapped_at: '2025-12-04T01:52:47.624510+00:00'

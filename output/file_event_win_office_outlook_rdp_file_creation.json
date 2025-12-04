@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": ".RDP File Created by Outlook Process",
+    "comment": "Detects the creation of files with the \".rdp\" extensions in the temporary directory that Outlook uses when opening attachments. This can be used to detect spear-phishing campaigns that use RDP files as attachments.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(file.path), lower('.rdp')) AND (contains(lower(file.path), lower('\\\\appdata\\\\local\\\\packages\\\\microsoft.outlook_')) OR contains(lower(file.path), lower('\\\\appdata\\\\local\\\\microsoft\\\\olk\\\\attachments\\\\'))) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\microsoft\\\\windows\\\\')) AND contains(lower(file.path), lower('\\\\content.outlook\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of files with the \".rdp\" extensions in the temporary directory that Outlook uses when opening attachments. This can be used to detect spear-phishing campaigns that use RDP files as attachments.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Whenever someone receives an RDP file as an email attachment and decides to save or open it right from the attachments References: https://thecyberexpress.com/rogue-rdp-files-used-in-ukraine-cyberattacks/, https://www.microsoft.com/en-us/security/blog/2024/10/29/midnight-blizzard-conducts-large-scale-spear-phishing-campaign-using-rdp-files/, https://www.linkedin.com/feed/update/urn:li:ugcPost:7257437202706493443?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7257437202706493443%2C7257522819985543168%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287257522819985543168%2Curn%3Ali%3AugcPost%3A7257437202706493443%29",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "User Removed From Group With CA Policy Modification Access",
+    "comment": "Monitor and alert on group membership removal of groups that have CA policy modification access",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "auditlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(message) = lower('remove member from group'))"
+      }
+    },
+    "output": {
+      "summary": "Monitor and alert on group membership removal of groups that have CA policy modification access",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: User removed from the group is approved Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-infrastructure#conditional-access",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1548"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1556"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

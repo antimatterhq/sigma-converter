@@ -1,13 +1,9 @@
-id: 42127bdd-9133-474f-a6f1-97b6c08a4339
 title: New Federated Domain Added - Exchange
+id: 42127bdd-9133-474f-a6f1-97b6c08a4339
 status: test
 level: medium
-description: Detects the addition of a new Federated Domain.
 author: Splunk Threat Research Team (original rule), '@ionsor (rule)'
-date: '2022-02-08'
-tags:
-    - attack.persistence
-    - attack.t1136.003
+description: Detects the addition of a new Federated Domain.
 references:
     - https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/wp-m-unc2452-2021-000343-01.pdf
     - https://us-cert.cisa.gov/ncas/alerts/aa21-008a
@@ -19,9 +15,10 @@ falsepositives:
         these events need to be followed closely, as it may indicate federated credential
         abuse or backdoor via federated identities at a similar or different cloud
         provider.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''58f88172-a73d-442b-94c9-95eaed3cbb36''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1136.003
+date: '2022-02-08'
 logsource:
     product: m365
     service: exchange
@@ -31,6 +28,9 @@ detection:
         eventName: Add-FederatedDomain
         status: success
     condition: selection
+related:
+    -   id: 58f88172-a73d-442b-94c9-95eaed3cbb36
+        type: similar
 ocsf_mapping:
     class_name: authentication
     activity_id: <UNMAPPED>
@@ -38,21 +38,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:21:49.272722+00:00'
+            mapped_at: '2025-12-04T01:38:56.587425+00:00'
         service:
             source_field: service
             source_value: exchange
-            mapped_at: '2025-11-26T02:21:49.272722+00:00'
+            mapped_at: '2025-12-04T01:38:56.587425+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:49.272759+00:00'
+            mapped_at: '2025-12-04T01:38:56.587439+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:21:49.272763+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:38:56.587441+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:21:49.272766+00:00'
+            mapped_at: '2025-12-04T01:38:56.587442+00:00'

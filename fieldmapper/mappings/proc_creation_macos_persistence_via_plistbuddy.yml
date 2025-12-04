@@ -1,21 +1,20 @@
-id: 65d506d3-fcfe-4071-b4b2-bcefe721bbbb
 title: Potential Persistence Via PlistBuddy
+id: 65d506d3-fcfe-4071-b4b2-bcefe721bbbb
 status: test
 level: high
+author: Sohan G (D4rkCiph3r)
 description: Detects potential persistence activity using LaunchAgents or LaunchDaemons
     via the PlistBuddy utility
-author: Sohan G (D4rkCiph3r)
-date: '2023-02-18'
-tags:
-    - attack.persistence
-    - attack.t1543.001
-    - attack.t1543.004
 references:
     - https://redcanary.com/blog/clipping-silver-sparrows-wings/
     - https://www.manpagez.com/man/8/PlistBuddy/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1543.001
+    - attack.t1543.004
+date: '2023-02-18'
 logsource:
     category: process_creation
     product: macos
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:15.961967+00:00'
+            mapped_at: '2025-12-04T01:34:13.466808+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:15.961967+00:00'
+            mapped_at: '2025-12-04T01:34:13.466808+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:15.962000+00:00'
+            mapped_at: '2025-12-04T01:34:13.466832+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:15.962002+00:00'
+            mapped_at: '2025-12-04T01:34:13.466836+00:00'

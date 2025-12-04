@@ -1,15 +1,10 @@
-id: efdd8dd5-cee8-4e59-9390-7d4d5e4dd6f6
 title: Suspicious Program Names
+id: efdd8dd5-cee8-4e59-9390-7d4d5e4dd6f6
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious patterns in program names or folders that are often
     found in malicious samples or hacktools
-author: Florian Roth (Nextron Systems)
-date: '2022-02-11'
-modified: '2023-03-22'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1560.001/T1560.001.md
 fields:
@@ -18,7 +13,11 @@ fields:
     - CurrentDirectory
 falsepositives:
     - Legitimate tools that accidentally match on the searched patterns
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-02-11'
+modified: '2023-03-22'
 logsource:
     category: process_creation
     product: windows
@@ -76,17 +75,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:08.670023+00:00'
+            mapped_at: '2025-12-04T01:44:07.099124+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:08.670023+00:00'
+            mapped_at: '2025-12-04T01:44:07.099124+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:08.670050+00:00'
+            mapped_at: '2025-12-04T01:44:07.099140+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:08.670055+00:00'
+            mapped_at: '2025-12-04T01:44:07.099142+00:00'

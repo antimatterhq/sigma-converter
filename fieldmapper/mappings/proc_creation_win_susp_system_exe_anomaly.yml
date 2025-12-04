@@ -1,26 +1,23 @@
-id: e4a6b256-3e47-40fc-89d2-7a477edd6915
 title: System File Execution Location Anomaly
+id: e4a6b256-3e47-40fc-89d2-7a477edd6915
 status: experimental
 level: high
+author: Florian Roth (Nextron Systems), Patrick Bareiss, Anton Kutepov, oscd.community,
+    Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of a Windows system binary that is usually located
     in the system folder from an uncommon location.
 
     '
-author: Florian Roth (Nextron Systems), Patrick Bareiss, Anton Kutepov, oscd.community,
-    Nasreddine Bencherchali (Nextron Systems)
-date: '2017-11-27'
-modified: '2024-07-16'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://twitter.com/GelosSnake/status/934900723426439170
     - https://asec.ahnlab.com/en/39828/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''be58d2e2-06c8-4f58-b666-b99f6dc3b6cd''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2017-11-27'
+modified: '2024-07-16'
 logsource:
     category: process_creation
     product: windows
@@ -96,6 +93,9 @@ detection:
         Image|startswith: C:\Program Files\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForLinux
         Image|endswith: \wsl.exe
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: be58d2e2-06c8-4f58-b666-b99f6dc3b6cd
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -103,13 +103,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:21.665697+00:00'
+            mapped_at: '2025-12-04T01:49:15.419182+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:21.665697+00:00'
+            mapped_at: '2025-12-04T01:49:15.419182+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:21.665710+00:00'
+            mapped_at: '2025-12-04T01:49:15.419198+00:00'

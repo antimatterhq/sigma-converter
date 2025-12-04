@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Potential Active Directory Enumeration Using AD Module - PsScript",
+    "comment": "Detects usage of the \"Import-Module\" cmdlet to load the \"Microsoft.ActiveDirectory.Management.dl\" DLL. Which is often used by attackers to perform AD enumeration.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('import-module ')) AND contains(lower(script.script_content.value), lower('microsoft.activedirectory.management.dll')) OR contains(lower(script.script_content.value), lower('ipmo microsoft.activedirectory.management.dll'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the \"Import-Module\" cmdlet to load the \"Microsoft.ActiveDirectory.Management.dl\" DLL. Which is often used by attackers to perform AD enumeration.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of the library for administrative activity References: https://github.com/samratashok/ADModule, https://twitter.com/cyb3rops/status/1617108657166061568?s=20, https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/active-directory-enumeration-with-ad-module-without-rsat-or-admin-privileges",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Reconnaissance"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,15 +1,10 @@
-id: 62510e69-616b-4078-b371-847da438cc03
 title: Share And Session Enumeration Using Net.EXE
+id: 62510e69-616b-4078-b371-847da438cc03
 status: stable
 level: low
+author: Endgame, JHasenbusch (ported for oscd.community)
 description: Detects attempts to enumerate file shares, printer shares and sessions
     using "net.exe" with the "view" flag.
-author: Endgame, JHasenbusch (ported for oscd.community)
-date: '2018-10-30'
-modified: '2023-02-21'
-tags:
-    - attack.discovery
-    - attack.t1018
 references:
     - https://eqllib.readthedocs.io/en/latest/analytics/b8a94d2f-dc75-4630-9d73-1edc6bd26fff.html
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md
@@ -19,7 +14,11 @@ fields:
     - CommandLine
 falsepositives:
     - Legitimate use of net.exe utility by legitimate user
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1018
+date: '2018-10-30'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:53.713542+00:00'
+            mapped_at: '2025-12-04T01:43:09.946484+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:53.713542+00:00'
+            mapped_at: '2025-12-04T01:43:09.946484+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:53.713576+00:00'
+            mapped_at: '2025-12-04T01:43:09.946506+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:53.713581+00:00'
+            mapped_at: '2025-12-04T01:43:09.946508+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:53.713585+00:00'
+            mapped_at: '2025-12-04T01:43:09.946510+00:00'

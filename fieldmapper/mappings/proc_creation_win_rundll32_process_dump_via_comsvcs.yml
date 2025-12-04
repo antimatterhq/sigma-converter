@@ -1,18 +1,10 @@
-id: 646ea171-dded-4578-8a4d-65e9822892e3
 title: Process Memory Dump Via Comsvcs.DLL
+id: 646ea171-dded-4578-8a4d-65e9822892e3
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Modexp, Nasreddine Bencherchali (Nextron Systems)
 description: Detects a process memory dump via "comsvcs.dll" using rundll32, covering
     multiple different techniques (ordinal, minidump function, etc.)
-author: Florian Roth (Nextron Systems), Modexp, Nasreddine Bencherchali (Nextron Systems)
-date: '2020-02-18'
-modified: '2023-05-16'
-tags:
-    - attack.defense-evasion
-    - attack.credential-access
-    - attack.t1036
-    - attack.t1003.001
-    - car.2013-05-009
 references:
     - https://twitter.com/shantanukhande/status/1229348874298388484
     - https://twitter.com/pythonresponder/status/1385064506049630211?s=21
@@ -23,9 +15,14 @@ references:
     - https://github.com/Hackndo/lsassy/blob/14d8f8ae596ecf22b449bfe919829173b8a07635/lsassy/dumpmethod/comsvcs.py
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''09e6d5c0-05b8-4ff8-9eeb-043046ec774c''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.credential-access
+    - attack.t1036
+    - attack.t1003.001
+    - car.2013-05-009
+date: '2020-02-18'
+modified: '2023-05-16'
 logsource:
     category: process_creation
     product: windows
@@ -54,6 +51,9 @@ detection:
             - ',#'
             - ', #'
     condition: (selection_img and 1 of selection_cli_*) or selection_generic
+related:
+    -   id: 09e6d5c0-05b8-4ff8-9eeb-043046ec774c
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -61,21 +61,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:01.980008+00:00'
+            mapped_at: '2025-12-04T01:48:08.527561+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:01.980008+00:00'
+            mapped_at: '2025-12-04T01:48:08.527561+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:01.980042+00:00'
+            mapped_at: '2025-12-04T01:48:08.527577+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:01.980048+00:00'
+            mapped_at: '2025-12-04T01:48:08.527579+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:01.980051+00:00'
+            mapped_at: '2025-12-04T01:48:08.527581+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Remote Task Creation via ATSVC Named Pipe - Zeek",
+    "comment": "Detects remote task creation via at.exe or API interacting with ATSVC namedpipe",
+    "annotations": {
+      "source": "sigma",
+      "product": "zeek",
+      "service": "smb_files",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(file.path) regexp '\\\\.*\\\\ipc$' AND lower(file.name) = lower('atsvc'))"
+      }
+    },
+    "output": {
+      "summary": "Detects remote task creation via at.exe or API interacting with ATSVC namedpipe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://web.archive.org/web/20230409194125/https://blog.menasec.net/2019/03/threat-hunting-25-scheduled-tasks-for.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1053",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

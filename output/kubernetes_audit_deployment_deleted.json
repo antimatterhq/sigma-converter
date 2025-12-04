@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Deployment Deleted From Kubernetes Cluster",
+    "comment": "Detects the removal of a deployment from a Kubernetes cluster. This could indicate disruptive activity aiming to impact business operations.",
+    "annotations": {
+      "source": "sigma",
+      "category": "application",
+      "product": "kubernetes",
+      "service": "audit",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND lower(api.operation) = lower('delete') AND lower(resources.name) = lower('deployments'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the removal of a deployment from a Kubernetes cluster. This could indicate disruptive activity aiming to impact business operations.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Data%20destruction/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1498"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

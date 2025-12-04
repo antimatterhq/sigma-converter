@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Regsvr32 HTTP IP Pattern",
+    "comment": "Detects regsvr32 execution to download and install DLLs located remotely where the address is an IP address.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\regsvr32.exe')) AND lower(process.file.name) = lower('regsvr32.exe') AND (contains(lower(process.cmd_line), lower(' /i:http://1')) OR contains(lower(process.cmd_line), lower(' /i:http://2')) OR contains(lower(process.cmd_line), lower(' /i:http://3')) OR contains(lower(process.cmd_line), lower(' /i:http://4')) OR contains(lower(process.cmd_line), lower(' /i:http://5')) OR contains(lower(process.cmd_line), lower(' /i:http://6')) OR contains(lower(process.cmd_line), lower(' /i:http://7')) OR contains(lower(process.cmd_line), lower(' /i:http://8')) OR contains(lower(process.cmd_line), lower(' /i:http://9')) OR contains(lower(process.cmd_line), lower(' /i:https://1')) OR contains(lower(process.cmd_line), lower(' /i:https://2')) OR contains(lower(process.cmd_line), lower(' /i:https://3')) OR contains(lower(process.cmd_line), lower(' /i:https://4')) OR contains(lower(process.cmd_line), lower(' /i:https://5')) OR contains(lower(process.cmd_line), lower(' /i:https://6')) OR contains(lower(process.cmd_line), lower(' /i:https://7')) OR contains(lower(process.cmd_line), lower(' /i:https://8')) OR contains(lower(process.cmd_line), lower(' /i:https://9')) OR contains(lower(process.cmd_line), lower(' -i:http://1')) OR contains(lower(process.cmd_line), lower(' -i:http://2')) OR contains(lower(process.cmd_line), lower(' -i:http://3')) OR contains(lower(process.cmd_line), lower(' -i:http://4')) OR contains(lower(process.cmd_line), lower(' -i:http://5')) OR contains(lower(process.cmd_line), lower(' -i:http://6')) OR contains(lower(process.cmd_line), lower(' -i:http://7')) OR contains(lower(process.cmd_line), lower(' -i:http://8')) OR contains(lower(process.cmd_line), lower(' -i:http://9')) OR contains(lower(process.cmd_line), lower(' -i:https://1')) OR contains(lower(process.cmd_line), lower(' -i:https://2')) OR contains(lower(process.cmd_line), lower(' -i:https://3')) OR contains(lower(process.cmd_line), lower(' -i:https://4')) OR contains(lower(process.cmd_line), lower(' -i:https://5')) OR contains(lower(process.cmd_line), lower(' -i:https://6')) OR contains(lower(process.cmd_line), lower(' -i:https://7')) OR contains(lower(process.cmd_line), lower(' -i:https://8')) OR contains(lower(process.cmd_line), lower(' -i:https://9'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects regsvr32 execution to download and install DLLs located remotely where the address is an IP address.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: FQDNs that start with a number such as \"7-Zip\" References: https://twitter.com/mrd0x/status/1461041276514623491, https://twitter.com/tccontre18/status/1480950986650832903, https://lolbas-project.github.io/lolbas/Binaries/Regsvr32/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

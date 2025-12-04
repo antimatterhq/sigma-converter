@@ -1,23 +1,20 @@
-id: 0c718a5e-4284-4fb9-b4d9-b9a50b3a1974
 title: Invoke-Obfuscation STDIN+ Launcher - Security
+id: 0c718a5e-4284-4fb9-b4d9-b9a50b3a1974
 status: test
 level: high
-description: Detects Obfuscated use of stdin to execute PowerShell
 author: Jonathan Cheong, oscd.community
-date: '2020-10-15'
-modified: '2022-11-29'
+description: Detects Obfuscated use of stdin to execute PowerShell
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''72862bf2-0eb1-11eb-adc1-0242ac120002''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-15'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -38,6 +35,9 @@ detection:
             - ' /c '
             - ' /r '
     condition: all of selection*
+related:
+    -   id: 72862bf2-0eb1-11eb-adc1-0242ac120002
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -45,17 +45,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:45.293770+00:00'
+            mapped_at: '2025-12-04T01:56:00.872482+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:45.293770+00:00'
+            mapped_at: '2025-12-04T01:56:00.872482+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:45.293784+00:00'
+            mapped_at: '2025-12-04T01:56:00.872503+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:45.293786+00:00'
+            mapped_at: '2025-12-04T01:56:00.872506+00:00'

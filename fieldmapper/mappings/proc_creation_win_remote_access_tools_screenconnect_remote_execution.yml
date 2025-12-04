@@ -1,20 +1,19 @@
-id: b1f73849-6329-4069-bc8f-78a604bb8b23
 title: Remote Access Tool - ScreenConnect Remote Command Execution
+id: b1f73849-6329-4069-bc8f-78a604bb8b23
 status: test
 level: low
-description: Detects the execution of a system command via the ScreenConnect RMM service.
 author: Ali Alwashali
-date: '2023-10-10'
-modified: '2024-02-26'
-tags:
-    - attack.execution
-    - attack.t1059.003
+description: Detects the execution of a system command via the ScreenConnect RMM service.
 references:
     - https://github.com/SigmaHQ/sigma/pull/4467
 falsepositives:
     - Legitimate use of ScreenConnect. Disable this rule if ScreenConnect is heavily
         used.
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.003
+date: '2023-10-10'
+modified: '2024-02-26'
 logsource:
     category: process_creation
     product: windows
@@ -34,25 +33,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:54.078105+00:00'
+            mapped_at: '2025-12-04T01:44:41.794520+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:54.078105+00:00'
+            mapped_at: '2025-12-04T01:44:41.794520+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:29:54.078140+00:00'
+            mapped_at: '2025-12-04T01:44:41.794539+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:54.078144+00:00'
+            mapped_at: '2025-12-04T01:44:41.794541+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:54.078147+00:00'
+            mapped_at: '2025-12-04T01:44:41.794542+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:54.078149+00:00'
+            mapped_at: '2025-12-04T01:44:41.794543+00:00'

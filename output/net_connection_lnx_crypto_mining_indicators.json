@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Linux Crypto Mining Pool Connections",
+    "comment": "Detects process connections to a Monero crypto mining pool",
+    "annotations": {
+      "source": "sigma",
+      "category": "network_connection",
+      "product": "linux",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM network_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(dst_endpoint.hostname)) in ('pool\\.minexmr\\.com', 'fr\\.minexmr\\.com', 'de\\.minexmr\\.com', 'sg\\.minexmr\\.com', 'ca\\.minexmr\\.com', 'us-west\\.minexmr\\.com', 'pool\\.supportxmr\\.com', 'mine\\.c3pool\\.com', 'xmr-eu1\\.nanopool\\.org', 'xmr-eu2\\.nanopool\\.org', 'xmr-us-east1\\.nanopool\\.org', 'xmr-us-west1\\.nanopool\\.org', 'xmr-asia1\\.nanopool\\.org', 'xmr-jp1\\.nanopool\\.org', 'xmr-au1\\.nanopool\\.org', 'xmr\\.2miners\\.com', 'xmr\\.hashcity\\.org', 'xmr\\.f2pool\\.com', 'xmrpool\\.eu', 'pool\\.hashvault\\.pro', 'moneroocean\\.stream', 'monerocean\\.stream')))"
+      }
+    },
+    "output": {
+      "summary": "Detects process connections to a Monero crypto mining pool",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of crypto miners Reference: https://www.poolwatch.io/coin/monero",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1496"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

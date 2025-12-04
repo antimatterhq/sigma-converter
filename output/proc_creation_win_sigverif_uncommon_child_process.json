@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Uncommon Sigverif.EXE Child Process",
+    "comment": "Detects uncommon child processes spawning from \"sigverif.exe\", which could indicate potential abuse of the latter as a living of the land binary in order to proxy execution.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\sigverif.exe')) AND NOT (lower(LOWER(process.name)) in ('c:\\\\windows\\\\system32\\\\werfault\\.exe', 'c:\\\\windows\\\\syswow64\\\\werfault\\.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects uncommon child processes spawning from \"sigverif.exe\", which could indicate potential abuse of the latter as a living of the land binary in order to proxy execution.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.hexacorn.com/blog/2018/04/27/i-shot-the-sigverif-exe-the-gui-based-lolbin/, https://twitter.com/0gtweet/status/1457676633809330184",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1216"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

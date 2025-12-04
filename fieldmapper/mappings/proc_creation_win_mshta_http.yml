@@ -1,22 +1,21 @@
-id: b98d0db6-511d-45de-ad02-e82a98729620
 title: Remotely Hosted HTA File Executed Via Mshta.EXE
+id: b98d0db6-511d-45de-ad02-e82a98729620
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of the "mshta" utility with an argument containing
     the "http" keyword, which could indicate that an attacker is executing a remotely
     hosted malicious hta file
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-08'
-modified: '2023-02-06'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218.005
 references:
     - https://www.trendmicro.com/en_us/research/22/e/avoslocker-ransomware-variant-abuses-driver-file-to-disable-anti-Virus-scans-log4shell.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218.005
+date: '2022-08-08'
+modified: '2023-02-06'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:44.163562+00:00'
+            mapped_at: '2025-12-04T01:43:02.288361+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:44.163562+00:00'
+            mapped_at: '2025-12-04T01:43:02.288361+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:44.163605+00:00'
+            mapped_at: '2025-12-04T01:43:02.288380+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:44.163610+00:00'
+            mapped_at: '2025-12-04T01:43:02.288381+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:44.163613+00:00'
+            mapped_at: '2025-12-04T01:43:02.288383+00:00'

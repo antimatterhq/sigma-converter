@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Script Proxy Execution Via CL_Mutexverifiers.ps1",
+    "comment": "Detects the use of the Microsoft signed script \"CL_mutexverifiers\" to proxy the execution of additional PowerShell script commands",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe'))) AND endswith(lower(process.name), lower('\\\\powershell.exe')) AND contains(lower(process.cmd_line), lower(' -nologo -windowstyle minimized -file ')) AND (contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of the Microsoft signed script \"CL_mutexverifiers\" to proxy the execution of additional PowerShell script commands",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://lolbas-project.github.io/lolbas/Scripts/CL_mutexverifiers/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1216"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

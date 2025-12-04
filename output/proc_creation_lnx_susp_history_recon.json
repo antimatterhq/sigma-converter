@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Print History File Contents",
+    "comment": "Detects events in which someone prints the contents of history files to the commandline or redirects it to a file for reconnaissance",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/cat')) OR endswith(lower(process.name), lower('/head')) OR endswith(lower(process.name), lower('/tail')) OR endswith(lower(process.name), lower('/more'))) AND (contains(lower(process.cmd_line), lower('/.bash_history')) OR contains(lower(process.cmd_line), lower('/.zsh_history'))) AND (endswith(lower(process.cmd_line), lower('_history')) OR endswith(lower(process.cmd_line), lower('.history')) OR endswith(lower(process.cmd_line), lower('zhistory'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects events in which someone prints the contents of history files to the commandline or redirects it to a file for reconnaissance",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://github.com/sleventyeleven/linuxprivchecker/, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.003/T1552.003.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Reconnaissance",
+          "techniqueId": "T1592",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,21 +1,20 @@
-id: b99a1518-1ad5-4f65-bc95-1ffff97a8fd0
 title: HackTool - Inveigh Execution
+id: b99a1518-1ad5-4f65-bc95-1ffff97a8fd0
 status: test
 level: critical
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the use of Inveigh a cross-platform .NET IPv4/IPv6 machine-in-the-middle
     tool
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-24'
-modified: '2023-02-04'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://github.com/Kevin-Robertson/Inveigh
     - https://thedfirreport.com/2020/11/23/pysa-mespinoza-ransomware/
 falsepositives:
     - Very unlikely
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2022-10-24'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -40,25 +39,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:17.279910+00:00'
+            mapped_at: '2025-12-04T01:45:02.360288+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:17.279910+00:00'
+            mapped_at: '2025-12-04T01:45:02.360288+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:17.279930+00:00'
+            mapped_at: '2025-12-04T01:45:02.360308+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:17.279933+00:00'
+            mapped_at: '2025-12-04T01:45:02.360310+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:30:17.279935+00:00'
+            mapped_at: '2025-12-04T01:45:02.360311+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:17.279938+00:00'
+            mapped_at: '2025-12-04T01:45:02.360313+00:00'

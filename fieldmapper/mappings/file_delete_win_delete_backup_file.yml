@@ -1,21 +1,20 @@
-id: 06125661-3814-4e03-bfa2-1e4411c60ac3
 title: Backup Files Deleted
+id: 06125661-3814-4e03-bfa2-1e4411c60ac3
 status: test
 level: medium
+author: frack113
 description: Detects deletion of files with extensions often used for backup files.
     Adversaries may delete or remove built-in operating system data and turn off services
     designed to aid in the recovery of a corrupted system to prevent recovery.
-author: frack113
-date: '2022-01-02'
-modified: '2023-02-15'
-tags:
-    - attack.impact
-    - attack.t1490
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-6---windows---delete-backup-files
 falsepositives:
     - Legitime usage
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1490
+date: '2022-01-02'
+modified: '2023-02-15'
 logsource:
     category: file_delete
     product: windows
@@ -45,17 +44,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_delete
-            mapped_at: '2025-11-26T02:40:51.039420+00:00'
+            mapped_at: '2025-12-04T01:53:24.746532+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:51.039420+00:00'
+            mapped_at: '2025-12-04T01:53:24.746532+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:51.039438+00:00'
+            mapped_at: '2025-12-04T01:53:24.746545+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:51.039441+00:00'
+            mapped_at: '2025-12-04T01:53:24.746546+00:00'

@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "MSHTA Suspicious Execution 01",
+    "comment": "Detection for mshta.exe suspicious execution patterns sometimes involving file polyglotism",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\mshta.exe')) AND (contains(lower(process.cmd_line), lower('vbscript')) OR contains(lower(process.cmd_line), lower('.jpg')) OR contains(lower(process.cmd_line), lower('.png')) OR contains(lower(process.cmd_line), lower('.lnk')) OR contains(lower(process.cmd_line), lower('.xls')) OR contains(lower(process.cmd_line), lower('.doc')) OR contains(lower(process.cmd_line), lower('.zip')) OR contains(lower(process.cmd_line), lower('.dll'))))"
+      }
+    },
+    "output": {
+      "summary": "Detection for mshta.exe suspicious execution patterns sometimes involving file polyglotism",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives depend on scripts and administrative tools used in the monitored environment References: http://blog.sevagas.com/?Hacking-around-HTA-files, https://0x00sec.org/t/clientside-exploitation-in-2018-how-pentesting-has-changed/7356, https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/xml/xslt/xslt-stylesheet-scripting-using-msxsl-script, https://medium.com/tsscyber/pentesting-and-hta-bypassing-powershell-constrained-language-mode-53a42856c997, https://twitter.com/mattifestation/status/1326228491302563846",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1140"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

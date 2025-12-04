@@ -1,13 +1,9 @@
-id: b02f9591-12c3-4965-986a-88028629b2e1
 title: Azure Kubernetes Pods Deleted
+id: b02f9591-12c3-4965-986a-88028629b2e1
 status: test
 level: medium
-description: Identifies the deletion of Azure Kubernetes Pods.
 author: Austin Songer @austinsonger
-date: '2021-07-24'
-modified: '2022-08-23'
-tags:
-    - attack.impact
+description: Identifies the deletion of Azure Kubernetes Pods.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
     - https://github.com/elastic/detection-rules/blob/065bf48a9987cd8bd826c098a30ce36e6868ee46/rules/integrations/azure/impact_kubernetes_pod_deleted.toml
@@ -16,7 +12,10 @@ falsepositives:
         user agent, and/or hostname should be making changes in your environment.
     - Pods deletions from unfamiliar users or hosts should be investigated. If known
         behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-07-24'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -31,13 +30,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:46.364027+00:00'
+            mapped_at: '2025-12-04T01:38:15.930030+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:20:46.364027+00:00'
+            mapped_at: '2025-12-04T01:38:15.930030+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:20:47.470384+00:00'
+            mapped_at: '2025-12-04T01:38:15.930043+00:00'

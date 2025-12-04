@@ -1,17 +1,11 @@
-id: d797268e-28a9-49a7-b9a8-2f5039011c5c
 title: Bypass UAC via WSReset.exe
+id: d797268e-28a9-49a7-b9a8-2f5039011c5c
 status: test
 level: high
-description: Detects use of WSReset.exe to bypass User Account Control (UAC). Adversaries
-    use this technique to execute privileged processes.
 author: E.M. Anhaus (originally from Atomic Blue Detections, Tony Lambert), oscd.community,
     Florian Roth
-date: '2019-10-24'
-modified: '2022-05-13'
-tags:
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1548.002
+description: Detects use of WSReset.exe to bypass User Account Control (UAC). Adversaries
+    use this technique to execute privileged processes.
 references:
     - https://eqllib.readthedocs.io/en/latest/analytics/532b5ed4-7930-11e9-8f5c-d46d6d62a49e.html
     - https://lolbas-project.github.io/lolbas/Binaries/Wsreset/
@@ -19,9 +13,12 @@ references:
     - https://twitter.com/ReaQta/status/1222548288731217921
 falsepositives:
     - Unknown sub processes of Wsreset.exe
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''bdc8918e-a1d5-49d1-9db7-ea0fd91aa2ae''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1548.002
+date: '2019-10-24'
+modified: '2022-05-13'
 logsource:
     category: process_creation
     product: windows
@@ -32,6 +29,9 @@ detection:
         Image|endswith: \conhost.exe
         OriginalFileName: CONHOST.EXE
     condition: selection and not filter
+related:
+    -   id: bdc8918e-a1d5-49d1-9db7-ea0fd91aa2ae
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -39,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:20.743527+00:00'
+            mapped_at: '2025-12-04T01:45:52.802807+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:20.743527+00:00'
+            mapped_at: '2025-12-04T01:45:52.802807+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:20.743541+00:00'
+            mapped_at: '2025-12-04T01:45:52.802823+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:20.743543+00:00'
+            mapped_at: '2025-12-04T01:45:52.802825+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:20.743544+00:00'
+            mapped_at: '2025-12-04T01:45:52.802826+00:00'

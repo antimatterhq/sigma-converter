@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious CMD Shell Output Redirect",
+    "comment": "Detects inline Windows shell commands redirecting output via the \">\" symbol to a suspicious location. This technique is sometimes used by malicious actors in order to redirect the output of reconnaissance commands such as \"hostname\" and \"dir\" to files for future exfiltration.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND (lower(process.cmd_line) regexp '.*>.%appdata%\\\\.*' OR lower(process.cmd_line) regexp '.*>.%temp%\\\\.*' OR lower(process.cmd_line) regexp '.*>.%tmp%\\\\.*' OR lower(process.cmd_line) regexp '.*>.%userprofile%\\\\.*' OR lower(process.cmd_line) regexp '.*>.c:\\\\programdata\\\\.*' OR lower(process.cmd_line) regexp '.*>.c:\\\\temp\\\\.*' OR lower(process.cmd_line) regexp '.*>.c:\\\\users\\\\public\\\\.*' OR lower(process.cmd_line) regexp '.*>.c:\\\\windows\\\\temp\\\\.*' OR (contains(lower(process.cmd_line), lower(' >')) OR contains(lower(process.cmd_line), lower('\">')) OR contains(lower(process.cmd_line), lower('\\'>'))) AND contains(lower(process.cmd_line), lower('c:\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects inline Windows shell commands redirecting output via the \">\" symbol to a suspicious location. This technique is sometimes used by malicious actors in order to redirect the output of reconnaissance commands such as \"hostname\" and \"dir\" to files for future exfiltration.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate admin or third party scripts used for diagnostic collection might generate some false positives Reference: https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

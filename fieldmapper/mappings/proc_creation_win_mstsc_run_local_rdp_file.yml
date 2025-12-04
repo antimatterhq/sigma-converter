@@ -1,20 +1,19 @@
-id: 5fdce3ac-e7f9-4ecd-a3aa-a4d78ebbf0af
 title: Mstsc.EXE Execution With Local RDP File
+id: 5fdce3ac-e7f9-4ecd-a3aa-a4d78ebbf0af
 status: test
 level: low
-description: Detects potential RDP connection via Mstsc using a local ".rdp" file
 author: Nasreddine Bencherchali (Nextron Systems), Christopher Peacock @securepeacock
-date: '2023-04-18'
-modified: '2023-04-30'
-tags:
-    - attack.command-and-control
-    - attack.t1219
+description: Detects potential RDP connection via Mstsc using a local ".rdp" file
 references:
     - https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/
     - https://web.archive.org/web/20230726144748/https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/
 falsepositives:
     - Likely with legitimate usage of ".rdp" files
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2023-04-18'
+modified: '2023-04-30'
 logsource:
     category: process_creation
     product: windows
@@ -37,25 +36,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:25.675847+00:00'
+            mapped_at: '2025-12-04T01:42:41.826477+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:25.675847+00:00'
+            mapped_at: '2025-12-04T01:42:41.826477+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:25.675881+00:00'
+            mapped_at: '2025-12-04T01:42:41.826496+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:25.675885+00:00'
+            mapped_at: '2025-12-04T01:42:41.826498+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:25.675887+00:00'
+            mapped_at: '2025-12-04T01:42:41.826500+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:25.675889+00:00'
+            mapped_at: '2025-12-04T01:42:41.826501+00:00'

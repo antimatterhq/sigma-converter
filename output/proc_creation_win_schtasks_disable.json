@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Disable Important Scheduled Task",
+    "comment": "Detects when adversaries stop services or processes by disabling their respective scheduled tasks in order to conduct data destructive activities",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\schtasks.exe')) AND contains(lower(process.cmd_line), lower('/change')) AND contains(lower(process.cmd_line), lower('/tn')) AND contains(lower(process.cmd_line), lower('/disable')) AND (contains(lower(process.cmd_line), lower('\\\\windows\\\\bitlocker')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\exploitguard')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\exploitguard\\\\exploitguard mdm policy refresh')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\systemrestore\\\\sr')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\updateorchestrator\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\windows defender\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\windowsbackup\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\windowsupdate\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when adversaries stop services or processes by disabling their respective scheduled tasks in order to conduct data destructive activities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-8---windows---disable-the-sr-scheduled-task, https://twitter.com/MichalKoczwara/status/1553634816016498688, https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1489"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

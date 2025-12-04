@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Msiexec Execute Arbitrary DLL",
+    "comment": "Adversaries may abuse msiexec.exe to proxy execution of malicious payloads. Msiexec.exe is the command-line utility for the Windows Installer and is thus commonly associated with executing installation packages (.msi)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\msiexec.exe')) AND (contains(lower(process.cmd_line), lower(' -y')) OR contains(lower(process.cmd_line), lower(' /y')) OR contains(lower(process.cmd_line), lower(' \u2013y')) OR contains(lower(process.cmd_line), lower(' \u2014y')) OR contains(lower(process.cmd_line), lower(' \u2015y'))) AND NOT (contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" /y \"c:\\\\program files\\\\bonjour\\\\mdnsnsp.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" /y \"c:\\\\program files (x86)\\\\bonjour\\\\mdnsnsp.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" /y \"c:\\\\program files (x86)\\\\apple software update\\\\scriptingobjectmodel.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" /y \"c:\\\\program files (x86)\\\\apple software update\\\\softwareupdateadmin.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" /y \"c:\\\\windows\\\\ccm\\\\')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" /y c:\\\\windows\\\\ccm\\\\')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" -y \"c:\\\\program files\\\\bonjour\\\\mdnsnsp.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" -y \"c:\\\\program files (x86)\\\\bonjour\\\\mdnsnsp.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" -y \"c:\\\\program files (x86)\\\\apple software update\\\\scriptingobjectmodel.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" -y \"c:\\\\program files (x86)\\\\apple software update\\\\softwareupdateadmin.dll')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" -y \"c:\\\\windows\\\\ccm\\\\')) OR contains(lower(process.cmd_line), lower('\\\\msiexec.exe\" -y c:\\\\windows\\\\ccm\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may abuse msiexec.exe to proxy execution of malicious payloads. Msiexec.exe is the command-line utility for the Windows Installer and is thus commonly associated with executing installation packages (.msi)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate script References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md, https://twitter.com/_st0pp3r_/status/1583914515996897281",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

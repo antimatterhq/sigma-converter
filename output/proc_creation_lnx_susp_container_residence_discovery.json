@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Container Residence Discovery Via Proc Virtual FS",
+    "comment": "Detects potential container discovery via listing of certain kernel features in the \"/proc\" virtual filesystem",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('awk')) OR endswith(lower(process.name), lower('/cat')) OR endswith(lower(process.name), lower('grep')) OR endswith(lower(process.name), lower('/head')) OR endswith(lower(process.name), lower('/less')) OR endswith(lower(process.name), lower('/more')) OR endswith(lower(process.name), lower('/nl')) OR endswith(lower(process.name), lower('/tail'))) AND (contains(lower(process.cmd_line), lower('/proc/2/')) OR contains(lower(process.cmd_line), lower('/proc/')) AND (endswith(lower(process.cmd_line), lower('/cgroup')) OR endswith(lower(process.cmd_line), lower('/sched')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential container discovery via listing of certain kernel features in the \"/proc\" virtual filesystem",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate system administrator usage of these commands 2. Some container tools or deployments may use these techniques natively to determine how they proceed with execution, and will need to be filtered References: https://blog.skyplabs.net/posts/container-detection/, https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,22 +1,21 @@
-id: 1b9dc62e-6e9e-42a3-8990-94d7a10007f7
 title: Invoke-Obfuscation Obfuscated IEX Invocation - PowerShell
+id: 1b9dc62e-6e9e-42a3-8990-94d7a10007f7
 status: test
 level: high
+author: Daniel Bohannon (@Mandiant/@FireEye), oscd.community
 description: Detects all variations of obfuscated powershell IEX invocation code generated
     by Invoke-Obfuscation framework from the following code block \u2014
-author: Daniel Bohannon (@Mandiant/@FireEye), oscd.community
-date: '2019-11-08'
-modified: '2022-12-31'
+references:
+    - https://github.com/danielbohannon/Invoke-Obfuscation/blob/f20e7f843edd0a3a7716736e9eddfa423395dd26/Out-ObfuscatedStringCommand.ps1#L873-L888
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/danielbohannon/Invoke-Obfuscation/blob/f20e7f843edd0a3a7716736e9eddfa423395dd26/Out-ObfuscatedStringCommand.ps1#L873-L888
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2019-11-08'
+modified: '2022-12-31'
 logsource:
     category: ps_script
     product: windows
@@ -38,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:20.355862+00:00'
+            mapped_at: '2025-12-04T01:53:42.519586+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:20.355862+00:00'
+            mapped_at: '2025-12-04T01:53:42.519586+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:20.355877+00:00'
+            mapped_at: '2025-12-04T01:53:42.519607+00:00'

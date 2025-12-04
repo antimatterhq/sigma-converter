@@ -1,7 +1,8 @@
-id: 4b046706-5789-4673-b111-66f25fe99534
 title: Deleted Data Overwritten Via Cipher.EXE
+id: 4b046706-5789-4673-b111-66f25fe99534
 status: test
 level: medium
+author: frack113
 description: 'Detects usage of the "cipher" built-in utility in order to overwrite
     deleted data from disk.
 
@@ -12,17 +13,15 @@ description: 'Detects usage of the "cipher" built-in utility in order to overwri
     through overwriting files or data on local and remote drives
 
     '
-author: frack113
-date: '2021-12-26'
-modified: '2023-02-21'
-tags:
-    - attack.impact
-    - attack.t1485
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md#atomic-test-3---overwrite-deleted-data-on-c-drive
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1485
+date: '2021-12-26'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:00.153982+00:00'
+            mapped_at: '2025-12-04T01:44:00.673957+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:00.153982+00:00'
+            mapped_at: '2025-12-04T01:44:00.673957+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:00.153996+00:00'
+            mapped_at: '2025-12-04T01:44:00.673970+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:00.153998+00:00'
+            mapped_at: '2025-12-04T01:44:00.673972+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:00.153999+00:00'
+            mapped_at: '2025-12-04T01:44:00.673973+00:00'

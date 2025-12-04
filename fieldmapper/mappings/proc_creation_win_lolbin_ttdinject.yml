@@ -1,19 +1,18 @@
-id: b27077d6-23e6-45d2-81a0-e2b356eea5fd
 title: Use of TTDInject.exe
+id: b27077d6-23e6-45d2-81a0-e2b356eea5fd
 status: test
 level: medium
+author: frack113
 description: Detects the executiob of TTDInject.exe, which is used by Windows 10 v1809
     and newer to debug time travel (underlying call of tttracer.exe)
-author: frack113
-date: '2022-05-16'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Ttdinject/
 falsepositives:
     - Legitimate use
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2022-05-16'
 logsource:
     category: process_creation
     product: windows
@@ -29,17 +28,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:26.966793+00:00'
+            mapped_at: '2025-12-04T01:40:58.328406+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:26.966793+00:00'
+            mapped_at: '2025-12-04T01:40:58.328406+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:26.966828+00:00'
+            mapped_at: '2025-12-04T01:40:58.328417+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:26.966835+00:00'
+            mapped_at: '2025-12-04T01:40:58.328419+00:00'

@@ -1,23 +1,20 @@
-id: b36d01a3-ddaf-4804-be18-18a6247adfcd
 title: Add Windows Capability Via PowerShell Cmdlet
+id: b36d01a3-ddaf-4804-be18-18a6247adfcd
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the "Add-WindowsCapability" cmdlet to add Windows capabilities.
     Notable capabilities could be "OpenSSH" and others.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-22'
-modified: '2023-05-09'
-tags:
-    - attack.execution
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell
     - https://www.virustotal.com/gui/file/af1c82237b6e5a3a7cdbad82cc498d298c67845d92971bada450023d1335e267/content
 falsepositives:
     - Legitimate usage of the capabilities by administrators or users. Add additional
         filters accordingly.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''155c7fd5-47b4-49b2-bbeb-eb4fab335429''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-01-22'
+modified: '2023-05-09'
 logsource:
     category: process_creation
     product: windows
@@ -34,6 +31,9 @@ detection:
     selection_capa:
         CommandLine|contains: OpenSSH.
     condition: all of selection_*
+related:
+    -   id: 155c7fd5-47b4-49b2-bbeb-eb4fab335429
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -41,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:39.067695+00:00'
+            mapped_at: '2025-12-04T01:41:10.594289+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:39.067695+00:00'
+            mapped_at: '2025-12-04T01:41:10.594289+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:39.067722+00:00'
+            mapped_at: '2025-12-04T01:41:10.594304+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:39.067726+00:00'
+            mapped_at: '2025-12-04T01:41:10.594306+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:39.067729+00:00'
+            mapped_at: '2025-12-04T01:41:10.594314+00:00'

@@ -1,21 +1,20 @@
-id: 12e6d621-194f-4f59-90cc-1959e21e69f7
 title: Register new Logon Process by Rubeus
+id: 12e6d621-194f-4f59-90cc-1959e21e69f7
 status: test
 level: high
-description: Detects potential use of Rubeus via registered new trusted logon process
 author: Roberto Rodriguez (source), Ilyas Ochkov (rule), oscd.community
-date: '2019-10-24'
-modified: '2022-10-09'
+description: Detects potential use of Rubeus via registered new trusted logon process
+references:
+    - https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1
+falsepositives:
+    - Unknown
 tags:
     - attack.lateral-movement
     - attack.privilege-escalation
     - attack.credential-access
     - attack.t1558.003
-references:
-    - https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2019-10-24'
+modified: '2022-10-09'
 logsource:
     product: windows
     service: security
@@ -31,17 +30,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:18.675110+00:00'
+            mapped_at: '2025-12-04T01:55:26.388395+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:18.675110+00:00'
+            mapped_at: '2025-12-04T01:55:26.388395+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:19.549752+00:00'
+            mapped_at: '2025-12-04T01:55:26.388416+00:00'
         -   source_field: LogonProcessName
             target_table: authentication
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:44:19.549770+00:00'
+            mapped_at: '2025-12-04T01:55:26.388419+00:00'

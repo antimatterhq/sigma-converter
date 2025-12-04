@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Command Line Path Traversal Evasion Attempt",
+    "comment": "Detects potential evasion or obfuscation attempts using bogus path traversal via the commandline",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.name), lower('\\\\windows\\\\')) AND (contains(lower(process.cmd_line), lower('\\\\..\\\\windows\\\\')) OR contains(lower(process.cmd_line), lower('\\\\..\\\\system32\\\\')) OR contains(lower(process.cmd_line), lower('\\\\..\\\\..\\\\'))) OR contains(lower(process.cmd_line), lower('.exe\\\\..\\\\'))) AND NOT (contains(lower(process.cmd_line), lower('\\\\google\\\\drive\\\\googledrivesync.exe\\\\..\\\\')) OR contains(lower(process.cmd_line), lower('\\\\citrix\\\\virtual smart card\\\\citrix.authentication.virtualsmartcard.launcher.exe\\\\..\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential evasion or obfuscation attempts using bogus path traversal via the commandline",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Google Drive 2. Citrix References: https://twitter.com/hexacorn/status/1448037865435320323, https://twitter.com/Gal_B1t/status/1062971006078345217",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

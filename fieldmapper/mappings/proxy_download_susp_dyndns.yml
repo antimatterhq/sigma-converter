@@ -1,17 +1,10 @@
-id: 195c1119-ef07-4909-bb12-e66f5e07bf3c
 title: Download from Suspicious Dyndns Hosts
+id: 195c1119-ef07-4909-bb12-e66f5e07bf3c
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects download of certain file types from hosts with dynamic DNS names
     (selected list)
-author: Florian Roth (Nextron Systems)
-date: '2017-11-08'
-modified: '2023-05-18'
-tags:
-    - attack.defense-evasion
-    - attack.command-and-control
-    - attack.t1105
-    - attack.t1568
 references:
     - https://www.alienvault.com/blogs/security-essentials/dynamic-dns-security-and-potential-threats
 fields:
@@ -19,7 +12,13 @@ fields:
     - c-uri
 falsepositives:
     - Software downloads
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.command-and-control
+    - attack.t1105
+    - attack.t1568
+date: '2017-11-08'
+modified: '2023-05-18'
 logsource:
     category: proxy
 detection:
@@ -121,13 +120,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:17.575193+00:00'
+            mapped_at: '2025-12-04T01:34:56.662611+00:00'
     detection_fields:
         -   source_field: c-uri-extension
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:14:17.575217+00:00'
+            mapped_at: '2025-12-04T01:34:56.662629+00:00'
         -   source_field: cs-host
             target_table: http_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:14:17.575220+00:00'
+            mapped_at: '2025-12-04T01:34:56.662631+00:00'

@@ -1,7 +1,8 @@
-id: 0152550d-3a26-4efd-9f0e-54a0b28ae2f3
 title: Detection of PowerShell Execution via Sqlps.exe
+id: 0152550d-3a26-4efd-9f0e-54a0b28ae2f3
 status: test
 level: medium
+author: Agro (@agro_sev) oscd.community
 description: 'This rule detects execution of a PowerShell code through the sqlps.exe
     utility, which is included in the standard set of utilities supplied with the
     MSSQL Server.
@@ -10,14 +11,6 @@ description: 'This rule detects execution of a PowerShell code through the sqlps
     mechanisms based on the analysis of these logs.
 
     '
-author: Agro (@agro_sev) oscd.community
-date: '2020-10-10'
-modified: '2022-12-09'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://learn.microsoft.com/en-us/sql/tools/sqlps-utility?view=sql-server-ver15
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Sqlps/
@@ -25,7 +18,13 @@ references:
 falsepositives:
     - Direct PS command execution through SQLPS.exe is uncommon, childprocess sqlps.exe
         spawned by sqlagent.exe is a legitimate action.
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1127
+date: '2020-10-10'
+modified: '2022-12-09'
 logsource:
     category: process_creation
     product: windows
@@ -45,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:02.736863+00:00'
+            mapped_at: '2025-12-04T01:46:32.546452+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:02.736863+00:00'
+            mapped_at: '2025-12-04T01:46:32.546452+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:02.736887+00:00'
+            mapped_at: '2025-12-04T01:46:32.546465+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:02.736889+00:00'
+            mapped_at: '2025-12-04T01:46:32.546466+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:02.736892+00:00'
+            mapped_at: '2025-12-04T01:46:32.546468+00:00'

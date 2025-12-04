@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Files With System DLL Name In Unsuspected Locations",
+    "comment": "Detects the creation of a file with the \".dll\" extension that has the name of a System DLL in uncommon or unsuspected locations. (Outisde of \"System32\", \"SysWOW64\", etc.). It is highly recommended to perform an initial baseline before using this rule in production.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(file.path), lower('\\\\secur32.dll')) OR endswith(lower(file.path), lower('\\\\tdh.dll'))) AND NOT (contains(lower(file.path), lower('c:\\\\$windows.~bt\\\\')) OR contains(lower(file.path), lower('c:\\\\$winreagent\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\softwaredistribution\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\system32\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\syswow64\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\winsxs\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\uus\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a file with the \".dll\" extension that has the name of a System DLL in uncommon or unsuspected locations. (Outisde of \"System32\", \"SysWOW64\", etc.). It is highly recommended to perform an initial baseline before using this rule in production.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Third party software might bundle specific versions of system DLLs. Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

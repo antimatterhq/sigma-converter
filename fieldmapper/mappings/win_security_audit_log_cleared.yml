@@ -1,16 +1,10 @@
-id: d99b79d2-0a6f-4f46-ad8b-260b6e17f982
 title: Security Eventlog Cleared
+id: d99b79d2-0a6f-4f46-ad8b-260b6e17f982
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: One of the Windows Eventlogs has been cleared. e.g. caused by "wevtutil
     cl" command execution
-author: Florian Roth (Nextron Systems)
-date: '2017-01-10'
-modified: '2022-02-24'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.001
-    - car.2016-04-002
 references:
     - https://twitter.com/deviouspolack/status/832535435960209408
     - https://www.hybrid-analysis.com/sample/027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b30f6b0d7d3a745?environmentId=100
@@ -19,10 +13,12 @@ falsepositives:
     - Rollout of log collection agents (the setup routine often includes a reset of
         the local Eventlog)
     - System provisioning (system reset before the golden image creation)
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f2f01843-e7b8-4f95-a35a-d23584476423''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''a122ac13-daf8-4175-83a2-72c387be339d''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.001
+    - car.2016-04-002
+date: '2017-01-10'
+modified: '2022-02-24'
 logsource:
     product: windows
     service: security
@@ -34,6 +30,11 @@ detection:
         EventID: 1102
         Provider_Name: Microsoft-Windows-Eventlog
     condition: 1 of selection_*
+related:
+    -   id: f2f01843-e7b8-4f95-a35a-d23584476423
+        type: obsolete
+    -   id: a122ac13-daf8-4175-83a2-72c387be339d
+        type: obsolete
 ocsf_mapping:
     class_name: null
     activity_id: null

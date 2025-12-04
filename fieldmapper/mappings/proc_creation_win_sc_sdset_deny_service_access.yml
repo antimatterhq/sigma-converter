@@ -1,25 +1,21 @@
-id: 99cf1e02-00fb-4c0d-8375-563f978dfd37
 title: Deny Service Access Using Security Descriptor Tampering Via Sc.EXE
+id: 99cf1e02-00fb-4c0d-8375-563f978dfd37
 status: test
 level: high
+author: Jonhnathan Ribeiro, oscd.community
 description: Detects suspicious DACL modifications to deny access to a service that
     affects critical trustees. This can be used to hide services or make them unstoppable.
-author: Jonhnathan Ribeiro, oscd.community
-date: '2020-10-16'
-modified: '2023-02-28'
-tags:
-    - attack.persistence
-    - attack.t1543.003
 references:
     - https://www.sans.org/blog/red-team-tactics-hiding-windows-services/
     - https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/
     - https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-strings
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''98c5aeef-32d5-492f-b174-64a691896d25''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''a537cfc3-4297-4789-92b5-345bfd845ad0''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1543.003
+date: '2020-10-16'
+modified: '2023-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -39,6 +35,11 @@ detection:
             - ;SY
             - ;WD
     condition: all of selection_*
+related:
+    -   id: 98c5aeef-32d5-492f-b174-64a691896d25
+        type: similar
+    -   id: a537cfc3-4297-4789-92b5-345bfd845ad0
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -46,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:28.568418+00:00'
+            mapped_at: '2025-12-04T01:47:45.335755+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:28.568418+00:00'
+            mapped_at: '2025-12-04T01:47:45.335755+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:28.568461+00:00'
+            mapped_at: '2025-12-04T01:47:45.335770+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:28.568465+00:00'
+            mapped_at: '2025-12-04T01:47:45.335771+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:28.568467+00:00'
+            mapped_at: '2025-12-04T01:47:45.335773+00:00'

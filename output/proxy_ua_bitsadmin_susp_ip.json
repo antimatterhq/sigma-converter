@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Bitsadmin to Uncommon IP Server Address",
+    "comment": "Detects Bitsadmin connections to IP addresses instead of FQDN names",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (startswith(lower(http_request.user_agent), lower('microsoft bits/')) AND (endswith(lower(dst_endpoint.hostname), lower('1')) OR endswith(lower(dst_endpoint.hostname), lower('2')) OR endswith(lower(dst_endpoint.hostname), lower('3')) OR endswith(lower(dst_endpoint.hostname), lower('4')) OR endswith(lower(dst_endpoint.hostname), lower('5')) OR endswith(lower(dst_endpoint.hostname), lower('6')) OR endswith(lower(dst_endpoint.hostname), lower('7')) OR endswith(lower(dst_endpoint.hostname), lower('8')) OR endswith(lower(dst_endpoint.hostname), lower('9'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Bitsadmin connections to IP addresses instead of FQDN names",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://isc.sans.edu/diary/Microsoft+BITS+Used+to+Download+Payloads/21027",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1197"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

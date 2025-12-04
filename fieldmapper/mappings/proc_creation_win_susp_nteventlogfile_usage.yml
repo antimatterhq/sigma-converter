@@ -1,20 +1,17 @@
-id: caf201a9-c2ce-4a26-9c3a-2b9525413711
 title: Potentially Suspicious Call To Win32_NTEventlogFile Class
+id: caf201a9-c2ce-4a26-9c3a-2b9525413711
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the WMI class "Win32_NTEventlogFile" in a potentially
     suspicious way (delete, backup, change permissions, etc.) from a PowerShell script
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-07-13'
-tags:
-    - attack.defense-evasion
 references:
     - https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394225(v=vs.85)
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e2812b49-bae0-4b21-b366-7c142eafcde2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-07-13'
 logsource:
     category: process_creation
     product: windows
@@ -33,6 +30,9 @@ detection:
             - .TakeOwnerShip(
             - .TakeOwnerShipEx(
     condition: all of selection_*
+related:
+    -   id: e2812b49-bae0-4b21-b366-7c142eafcde2
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -40,13 +40,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:51.841041+00:00'
+            mapped_at: '2025-12-04T01:50:33.107870+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:51.841041+00:00'
+            mapped_at: '2025-12-04T01:50:33.107870+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:51.841073+00:00'
+            mapped_at: '2025-12-04T01:50:33.107887+00:00'

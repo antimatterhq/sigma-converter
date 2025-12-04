@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Proxy Execution Via Wuauclt.EXE",
+    "comment": "Detects the use of the Windows Update Client binary (wuauclt.exe) for proxy execution.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wuauclt.exe')) AND lower(process.file.name) = lower('wuauclt.exe') AND contains(lower(process.cmd_line), lower('updatedeploymentprovider')) AND contains(lower(process.cmd_line), lower('runhandlercomserver')) AND NOT (contains(lower(process.cmd_line), lower(' /updatedeploymentprovider updatedeploymentprovider.dll ')) OR contains(lower(process.cmd_line), lower(' wuaueng.dll ')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\uus\\\\packages\\\\preview\\\\amd64\\\\updatedeploy.dll /classid')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\uus\\\\amd64\\\\updatedeploy.dll /classid')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\winsxs\\\\')) AND contains(lower(process.cmd_line), lower('\\\\updatedeploy.dll /classid '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of the Windows Update Client binary (wuauclt.exe) for proxy execution.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://dtm.uk/wuauclt/, https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

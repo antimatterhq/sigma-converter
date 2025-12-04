@@ -1,15 +1,10 @@
-id: 114e7f1c-f137-48c8-8f54-3088c24ce4b9
 title: Remote Access Tool - AnyDesk Silent Installation
+id: 114e7f1c-f137-48c8-8f54-3088c24ce4b9
 status: test
 level: high
+author: Ján Trenčanský
 description: Detects AnyDesk Remote Desktop silent installation. Which can be used
     by attackers to gain remote access.
-author: Ján Trenčanský
-date: '2021-08-06'
-modified: '2023-03-05'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://twitter.com/TheDFIRReport/status/1423361119926816776?s=20
     - https://support.anydesk.com/Automatic_Deployment
@@ -19,7 +14,11 @@ fields:
     - CurrentDirectory
 falsepositives:
     - Legitimate deployment of AnyDesk
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2021-08-06'
+modified: '2023-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -37,13 +36,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:17.456632+00:00'
+            mapped_at: '2025-12-04T01:42:33.297299+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:17.456632+00:00'
+            mapped_at: '2025-12-04T01:42:33.297299+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:17.456647+00:00'
+            mapped_at: '2025-12-04T01:42:33.297314+00:00'

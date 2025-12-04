@@ -1,23 +1,22 @@
-id: e31033fc-33f0-4020-9a16-faf9b31cbf08
 title: PUA - Netcat Suspicious Execution
+id: e31033fc-33f0-4020-9a16-faf9b31cbf08
 status: test
 level: high
+author: frack113, Florian Roth (Nextron Systems)
 description: Detects execution of Netcat. Adversaries may use a non-application layer
     protocol for communication between host and C2 server or among infected hosts
     within a network
-author: frack113, Florian Roth (Nextron Systems)
-date: '2021-07-21'
-modified: '2023-02-08'
-tags:
-    - attack.command-and-control
-    - attack.t1095
 references:
     - https://nmap.org/ncat/
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1095/T1095.md
     - https://www.revshells.com/
 falsepositives:
     - Legitimate ncat use
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1095
+date: '2021-07-21'
+modified: '2023-02-08'
 logsource:
     category: process_creation
     product: windows
@@ -46,17 +45,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:01.594180+00:00'
+            mapped_at: '2025-12-04T01:48:58.879416+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:01.594180+00:00'
+            mapped_at: '2025-12-04T01:48:58.879416+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:01.594192+00:00'
+            mapped_at: '2025-12-04T01:48:58.888392+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:01.594194+00:00'
+            mapped_at: '2025-12-04T01:48:58.888414+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Azure New CloudShell Created",
+    "comment": "Identifies when a new cloudshell is created inside of Azure portal.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "activitylogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(api.operation) = lower('microsoft.portal/consoles/write'))"
+      }
+    },
+    "output": {
+      "summary": "Identifies when a new cloudshell is created inside of Azure portal.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: A new cloudshell may be created by a system administrator. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

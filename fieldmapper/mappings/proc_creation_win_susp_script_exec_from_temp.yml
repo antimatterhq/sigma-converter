@@ -1,19 +1,18 @@
-id: a6a39bdb-935c-4f0a-ab77-35f4bbf44d33
 title: Suspicious Script Execution From Temp Folder
+id: a6a39bdb-935c-4f0a-ab77-35f4bbf44d33
 status: test
 level: high
-description: Detects a suspicious script executions from temporary folder
 author: Florian Roth (Nextron Systems), Max Altgelt (Nextron Systems), Tim Shelton
-date: '2021-07-14'
-modified: '2022-10-05'
-tags:
-    - attack.execution
-    - attack.t1059
+description: Detects a suspicious script executions from temporary folder
 references:
     - https://www.microsoft.com/security/blog/2021/07/13/microsoft-discovers-threat-actor-targeting-solarwinds-serv-u-software-with-0-day-exploit/
 falsepositives:
     - Administrative scripts
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2021-07-14'
+modified: '2022-10-05'
 logsource:
     category: process_creation
     product: windows
@@ -48,17 +47,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:24.745389+00:00'
+            mapped_at: '2025-12-04T01:44:20.755531+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:24.745389+00:00'
+            mapped_at: '2025-12-04T01:44:20.755531+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:24.745402+00:00'
+            mapped_at: '2025-12-04T01:44:20.755544+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:24.745404+00:00'
+            mapped_at: '2025-12-04T01:44:20.755545+00:00'

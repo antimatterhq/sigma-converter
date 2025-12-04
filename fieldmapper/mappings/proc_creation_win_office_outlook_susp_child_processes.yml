@@ -1,15 +1,10 @@
-id: 208748f7-881d-47ac-a29c-07ea84bf691d
 title: Suspicious Outlook Child Process
+id: 208748f7-881d-47ac-a29c-07ea84bf691d
 status: test
 level: high
-description: Detects a suspicious process spawning from an Outlook process.
 author: Michael Haag, Florian Roth (Nextron Systems), Markus Neis, Elastic, FPT.EagleEye
     Team
-date: '2022-02-28'
-modified: '2023-02-04'
-tags:
-    - attack.execution
-    - attack.t1204.002
+description: Detects a suspicious process spawning from an Outlook process.
 references:
     - https://www.hybrid-analysis.com/sample/465aabe132ccb949e75b8ab9c5bda36d80cf2fd503d52b8bad54e295f28bbc21?environmentId=100
     - https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html
@@ -18,10 +13,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''438025f9-5856-4663-83f7-52f878a70a50''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''e212d415-0e93-435f-9e1a-f29005bb4723''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1204.002
+date: '2022-02-28'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -51,6 +47,11 @@ detection:
             - \wmic.exe
             - \wscript.exe
     condition: selection
+related:
+    -   id: 438025f9-5856-4663-83f7-52f878a70a50
+        type: derived
+    -   id: e212d415-0e93-435f-9e1a-f29005bb4723
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -58,17 +59,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:40.703210+00:00'
+            mapped_at: '2025-12-04T01:47:06.837195+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:40.703210+00:00'
+            mapped_at: '2025-12-04T01:47:06.837195+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:40.703224+00:00'
+            mapped_at: '2025-12-04T01:47:06.837221+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:40.703227+00:00'
+            mapped_at: '2025-12-04T01:47:06.837224+00:00'

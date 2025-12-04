@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potentially Over Permissive Permissions Granted Using Dsacls.EXE",
+    "comment": "Detects usage of Dsacls to grant over permissive permissions",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\dsacls.exe')) AND lower(process.file.name) = lower('dsacls.exe') AND contains(lower(process.cmd_line), lower(' /g ')) AND (contains(lower(process.cmd_line), lower('gr')) OR contains(lower(process.cmd_line), lower('ge')) OR contains(lower(process.cmd_line), lower('gw')) OR contains(lower(process.cmd_line), lower('ga')) OR contains(lower(process.cmd_line), lower('wp')) OR contains(lower(process.cmd_line), lower('wd'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of Dsacls to grant over permissive permissions",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrators granting over permissive permissions to users References: https://ss64.com/nt/dsacls.html, https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc771151(v=ws.11)",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

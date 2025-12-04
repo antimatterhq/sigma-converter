@@ -1,7 +1,9 @@
-id: ec127035-a636-4b9a-8555-0efd4e59f316
 title: Clipboard Collection with Xclip Tool
+id: ec127035-a636-4b9a-8555-0efd4e59f316
 status: test
 level: low
+author: Pawel Mazur, Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research),
+    MSTIC
 description: 'Detects attempts to collect data stored in the clipboard from users
     with the usage of xclip tool. Xclip has to be installed.
 
@@ -9,18 +11,15 @@ description: 'Detects attempts to collect data stored in the clipboard from user
     on user workstations.
 
     '
-author: Pawel Mazur, Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research),
-    MSTIC
-date: '2021-10-15'
-modified: '2022-09-15'
-tags:
-    - attack.collection
-    - attack.t1115
 references:
     - https://www.packetlabs.net/posts/clipboard-data-security/
 falsepositives:
     - Legitimate usage of xclip tools.
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1115
+date: '2021-10-15'
+modified: '2022-09-15'
 logsource:
     category: process_creation
     product: linux
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:38.346982+00:00'
+            mapped_at: '2025-12-04T01:36:45.002877+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:38.346982+00:00'
+            mapped_at: '2025-12-04T01:36:45.002877+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:38.346999+00:00'
+            mapped_at: '2025-12-04T01:36:45.002925+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:38.347002+00:00'
+            mapped_at: '2025-12-04T01:36:45.002927+00:00'

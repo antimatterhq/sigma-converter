@@ -1,7 +1,8 @@
-id: 46612ae6-86be-4802-bc07-39b59feb1309
 title: Access To Windows DPAPI Master Keys By Uncommon Applications
+id: 46612ae6-86be-4802-bc07-39b59feb1309
 status: experimental
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects file access requests to the the Windows Data Protection API
     Master keys by an uncommon application.
 
@@ -9,18 +10,16 @@ description: 'Detects file access requests to the the Windows Data Protection AP
     "dpapi::masterkey" function
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-17'
-modified: '2024-07-29'
-tags:
-    - attack.credential-access
-    - attack.t1555.004
 references:
     - http://blog.harmj0y.net/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/
     - https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1555.004
+date: '2022-10-17'
+modified: '2024-07-29'
 logsource:
     category: file_access
     product: windows
@@ -44,17 +43,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_access
-            mapped_at: '2025-11-26T02:40:59.663052+00:00'
+            mapped_at: '2025-12-04T01:53:31.607667+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:59.663052+00:00'
+            mapped_at: '2025-12-04T01:53:31.607667+00:00'
     detection_fields:
         -   source_field: FileName
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:40:59.663074+00:00'
+            mapped_at: '2025-12-04T01:53:31.607683+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:59.663077+00:00'
+            mapped_at: '2025-12-04T01:53:31.607685+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential SMB Relay Attack Tool Execution",
+    "comment": "Detects different hacktools used for relay attacks on Windows for privilege escalation",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.name), lower('petitpotam')) OR contains(lower(process.name), lower('rottenpotato')) OR contains(lower(process.name), lower('hotpotato')) OR contains(lower(process.name), lower('juicypotato')) OR contains(lower(process.name), lower('\\\\just_dce_')) OR contains(lower(process.name), lower('juicy potato')) OR contains(lower(process.name), lower('\\\\temp\\\\rot.exe')) OR contains(lower(process.name), lower('\\\\potato.exe')) OR contains(lower(process.name), lower('\\\\spoolsample.exe')) OR contains(lower(process.name), lower('\\\\responder.exe')) OR contains(lower(process.name), lower('\\\\smbrelayx')) OR contains(lower(process.name), lower('\\\\ntlmrelayx')) OR contains(lower(process.name), lower('\\\\localpotato')) OR contains(lower(process.cmd_line), lower('invoke-tater')) OR contains(lower(process.cmd_line), lower(' smbrelay')) OR contains(lower(process.cmd_line), lower(' ntlmrelay')) OR contains(lower(process.cmd_line), lower('cme smb ')) OR contains(lower(process.cmd_line), lower(' /ntlm:ntlmhash ')) OR contains(lower(process.cmd_line), lower('invoke-petitpotam')) OR lower(process.cmd_line) regexp '.*\\.exe -t .* -p .*' OR contains(lower(process.cmd_line), lower('.exe -c \"{')) AND endswith(lower(process.cmd_line), lower('}\" -z'))) AND NOT (contains(lower(process.name), lower('hotpotatoes6')) OR contains(lower(process.name), lower('hotpotatoes7')) OR contains(lower(process.name), lower('hotpotatoes '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects different hacktools used for relay attacks on Windows for privilege escalation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate files with these rare hacktool names References: https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/, https://pentestlab.blog/2017/04/13/hot-potato/, https://github.com/ohpe/juicy-potato, https://hunter2.gitbook.io/darthsidious/other/war-stories/domain-admin-in-30-minutes, https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire, https://www.localpotato.com/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1557",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

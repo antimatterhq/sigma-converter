@@ -1,21 +1,18 @@
-id: 613c03ba-0779-4a53-8a1f-47f914a4ded3
 title: DNS Query To MEGA Hosting Website
+id: 613c03ba-0779-4a53-8a1f-47f914a4ded3
 status: test
 level: medium
-description: Detects DNS queries for subdomains related to MEGA sharing website
 author: Aaron Greetham (@beardofbinary) - NCC Group
-date: '2021-05-26'
-modified: '2023-09-18'
-tags:
-    - attack.exfiltration
-    - attack.t1567.002
+description: Detects DNS queries for subdomains related to MEGA sharing website
 references:
     - https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/
 falsepositives:
     - Legitimate DNS queries and usage of Mega
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''66474410-b883-415f-9f8d-75345a0a66a6''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+date: '2021-05-26'
+modified: '2023-09-18'
 logsource:
     category: dns_query
     product: windows
@@ -23,6 +20,9 @@ detection:
     selection:
         QueryName|contains: userstorage.mega.co.nz
     condition: selection
+related:
+    -   id: 66474410-b883-415f-9f8d-75345a0a66a6
+        type: similar
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -30,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:48.286088+00:00'
+            mapped_at: '2025-12-04T01:51:21.109629+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:48.286088+00:00'
+            mapped_at: '2025-12-04T01:51:21.109629+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:48.286103+00:00'
+            mapped_at: '2025-12-04T01:51:21.109646+00:00'

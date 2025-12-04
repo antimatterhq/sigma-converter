@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Non Interactive PowerShell Process Spawned",
+    "comment": "Detects non-interactive PowerShell activity by looking at the \"powershell\" process with a non-user GUI process such as \"explorer.exe\" as a parent.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND NOT (endswith(lower(process.parent_process.name), lower(':\\\\windows\\\\explorer.exe')) OR endswith(lower(process.parent_process.name), lower(':\\\\windows\\\\system32\\\\compattelrunner.exe')) OR endswith(lower(process.parent_process.name), lower(':\\\\windows\\\\syswow64\\\\explorer.exe')) OR lower(process.parent_process.name) = lower(':\\\\$windows.~bt\\\\sources\\\\setuphost.exe')) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\programs\\\\microsoft vs code\\\\code.exe')) AND contains(lower(process.parent_process.cmd_line), lower(' --ms-enable-electron-run-as-node ')) OR contains(lower(process.parent_process.name), lower(':\\\\program files\\\\windowsapps\\\\microsoft.windowsterminal_')) AND endswith(lower(process.parent_process.name), lower('\\\\windowsterminal.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects non-interactive PowerShell activity by looking at the \"powershell\" process with a non-user GUI process such as \"explorer.exe\" as a parent.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Likely. Many admin scripts and tools leverage PowerShell in their BAT or VB scripts which may trigger this rule often. It is best to add additional filters or use this to hunt for anomalies Reference: https://web.archive.org/web/20200925032237/https://threathunterplaybook.com/notebooks/windows/02_execution/WIN-190410151110.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

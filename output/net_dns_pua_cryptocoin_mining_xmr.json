@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "name": "Monero Crypto Coin Mining Pool Lookup",
+    "comment": "Detects suspicious DNS queries to Monero mining pools",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(query.hostname), lower('pool.minexmr.com')) OR contains(lower(query.hostname), lower('fr.minexmr.com')) OR contains(lower(query.hostname), lower('de.minexmr.com')) OR contains(lower(query.hostname), lower('sg.minexmr.com')) OR contains(lower(query.hostname), lower('ca.minexmr.com')) OR contains(lower(query.hostname), lower('us-west.minexmr.com')) OR contains(lower(query.hostname), lower('pool.supportxmr.com')) OR contains(lower(query.hostname), lower('mine.c3pool.com')) OR contains(lower(query.hostname), lower('xmr-eu1.nanopool.org')) OR contains(lower(query.hostname), lower('xmr-eu2.nanopool.org')) OR contains(lower(query.hostname), lower('xmr-us-east1.nanopool.org')) OR contains(lower(query.hostname), lower('xmr-us-west1.nanopool.org')) OR contains(lower(query.hostname), lower('xmr-asia1.nanopool.org')) OR contains(lower(query.hostname), lower('xmr-jp1.nanopool.org')) OR contains(lower(query.hostname), lower('xmr-au1.nanopool.org')) OR contains(lower(query.hostname), lower('xmr.2miners.com')) OR contains(lower(query.hostname), lower('xmr.hashcity.org')) OR contains(lower(query.hostname), lower('xmr.f2pool.com')) OR contains(lower(query.hostname), lower('xmrpool.eu')) OR contains(lower(query.hostname), lower('pool.hashvault.pro'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious DNS queries to Monero mining pools",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate crypto coin mining Reference: https://www.nextron-systems.com/2021/10/24/monero-mining-pool-fqdns/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1496"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1567"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Dosfuscation Activity",
+    "comment": "Detects possible payload obfuscation via the commandline",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('^^')) OR contains(lower(process.cmd_line), lower('^|^')) OR contains(lower(process.cmd_line), lower(',;,')) OR contains(lower(process.cmd_line), lower(';;;;')) OR contains(lower(process.cmd_line), lower(';; ;;')) OR contains(lower(process.cmd_line), lower('(,(,')) OR contains(lower(process.cmd_line), lower('%comspec:~')) OR contains(lower(process.cmd_line), lower(' c^m^d')) OR contains(lower(process.cmd_line), lower('^c^m^d')) OR contains(lower(process.cmd_line), lower(' c^md')) OR contains(lower(process.cmd_line), lower(' cm^d')) OR contains(lower(process.cmd_line), lower('^cm^d')) OR contains(lower(process.cmd_line), lower(' s^et ')) OR contains(lower(process.cmd_line), lower(' s^e^t ')) OR contains(lower(process.cmd_line), lower(' se^t '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects possible payload obfuscation via the commandline",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/dosfuscation-report.pdf, https://github.com/danielbohannon/Invoke-DOSfuscation",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

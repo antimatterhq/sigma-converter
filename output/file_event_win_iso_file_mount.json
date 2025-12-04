@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "ISO File Created Within Temp Folders",
+    "comment": "Detects the creation of a ISO file in the Outlook temp folder or in the Appdata temp folder. Typical of Qakbot TTP from end-July 2022.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) AND contains(lower(file.path), lower('.zip\\\\')) AND endswith(lower(file.path), lower('.iso')) OR contains(lower(file.path), lower('\\\\appdata\\\\local\\\\microsoft\\\\windows\\\\inetcache\\\\content.outlook\\\\')) AND endswith(lower(file.path), lower('.iso'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a ISO file in the Outlook temp folder or in the Appdata temp folder. Typical of Qakbot TTP from end-July 2022.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: actor.process.name, ComputerName, TargetFileName False positive: Potential FP by sysadmin opening a zip file containing a legitimate ISO file References: https://twitter.com/Sam0x90/status/1552011547974696960, https://securityaffairs.co/wordpress/133680/malware/dll-sideloading-spread-qakbot.html, https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1553.005/T1553.005.md#atomic-test-1---mount-iso-image",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,7 +1,8 @@
-id: ab70c354-d9ac-4e11-bbb6-ec8e3b153357
 title: Remote Access Tool - Team Viewer Session Started On Windows Host
+id: ab70c354-d9ac-4e11-bbb6-ec8e3b153357
 status: experimental
 level: low
+author: Josh Nickels, Qi Nan
 description: 'Detects the command line executed when TeamViewer starts a session started
     by a remote host.
 
@@ -9,19 +10,14 @@ description: 'Detects the command line executed when TeamViewer starts a session
     details by viewing the "incoming_connections.txt" log file in the TeamViewer folder.
 
     '
-author: Josh Nickels, Qi Nan
-date: '2024-03-11'
-tags:
-    - attack.initial-access
-    - attack.t1133
 references:
     - Internal Research
 falsepositives:
     - Legitimate usage of TeamViewer
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1f6b8cd4-3e60-47cc-b282-5aa1cbc9182d''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''f459ccb4-9805-41ea-b5b2-55e279e2424a''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1133
+date: '2024-03-11'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +27,11 @@ detection:
         ParentImage: TeamViewer_Service.exe
         CommandLine|endswith: TeamViewer_Desktop.exe --IPCport 5939 --Module 1
     condition: selection
+related:
+    -   id: 1f6b8cd4-3e60-47cc-b282-5aa1cbc9182d
+        type: similar
+    -   id: f459ccb4-9805-41ea-b5b2-55e279e2424a
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:01.227200+00:00'
+            mapped_at: '2025-12-04T01:50:42.688987+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:01.227200+00:00'
+            mapped_at: '2025-12-04T01:50:42.688987+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:01.227234+00:00'
+            mapped_at: '2025-12-04T01:50:42.689003+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:37:01.227238+00:00'
+            mapped_at: '2025-12-04T01:50:42.689005+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:01.227240+00:00'
+            mapped_at: '2025-12-04T01:50:42.689006+00:00'

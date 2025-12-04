@@ -1,23 +1,22 @@
-id: 8737b7f6-8df3-4bb7-b1da-06019b99b687
 title: Shell Invocation Via Ssh - Linux
+id: 8737b7f6-8df3-4bb7-b1da-06019b99b687
 status: experimental
 level: high
+author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
 description: 'Detects the use of the "ssh" utility to execute a shell. Such behavior
     may be associated with privilege escalation, unauthorized command execution, or
     to break out from restricted environments.
 
     '
-author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
-date: '2024-08-29'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://gtfobins.github.io/gtfobins/ssh/
     - https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2024-08-29'
 logsource:
     category: process_creation
     product: linux
@@ -45,17 +44,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:06.678513+00:00'
+            mapped_at: '2025-12-04T01:36:19.176024+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:06.678513+00:00'
+            mapped_at: '2025-12-04T01:36:19.176024+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:06.678525+00:00'
+            mapped_at: '2025-12-04T01:36:19.176048+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:06.678527+00:00'
+            mapped_at: '2025-12-04T01:36:19.176053+00:00'

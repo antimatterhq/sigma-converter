@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Exports Critical Registry Keys To a File",
+    "comment": "Detects the export of a crital Registry key to a file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\regedit.exe')) AND lower(process.file.name) = lower('regedit.exe') AND (contains(lower(process.cmd_line), lower(' -e ')) OR contains(lower(process.cmd_line), lower(' /e ')) OR contains(lower(process.cmd_line), lower(' \u2013e ')) OR contains(lower(process.cmd_line), lower(' \u2014e ')) OR contains(lower(process.cmd_line), lower(' \u2015e '))) AND (contains(lower(process.cmd_line), lower('hklm')) OR contains(lower(process.cmd_line), lower('hkey_local_machine'))) AND (endswith(lower(process.cmd_line), lower('\\\\system')) OR endswith(lower(process.cmd_line), lower('\\\\sam')) OR endswith(lower(process.cmd_line), lower('\\\\security'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the export of a crital Registry key to a file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.parent_process.name, process.cmd_line False positive: Dumping hives for legitimate purpouse i.e. backup or forensic investigation References: https://lolbas-project.github.io/lolbas/Binaries/Regedit/, https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1012"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

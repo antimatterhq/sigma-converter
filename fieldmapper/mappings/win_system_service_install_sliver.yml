@@ -1,22 +1,21 @@
-id: 31c51af6-e7aa-4da7-84d4-8f32cc580af2
 title: Sliver C2 Default Service Installation
+id: 31c51af6-e7aa-4da7-84d4-8f32cc580af2
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects known malicious service installation that appear in cases in
     which a Sliver implants execute the PsExec commands
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-25'
-tags:
-    - attack.execution
-    - attack.privilege-escalation
-    - attack.t1543.003
-    - attack.t1569.002
 references:
     - https://github.com/BishopFox/sliver/blob/79f2d48fcdfc2bee4713b78d431ea4b27f733f30/client/command/commands.go#L1231
     - https://www.microsoft.com/security/blog/2022/08/24/looking-for-the-sliver-lining-hunting-for-emerging-command-and-control-frameworks/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.privilege-escalation
+    - attack.t1543.003
+    - attack.t1569.002
+date: '2022-08-25'
 logsource:
     product: windows
     service: system
@@ -38,25 +37,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:04.323225+00:00'
+            mapped_at: '2025-12-04T01:57:00.366017+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:04.323225+00:00'
+            mapped_at: '2025-12-04T01:57:00.366017+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:04.323243+00:00'
+            mapped_at: '2025-12-04T01:57:00.366035+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:04.323245+00:00'
+            mapped_at: '2025-12-04T01:57:00.366037+00:00'
         -   source_field: ImagePath
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:48:04.323247+00:00'
+            mapped_at: '2025-12-04T01:57:00.366039+00:00'
         -   source_field: ServiceName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:04.323248+00:00'
+            mapped_at: '2025-12-04T01:57:00.366040+00:00'

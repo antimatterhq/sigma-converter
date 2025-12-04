@@ -1,7 +1,8 @@
-id: 9d5a1274-922a-49d0-87f3-8c653483b909
 title: Uncommon System Information Discovery Via Wmic.EXE
+id: 9d5a1274-922a-49d0-87f3-8c653483b909
 status: test
 level: medium
+author: TropChaud
 description: 'Detects the use of the WMI command-line (WMIC) utility to identify and
     display various system information,
 
@@ -13,12 +14,6 @@ description: 'Detects the use of the WMI command-line (WMIC) utility to identify
     Some of these commands were used by Aurora Stealer in late 2022/early 2023.
 
     '
-author: TropChaud
-date: '2023-01-26'
-modified: '2023-12-19'
-tags:
-    - attack.discovery
-    - attack.t1082
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/a2ccd19c37d0278b4ffa8583add3cf52060a5418/atomics/T1082/T1082.md#atomic-test-25---system-information-discovery-with-wmic
     - https://nwgat.ninja/getting-system-information-with-wmic-on-windows/
@@ -28,9 +23,11 @@ references:
     - https://www.virustotal.com/gui/file/d6f6bc10ae0e634ed4301d584f61418cee18e5d58ad9af72f8aa552dc4aaeca3/behavior
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d85ecdd7-b855-4e6e-af59-d9c78b5b861e''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1082
+date: '2023-01-26'
+modified: '2023-12-19'
 logsource:
     category: process_creation
     product: windows
@@ -44,6 +41,9 @@ detection:
             - LOGICALDISK get Name,Size,FreeSpace
             - os get Caption,OSArchitecture,Version
     condition: all of selection_*
+related:
+    -   id: d85ecdd7-b855-4e6e-af59-d9c78b5b861e
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -51,25 +51,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:36.314716+00:00'
+            mapped_at: '2025-12-04T01:41:59.091897+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:36.314716+00:00'
+            mapped_at: '2025-12-04T01:41:59.091897+00:00'
     detection_fields:
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:26:36.314774+00:00'
+            mapped_at: '2025-12-04T01:41:59.091912+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:36.314778+00:00'
+            mapped_at: '2025-12-04T01:41:59.091914+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:36.314782+00:00'
+            mapped_at: '2025-12-04T01:41:59.091916+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:36.314785+00:00'
+            mapped_at: '2025-12-04T01:41:59.091917+00:00'

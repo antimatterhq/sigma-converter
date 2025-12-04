@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious AppX Package Locations",
+    "comment": "Detects an appx package added the pipeline of the \"to be processed\" packages which is located in suspicious locations",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "appxdeployment-server",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 854 AND (contains(lower(job.file.path), lower('c:\\\\users\\\\public\\\\')) OR contains(lower(job.file.path), lower('/users/public/')) OR contains(lower(job.file.path), lower('c:\\\\perflogs\\\\')) OR contains(lower(job.file.path), lower('c:/perflogs/')) OR contains(lower(job.file.path), lower('\\\\desktop\\\\')) OR contains(lower(job.file.path), lower('/desktop/')) OR contains(lower(job.file.path), lower('\\\\downloads\\\\')) OR contains(lower(job.file.path), lower('/downloads/')) OR contains(lower(job.file.path), lower('c:\\\\windows\\\\temp\\\\')) OR contains(lower(job.file.path), lower('c:/windows/temp/')) OR contains(lower(job.file.path), lower('\\\\appddata\\\\local\\\\temp\\\\')) OR contains(lower(job.file.path), lower('/appddata/local/temp/'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects an appx package added the pipeline of the \"to be processed\" packages which is located in suspicious locations",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: Internal Research, https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/, https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting, https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

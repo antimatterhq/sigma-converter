@@ -1,13 +1,9 @@
-id: 448fd1ea-2116-4c62-9cde-a92d120e0f08
 title: Azure Service Principal Removed
+id: 448fd1ea-2116-4c62-9cde-a92d120e0f08
 status: test
 level: medium
-description: Identifies when a service principal was removed in Azure.
 author: Austin Songer @austinsonger
-date: '2021-09-03'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
+description: Identifies when a service principal was removed in Azure.
 references:
     - https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities#application-proxy
 falsepositives:
@@ -16,7 +12,10 @@ falsepositives:
         changes in your environment.
     - Service principal removed from unfamiliar users should be investigated. If known
         behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2021-09-03'
+modified: '2022-10-09'
 logsource:
     product: azure
     service: activitylogs
@@ -31,13 +30,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:09.124011+00:00'
+            mapped_at: '2025-12-04T01:38:34.442885+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:09.124011+00:00'
+            mapped_at: '2025-12-04T01:38:34.442885+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:21:09.124039+00:00'
+            mapped_at: '2025-12-04T01:38:34.442930+00:00'

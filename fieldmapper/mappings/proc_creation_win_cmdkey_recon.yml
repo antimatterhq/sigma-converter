@@ -1,15 +1,10 @@
-id: 07f8bdc2-c9b3-472a-9817-5a670b872f53
 title: Potential Reconnaissance For Cached Credentials Via Cmdkey.EXE
+id: 07f8bdc2-c9b3-472a-9817-5a670b872f53
 status: test
 level: high
-description: Detects usage of cmdkey to look for cached credentials on the system
 author: jmallette, Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron
     Systems)
-date: '2019-01-16'
-modified: '2024-03-05'
-tags:
-    - attack.credential-access
-    - attack.t1003.005
+description: Detects usage of cmdkey to look for cached credentials on the system
 references:
     - https://www.peew.pw/blog/2017/11/26/exploring-cmdkey-an-edge-case-for-privilege-escalation
     - https://technet.microsoft.com/en-us/library/cc754243(v=ws.11).aspx
@@ -20,7 +15,11 @@ fields:
     - User
 falsepositives:
     - Legitimate administrative tasks
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.005
+date: '2019-01-16'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:46.722147+00:00'
+            mapped_at: '2025-12-04T01:48:00.805375+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:46.722147+00:00'
+            mapped_at: '2025-12-04T01:48:00.805375+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:46.722166+00:00'
+            mapped_at: '2025-12-04T01:48:00.805423+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:46.722168+00:00'
+            mapped_at: '2025-12-04T01:48:00.805436+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:46.722169+00:00'
+            mapped_at: '2025-12-04T01:48:00.805438+00:00'

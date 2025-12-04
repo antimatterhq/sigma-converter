@@ -1,22 +1,19 @@
-id: aa2efee7-34dd-446e-8a37-40790a66efd7
 title: Recon Information for Export with Command Prompt
+id: aa2efee7-34dd-446e-8a37-40790a66efd7
 status: test
 level: medium
+author: frack113
 description: Once established within a system or network, an adversary may use automated
     techniques for collecting internal data.
-author: frack113
-date: '2021-07-30'
-modified: '2022-09-13'
-tags:
-    - attack.collection
-    - attack.t1119
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8e0bb260-d4b2-4fff-bb8d-3f82118e6892''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1119
+date: '2021-07-30'
+modified: '2022-09-13'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
             - ' > %TEMP%\'
             - ' > %TMP%\'
     condition: all of selection*
+related:
+    -   id: 8e0bb260-d4b2-4fff-bb8d-3f82118e6892
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:22.632804+00:00'
+            mapped_at: '2025-12-04T01:51:05.780480+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:22.632804+00:00'
+            mapped_at: '2025-12-04T01:51:05.780480+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:22.632822+00:00'
+            mapped_at: '2025-12-04T01:51:05.780494+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:22.632825+00:00'
+            mapped_at: '2025-12-04T01:51:05.780496+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:37:22.632826+00:00'
+            mapped_at: '2025-12-04T01:51:05.780497+00:00'

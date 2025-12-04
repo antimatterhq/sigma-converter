@@ -1,15 +1,10 @@
-id: 5b768e71-86f2-4879-b448-81061cbae951
 title: Suspicious Manipulation Of Default Accounts Via Net.EXE
+id: 5b768e71-86f2-4879-b448-81061cbae951
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious manipulations of default accounts such as 'administrator'
     and 'guest'. For example 'enable' or 'disable' accounts or change the password...etc
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-01'
-modified: '2023-02-21'
-tags:
-    - attack.collection
-    - attack.t1560.001
 references:
     - https://www.trellix.com/en-sg/about/newsroom/stories/threat-labs/lockergoga-ransomware-family-used-in-targeted-attacks.html
     - https://redacted.com/blog/bianlian-ransomware-gang-gives-it-a-go/
@@ -18,7 +13,11 @@ falsepositives:
     - Some false positives could occur with the admin or guest account. It depends
         on the scripts being used by the admins in your env. If you experience a lot
         of FP you could reduce the level to medium
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1560.001
+date: '2022-09-01'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -73,21 +72,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:12.124949+00:00'
+            mapped_at: '2025-12-04T01:42:26.687237+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:12.124949+00:00'
+            mapped_at: '2025-12-04T01:42:26.687237+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:12.124962+00:00'
+            mapped_at: '2025-12-04T01:42:26.687249+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:12.124964+00:00'
+            mapped_at: '2025-12-04T01:42:26.687251+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:12.124965+00:00'
+            mapped_at: '2025-12-04T01:42:26.687252+00:00'

@@ -1,24 +1,23 @@
-id: 02f7c9c1-1ae8-4c6a-8add-04693807f92f
 title: Potential Access Token Abuse
+id: 02f7c9c1-1ae8-4c6a-8add-04693807f92f
 status: test
 level: medium
+author: Michaela Adams, Zach Mathis
 description: Detects potential token impersonation and theft. Example, when using
     "DuplicateToken(Ex)" and "ImpersonateLoggedOnUser" with the "LOGON32_LOGON_NEW_CREDENTIALS
     flag".
-author: Michaela Adams, Zach Mathis
-date: '2022-11-06'
-modified: '2023-04-26'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1134.001
-    - stp.4u
 references:
     - https://www.elastic.co/fr/blog/how-attackers-abuse-access-token-manipulation
     - https://www.manageengine.com/log-management/cyber-security/access-token-manipulation.html
 falsepositives:
     - Anti-Virus
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1134.001
+    - stp.4u
+date: '2022-11-06'
+modified: '2023-04-26'
 logsource:
     product: windows
     service: security
@@ -37,29 +36,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:47.842123+00:00'
+            mapped_at: '2025-12-04T01:56:52.707804+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:47:47.842123+00:00'
+            mapped_at: '2025-12-04T01:56:52.707804+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:48.743037+00:00'
+            mapped_at: '2025-12-04T01:56:52.707822+00:00'
         -   source_field: LogonType
             target_table: authentication
             target_field: logon_type
-            mapped_at: '2025-11-26T02:47:48.743062+00:00'
+            mapped_at: '2025-12-04T01:56:52.707824+00:00'
         -   source_field: LogonProcessName
             target_table: authentication
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:47:48.743067+00:00'
+            mapped_at: '2025-12-04T01:56:52.707826+00:00'
         -   source_field: AuthenticationPackageName
             target_table: authentication
             target_field: auth_protocol
-            mapped_at: '2025-11-26T02:47:48.743070+00:00'
+            mapped_at: '2025-12-04T01:56:52.707827+00:00'
         -   source_field: ImpersonationLevel
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:48.743073+00:00'
+            mapped_at: '2025-12-04T01:56:52.707829+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Azure Network Firewall Policy Modified or Deleted",
+    "comment": "Identifies when a Firewall Policy is Modified or Deleted.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "activitylogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (lower(LOWER(api.operation)) in ('microsoft\\.network/firewallpolicies/write', 'microsoft\\.network/firewallpolicies/join/action', 'microsoft\\.network/firewallpolicies/certificates/action', 'microsoft\\.network/firewallpolicies/delete')))"
+      }
+    },
+    "output": {
+      "summary": "Identifies when a Firewall Policy is Modified or Deleted.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Firewall Policy being modified or deleted may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 2. Firewall Policy modified or deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1562",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

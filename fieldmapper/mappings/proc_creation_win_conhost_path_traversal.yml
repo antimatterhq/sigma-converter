@@ -1,19 +1,18 @@
-id: ee5e119b-1f75-4b34-add8-3be976961e39
 title: Conhost.exe CommandLine Path Traversal
+id: ee5e119b-1f75-4b34-add8-3be976961e39
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: detects the usage of path traversal in conhost.exe indicating possible
     command/argument confusion/hijacking
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-14'
-tags:
-    - attack.execution
-    - attack.t1059.003
 references:
     - https://pentestlab.blog/2020/07/06/indirect-command-execution/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.003
+date: '2022-06-14'
 logsource:
     category: process_creation
     product: windows
@@ -29,17 +28,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:41.216787+00:00'
+            mapped_at: '2025-12-04T01:47:53.976676+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:41.216787+00:00'
+            mapped_at: '2025-12-04T01:47:53.976676+00:00'
     detection_fields:
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:33:41.216819+00:00'
+            mapped_at: '2025-12-04T01:47:53.976698+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:41.216823+00:00'
+            mapped_at: '2025-12-04T01:47:53.976700+00:00'

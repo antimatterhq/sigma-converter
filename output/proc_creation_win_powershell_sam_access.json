@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PowerShell SAM Copy",
+    "comment": "Detects suspicious PowerShell scripts accessing SAM hives",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('\\\\harddiskvolumeshadowcopy')) AND contains(lower(process.cmd_line), lower('system32\\\\config\\\\sam')) AND (contains(lower(process.cmd_line), lower('copy-item')) OR contains(lower(process.cmd_line), lower('cp $_.')) OR contains(lower(process.cmd_line), lower('cpi $_.')) OR contains(lower(process.cmd_line), lower('copy $_.')) OR contains(lower(process.cmd_line), lower('.file]::copy('))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious PowerShell scripts accessing SAM hives",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Some rare backup scenarios 2. PowerShell scripts fixing HiveNightmare / SeriousSAM ACLs Reference: https://twitter.com/splinter_code/status/1420546784250769408",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

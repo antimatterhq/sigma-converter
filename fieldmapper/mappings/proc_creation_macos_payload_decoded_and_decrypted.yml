@@ -1,14 +1,17 @@
-id: 234dc5df-40b5-49d1-bf53-0d44ce778eca
 title: Payload Decoded and Decrypted via Built-in Utilities
+id: 234dc5df-40b5-49d1-bf53-0d44ce778eca
 status: test
 level: medium
+author: Tim Rauch (rule), Elastic (idea)
 description: Detects when a built-in utility is used to decode and decrypt a payload
     after a macOS disk image (DMG) is executed. Malware authors may attempt to evade
     detection and trick users into executing malicious code by encoding and encrypting
     their payload and placing it in a disk image file. This behavior is consistent
     with adware or malware families such as Bundlore and Shlayer.
-author: Tim Rauch (rule), Elastic (idea)
-date: '2022-10-17'
+references:
+    - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-5d42c3d772e04f1e8d0eb60f5233bc79def1ea73105a2d8822f44164f77ef823
+falsepositives:
+    - Unknown
 tags:
     - attack.t1059
     - attack.t1204
@@ -17,11 +20,7 @@ tags:
     - attack.defense-evasion
     - attack.s0482
     - attack.s0402
-references:
-    - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-5d42c3d772e04f1e8d0eb60f5233bc79def1ea73105a2d8822f44164f77ef823
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-10-17'
 logsource:
     category: process_creation
     product: macos
@@ -41,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:10.420863+00:00'
+            mapped_at: '2025-12-04T01:34:08.765257+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:10.420863+00:00'
+            mapped_at: '2025-12-04T01:34:08.765257+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:10.420897+00:00'
+            mapped_at: '2025-12-04T01:34:08.765281+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:10.420903+00:00'
+            mapped_at: '2025-12-04T01:34:08.765283+00:00'

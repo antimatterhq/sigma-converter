@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Windows Admin Share Mount Via Net.EXE",
+    "comment": "Detects when an admin share is mounted using net.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe'))) AND (lower(LOWER(process.file.name)) in ('net\\.exe', 'net1\\.exe')) AND contains(lower(process.cmd_line), lower(' use ')) AND lower(process.cmd_line) regexp '.* \\\\.*\\*$.*')"
+      }
+    },
+    "output": {
+      "summary": "Detects when an admin share is mounted using net.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrators Reference: https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1021",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "CreateDump Process Dump",
+    "comment": "Detects uses of the createdump.exe LOLOBIN utility to dump process memory",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\createdump.exe')) AND lower(process.file.name) = lower('fx_ver_internalname_str') AND (contains(lower(process.cmd_line), lower(' -u ')) OR contains(lower(process.cmd_line), lower(' --full ')) OR contains(lower(process.cmd_line), lower(' -f ')) OR contains(lower(process.cmd_line), lower(' --name ')) OR contains(lower(process.cmd_line), lower('.dmp '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects uses of the createdump.exe LOLOBIN utility to dump process memory",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Command lines that use the same flags References: https://www.crowdstrike.com/blog/overwatch-exposes-aquatic-panda-in-possession-of-log-4-shell-exploit-tools/, https://twitter.com/bopin2020/status/1366400799199272960",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

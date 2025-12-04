@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Suspicious Child Process Of Veeam Dabatase",
+    "comment": "Detects suspicious child processes of the Veeam service process. This could indicate potential RCE or SQL Injection.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\sqlservr.exe')) AND contains(lower(process.parent_process.cmd_line), lower('veeamsql')) AND ((endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\wsl.exe')) OR endswith(lower(process.name), lower('\\\\wt.exe'))) AND (contains(lower(process.cmd_line), lower('-ex ')) OR contains(lower(process.cmd_line), lower('bypass')) OR contains(lower(process.cmd_line), lower('cscript')) OR contains(lower(process.cmd_line), lower('downloadstring')) OR contains(lower(process.cmd_line), lower('http://')) OR contains(lower(process.cmd_line), lower('https://')) OR contains(lower(process.cmd_line), lower('mshta')) OR contains(lower(process.cmd_line), lower('regsvr32')) OR contains(lower(process.cmd_line), lower('rundll32')) OR contains(lower(process.cmd_line), lower('wscript')) OR contains(lower(process.cmd_line), lower('copy '))) OR endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe')) OR endswith(lower(process.name), lower('\\\\netstat.exe')) OR endswith(lower(process.name), lower('\\\\nltest.exe')) OR endswith(lower(process.name), lower('\\\\ping.exe')) OR endswith(lower(process.name), lower('\\\\tasklist.exe')) OR endswith(lower(process.name), lower('\\\\whoami.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes of the Veeam service process. This could indicate potential RCE or SQL Injection.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "Reference: https://labs.withsecure.com/publications/fin7-target-veeam-servers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

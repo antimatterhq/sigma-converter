@@ -1,7 +1,8 @@
-id: 0c3fac91-5627-46e8-a6a8-a0d7b9b8ae1b
 title: Suspicious Get-Variable.exe Creation
+id: 0c3fac91-5627-46e8-a6a8-a0d7b9b8ae1b
 status: test
 level: high
+author: frack113
 description: 'Get-Variable is a valid PowerShell cmdlet
 
     WindowsApps is by default in the path where PowerShell is executed.
@@ -11,19 +12,17 @@ description: 'Get-Variable is a valid PowerShell cmdlet
     binary instead of looking for the PowerShell cmdlet.
 
     '
-author: frack113
-date: '2022-04-23'
-tags:
-    - attack.persistence
-    - attack.t1546
-    - attack.defense-evasion
-    - attack.t1027
 references:
     - https://blog.malwarebytes.com/threat-intelligence/2022/04/colibri-loader-combines-task-scheduler-and-powershell-in-clever-persistence-technique/
     - https://www.joesandbox.com/analysis/465533/0/html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1546
+    - attack.defense-evasion
+    - attack.t1027
+date: '2022-04-23'
 logsource:
     category: file_event
     product: windows
@@ -38,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:17.882647+00:00'
+            mapped_at: '2025-12-04T01:52:57.439072+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:17.882647+00:00'
+            mapped_at: '2025-12-04T01:52:57.439072+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:17.882663+00:00'
+            mapped_at: '2025-12-04T01:52:57.439123+00:00'

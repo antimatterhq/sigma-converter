@@ -1,15 +1,9 @@
-id: 6ea858a8-ba71-4a12-b2cc-5d83312404c7
 title: HackTool - Typical HiveNightmare SAM File Export
+id: 6ea858a8-ba71-4a12-b2cc-5d83312404c7
 status: test
 level: high
-description: Detects files written by the different tools that exploit HiveNightmare
 author: Florian Roth (Nextron Systems)
-date: '2021-07-23'
-modified: '2024-06-27'
-tags:
-    - attack.credential-access
-    - attack.t1552.001
-    - cve.2021-36934
+description: Detects files written by the different tools that exploit HiveNightmare
 references:
     - https://github.com/GossiTheDog/HiveNightmare
     - https://github.com/FireFart/hivenightmare/
@@ -17,7 +11,12 @@ references:
     - https://twitter.com/cube0x0/status/1418920190759378944
 falsepositives:
     - Files that accidentally contain these strings
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1552.001
+    - cve.2021-36934
+date: '2021-07-23'
+modified: '2024-06-27'
 logsource:
     category: file_event
     product: windows
@@ -39,13 +38,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:49.960616+00:00'
+            mapped_at: '2025-12-04T01:52:39.011357+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:49.960616+00:00'
+            mapped_at: '2025-12-04T01:52:39.011357+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:49.960637+00:00'
+            mapped_at: '2025-12-04T01:52:39.011371+00:00'

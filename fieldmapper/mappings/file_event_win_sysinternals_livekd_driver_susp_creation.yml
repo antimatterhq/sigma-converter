@@ -1,22 +1,19 @@
-id: 059c5af9-5131-4d8d-92b2-de4ad6146712
 title: LiveKD Driver Creation By Uncommon Process
+id: 059c5af9-5131-4d8d-92b2-de4ad6146712
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation of the LiveKD driver by a process image other than
     "livekd.exe".
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-16'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
 references:
     - Internal Research
 falsepositives:
     - Administrators might rename LiveKD before its usage which could trigger this.
         Add additional names you use to the filter
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''16fe46bb-4f64-46aa-817d-ff7bec4a2352''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+date: '2023-05-16'
 logsource:
     category: file_event
     product: windows
@@ -28,6 +25,9 @@ detection:
             - \livekd.exe
             - \livek64.exe
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 16fe46bb-4f64-46aa-817d-ff7bec4a2352
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -35,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:04.251977+00:00'
+            mapped_at: '2025-12-04T01:52:48.598405+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:04.251977+00:00'
+            mapped_at: '2025-12-04T01:52:48.598405+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:04.251993+00:00'
+            mapped_at: '2025-12-04T01:52:48.598432+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:04.251995+00:00'
+            mapped_at: '2025-12-04T01:52:48.598437+00:00'

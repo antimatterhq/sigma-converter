@@ -1,20 +1,19 @@
-id: 431a1fdb-4799-4f3b-91c3-a683b003fc49
 title: New Kernel Driver Via SC.EXE
+id: 431a1fdb-4799-4f3b-91c3-a683b003fc49
 status: test
 level: medium
-description: Detects creation of a new service (kernel driver) with the type "kernel"
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-14'
-modified: '2022-08-08'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1543.003
+description: Detects creation of a new service (kernel driver) with the type "kernel"
 references:
     - https://www.aon.com/cyber-solutions/aon_cyber_labs/yours-truly-signed-av-driver-weaponizing-an-antivirus-driver/
 falsepositives:
     - Rare legitimate installation of kernel drivers via sc.exe
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1543.003
+date: '2022-07-14'
+modified: '2022-08-08'
 logsource:
     category: process_creation
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:10.748581+00:00'
+            mapped_at: '2025-12-04T01:44:57.410561+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:10.748581+00:00'
+            mapped_at: '2025-12-04T01:44:57.410561+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:10.748611+00:00'
+            mapped_at: '2025-12-04T01:44:57.410573+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:10.748614+00:00'
+            mapped_at: '2025-12-04T01:44:57.410584+00:00'

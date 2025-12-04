@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Windows Recall Feature Enabled Via Reg.EXE",
+    "comment": "Detects the enabling of the Windows Recall feature via registry manipulation. Windows Recall can be enabled by deleting the existing \"DisableAIDataAnalysis\" value, or setting it to 0. Adversaries may enable Windows Recall as part of post-exploitation discovery and collection activities. This rule assumes that Recall is already explicitly disabled on the host, and subsequently enabled by the adversary.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\reg.exe')) AND lower(process.file.name) = lower('reg.exe') AND contains(lower(process.cmd_line), lower('microsoft\\\\windows\\\\windowsai')) AND contains(lower(process.cmd_line), lower('disableaidataanalysis')) AND (contains(lower(process.cmd_line), lower('add')) OR contains(lower(process.cmd_line), lower('0')) OR contains(lower(process.cmd_line), lower('delete'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the enabling of the Windows Recall feature via registry manipulation. Windows Recall can be enabled by deleting the existing \"DisableAIDataAnalysis\" value, or setting it to 0. Adversaries may enable Windows Recall as part of post-exploitation discovery and collection activities. This rule assumes that Recall is already explicitly disabled on the host, and subsequently enabled by the adversary.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use/activation of Windows Recall References: https://learn.microsoft.com/en-us/windows/client-management/manage-recall, https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowsai#disableaidataanalysis",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1113"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

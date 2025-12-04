@@ -1,12 +1,15 @@
-id: c2c76b77-32be-4d1f-82c9-7e544bdfe0eb
 title: Potential Suspicious Activity Using SeCEdit
+id: c2c76b77-32be-4d1f-82c9-7e544bdfe0eb
 status: test
 level: medium
+author: Janantha Marasinghe
 description: Detects potential suspicious behaviour using secedit.exe. Such as exporting
     or modifying the security policy
-author: Janantha Marasinghe
-date: '2022-11-18'
-modified: '2022-12-30'
+references:
+    - https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/secedit
+falsepositives:
+    - Legitimate administrative use
 tags:
     - attack.discovery
     - attack.persistence
@@ -27,12 +30,8 @@ tags:
     - attack.t1547.002
     - attack.t1557
     - attack.t1082
-references:
-    - https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d
-    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/secedit
-falsepositives:
-    - Legitimate administrative use
-taxonomy: sigma
+date: '2022-11-18'
+modified: '2022-12-30'
 logsource:
     category: process_creation
     product: windows
@@ -56,21 +55,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:47.508877+00:00'
+            mapped_at: '2025-12-04T01:47:11.978391+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:47.508877+00:00'
+            mapped_at: '2025-12-04T01:47:11.978391+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:47.508893+00:00'
+            mapped_at: '2025-12-04T01:47:11.978408+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:47.508895+00:00'
+            mapped_at: '2025-12-04T01:47:11.978410+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:47.508896+00:00'
+            mapped_at: '2025-12-04T01:47:11.978412+00:00'

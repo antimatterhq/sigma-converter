@@ -1,24 +1,23 @@
-id: f88e112a-21aa-44bd-9b01-6ee2a2bbbed1
 title: Failed Logon From Public IP
+id: f88e112a-21aa-44bd-9b01-6ee2a2bbbed1
 status: test
 level: medium
+author: NVISO
 description: Detects a failed logon attempt from a public IP. A login from a public
     IP can indicate a misconfigured firewall or network boundary.
-author: NVISO
-date: '2020-05-06'
-modified: '2024-03-11'
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625
+falsepositives:
+    - Legitimate logon attempts over the internet
+    - IPv4-to-IPv6 mapped IPs
 tags:
     - attack.initial-access
     - attack.persistence
     - attack.t1078
     - attack.t1190
     - attack.t1133
-references:
-    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625
-falsepositives:
-    - Legitimate logon attempts over the internet
-    - IPv4-to-IPv6 mapped IPs
-taxonomy: sigma
+date: '2020-05-06'
+modified: '2024-03-11'
 logsource:
     product: windows
     service: security
@@ -45,17 +44,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:43.547639+00:00'
+            mapped_at: '2025-12-04T01:56:51.113547+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:47:43.547639+00:00'
+            mapped_at: '2025-12-04T01:56:51.113547+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:43.547667+00:00'
+            mapped_at: '2025-12-04T01:56:51.113575+00:00'
         -   source_field: IpAddress
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:43.547672+00:00'
+            mapped_at: '2025-12-04T01:56:51.113581+00:00'

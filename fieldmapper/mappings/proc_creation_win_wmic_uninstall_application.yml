@@ -1,21 +1,18 @@
-id: b53317a0-8acf-4fd1-8de8-a5401e776b96
 title: Application Removed Via Wmic.EXE
+id: b53317a0-8acf-4fd1-8de8-a5401e776b96
 status: test
 level: medium
-description: Detects the removal or uninstallation of an application via "Wmic.EXE".
 author: frack113
-date: '2022-01-28'
-modified: '2024-07-02'
-tags:
-    - attack.execution
-    - attack.t1047
+description: Detects the removal or uninstallation of an application via "Wmic.EXE".
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1047/T1047.md#atomic-test-10---application-uninstall-using-wmic
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''847d5ff3-8a31-4737-a970-aeae8fe21765''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+date: '2022-01-28'
+modified: '2024-07-02'
 logsource:
     category: process_creation
     product: windows
@@ -28,6 +25,9 @@ detection:
             - call
             - uninstall
     condition: all of selection_*
+related:
+    -   id: 847d5ff3-8a31-4737-a970-aeae8fe21765
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -35,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:13.344377+00:00'
+            mapped_at: '2025-12-04T01:43:24.845131+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:13.344377+00:00'
+            mapped_at: '2025-12-04T01:43:24.845131+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:13.344393+00:00'
+            mapped_at: '2025-12-04T01:43:24.845145+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:13.344395+00:00'
+            mapped_at: '2025-12-04T01:43:24.845147+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:13.344397+00:00'
+            mapped_at: '2025-12-04T01:43:24.845148+00:00'

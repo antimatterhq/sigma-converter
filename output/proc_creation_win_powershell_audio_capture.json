@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Audio Capture via PowerShell",
+    "comment": "Detects audio capture via PowerShell Cmdlet.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('windowsaudiodevice-powershell-cmdlet')) OR contains(lower(process.cmd_line), lower('toggle-audiodevice')) OR contains(lower(process.cmd_line), lower('get-audiodevice ')) OR contains(lower(process.cmd_line), lower('set-audiodevice ')) OR contains(lower(process.cmd_line), lower('write-audiodevice '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects audio capture via PowerShell Cmdlet.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate audio capture by legitimate user. References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1123/T1123.md, https://eqllib.readthedocs.io/en/latest/analytics/ab7a6ef4-0983-4275-a4f1-5c6bd3c31c23.html, https://github.com/frgnca/AudioDeviceCmdlets",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1123"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

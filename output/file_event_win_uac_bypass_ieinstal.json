@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "UAC Bypass Using IEInstal - File",
+    "comment": "Detects the pattern of UAC Bypass using IEInstal.exe (UACMe 64)",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND lower(actor.process.name) = lower('c:\\\\program files\\\\internet explorer\\\\ieinstal.exe') AND startswith(lower(file.path), lower('c:\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) AND endswith(lower(file.path), lower('consent.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the pattern of UAC Bypass using IEInstal.exe (UACMe 64)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/hfiref0x/UACME",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1548",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

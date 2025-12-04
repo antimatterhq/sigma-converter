@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "New User Created Via Net.EXE With Never Expire Option",
+    "comment": "Detects creation of local users via the net.exe command with the option \"never expire\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe'))) AND (lower(LOWER(process.file.name)) in ('net\\.exe', 'net1\\.exe')) AND contains(lower(process.cmd_line), lower('user')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('expires:never')))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of local users via the net.exe command with the option \"never expire\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1136",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

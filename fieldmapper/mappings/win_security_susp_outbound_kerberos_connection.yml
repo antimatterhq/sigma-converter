@@ -1,25 +1,22 @@
-id: eca91c7c-9214-47b9-b4c5-cb1d7e4f2350
 title: Uncommon Outbound Kerberos Connection - Security
+id: eca91c7c-9214-47b9-b4c5-cb1d7e4f2350
 status: test
 level: medium
+author: Ilyas Ochkov, oscd.community
 description: 'Detects uncommon outbound network activity via Kerberos default port
     indicating possible lateral movement or first stage PrivEsc via delegation.
 
     '
-author: Ilyas Ochkov, oscd.community
-date: '2019-10-24'
-modified: '2024-03-15'
-tags:
-    - attack.lateral-movement
-    - attack.t1558.003
 references:
     - https://github.com/GhostPack/Rubeus
 falsepositives:
     - Web Browsers and third party application might generate similar activity. An
         initial baseline is required.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e54979bd-c5f9-4d6c-967b-a04b19ac4c74''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1558.003
+date: '2019-10-24'
+modified: '2024-03-15'
 logsource:
     product: windows
     service: security
@@ -49,28 +46,31 @@ detection:
     filter_optional_tomcat:
         Application|endswith: \tomcat\bin\tomcat8.exe
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: e54979bd-c5f9-4d6c-967b-a04b19ac4c74
+        type: similar
 ocsf_mapping:
     class_name: authentication
-    activity_id: 4
+    activity_id: 3
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:13.900901+00:00'
+            mapped_at: '2025-12-04T01:56:12.205233+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:13.900901+00:00'
+            mapped_at: '2025-12-04T01:56:12.205233+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:14.724791+00:00'
+            mapped_at: '2025-12-04T01:56:12.205379+00:00'
         -   source_field: DestPort
             target_table: authentication
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:46:14.724806+00:00'
+            mapped_at: '2025-12-04T01:56:12.205382+00:00'
         -   source_field: Application
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:14.724809+00:00'
+            mapped_at: '2025-12-04T01:56:12.205384+00:00'

@@ -1,21 +1,18 @@
-id: deb9b646-a508-44ee-b7c9-d8965921c6b6
 title: Powershell Token Obfuscation - Process Creation
+id: deb9b646-a508-44ee-b7c9-d8965921c6b6
 status: test
 level: high
-description: Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation
 author: frack113
-date: '2022-12-27'
-modified: '2024-08-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1027.009
+description: Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation
 references:
     - https://github.com/danielbohannon/Invoke-Obfuscation
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f3a98ce4-6164-4dd4-867c-4d83de7eca51''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027.009
+date: '2022-12-27'
+modified: '2024-08-11'
 logsource:
     category: process_creation
     product: windows
@@ -28,6 +25,9 @@ detection:
     filter_main_envpath:
         CommandLine|contains: ${env:path}
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: f3a98ce4-6164-4dd4-867c-4d83de7eca51
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -35,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:09.461391+00:00'
+            mapped_at: '2025-12-04T01:40:49.721086+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:09.461391+00:00'
+            mapped_at: '2025-12-04T01:40:49.721086+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:09.461407+00:00'
+            mapped_at: '2025-12-04T01:40:49.721101+00:00'

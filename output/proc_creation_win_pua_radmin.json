@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PUA - Radmin Viewer Utility Execution",
+    "comment": "Detects the execution of Radmin which can be abused by an adversary to remotely control Windows machines",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(device.desc) = lower('radmin viewer') AND lower(metadata.product.name) = lower('radmin viewer') AND lower(process.file.name) = lower('radmin.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of Radmin which can be abused by an adversary to remotely control Windows machines",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1072/T1072.md, https://www.radmin.fr/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1072"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

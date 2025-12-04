@@ -1,14 +1,10 @@
-id: 7e9cf7b6-e827-11ed-a05b-15959c120003
 title: Potentially Suspicious Network Connection To Notion API
+id: 7e9cf7b6-e827-11ed-a05b-15959c120003
 status: test
 level: low
+author: Gavin Knapp
 description: Detects a non-browser process communicating with the Notion API. This
     could indicate potential use of a covert C2 channel such as "OffensiveNotion C2"
-author: Gavin Knapp
-date: '2023-05-03'
-tags:
-    - attack.command-and-control
-    - attack.t1102
 references:
     - https://github.com/mttaggart/OffensiveNotion
     - https://medium.com/@huskyhacks.mk/we-put-a-c2-in-your-notetaking-app-offensivenotion-3e933bace332
@@ -16,7 +12,10 @@ falsepositives:
     - Legitimate applications communicating with the "api.notion.com" endpoint that
         are not already in the exclusion list. The desktop and browser applications
         do not appear to be using the API by default unless integrations are configured.
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1102
+date: '2023-05-03'
 logsource:
     category: network_connection
     product: windows
@@ -72,17 +71,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:37.606083+00:00'
+            mapped_at: '2025-12-04T01:51:41.800687+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:37.606083+00:00'
+            mapped_at: '2025-12-04T01:51:41.800687+00:00'
     detection_fields:
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:37.606101+00:00'
+            mapped_at: '2025-12-04T01:51:41.800701+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:37.606104+00:00'
+            mapped_at: '2025-12-04T01:51:41.800703+00:00'

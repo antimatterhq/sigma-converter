@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potential Cookies Session Hijacking",
+    "comment": "Detects execution of \"curl.exe\" with the \"-c\" flag in order to save cookie data.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\curl.exe')) AND lower(process.file.name) = lower('curl.exe') AND process.cmd_line rlike '\\\\s-c\\\\s' AND contains(lower(process.cmd_line), lower('--cookie-jar')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"curl.exe\" with the \"-c\" flag in order to save cookie data.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://curl.se/docs/manpage.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

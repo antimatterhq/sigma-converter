@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - CrackMapExec Process Patterns",
+    "comment": "Detects suspicious process patterns found in logs when CrackMapExec is used",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('tasklist /fi ')) AND contains(lower(process.cmd_line), lower('imagename eq lsass.exe')) AND (contains(lower(process.cmd_line), lower('cmd.exe /c ')) OR contains(lower(process.cmd_line), lower('cmd.exe /r ')) OR contains(lower(process.cmd_line), lower('cmd.exe /k ')) OR contains(lower(process.cmd_line), lower('cmd /c ')) OR contains(lower(process.cmd_line), lower('cmd /r ')) OR contains(lower(process.cmd_line), lower('cmd /k '))) AND (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))) OR contains(lower(process.cmd_line), lower('do rundll32.exe c:\\\\windows\\\\system32\\\\comsvcs.dll, minidump')) AND contains(lower(process.cmd_line), lower('\\\\windows\\\\temp\\\\')) AND contains(lower(process.cmd_line), lower(' full')) AND contains(lower(process.cmd_line), lower('%%b')) OR contains(lower(process.cmd_line), lower('tasklist /v /fo csv')) AND contains(lower(process.cmd_line), lower('findstr /i \"lsass\"'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious process patterns found in logs when CrackMapExec is used",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://mpgn.gitbook.io/crackmapexec/smb-protocol/obtaining-credentials/dump-lsass",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

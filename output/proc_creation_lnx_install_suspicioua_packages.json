@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Package Installed - Linux",
+    "comment": "Detects installation of suspicious packages using system installation utilities",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((endswith(lower(process.name), lower('/apt')) OR endswith(lower(process.name), lower('/apt-get'))) AND contains(lower(process.cmd_line), lower('install')) OR endswith(lower(process.name), lower('/yum')) AND (contains(lower(process.cmd_line), lower('localinstall')) OR contains(lower(process.cmd_line), lower('install'))) OR endswith(lower(process.name), lower('/rpm')) AND contains(lower(process.cmd_line), lower('-i')) OR endswith(lower(process.name), lower('/dpkg')) AND (contains(lower(process.cmd_line), lower('--install')) OR contains(lower(process.cmd_line), lower('-i')))) AND (contains(lower(process.cmd_line), lower('nmap')) OR contains(lower(process.cmd_line), lower(' nc')) OR contains(lower(process.cmd_line), lower('netcat')) OR contains(lower(process.cmd_line), lower('wireshark')) OR contains(lower(process.cmd_line), lower('tshark')) OR contains(lower(process.cmd_line), lower('openconnect')) OR contains(lower(process.cmd_line), lower('proxychains'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects installation of suspicious packages using system installation utilities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://gist.githubusercontent.com/MichaelKoczwara/12faba9c061c12b5814b711166de8c2f/raw/e2068486692897b620c25fde1ea258c8218fe3d3/history.txt",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1553",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious Powercfg Execution To Change Lock Screen Timeout",
+    "comment": "Detects suspicious execution of 'Powercfg.exe' to change lock screen timeout",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\powercfg.exe')) AND lower(process.file.name) = lower('powercfg.exe') AND contains(lower(process.cmd_line), lower('/setacvalueindex ')) AND contains(lower(process.cmd_line), lower('scheme_current')) AND contains(lower(process.cmd_line), lower('sub_video')) AND contains(lower(process.cmd_line), lower('videoconlock')) AND contains(lower(process.cmd_line), lower('-change ')) AND contains(lower(process.cmd_line), lower('-standby-timeout-')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious execution of 'Powercfg.exe' to change lock screen timeout",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blogs.vmware.com/security/2022/11/batloader-the-evasive-downloader-malware.html, https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

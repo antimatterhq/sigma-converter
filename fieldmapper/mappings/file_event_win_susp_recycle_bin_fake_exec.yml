@@ -1,23 +1,20 @@
-id: cd8b36ac-8e4a-4c2f-a402-a29b8fbd5bca
 title: Suspicious File Creation Activity From Fake Recycle.Bin Folder
+id: cd8b36ac-8e4a-4c2f-a402-a29b8fbd5bca
 status: test
 level: high
+author: X__Junior (Nextron Systems)
 description: Detects file write event from/to a fake recycle bin folder that is often
     used as a staging directory for malware
-author: X__Junior (Nextron Systems)
-date: '2023-07-12'
-modified: '2023-12-11'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
 references:
     - https://www.mandiant.com/resources/blog/infected-usb-steal-secrets
     - https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5ce0f04e-3efc-42af-839d-5b3a543b76c0''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+date: '2023-07-12'
+modified: '2023-12-11'
 logsource:
     category: file_event
     product: windows
@@ -30,6 +27,9 @@ detection:
             - RECYCLERS.BIN\
             - RECYCLER.BIN\
     condition: selection
+related:
+    -   id: 5ce0f04e-3efc-42af-839d-5b3a543b76c0
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 3
@@ -37,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:09.511787+00:00'
+            mapped_at: '2025-12-04T01:52:00.208292+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:09.511787+00:00'
+            mapped_at: '2025-12-04T01:52:00.208292+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:09.511816+00:00'
+            mapped_at: '2025-12-04T01:52:00.208337+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:09.511820+00:00'
+            mapped_at: '2025-12-04T01:52:00.208342+00:00'

@@ -1,20 +1,19 @@
-id: 7c8af9b2-dcae-41a2-a9db-b28c288b5f08
 title: Suspicious IIS URL GlobalRules Rewrite Via AppCmd
+id: 7c8af9b2-dcae-41a2-a9db-b28c288b5f08
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of "appcmd" to create new global URL rewrite rules. This
     behaviour has been observed being used by threat actors to add new rules so they
     can access their webshells.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-22'
-tags:
-    - attack.defense-evasion
 references:
     - https://twitter.com/malmoeb/status/1616702107242971144
     - https://learn.microsoft.com/en-us/answers/questions/739120/how-to-add-re-write-global-rule-with-action-type-r
 falsepositives:
     - Legitimate usage of appcmd to add new URL rewrite rules
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-01-22'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:36.836111+00:00'
+            mapped_at: '2025-12-04T01:47:51.127846+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:36.836111+00:00'
+            mapped_at: '2025-12-04T01:47:51.127846+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:36.836137+00:00'
+            mapped_at: '2025-12-04T01:47:51.127861+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:36.836140+00:00'
+            mapped_at: '2025-12-04T01:47:51.127863+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:36.836143+00:00'
+            mapped_at: '2025-12-04T01:47:51.127865+00:00'

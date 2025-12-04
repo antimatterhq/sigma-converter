@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Time Machine Backup Deletion Attempt Via Tmutil - MacOS",
+    "comment": "Detects deletion attempts of MacOS Time Machine backups via the native backup utility \"tmutil\". An adversary may perform this action before launching a ransonware attack to prevent the victim from restoring their files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/tmutil')) AND contains(lower(process.cmd_line), lower('tmutil')) AND contains(lower(process.cmd_line), lower('delete')))"
+      }
+    },
+    "output": {
+      "summary": "Detects deletion attempts of MacOS Time Machine backups via the native backup utility \"tmutil\". An adversary may perform this action before launching a ransonware attack to prevent the victim from restoring their files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate activities References: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1490/T1490.md#atomic-test-12---disable-time-machine, https://www.loobins.io/binaries/tmutil/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1490"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

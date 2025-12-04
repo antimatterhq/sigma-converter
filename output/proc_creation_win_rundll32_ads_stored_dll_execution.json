@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Rundll32 Execution With DLL Stored In ADS",
+    "comment": "Detects execution of rundll32 where the DLL being called is stored in an Alternate Data Stream (ADS).",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND process.cmd_line rlike '\\[Rr\\]\\[Uu\\]\\[Nn\\]\\[Dd\\]\\[Ll\\]\\[Ll\\]32\\(\\\\.\\[Ee\\]\\[Xx\\]\\[Ee\\]\\)? \\\\S\\+?\\\\w:\\\\S\\+?:')"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of rundll32 where the DLL being called is stored in an Alternate Data Stream (ADS).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://lolbas-project.github.io/lolbas/Binaries/Rundll32",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1564",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

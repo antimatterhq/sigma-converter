@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Suspicious Change To Sensitive/Critical Files",
+    "comment": "Detects changes of sensitive and critical files. Monitors files that you don't expect to change without planning on Linux system.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (((endswith(lower(process.name), lower('/cat')) OR endswith(lower(process.name), lower('/echo')) OR endswith(lower(process.name), lower('/grep')) OR endswith(lower(process.name), lower('/head')) OR endswith(lower(process.name), lower('/more')) OR endswith(lower(process.name), lower('/tail'))) AND contains(lower(process.cmd_line), lower('>')) OR endswith(lower(process.name), lower('/emacs')) OR endswith(lower(process.name), lower('/nano')) OR endswith(lower(process.name), lower('/sed')) OR endswith(lower(process.name), lower('/vi')) OR endswith(lower(process.name), lower('/vim'))) AND (contains(lower(process.cmd_line), lower('/bin/login')) OR contains(lower(process.cmd_line), lower('/bin/passwd')) OR contains(lower(process.cmd_line), lower('/boot/')) OR lower(process.cmd_line) regexp '.*/etc/.*\\.conf.*' OR contains(lower(process.cmd_line), lower('/etc/cron.')) OR contains(lower(process.cmd_line), lower('/etc/crontab')) OR contains(lower(process.cmd_line), lower('/etc/hosts')) OR contains(lower(process.cmd_line), lower('/etc/init.d')) OR contains(lower(process.cmd_line), lower('/etc/sudoers')) OR contains(lower(process.cmd_line), lower('/opt/bin/')) OR contains(lower(process.cmd_line), lower('/sbin')) OR contains(lower(process.cmd_line), lower('/usr/bin/')) OR contains(lower(process.cmd_line), lower('/usr/local/bin/'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects changes of sensitive and critical files. Monitors files that you don't expect to change without planning on Linux system.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some false positives are to be expected on user or administrator machines. Apply additional filters as needed. Reference: https://learn.microsoft.com/en-us/azure/defender-for-cloud/file-integrity-monitoring-overview#which-files-should-i-monitor",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1565",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

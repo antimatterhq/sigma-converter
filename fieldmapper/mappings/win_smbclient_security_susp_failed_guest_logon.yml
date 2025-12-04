@@ -1,15 +1,10 @@
-id: 71886b70-d7b4-4dbf-acce-87d2ca135262
 title: Suspicious Rejected SMB Guest Logon From IP
+id: 71886b70-d7b4-4dbf-acce-87d2ca135262
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), KevTheHermit, fuzzyf10w
 description: Detect Attempt PrintNightmare (CVE-2021-1675) Remote code execution in
     Windows Spooler Service
-author: Florian Roth (Nextron Systems), KevTheHermit, fuzzyf10w
-date: '2021-06-30'
-modified: '2023-01-02'
-tags:
-    - attack.credential-access
-    - attack.t1110.001
 references:
     - https://twitter.com/KevTheHermit/status/1410203844064301056
     - https://web.archive.org/web/20210629055600/https://github.com/hhlxf/PrintNightmare/
@@ -19,7 +14,11 @@ fields:
     - User
 falsepositives:
     - Account fallback reasons (after failed login with specific account)
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1110.001
+date: '2021-06-30'
+modified: '2023-01-02'
 logsource:
     product: windows
     service: smbclient-security
@@ -36,21 +35,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:42.454481+00:00'
+            mapped_at: '2025-12-04T01:57:26.592734+00:00'
         service:
             source_field: service
             source_value: smbclient-security
-            mapped_at: '2025-11-26T02:48:42.454481+00:00'
+            mapped_at: '2025-12-04T01:57:26.592734+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:43.827895+00:00'
+            mapped_at: '2025-12-04T01:57:26.592764+00:00'
         -   source_field: UserName
             target_table: authentication
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:48:43.827907+00:00'
+            mapped_at: '2025-12-04T01:57:26.592769+00:00'
         -   source_field: ServerName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:43.827910+00:00'
+            mapped_at: '2025-12-04T01:57:26.592772+00:00'

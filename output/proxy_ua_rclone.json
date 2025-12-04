@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Rclone Activity via Proxy",
+    "comment": "Detects the use of rclone, a command-line program to manage files on cloud storage, via its default user-agent string",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (startswith(lower(http_request.user_agent), lower('rclone/v')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of rclone, a command-line program to manage files on cloud storage, via its default user-agent string",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: c-ip False positive: Valid requests with this exact user agent to that is used by legitimate scripts or sysadmin operations References: https://rclone.org/, https://www.kroll.com/en/insights/publications/cyber/new-m365-business-email-compromise-attacks-with-rclone",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

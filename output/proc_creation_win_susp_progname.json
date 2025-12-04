@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Program Names",
+    "comment": "Detects suspicious patterns in program names or folders that are often found in malicious samples or hacktools",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((contains(lower(process.name), lower('\\\\cve-202')) OR contains(lower(process.name), lower('\\\\cve202'))) AND (endswith(lower(process.name), lower('\\\\poc.exe')) OR endswith(lower(process.name), lower('\\\\artifact.exe')) OR endswith(lower(process.name), lower('\\\\artifact64.exe')) OR endswith(lower(process.name), lower('\\\\artifact_protected.exe')) OR endswith(lower(process.name), lower('\\\\artifact32.exe')) OR endswith(lower(process.name), lower('\\\\artifact32big.exe')) OR endswith(lower(process.name), lower('obfuscated.exe')) OR endswith(lower(process.name), lower('obfusc.exe')) OR endswith(lower(process.name), lower('\\\\meterpreter'))) OR contains(lower(process.cmd_line), lower('inject.ps1')) OR contains(lower(process.cmd_line), lower('invoke-cve')) OR contains(lower(process.cmd_line), lower('pupy.ps1')) OR contains(lower(process.cmd_line), lower('payload.ps1')) OR contains(lower(process.cmd_line), lower('beacon.ps1')) OR contains(lower(process.cmd_line), lower('powerview.ps1')) OR contains(lower(process.cmd_line), lower('bypass.ps1')) OR contains(lower(process.cmd_line), lower('obfuscated.ps1')) OR contains(lower(process.cmd_line), lower('obfusc.ps1')) OR contains(lower(process.cmd_line), lower('obfus.ps1')) OR contains(lower(process.cmd_line), lower('obfs.ps1')) OR contains(lower(process.cmd_line), lower('evil.ps1')) OR contains(lower(process.cmd_line), lower('minidogz.ps1')) OR contains(lower(process.cmd_line), lower('_enc.ps1')) OR contains(lower(process.cmd_line), lower('\\\\shell.ps1')) OR contains(lower(process.cmd_line), lower('\\\\rshell.ps1')) OR contains(lower(process.cmd_line), lower('revshell.ps1')) OR contains(lower(process.cmd_line), lower('\\\\av.ps1')) OR contains(lower(process.cmd_line), lower('\\\\av_test.ps1')) OR contains(lower(process.cmd_line), lower('adrecon.ps1')) OR contains(lower(process.cmd_line), lower('mimikatz.ps1')) OR contains(lower(process.cmd_line), lower('\\\\powerup_')) OR contains(lower(process.cmd_line), lower('powerup.ps1')) OR contains(lower(process.cmd_line), lower('\\\\temp\\\\a.ps1')) OR contains(lower(process.cmd_line), lower('\\\\temp\\\\p.ps1')) OR contains(lower(process.cmd_line), lower('\\\\temp\\\\1.ps1')) OR contains(lower(process.cmd_line), lower('hound.ps1')) OR contains(lower(process.cmd_line), lower('encode.ps1')) OR contains(lower(process.cmd_line), lower('powercat.ps1'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious patterns in program names or folders that are often found in malicious samples or hacktools",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line, CurrentDirectory False positive: Legitimate tools that accidentally match on the searched patterns Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1560.001/T1560.001.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

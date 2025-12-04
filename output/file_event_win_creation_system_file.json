@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Files With System Process Name In Unsuspected Locations",
+    "comment": "Detects the creation of an executable with a system process name in folders other than the system ones (System32, SysWOW64, etc.). It is highly recommended to perform an initial baseline before using this rule in production.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(file.path), lower('\\\\atbroker.exe')) OR endswith(lower(file.path), lower('\\\\audiodg.exe')) OR endswith(lower(file.path), lower('\\\\backgroundtaskhost.exe')) OR endswith(lower(file.path), lower('\\\\bcdedit.exe')) OR endswith(lower(file.path), lower('\\\\bitsadmin.exe')) OR endswith(lower(file.path), lower('\\\\cmdl32.exe')) OR endswith(lower(file.path), lower('\\\\cmstp.exe')) OR endswith(lower(file.path), lower('\\\\conhost.exe')) OR endswith(lower(file.path), lower('\\\\csrss.exe')) OR endswith(lower(file.path), lower('\\\\dashost.exe')) OR endswith(lower(file.path), lower('\\\\dfrgui.exe')) OR endswith(lower(file.path), lower('\\\\dllhost.exe')) OR endswith(lower(file.path), lower('\\\\dwm.exe')) OR endswith(lower(file.path), lower('\\\\eventcreate.exe')) OR endswith(lower(file.path), lower('\\\\eventvwr.exe')) OR endswith(lower(file.path), lower('\\\\explorer.exe')) OR endswith(lower(file.path), lower('\\\\extrac32.exe')) OR endswith(lower(file.path), lower('\\\\fontdrvhost.exe')) OR endswith(lower(file.path), lower('\\\\ipconfig.exe')) OR endswith(lower(file.path), lower('\\\\iscsicli.exe')) OR endswith(lower(file.path), lower('\\\\iscsicpl.exe')) OR endswith(lower(file.path), lower('\\\\logman.exe')) OR endswith(lower(file.path), lower('\\\\logonui.exe')) OR endswith(lower(file.path), lower('\\\\lsaiso.exe')) OR endswith(lower(file.path), lower('\\\\lsass.exe')) OR endswith(lower(file.path), lower('\\\\lsm.exe')) OR endswith(lower(file.path), lower('\\\\msiexec.exe')) OR endswith(lower(file.path), lower('\\\\msinfo32.exe')) OR endswith(lower(file.path), lower('\\\\mstsc.exe')) OR endswith(lower(file.path), lower('\\\\nbtstat.exe')) OR endswith(lower(file.path), lower('\\\\odbcconf.exe')) OR endswith(lower(file.path), lower('\\\\powershell.exe')) OR endswith(lower(file.path), lower('\\\\pwsh.exe')) OR endswith(lower(file.path), lower('\\\\regini.exe')) OR endswith(lower(file.path), lower('\\\\regsvr32.exe')) OR endswith(lower(file.path), lower('\\\\rundll32.exe')) OR endswith(lower(file.path), lower('\\\\runtimebroker.exe')) OR endswith(lower(file.path), lower('\\\\schtasks.exe')) OR endswith(lower(file.path), lower('\\\\searchfilterhost.exe')) OR endswith(lower(file.path), lower('\\\\searchindexer.exe')) OR endswith(lower(file.path), lower('\\\\searchprotocolhost.exe')) OR endswith(lower(file.path), lower('\\\\securityhealthservice.exe')) OR endswith(lower(file.path), lower('\\\\securityhealthsystray.exe')) OR endswith(lower(file.path), lower('\\\\services.exe')) OR endswith(lower(file.path), lower('\\\\shellappruntime.exe')) OR endswith(lower(file.path), lower('\\\\sihost.exe')) OR endswith(lower(file.path), lower('\\\\smartscreen.exe')) OR endswith(lower(file.path), lower('\\\\smss.exe')) OR endswith(lower(file.path), lower('\\\\spoolsv.exe')) OR endswith(lower(file.path), lower('\\\\svchost.exe')) OR endswith(lower(file.path), lower('\\\\systemsettingsbroker.exe')) OR endswith(lower(file.path), lower('\\\\taskhost.exe')) OR endswith(lower(file.path), lower('\\\\taskhostw.exe')) OR endswith(lower(file.path), lower('\\\\taskmgr.exe')) OR endswith(lower(file.path), lower('\\\\tiworker.exe')) OR endswith(lower(file.path), lower('\\\\vssadmin.exe')) OR endswith(lower(file.path), lower('\\\\w32tm.exe')) OR endswith(lower(file.path), lower('\\\\werfault.exe')) OR endswith(lower(file.path), lower('\\\\werfaultsecure.exe')) OR endswith(lower(file.path), lower('\\\\wermgr.exe')) OR endswith(lower(file.path), lower('\\\\wevtutil.exe')) OR endswith(lower(file.path), lower('\\\\wininit.exe')) OR endswith(lower(file.path), lower('\\\\winlogon.exe')) OR endswith(lower(file.path), lower('\\\\winrshost.exe')) OR endswith(lower(file.path), lower('\\\\winrtnetmuahostserver.exe')) OR endswith(lower(file.path), lower('\\\\wlanext.exe')) OR endswith(lower(file.path), lower('\\\\wlrmdr.exe')) OR endswith(lower(file.path), lower('\\\\wmiprvse.exe')) OR endswith(lower(file.path), lower('\\\\wslhost.exe')) OR endswith(lower(file.path), lower('\\\\wsreset.exe')) OR endswith(lower(file.path), lower('\\\\wudfhost.exe')) OR endswith(lower(file.path), lower('\\\\wwahost.exe'))) AND NOT (contains(lower(file.path), lower('c:\\\\$windows.~bt\\\\')) OR contains(lower(file.path), lower('c:\\\\$winreagent\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\softwaredistribution\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\system32\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\syswow64\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\winsxs\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\uus\\\\')) OR endswith(lower(actor.process.name), lower('c:\\\\windows\\\\system32\\\\svchost.exe')) AND contains(lower(file.path), lower('c:\\\\program files\\\\windowsapps\\\\')) OR endswith(lower(actor.process.name), lower('c:\\\\windows\\\\system32\\\\wuauclt.exe')) OR endswith(lower(file.path), lower('c:\\\\windows\\\\explorer.exe')) OR endswith(lower(actor.process.name), lower('c:\\\\windows\\\\system32\\\\msiexec.exe')) AND (endswith(lower(file.path), lower('c:\\\\program files\\\\powershell\\\\7\\\\pwsh.exe')) OR endswith(lower(file.path), lower('c:\\\\program files\\\\powershell\\\\7-preview\\\\pwsh.exe'))) OR contains(lower(file.path), lower('c:\\\\windows\\\\system32\\\\securityhealth\\\\')) AND endswith(lower(file.path), lower('\\\\securityhealthsystray.exe')) AND endswith(lower(actor.process.name), lower('\\\\securityhealthsetup.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of an executable with a system process name in folders other than the system ones (System32, SysWOW64, etc.). It is highly recommended to perform an initial baseline before using this rule in production.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. System processes copied outside their default folders for testing purposes 2. Third party software naming their software with the same names as the processes mentioned here Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

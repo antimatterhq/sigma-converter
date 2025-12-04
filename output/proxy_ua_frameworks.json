@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Exploit Framework User Agent",
+    "comment": "Detects suspicious user agent strings used by exploit / pentest frameworks like Metasploit in proxy logs",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (startswith(lower(http_request.user_agent), lower('internet explorer ')) OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; msie 6.0; windows nt 5.1; sv1; infopath.2)') OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; metasploit rspec)') OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; msie 6.1; windows nt)') OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; msie 6.0; windows nt 5.1)') OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; msie 7.0; windows nt 6.0)') OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; msie 8.0; windows nt 6.0; trident/4.0)') OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; msie 7.0; windows nt 6.0; trident/4.0; simbar={7db0f6de-8de7-4841-9084-28fa914b0f2e}; slcc1; .n') OR lower(http_request.user_agent) = lower('mozilla/5.0 (compatible; googlebot/2.1; +http://www.google.com/bot.html)') OR lower(http_request.user_agent) = lower('mozilla/5.0 (windows; u; windows nt 5.1; en-us) applewebkit/525.13 (khtml, like gecko) chrome/4.0.221.6 safari/525.13') OR lower(http_request.user_agent) = lower('mozilla/5.0 (compatible; msie 9.0; windows nt 6.1; wow64; trident/5.0; maau)') OR lower(http_request.user_agent) = lower('mozilla/5.0') OR lower(http_request.user_agent) = lower('mozilla/4.0 (compatible; spipe/1.0') OR lower(http_request.user_agent) = lower('mozilla/5.0 (windows nt 6.3; rv:39.0) gecko/20100101 firefox/35.0') OR lower(http_request.user_agent) = lower('sametime community agent') OR lower(http_request.user_agent) = lower('x-forwarded-for') OR lower(http_request.user_agent) = lower('dotdotpwn v2.1') OR lower(http_request.user_agent) = lower('sipdroid') OR lower(http_request.user_agent) = lower('mozilla/5.0 (windows nt 10.0; win32; x32; rv:60.0)') OR lower(http_request.user_agent) = lower('mozilla/6.0 (x11; linux x86_64; rv:24.0) gecko/20140205     firefox/27.0 iceweasel/25.3.0') OR contains(lower(http_request.user_agent), lower('wordpress hash grabber')) OR contains(lower(http_request.user_agent), lower('exploit')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious user agent strings used by exploit / pentest frameworks like Metasploit in proxy logs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ClientIP, http_request.url, http_request.user_agent False positive: Unknown Reference: https://blog.didierstevens.com/2015/03/16/quickpost-metasploit-user-agent-strings/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

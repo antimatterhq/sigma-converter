@@ -1,7 +1,9 @@
-id: 129966c9-de17-4334-a123-8b58172e664d
 title: Potential Windows Defender AV Bypass Via Dump64.EXE Rename
+id: 129966c9-de17-4334-a123-8b58172e664d
 status: test
 level: high
+author: Austin Songer @austinsonger, Florian Roth (Nextron Systems), Nasreddine Bencherchali
+    (Nextron Systems)
 description: 'Detects when a user is potentially trying to bypass the Windows Defender
     AV by renaming a tool to dump64.exe and placing it in the Visual Studio folder.
 
@@ -9,18 +11,15 @@ description: 'Detects when a user is potentially trying to bypass the Windows De
     be added in order to increase coverage.
 
     '
-author: Austin Songer @austinsonger, Florian Roth (Nextron Systems), Nasreddine Bencherchali
-    (Nextron Systems)
-date: '2021-11-26'
-modified: '2024-06-21'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://twitter.com/mrd0x/status/1460597833917251595
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2021-11-26'
+modified: '2024-06-21'
 logsource:
     category: process_creation
     product: windows
@@ -42,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:23.454828+00:00'
+            mapped_at: '2025-12-04T01:48:28.105374+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:23.454828+00:00'
+            mapped_at: '2025-12-04T01:48:28.105374+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:23.454847+00:00'
+            mapped_at: '2025-12-04T01:48:28.105388+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:23.454849+00:00'
+            mapped_at: '2025-12-04T01:48:28.105390+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:23.454851+00:00'
+            mapped_at: '2025-12-04T01:48:28.105391+00:00'

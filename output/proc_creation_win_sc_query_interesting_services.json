@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Interesting Service Enumeration Via Sc.EXE",
+    "comment": "Detects the enumeration and query of interesting and in some cases sensitive services on the system via \"sc.exe\". Attackers often try to enumerate the services currently running on a system in order to find different attack vectors.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sc.exe')) AND lower(process.file.name) = lower('sc.exe') AND contains(lower(process.cmd_line), lower('query')) AND contains(lower(process.cmd_line), lower('termservice')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the enumeration and query of interesting and in some cases sensitive services on the system via \"sc.exe\". Attackers often try to enumerate the services currently running on a system in order to find different attack vectors.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/, https://pentestlab.blog/tag/svchost/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

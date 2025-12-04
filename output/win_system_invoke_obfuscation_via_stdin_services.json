@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Invoke-Obfuscation Via Stdin - System",
+    "comment": "Detects Obfuscated Powershell via Stdin in Scripts",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND contains(lower(process.file.path), lower('set')) AND contains(lower(process.file.path), lower('&&')) AND (contains(lower(process.file.path), lower('environment')) OR contains(lower(process.file.path), lower('invoke')) OR contains(lower(process.file.path), lower('input'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Obfuscated Powershell via Stdin in Scripts",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/SigmaHQ/sigma/issues/1009",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

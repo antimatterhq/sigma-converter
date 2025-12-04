@@ -1,13 +1,16 @@
-id: 304afd73-55a5-4bb9-8c21-0b1fc84ea9e4
 title: PSEXEC Remote Execution File Artefact
+id: 304afd73-55a5-4bb9-8c21-0b1fc84ea9e4
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of the PSEXEC key file. Which is created anytime a PsExec
     command is executed. It gets written to the file system and will be recorded in
     the USN Journal on the target system
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-21'
-modified: '2023-02-23'
+references:
+    - https://aboutdfir.com/the-key-to-identify-psexec/
+    - https://twitter.com/davisrichardg/status/1616518800584704028
+falsepositives:
+    - Unlikely
 tags:
     - attack.lateral-movement
     - attack.privilege-escalation
@@ -17,12 +20,8 @@ tags:
     - attack.t1543.003
     - attack.t1570
     - attack.s0029
-references:
-    - https://aboutdfir.com/the-key-to-identify-psexec/
-    - https://twitter.com/davisrichardg/status/1616518800584704028
-falsepositives:
-    - Unlikely
-taxonomy: sigma
+date: '2023-01-21'
+modified: '2023-02-23'
 logsource:
     category: file_event
     product: windows
@@ -38,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:13.911545+00:00'
+            mapped_at: '2025-12-04T01:52:06.148453+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:13.911545+00:00'
+            mapped_at: '2025-12-04T01:52:06.148453+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:13.911576+00:00'
+            mapped_at: '2025-12-04T01:52:06.148469+00:00'

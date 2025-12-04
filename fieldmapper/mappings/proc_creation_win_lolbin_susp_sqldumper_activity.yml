@@ -1,21 +1,20 @@
-id: 23ceaf5c-b6f1-4a32-8559-f2ff734be516
 title: Dumping Process via Sqldumper.exe
+id: 23ceaf5c-b6f1-4a32-8559-f2ff734be516
 status: test
 level: medium
-description: Detects process dump via legitimate sqldumper.exe binary
 author: Kirill Kiryanov, oscd.community
-date: '2020-10-08'
-modified: '2021-11-27'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
+description: Detects process dump via legitimate sqldumper.exe binary
 references:
     - https://twitter.com/countuponsec/status/910977826853068800
     - https://twitter.com/countuponsec/status/910969424215232518
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Sqldumper/
 falsepositives:
     - Legitimate MSSQL Server actions
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2020-10-08'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:18.945338+00:00'
+            mapped_at: '2025-12-04T01:51:04.040543+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:18.945338+00:00'
+            mapped_at: '2025-12-04T01:51:04.040543+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:18.945354+00:00'
+            mapped_at: '2025-12-04T01:51:04.040690+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:18.945356+00:00'
+            mapped_at: '2025-12-04T01:51:04.040699+00:00'

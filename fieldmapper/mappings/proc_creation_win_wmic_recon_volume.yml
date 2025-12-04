@@ -1,7 +1,8 @@
-id: c79da740-5030-45ec-a2e0-479e824a562c
 title: System Disk And Volume Reconnaissance Via Wmic.EXE
+id: c79da740-5030-45ec-a2e0-479e824a562c
 status: test
 level: medium
+author: Stephen Lincoln `@slincoln-aiq`(AttackIQ)
 description: 'An adversary might use WMI to discover information about the system,
     such as the volume name, size,
 
@@ -11,21 +12,17 @@ description: 'An adversary might use WMI to discover information about the syste
     observed being used by threat actors such as Volt Typhoon.
 
     '
-author: Stephen Lincoln `@slincoln-aiq`(AttackIQ)
-date: '2024-02-02'
-tags:
-    - attack.execution
-    - attack.discovery
-    - attack.t1047
-    - attack.t1082
 references:
     - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-144a
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d85ecdd7-b855-4e6e-af59-d9c78b5b861e''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.discovery
+    - attack.t1047
+    - attack.t1082
+date: '2024-02-02'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +35,9 @@ detection:
             - volume
             - path win32_logicaldisk
     condition: all of selection_*
+related:
+    -   id: d85ecdd7-b855-4e6e-af59-d9c78b5b861e
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:04.160876+00:00'
+            mapped_at: '2025-12-04T01:46:34.220965+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:04.160876+00:00'
+            mapped_at: '2025-12-04T01:46:34.220965+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:04.160892+00:00'
+            mapped_at: '2025-12-04T01:46:34.220984+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:04.160895+00:00'
+            mapped_at: '2025-12-04T01:46:34.220986+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:04.160897+00:00'
+            mapped_at: '2025-12-04T01:46:34.220988+00:00'

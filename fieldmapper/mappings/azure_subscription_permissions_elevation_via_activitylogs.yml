@@ -1,7 +1,8 @@
-id: 09438caa-07b1-4870-8405-1dbafe3dad95
 title: Azure Subscription Permission Elevation Via ActivityLogs
+id: 09438caa-07b1-4870-8405-1dbafe3dad95
 status: test
 level: high
+author: Austin Songer @austinsonger
 description: 'Detects when a user has been elevated to manage all Azure Subscriptions.
 
     This change should be investigated immediately if it isn''t planned.
@@ -9,17 +10,15 @@ description: 'Detects when a user has been elevated to manage all Azure Subscrip
     This setting could allow an attacker access to Azure subscriptions in your environment.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-11-26'
-modified: '2022-08-23'
-tags:
-    - attack.initial-access
-    - attack.t1078.004
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftauthorization
 falsepositives:
     - If this was approved by System Administrator.
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1078.004
+date: '2021-11-26'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -29,18 +28,18 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: entity_management
-    activity_id: <UNMAPPED>
+    activity_id: 3
     logsource:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:06.529534+00:00'
+            mapped_at: '2025-12-04T01:38:32.231916+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:06.529534+00:00'
+            mapped_at: '2025-12-04T01:38:32.231916+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:06.529566+00:00'
+            mapped_at: '2025-12-04T01:38:32.231932+00:00'

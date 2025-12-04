@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential PowerShell Execution Via DLL",
+    "comment": "Detects potential PowerShell execution from a DLL instead of the usual PowerShell process as seen used in PowerShdll. This detection assumes that PowerShell commands are passed via the CommandLine.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\installutil.exe')) OR endswith(lower(process.name), lower('\\\\regasm.exe')) OR endswith(lower(process.name), lower('\\\\regsvcs.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe'))) AND (lower(LOWER(process.file.name)) in ('installutil\\.exe', 'regasm\\.exe', 'regsvcs\\.exe', 'regsvr32\\.exe', 'rundll32\\.exe')) AND (contains(lower(process.cmd_line), lower('default.getstring')) OR contains(lower(process.cmd_line), lower('downloadstring')) OR contains(lower(process.cmd_line), lower('frombase64string')) OR contains(lower(process.cmd_line), lower('icm ')) OR contains(lower(process.cmd_line), lower('iex ')) OR contains(lower(process.cmd_line), lower('invoke-command')) OR contains(lower(process.cmd_line), lower('invoke-expression'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential PowerShell execution from a DLL instead of the usual PowerShell process as seen used in PowerShdll. This detection assumes that PowerShell commands are passed via the CommandLine.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/p3nt4/PowerShdll/blob/62cfa172fb4e1f7f4ac00ca942685baeb88ff356/README.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

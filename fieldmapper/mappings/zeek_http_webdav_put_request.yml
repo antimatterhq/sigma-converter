@@ -1,20 +1,19 @@
-id: 705072a5-bb6f-4ced-95b6-ecfa6602090b
 title: WebDav Put Request
+id: 705072a5-bb6f-4ced-95b6-ecfa6602090b
 status: test
 level: low
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
 description: A General detection for WebDav user-agent being used to PUT files on
     a WebDav network share. This could be an indicator of exfiltration.
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2020-05-02'
-modified: '2024-03-13'
-tags:
-    - attack.exfiltration
-    - attack.t1048.003
 references:
     - https://github.com/OTRF/detection-hackathon-apt29/issues/17
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+date: '2020-05-02'
+modified: '2024-03-13'
 logsource:
     product: zeek
     service: http
@@ -37,21 +36,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:10.897936+00:00'
+            mapped_at: '2025-12-04T01:35:15.278346+00:00'
         service:
             source_field: service
             source_value: http
-            mapped_at: '2025-11-26T02:15:10.897936+00:00'
+            mapped_at: '2025-12-04T01:35:15.278346+00:00'
     detection_fields:
         -   source_field: user_agent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:15:11.762834+00:00'
+            mapped_at: '2025-12-04T01:35:15.278362+00:00'
         -   source_field: method
             target_table: http_activity
             target_field: http_request.http_method
-            mapped_at: '2025-11-26T02:15:11.762850+00:00'
+            mapped_at: '2025-12-04T01:35:15.278371+00:00'
         -   source_field: id.resp_h
             target_table: http_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:15:11.762852+00:00'
+            mapped_at: '2025-12-04T01:35:15.278373+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Console CodePage Lookup Via CHCP",
+    "comment": "Detects use of chcp to look up the system locale value as part of host discovery",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) AND (contains(lower(process.parent_process.cmd_line), lower(' -c ')) OR contains(lower(process.parent_process.cmd_line), lower(' /c ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2013c ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2014c ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2015c ')) OR contains(lower(process.parent_process.cmd_line), lower(' -r ')) OR contains(lower(process.parent_process.cmd_line), lower(' /r ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2013r ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2014r ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2015r ')) OR contains(lower(process.parent_process.cmd_line), lower(' -k ')) OR contains(lower(process.parent_process.cmd_line), lower(' /k ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2013k ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2014k ')) OR contains(lower(process.parent_process.cmd_line), lower(' \u2015k '))) AND endswith(lower(process.name), lower('\\\\chcp.com')) AND (endswith(lower(process.cmd_line), lower('chcp')) OR endswith(lower(process.cmd_line), lower('chcp ')) OR endswith(lower(process.cmd_line), lower('chcp  '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects use of chcp to look up the system locale value as part of host discovery",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. During Anaconda update the 'conda.exe' process will eventually execution the 'chcp' command. 2. Discord was seen using chcp to look up code pages References: https://thedfirreport.com/2022/04/04/stolen-images-campaign-ends-in-conti-ransomware/, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/chcp",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1614",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,15 +1,10 @@
-id: 9637e8a5-7131-4f7f-bdc7-2b05d8670c43
 title: Suspicious File Characteristics Due to Missing Fields
+id: 9637e8a5-7131-4f7f-bdc7-2b05d8670c43
 status: test
 level: medium
+author: Markus Neis, Sander Wiebing
 description: Detects Executables in the Downloads folder without FileVersion,Description,Product,Company
     likely created with py2exe
-author: Markus Neis, Sander Wiebing
-date: '2018-11-22'
-modified: '2022-10-09'
-tags:
-    - attack.execution
-    - attack.t1059.006
 references:
     - https://securelist.com/muddywater/88059/
     - https://www.virustotal.com/#/file/276a765a10f98cda1a38d3a31e7483585ca3722ecad19d784441293acf1b7beb/detection
@@ -18,7 +13,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.006
+date: '2018-11-22'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -42,29 +41,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:45.659622+00:00'
+            mapped_at: '2025-12-04T01:46:14.470617+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:45.659622+00:00'
+            mapped_at: '2025-12-04T01:46:14.470617+00:00'
     detection_fields:
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:31:45.659641+00:00'
+            mapped_at: '2025-12-04T01:46:14.470630+00:00'
         -   source_field: FileVersion
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:31:45.659643+00:00'
+            mapped_at: '2025-12-04T01:46:14.470632+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:31:45.659644+00:00'
+            mapped_at: '2025-12-04T01:46:14.470634+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:31:45.659645+00:00'
+            mapped_at: '2025-12-04T01:46:14.470635+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:45.659647+00:00'
+            mapped_at: '2025-12-04T01:46:14.470636+00:00'

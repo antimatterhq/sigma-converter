@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "AWS SecurityHub Findings Evasion",
+    "comment": "Detects the modification of the findings on SecurityHub.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('securityhub.amazonaws.com') AND (lower(LOWER(metadata.event_code)) in ('batchupdatefindings', 'deleteinsight', 'updatefindings', 'updateinsight')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the modification of the findings on SecurityHub.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: sourceIPAddress, userIdentity.arn False positives: 1. System or Network administrator behaviors 2. DEV, UAT, SAT environment. You should apply this rule with PROD environment only. Reference: https://docs.aws.amazon.com/cli/latest/reference/securityhub/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

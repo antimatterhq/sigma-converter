@@ -1,26 +1,22 @@
-id: 46a68649-f218-4f86-aea1-16a759d81820
 title: Windows Defender Exclusion List Modified
+id: 46a68649-f218-4f86-aea1-16a759d81820
 status: test
 level: medium
+author: '@BarryShooshooga'
 description: 'Detects modifications to the Windows Defender exclusion registry key.
     This could indicate a potentially suspicious or even malicious activity by an
     attacker trying to add a new exclusion in order to bypass security.
 
     '
-author: '@BarryShooshooga'
-date: '2019-10-26'
-modified: '2023-11-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://www.bleepingcomputer.com/news/security/gootkit-malware-bypasses-windows-defender-by-setting-path-exclusions/
 falsepositives:
     - Intended exclusions by administrators
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e9c8808f-4cfb-4ba9-97d4-e5f3beaa244d''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''a33f8808-2812-4373-ae95-8cfb82134978''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2019-10-26'
+modified: '2023-11-11'
 logsource:
     product: windows
     service: security
@@ -31,6 +27,11 @@ detection:
         EventID: 4657
         ObjectName|contains: \Microsoft\Windows Defender\Exclusions\
     condition: selection
+related:
+    -   id: e9c8808f-4cfb-4ba9-97d4-e5f3beaa244d
+        type: derived
+    -   id: a33f8808-2812-4373-ae95-8cfb82134978
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -38,17 +39,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:28.569697+00:00'
+            mapped_at: '2025-12-04T01:55:29.681607+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:28.569697+00:00'
+            mapped_at: '2025-12-04T01:55:29.681607+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:28.569721+00:00'
+            mapped_at: '2025-12-04T01:55:29.681624+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:28.569724+00:00'
+            mapped_at: '2025-12-04T01:55:29.681626+00:00'

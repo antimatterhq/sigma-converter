@@ -1,23 +1,22 @@
-id: 4b09c71e-4269-4111-9cdd-107d8867f0cc
 title: Shell Execution via Flock - Linux
+id: 4b09c71e-4269-4111-9cdd-107d8867f0cc
 status: experimental
 level: high
+author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
 description: 'Detects the use of the "flock" command to execute a shell. Such behavior
     may be associated with privilege escalation, unauthorized command execution, or
     to break out from restricted environments.
 
     '
-author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
-date: '2024-09-02'
-tags:
-    - attack.discovery
-    - attack.t1083
 references:
     - https://gtfobins.github.io/gtfobins/flock/#shell
     - https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1083
+date: '2024-09-02'
 logsource:
     category: process_creation
     product: linux
@@ -40,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:42.644946+00:00'
+            mapped_at: '2025-12-04T01:36:50.362506+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:42.644946+00:00'
+            mapped_at: '2025-12-04T01:36:50.362506+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:42.644966+00:00'
+            mapped_at: '2025-12-04T01:36:50.362560+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:42.644969+00:00'
+            mapped_at: '2025-12-04T01:36:50.362565+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Linux Base64 Encoded Shebang In CLI",
+    "comment": "Detects the presence of a base64 version of the shebang in the commandline, which could indicate a malicious payload about to be decoded",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('iyevymlul2jhc2')) OR contains(lower(process.cmd_line), lower('iyevymlul2rhc2')) OR contains(lower(process.cmd_line), lower('iyevymlul3pza')) OR contains(lower(process.cmd_line), lower('iyevymlul2zpc2')) OR contains(lower(process.cmd_line), lower('iyevymlul3no'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the presence of a base64 version of the shebang in the commandline, which could indicate a malicious payload about to be decoded",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html, https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1140"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

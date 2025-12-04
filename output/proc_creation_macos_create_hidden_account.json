@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Hidden User Creation",
+    "comment": "Detects creation of a hidden user account on macOS (UserID < 500) or with IsHidden option",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/dscl')) AND contains(lower(process.cmd_line), lower('create')) AND contains(lower(process.cmd_line), lower('uniqueid')) AND process.cmd_line rlike '\\(\\[0-9\\]|\\[1-9\\]\\[0-9\\]|\\[1-4\\]\\[0-9\\]\\{2\\}\\)' OR endswith(lower(process.name), lower('/dscl')) AND contains(lower(process.cmd_line), lower('create')) AND contains(lower(process.cmd_line), lower('ishidden')) AND (contains(lower(process.cmd_line), lower('true')) OR contains(lower(process.cmd_line), lower('yes')) OR contains(lower(process.cmd_line), lower('1')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of a hidden user account on macOS (UserID < 500) or with IsHidden option",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.002/T1564.002.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1564",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

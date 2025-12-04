@@ -1,22 +1,21 @@
-id: 39f1f9f2-9636-45de-98f6-a4046aa8e4b9
 title: Potential Webshell Creation On Static Website
+id: 39f1f9f2-9636-45de-98f6-a4046aa8e4b9
 status: test
 level: medium
+author: Beyu Denis, oscd.community, Tim Shelton, Thurein Oo
 description: Detects the creation of files with certain extensions on a static web
     site. This can be indicative of potential uploads of a web shell.
-author: Beyu Denis, oscd.community, Tim Shelton, Thurein Oo
-date: '2019-10-22'
-modified: '2023-10-15'
-tags:
-    - attack.persistence
-    - attack.t1505.003
 references:
     - PT ESC rule and personal experience
     - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/c95a0a1a2855dc0cd7f7327614545fe30482a636/Upload%20Insecure%20Files/README.md
 falsepositives:
     - Legitimate administrator or developer creating legitimate executable files in
         a web application folder
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1505.003
+date: '2019-10-22'
+modified: '2023-10-15'
 logsource:
     category: file_event
     product: windows
@@ -53,17 +52,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:19.287373+00:00'
+            mapped_at: '2025-12-04T01:52:10.867314+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:19.287373+00:00'
+            mapped_at: '2025-12-04T01:52:10.867314+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:19.287394+00:00'
+            mapped_at: '2025-12-04T01:52:10.867338+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:19.287398+00:00'
+            mapped_at: '2025-12-04T01:52:10.867342+00:00'

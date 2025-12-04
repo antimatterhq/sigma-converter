@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "TrustedPath UAC Bypass Pattern",
+    "comment": "Detects indicators of a UAC bypass method by mocking directories",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.name), lower('c:\\\\windows \\\\system32\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects indicators of a UAC bypass method by mocking directories",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://medium.com/tenable-techblog/uac-bypass-by-mocking-trusted-directories-24a96675f6e, https://www.wietzebeukema.nl/blog/hijacking-dlls-in-windows, https://github.com/netero1010/TrustedPath-UACBypass-BOF",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1548",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,16 +1,10 @@
-id: 4e2ed651-1906-4a59-a78a-18220fca1b22
 title: PUA - NirCmd Execution
+id: 4e2ed651-1906-4a59-a78a-18220fca1b22
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects the use of NirCmd tool for command execution, which could be
     the result of legitimate administrative activity
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-01-24'
-modified: '2023-02-13'
-tags:
-    - attack.execution
-    - attack.t1569.002
-    - attack.s0029
 references:
     - https://www.nirsoft.net/utils/nircmd.html
     - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
@@ -20,7 +14,12 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Legitimate use by administrators
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1569.002
+    - attack.s0029
+date: '2022-01-24'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -50,21 +49,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:15.679199+00:00'
+            mapped_at: '2025-12-04T01:44:13.104855+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:15.679199+00:00'
+            mapped_at: '2025-12-04T01:44:13.104855+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:15.679225+00:00'
+            mapped_at: '2025-12-04T01:44:13.104871+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:15.679228+00:00'
+            mapped_at: '2025-12-04T01:44:13.104874+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:15.679229+00:00'
+            mapped_at: '2025-12-04T01:44:13.104875+00:00'

@@ -1,22 +1,21 @@
-id: c3d76afc-93df-461e-8e67-9b2bad3f2ac4
 title: File Explorer Folder Opened Using Explorer Folder Shortcut Via Shell
+id: c3d76afc-93df-461e-8e67-9b2bad3f2ac4
 status: experimental
 level: high
+author: '@Kostastsale'
 description: 'Detects the initial execution of "cmd.exe" which spawns "explorer.exe"
     with the appropriate command line arguments for opening the "My Computer" folder.
 
     '
-author: '@Kostastsale'
-date: '2022-12-22'
-modified: '2024-08-23'
-tags:
-    - attack.discovery
-    - attack.t1135
 references:
     - https://ss64.com/nt/shell.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1135
+date: '2022-12-22'
+modified: '2024-08-23'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:08.021021+00:00'
+            mapped_at: '2025-12-04T01:48:14.369973+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:08.021021+00:00'
+            mapped_at: '2025-12-04T01:48:14.369973+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:34:08.021040+00:00'
+            mapped_at: '2025-12-04T01:48:14.369988+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:08.021042+00:00'
+            mapped_at: '2025-12-04T01:48:14.369990+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:08.021044+00:00'
+            mapped_at: '2025-12-04T01:48:14.369991+00:00'

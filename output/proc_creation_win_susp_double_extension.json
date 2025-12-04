@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Double Extension File Execution",
+    "comment": "Detects suspicious use of an .exe extension after a non-executable file extension like .pdf.exe, a set of spaces or underlines to cloak the executable file in spear phishing campaigns",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('.doc.exe')) OR endswith(lower(process.name), lower('.docx.exe')) OR endswith(lower(process.name), lower('.xls.exe')) OR endswith(lower(process.name), lower('.xlsx.exe')) OR endswith(lower(process.name), lower('.ppt.exe')) OR endswith(lower(process.name), lower('.pptx.exe')) OR endswith(lower(process.name), lower('.rtf.exe')) OR endswith(lower(process.name), lower('.pdf.exe')) OR endswith(lower(process.name), lower('.txt.exe')) OR endswith(lower(process.name), lower('      .exe')) OR endswith(lower(process.name), lower('______.exe')) OR endswith(lower(process.name), lower('.doc.js')) OR endswith(lower(process.name), lower('.docx.js')) OR endswith(lower(process.name), lower('.xls.js')) OR endswith(lower(process.name), lower('.xlsx.js')) OR endswith(lower(process.name), lower('.ppt.js')) OR endswith(lower(process.name), lower('.pptx.js')) OR endswith(lower(process.name), lower('.rtf.js')) OR endswith(lower(process.name), lower('.pdf.js')) OR endswith(lower(process.name), lower('.txt.js'))) AND (contains(lower(process.cmd_line), lower('.doc.exe')) OR contains(lower(process.cmd_line), lower('.docx.exe')) OR contains(lower(process.cmd_line), lower('.xls.exe')) OR contains(lower(process.cmd_line), lower('.xlsx.exe')) OR contains(lower(process.cmd_line), lower('.ppt.exe')) OR contains(lower(process.cmd_line), lower('.pptx.exe')) OR contains(lower(process.cmd_line), lower('.rtf.exe')) OR contains(lower(process.cmd_line), lower('.pdf.exe')) OR contains(lower(process.cmd_line), lower('.txt.exe')) OR contains(lower(process.cmd_line), lower('      .exe')) OR contains(lower(process.cmd_line), lower('______.exe')) OR contains(lower(process.cmd_line), lower('.doc.js')) OR contains(lower(process.cmd_line), lower('.docx.js')) OR contains(lower(process.cmd_line), lower('.xls.js')) OR contains(lower(process.cmd_line), lower('.xlsx.js')) OR contains(lower(process.cmd_line), lower('.ppt.js')) OR contains(lower(process.cmd_line), lower('.pptx.js')) OR contains(lower(process.cmd_line), lower('.rtf.js')) OR contains(lower(process.cmd_line), lower('.pdf.js')) OR contains(lower(process.cmd_line), lower('.txt.js'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious use of an .exe extension after a non-executable file extension like .pdf.exe, a set of spaces or underlines to cloak the executable file in spear phishing campaigns",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blu3-team.blogspot.com/2019/06/misleading-extensions-xlsexe-docexe.html, https://twitter.com/blackorbird/status/1140519090961825792",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,7 +1,8 @@
-id: 8e0bb260-d4b2-4fff-bb8d-3f82118e6892
 title: Potentially Suspicious CMD Shell Output Redirect
+id: 8e0bb260-d4b2-4fff-bb8d-3f82118e6892
 status: experimental
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects inline Windows shell commands redirecting output via the ">"
     symbol to a suspicious location.
 
@@ -10,21 +11,16 @@ description: 'Detects inline Windows shell commands redirecting output via the "
     exfiltration.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-12'
-modified: '2024-03-19'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
 falsepositives:
     - Legitimate admin or third party scripts used for diagnostic collection might
         generate some false positives
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''aa2efee7-34dd-446e-8a37-40790a66efd7''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''4f4eaa9f-5ad4-410c-a4be-bc6132b0175a''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-07-12'
+modified: '2024-03-19'
 logsource:
     category: process_creation
     product: windows
@@ -51,6 +47,11 @@ detection:
             - C:\Users\
             - \AppData\Local\
     condition: selection_img and 1 of selection_cli_*
+related:
+    -   id: aa2efee7-34dd-446e-8a37-40790a66efd7
+        type: derived
+    -   id: 4f4eaa9f-5ad4-410c-a4be-bc6132b0175a
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -58,21 +59,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:17.085101+00:00'
+            mapped_at: '2025-12-04T01:48:21.933627+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:17.085101+00:00'
+            mapped_at: '2025-12-04T01:48:21.933627+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:17.085118+00:00'
+            mapped_at: '2025-12-04T01:48:21.933657+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:17.085121+00:00'
+            mapped_at: '2025-12-04T01:48:21.933662+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:17.085123+00:00'
+            mapped_at: '2025-12-04T01:48:21.933663+00:00'

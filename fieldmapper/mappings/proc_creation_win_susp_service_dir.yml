@@ -1,19 +1,18 @@
-id: 883faa95-175a-4e22-8181-e5761aeb373c
 title: Suspicious Service Binary Directory
+id: 883faa95-175a-4e22-8181-e5761aeb373c
 status: test
 level: high
-description: Detects a service binary running in a suspicious directory
 author: Florian Roth (Nextron Systems)
-date: '2021-03-09'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1202
+description: Detects a service binary running in a suspicious directory
 references:
     - https://blog.truesec.com/2021/03/07/exchange-zero-day-proxylogon-and-hafnium/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+date: '2021-03-09'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:05.535175+00:00'
+            mapped_at: '2025-12-04T01:49:01.493289+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:05.535175+00:00'
+            mapped_at: '2025-12-04T01:49:01.493289+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:05.535193+00:00'
+            mapped_at: '2025-12-04T01:49:01.493308+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:05.535196+00:00'
+            mapped_at: '2025-12-04T01:49:01.493331+00:00'

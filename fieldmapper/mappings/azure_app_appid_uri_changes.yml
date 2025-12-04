@@ -1,23 +1,22 @@
-id: 1b45b0d1-773f-4f23-aedc-814b759563b1
 title: Application AppID Uri Configuration Changes
+id: 1b45b0d1-773f-4f23-aedc-814b759563b1
 status: test
 level: high
+author: Mark Morowczynski '@markmorow', Bailey Bercik '@baileybercik'
 description: Detects when a configuration change is made to an applications AppID
     URI.
-author: Mark Morowczynski '@markmorow', Bailey Bercik '@baileybercik'
-date: '2022-06-02'
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#appid-uri-added-modified-or-removed
+falsepositives:
+    - When and administrator is making legitimate AppID URI configuration changes
+        to an application. This should be a planned event.
 tags:
     - attack.persistence
     - attack.credential-access
     - attack.privilege-escalation
     - attack.t1552
     - attack.t1078.004
-references:
-    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#appid-uri-added-modified-or-removed
-falsepositives:
-    - When and administrator is making legitimate AppID URI configuration changes
-        to an application. This should be a planned event.
-taxonomy: sigma
+date: '2022-06-02'
 logsource:
     product: azure
     service: auditlogs
@@ -34,13 +33,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:17.805163+00:00'
+            mapped_at: '2025-12-04T01:37:41.905095+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:17.805163+00:00'
+            mapped_at: '2025-12-04T01:37:41.905095+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:19:17.805194+00:00'
+            mapped_at: '2025-12-04T01:37:41.905119+00:00'

@@ -1,13 +1,10 @@
-id: 2fade0b6-7423-4835-9d4f-335b39b83867
 title: Shell Execution Of Process Located In Tmp Directory
+id: 2fade0b6-7423-4835-9d4f-335b39b83867
 status: test
 level: high
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
 description: Detects execution of shells from a parent process located in a temporary
     (/tmp) directory
-author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2023-06-02'
-tags:
-    - attack.execution
 references:
     - https://blogs.jpcert.or.jp/en/2023/05/gobrat.html
     - https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/
@@ -15,7 +12,9 @@ references:
     - https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-06-02'
 logsource:
     category: process_creation
     product: linux
@@ -38,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:32.221860+00:00'
+            mapped_at: '2025-12-04T01:36:37.881603+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:32.221860+00:00'
+            mapped_at: '2025-12-04T01:36:37.881603+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:17:32.221879+00:00'
+            mapped_at: '2025-12-04T01:36:37.881620+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:32.221882+00:00'
+            mapped_at: '2025-12-04T01:36:37.881622+00:00'

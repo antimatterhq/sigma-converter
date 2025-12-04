@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Backup Files Deleted",
+    "comment": "Detects deletion of files with extensions often used for backup files. Adversaries may delete or remove built-in operating system data and turn off services designed to aid in the recovery of a corrupted system to prevent recovery.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_delete",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND (endswith(lower(actor.process.name), lower('\\\\cmd.exe')) OR endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe')) OR endswith(lower(actor.process.name), lower('\\\\wt.exe')) OR endswith(lower(actor.process.name), lower('\\\\rundll32.exe')) OR endswith(lower(actor.process.name), lower('\\\\regsvr32.exe'))) AND (endswith(lower(file.path), lower('.vhd')) OR endswith(lower(file.path), lower('.bac')) OR endswith(lower(file.path), lower('.bak')) OR endswith(lower(file.path), lower('.wbcat')) OR endswith(lower(file.path), lower('.bkf')) OR endswith(lower(file.path), lower('.set')) OR endswith(lower(file.path), lower('.win')) OR endswith(lower(file.path), lower('.dsk'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects deletion of files with extensions often used for backup files. Adversaries may delete or remove built-in operating system data and turn off services designed to aid in the recovery of a corrupted system to prevent recovery.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitime usage Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-6---windows---delete-backup-files",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1490"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

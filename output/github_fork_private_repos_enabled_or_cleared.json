@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Github Fork Private Repositories Setting Enabled/Cleared",
+    "comment": "Detects when the policy allowing forks of private and internal repositories is changed (enabled or cleared).",
+    "annotations": {
+      "source": "sigma",
+      "product": "github",
+      "service": "audit",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(action)) in ('private_repository_forking\\.clear', 'private_repository_forking\\.enable'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when the policy allowing forks of private and internal repositories is changed (enabled or cleared).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Allowed administrative activities. Reference: https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise#private_repository_forking",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1020"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1537"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

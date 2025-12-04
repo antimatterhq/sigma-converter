@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious User-Agents Related To Recon Tools",
+    "comment": "Detects known suspicious (default) user-agents related to scanning/recon tools",
+    "annotations": {
+      "source": "sigma",
+      "category": "webserver",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.user_agent), lower('wfuzz/')) OR contains(lower(http_request.user_agent), lower('wpscan v')) OR contains(lower(http_request.user_agent), lower('recon-ng/v')) OR contains(lower(http_request.user_agent), lower('gis - appsec team - project vision')))"
+      }
+    },
+    "output": {
+      "summary": "Detects known suspicious (default) user-agents related to scanning/recon tools",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/wpscanteam/wpscan/blob/196fbab5b1ce3870a43515153d4f07878a89d410/lib/wpscan/browser.rb, https://github.com/xmendez/wfuzz/blob/1b695ee9a87d66a7d7bf6cae70d60a33fae51541/docs/user/basicusage.rst, https://github.com/lanmaster53/recon-ng/blob/9e907dfe09fce2997f0301d746796408e01a60b7/recon/core/base.py#L92",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1190"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

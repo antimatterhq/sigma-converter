@@ -1,16 +1,11 @@
-id: e0f8ab85-0ac9-423b-a73a-81b3c7b1aa97
 title: Network Communication Initiated To File Sharing Domains From Process Located
     In Suspicious Folder
+id: e0f8ab85-0ac9-423b-a73a-81b3c7b1aa97
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects executables located in potentially suspicious directories initiating
     network connections towards file sharing domains.
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2018-08-30'
-modified: '2024-10-21'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://twitter.com/M_haggis/status/900741347035889665
     - https://twitter.com/M_haggis/status/1032799638213066752
@@ -21,9 +16,11 @@ falsepositives:
     - Some installers located in the temp directory might communicate with the Github
         domains in order to download additional software. Baseline these cases or
         move the github domain to a lower level hunting rule.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''635dbb88-67b3-4b41-9ea5-a3af2dd88153''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2018-08-30'
+modified: '2024-10-21'
 logsource:
     category: network_connection
     product: windows
@@ -79,6 +76,9 @@ detection:
             - w3spaces.com
             - workers.dev
     condition: all of selection_*
+related:
+    -   id: 635dbb88-67b3-4b41-9ea5-a3af2dd88153
+        type: obsolete
 ocsf_mapping:
     class_name: network_activity
     activity_id: 1
@@ -86,21 +86,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:46.886073+00:00'
+            mapped_at: '2025-12-04T01:51:46.282328+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:46.886073+00:00'
+            mapped_at: '2025-12-04T01:51:46.282328+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:46.886089+00:00'
+            mapped_at: '2025-12-04T01:51:46.282978+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:46.886096+00:00'
+            mapped_at: '2025-12-04T01:51:46.282994+00:00'
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:46.886098+00:00'
+            mapped_at: '2025-12-04T01:51:46.282998+00:00'

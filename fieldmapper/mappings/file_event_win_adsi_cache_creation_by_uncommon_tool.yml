@@ -1,15 +1,10 @@
-id: 75bf09fa-1dd7-4d18-9af9-dd9e492562eb
 title: ADSI-Cache File Creation By Uncommon Tool
+id: 75bf09fa-1dd7-4d18-9af9-dd9e492562eb
 status: test
 level: medium
+author: xknow @xknow_infosec, Tim Shelton
 description: Detects the creation of an "Active Directory Schema Cache File" (.sch)
     file by an uncommon tool.
-author: xknow @xknow_infosec, Tim Shelton
-date: '2019-03-24'
-modified: '2023-10-18'
-tags:
-    - attack.t1001.003
-    - attack.command-and-control
 references:
     - https://medium.com/@ivecodoe/detecting-ldapfragger-a-newly-released-cobalt-strike-beacon-using-ldap-for-c2-communication-c274a7f00961
     - https://blog.fox-it.com/2020/03/19/ldapfragger-command-and-control-over-ldap-attributes/
@@ -17,7 +12,11 @@ references:
 falsepositives:
     - Other legimate tools, which do ADSI (LDAP) operations, e.g. any remoting activity
         by MMC, Powershell, Windows etc.
-taxonomy: sigma
+tags:
+    - attack.t1001.003
+    - attack.command-and-control
+date: '2019-03-24'
+modified: '2023-10-18'
 logsource:
     category: file_event
     product: windows
@@ -56,17 +55,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:33.254048+00:00'
+            mapped_at: '2025-12-04T01:52:25.785036+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:33.254048+00:00'
+            mapped_at: '2025-12-04T01:52:25.785036+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:33.254075+00:00'
+            mapped_at: '2025-12-04T01:52:25.785056+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:33.254079+00:00'
+            mapped_at: '2025-12-04T01:52:25.785058+00:00'

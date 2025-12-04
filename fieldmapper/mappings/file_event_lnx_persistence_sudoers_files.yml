@@ -1,20 +1,19 @@
-id: ddb26b76-4447-4807-871f-1b035b2bfa5d
 title: Persistence Via Sudoers Files
+id: ddb26b76-4447-4807-871f-1b035b2bfa5d
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of sudoers file or files in "sudoers.d" directory which
     can be used a potential method to persiste privileges for a specific user.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-05'
-modified: '2022-12-31'
-tags:
-    - attack.persistence
-    - attack.t1053.003
 references:
     - https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/apps/deployer.sh
 falsepositives:
     - Creation of legitimate files in sudoers.d folder part of administrator work
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1053.003
+date: '2022-07-05'
+modified: '2022-12-31'
 logsource:
     category: file_event
     product: linux
@@ -29,13 +28,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:15:27.195621+00:00'
+            mapped_at: '2025-12-04T01:35:22.668896+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:27.195621+00:00'
+            mapped_at: '2025-12-04T01:35:22.668896+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:15:27.195643+00:00'
+            mapped_at: '2025-12-04T01:35:22.668910+00:00'

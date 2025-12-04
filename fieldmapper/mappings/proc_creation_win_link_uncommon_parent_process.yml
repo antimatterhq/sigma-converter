@@ -1,7 +1,8 @@
-id: 6e968eb1-5f05-4dac-94e9-fd0c5cb49fd6
 title: Uncommon Link.EXE Parent Process
+id: 6e968eb1-5f05-4dac-94e9-fd0c5cb49fd6
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects an uncommon parent process of "LINK.EXE".
 
     Link.EXE in Microsoft incremental linker. Its a utility usually bundled with Visual
@@ -17,17 +18,15 @@ description: 'Detects an uncommon parent process of "LINK.EXE".
     process of LINK.EXE that might be suspicious or malicious.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-22'
-modified: '2024-06-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://twitter.com/0gtweet/status/1560732860935729152
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-08-22'
+modified: '2024-06-27'
 logsource:
     category: process_creation
     product: windows
@@ -50,21 +49,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:56.031112+00:00'
+            mapped_at: '2025-12-04T01:41:25.358563+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:56.031112+00:00'
+            mapped_at: '2025-12-04T01:41:25.358563+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:56.031131+00:00'
+            mapped_at: '2025-12-04T01:41:25.358579+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:56.031133+00:00'
+            mapped_at: '2025-12-04T01:41:25.358581+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:56.031134+00:00'
+            mapped_at: '2025-12-04T01:41:25.358583+00:00'

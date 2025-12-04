@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Execution of Sysinternals Tools",
+    "comment": "Detects command lines that contain the 'accepteula' flag which could be a sign of execution of one of the Sysinternals tools",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' -accepteula')) OR contains(lower(process.cmd_line), lower(' /accepteula')) OR contains(lower(process.cmd_line), lower(' \u2013accepteula')) OR contains(lower(process.cmd_line), lower(' \u2014accepteula')) OR contains(lower(process.cmd_line), lower(' \u2015accepteula'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects command lines that contain the 'accepteula' flag which could be a sign of execution of one of the Sysinternals tools",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate use of SysInternals tools 2. Programs that use the same command line flag Reference: https://twitter.com/Moti_B/status/1008587936735035392",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Resource-Development",
+          "techniqueId": "T1588",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

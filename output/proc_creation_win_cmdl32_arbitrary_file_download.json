@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Potential Arbitrary File Download Via Cmdl32.EXE",
+    "comment": "Detects execution of Cmdl32 with the \"/vpn\" and \"/lan\" flags. Attackers can abuse this utility in order to download arbitrary files via a configuration file. Inspect the location and the content of the file passed as an argument in order to determine if it is suspicious.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmdl32.exe')) AND lower(process.file.name) = lower('cmdl32.exe') AND contains(lower(process.cmd_line), lower('/vpn')) AND contains(lower(process.cmd_line), lower('/lan')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of Cmdl32 with the \"/vpn\" and \"/lan\" flags. Attackers can abuse this utility in order to download arbitrary files via a configuration file. Inspect the location and the content of the file passed as an argument in order to determine if it is suspicious.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://lolbas-project.github.io/lolbas/Binaries/Cmdl32/, https://twitter.com/SwiftOnSecurity/status/1455897435063074824, https://github.com/LOLBAS-Project/LOLBAS/pull/151",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

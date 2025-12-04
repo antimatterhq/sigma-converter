@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Powershell Base64 Encoded MpPreference Cmdlet",
+    "comment": "Detects base64 encoded \"MpPreference\" PowerShell cmdlet code that tries to modifies or tamper with Windows Defender AV",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('qwrklu1wuhjlzmvyzw5jzs')) OR contains(lower(process.cmd_line), lower('fkzc1ncfbyzwzlcmvuy2ug')) OR contains(lower(process.cmd_line), lower('bzgqttxbqcmvmzxjlbmnli')) OR contains(lower(process.cmd_line), lower('u2v0lu1wuhjlzmvyzw5jzs')) OR contains(lower(process.cmd_line), lower('nldc1ncfbyzwzlcmvuy2ug')) OR contains(lower(process.cmd_line), lower('tzxqttxbqcmvmzxjlbmnli')) OR contains(lower(process.cmd_line), lower('ywrklw1wchjlzmvyzw5jzs')) OR contains(lower(process.cmd_line), lower('fkzc1tchbyzwzlcmvuy2ug')) OR contains(lower(process.cmd_line), lower('hzgqtbxbwcmvmzxjlbmnli')) OR contains(lower(process.cmd_line), lower('c2v0lw1wchjlzmvyzw5jzs')) OR contains(lower(process.cmd_line), lower('nldc1tchbyzwzlcmvuy2ug')) OR contains(lower(process.cmd_line), lower('zzxqtbxbwcmvmzxjlbmnli'))) AND (contains(lower(process.cmd_line), lower('qqbkagqalqbnahaauabyaguazgblahiazqbuagmazqaga')) OR contains(lower(process.cmd_line), lower('eazabkac0atqbwafaacgblagyazqbyaguabgbjaguaia')) OR contains(lower(process.cmd_line), lower('bagqazaatae0acabqahiazqbmaguacgblag4aywblacaa')) OR contains(lower(process.cmd_line), lower('uwblahqalqbnahaauabyaguazgblahiazqbuagmazqaga')) OR contains(lower(process.cmd_line), lower('mazqb0ac0atqbwafaacgblagyazqbyaguabgbjaguaia')) OR contains(lower(process.cmd_line), lower('taguadaatae0acabqahiazqbmaguacgblag4aywblacaa')) OR contains(lower(process.cmd_line), lower('yqbkagqalqbtahaacabyaguazgblahiazqbuagmazqaga')) OR contains(lower(process.cmd_line), lower('eazabkac0abqbwahaacgblagyazqbyaguabgbjaguaia')) OR contains(lower(process.cmd_line), lower('hagqazaatag0acabwahiazqbmaguacgblag4aywblacaa')) OR contains(lower(process.cmd_line), lower('cwblahqalqbtahaacabyaguazgblahiazqbuagmazqaga')) OR contains(lower(process.cmd_line), lower('mazqb0ac0abqbwahaacgblagyazqbyaguabgbjaguaia')) OR contains(lower(process.cmd_line), lower('zaguadaatag0acabwahiazqbmaguacgblag4aywblacaa'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects base64 encoded \"MpPreference\" PowerShell cmdlet code that tries to modifies or tamper with Windows Defender AV",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/defender-endpoint/configure-process-opened-file-exclusions-microsoft-defender-antivirus, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md, https://twitter.com/AdamTheAnalyst/status/1483497517119590403",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

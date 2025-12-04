@@ -1,15 +1,10 @@
-id: 790317c0-0a36-4a6a-a105-6e576bf99a14
 title: COM Object Hijacking Via Modification Of Default System CLSID Default Value
+id: 790317c0-0a36-4a6a-a105-6e576bf99a14
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potential COM object hijacking via modification of default system
     CLSID.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-07-16'
-modified: '2024-12-14'
-tags:
-    - attack.persistence
-    - attack.t1546.015
 references:
     - https://www.microsoft.com/security/blog/2022/07/27/untangling-knotweed-european-private-sector-offensive-actor-using-0-day-exploits/
         (idea)
@@ -19,10 +14,11 @@ references:
     - https://threatbook.io/blog/Analysis-of-APT-C-60-Attack-on-South-Korea
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3d968d17-ffa4-4bc0-bfdc-f139de76ce77''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''a0ff33d8-79e4-4cef-b4f3-9dc4133ccd12''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1546.015
+date: '2024-07-16'
+modified: '2024-12-14'
 logsource:
     category: registry_set
     product: windows
@@ -69,6 +65,11 @@ detection:
             - :\Users\
             - \Pictures\
     condition: all of selection_target_* and 1 of selection_susp_location_*
+related:
+    -   id: 3d968d17-ffa4-4bc0-bfdc-f139de76ce77
+        type: obsolete
+    -   id: a0ff33d8-79e4-4cef-b4f3-9dc4133ccd12
+        type: obsolete
 ocsf_mapping:
     class_name: null
     activity_id: null

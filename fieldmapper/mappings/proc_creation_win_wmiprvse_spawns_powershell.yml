@@ -1,26 +1,22 @@
-id: 692f0bec-83ba-4d04-af7e-e884a96059b6
 title: Potential WMI Lateral Movement WmiPrvSE Spawned PowerShell
+id: 692f0bec-83ba-4d04-af7e-e884a96059b6
 status: stable
 level: medium
+author: Markus Neis @Karneades
 description: Detects Powershell as a child of the WmiPrvSE process. Which could be
     a sign of lateral movement via WMI.
-author: Markus Neis @Karneades
-date: '2019-04-03'
-modified: '2023-03-29'
-tags:
-    - attack.execution
-    - attack.t1047
-    - attack.t1059.001
 references:
     - https://any.run/report/68bc255f9b0db6a0d30a8f2dadfbee3256acfe12497bf93943bc1eab0735e45e/a2385d6f-34f7-403c-90d3-b1f9d2a90a5e
 falsepositives:
     - AppvClient
     - CCM
     - WinRM
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8a582fe2-0882-4b89-a82a-da6b2dc32937''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''d21374ff-f574-44a7-9998-4a8c8bf33d7d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+    - attack.t1059.001
+date: '2019-04-03'
+modified: '2023-03-29'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +31,11 @@ detection:
             - PowerShell.EXE
             - pwsh.dll
     condition: all of selection_*
+related:
+    -   id: 8a582fe2-0882-4b89-a82a-da6b2dc32937
+        type: similar
+    -   id: d21374ff-f574-44a7-9998-4a8c8bf33d7d
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -42,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:27.942172+00:00'
+            mapped_at: '2025-12-04T01:42:43.951093+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:27.942172+00:00'
+            mapped_at: '2025-12-04T01:42:43.951093+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:27.942193+00:00'
+            mapped_at: '2025-12-04T01:42:43.951106+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:27.942196+00:00'
+            mapped_at: '2025-12-04T01:42:43.951108+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:27.942199+00:00'
+            mapped_at: '2025-12-04T01:42:43.951109+00:00'

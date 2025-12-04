@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Powershell Token Obfuscation - Powershell",
+    "comment": "Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND script.script_content.value rlike '\\\\w\\+`\\(\\\\w\\+|-|.\\)`\\[\\\\w\\+|\\\\s\\]' AND script.script_content.value rlike '\"\\(\\\\\\{\\\\d\\\\\\}\\)\\{2,\\}\"\\\\s*-f' AND script.script_content.value rlike '\\(?i\\)\\\\$\\\\\\{`?e`?n`?v`?:`?p`?a`?t`?h`?\\\\\\}' AND NOT (contains(lower(script.script_content.value), lower('${env:path}')) OR contains(lower(script.script_content.value), lower('it will return true or false instead')) OR contains(lower(script.script_content.value), lower('the function also prevents `get-itemproperty` from failing')) OR startswith(lower(script.file.path), lower('c:\\\\program files\\\\microsoft\\\\exchange server\\\\')) AND endswith(lower(script.file.path), lower('\\\\bin\\\\servicecontrol.ps1')) AND contains(lower(script.script_content.value), lower('`r`n'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/danielbohannon/Invoke-Obfuscation",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027",
+          "subTechniqueId": "009"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

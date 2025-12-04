@@ -1,22 +1,21 @@
-id: 5817e76f-4804-41e6-8f1d-5fa0b3ecae2d
 title: PUA - Radmin Viewer Utility Execution
+id: 5817e76f-4804-41e6-8f1d-5fa0b3ecae2d
 status: test
 level: medium
+author: frack113
 description: Detects the execution of Radmin which can be abused by an adversary to
     remotely control Windows machines
-author: frack113
-date: '2022-01-22'
-modified: '2023-12-11'
-tags:
-    - attack.execution
-    - attack.lateral-movement
-    - attack.t1072
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1072/T1072.md
     - https://www.radmin.fr/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.lateral-movement
+    - attack.t1072
+date: '2022-01-22'
+modified: '2023-12-11'
 logsource:
     category: process_creation
     product: windows
@@ -33,21 +32,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:00.899897+00:00'
+            mapped_at: '2025-12-04T01:45:37.322140+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:00.899897+00:00'
+            mapped_at: '2025-12-04T01:45:37.322140+00:00'
     detection_fields:
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:31:00.899932+00:00'
+            mapped_at: '2025-12-04T01:45:37.322187+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:31:00.899937+00:00'
+            mapped_at: '2025-12-04T01:45:37.322191+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:00.899940+00:00'
+            mapped_at: '2025-12-04T01:45:37.322195+00:00'

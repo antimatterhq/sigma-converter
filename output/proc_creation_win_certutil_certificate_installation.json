@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "New Root Certificate Installed Via Certutil.EXE",
+    "comment": "Detects execution of \"certutil\" with the \"addstore\" flag in order to install a new certificate on the system. Adversaries may install a root certificate on a compromised system to avoid warnings when connecting to adversary controlled web servers.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certutil.exe')) AND lower(process.file.name) = lower('certutil.exe') AND (contains(lower(process.cmd_line), lower('-addstore')) OR contains(lower(process.cmd_line), lower('/addstore')) OR contains(lower(process.cmd_line), lower('\u2013addstore')) OR contains(lower(process.cmd_line), lower('\u2014addstore')) OR contains(lower(process.cmd_line), lower('\u2015addstore'))) AND contains(lower(process.cmd_line), lower('root')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"certutil\" with the \"addstore\" flag in order to install a new certificate on the system. Adversaries may install a root certificate on a compromised system to avoid warnings when connecting to adversary controlled web servers.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Help Desk or IT may need to manually add a corporate Root CA on occasion. Need to test if GPO push doesn't trigger FP Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1553.004/T1553.004.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1553",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

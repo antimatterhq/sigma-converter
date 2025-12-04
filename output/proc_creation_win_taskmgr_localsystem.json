@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Taskmgr as LOCAL_SYSTEM",
+    "comment": "Detects the creation of taskmgr.exe process in context of LOCAL_SYSTEM",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))) AND endswith(lower(process.name), lower('\\\\taskmgr.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of taskmgr.exe process in context of LOCAL_SYSTEM",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

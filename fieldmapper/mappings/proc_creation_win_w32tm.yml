@@ -1,20 +1,19 @@
-id: 6da2c9f5-7c53-401b-aacb-92c040ce1215
 title: Use of W32tm as Timer
+id: 6da2c9f5-7c53-401b-aacb-92c040ce1215
 status: test
 level: high
+author: frack113
 description: When configured with suitable command line arguments, w32tm can act as
     a delay mechanism
-author: frack113
-date: '2022-09-25'
-tags:
-    - attack.discovery
-    - attack.t1124
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/d0dad62dbcae9c60c519368e82c196a3db577055/atomics/T1124/T1124.md
     - https://blogs.blackberry.com/en/2022/05/dirty-deeds-done-dirt-cheap-russian-rat-offers-backdoor-bargains
 falsepositives:
     - Legitimate use
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1124
+date: '2022-09-25'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:19.330547+00:00'
+            mapped_at: '2025-12-04T01:50:00.815857+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:19.330547+00:00'
+            mapped_at: '2025-12-04T01:50:00.815857+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:19.330577+00:00'
+            mapped_at: '2025-12-04T01:50:00.815905+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:19.330581+00:00'
+            mapped_at: '2025-12-04T01:50:00.815923+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:19.330584+00:00'
+            mapped_at: '2025-12-04T01:50:00.815926+00:00'

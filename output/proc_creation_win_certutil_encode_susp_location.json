@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "File In Suspicious Location Encoded To Base64 Via Certutil.EXE",
+    "comment": "Detects the execution of certutil with the \"encode\" flag to encode a file to base64 where the files are located in potentially suspicious locations",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certutil.exe')) AND lower(process.file.name) = lower('certutil.exe') AND (contains(lower(process.cmd_line), lower('-encode')) OR contains(lower(process.cmd_line), lower('/encode')) OR contains(lower(process.cmd_line), lower('\u2013encode')) OR contains(lower(process.cmd_line), lower('\u2014encode')) OR contains(lower(process.cmd_line), lower('\u2015encode'))) AND (contains(lower(process.cmd_line), lower('\\\\appdata\\\\roaming\\\\')) OR contains(lower(process.cmd_line), lower('\\\\desktop\\\\')) OR contains(lower(process.cmd_line), lower('\\\\local\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\perflogs\\\\')) OR contains(lower(process.cmd_line), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('$recycle.bin'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of certutil with the \"encode\" flag to encode a file to base64 where the files are located in potentially suspicious locations",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.virustotal.com/gui/file/35c22725a92d5cb1016b09421c0a6cdbfd860fd4778b3313669b057d4a131cb7/behavior, https://www.virustotal.com/gui/file/427616528b7dbc4a6057ac89eb174a3a90f7abcf3f34e5a359b7a910d82f7a72/behavior, https://www.virustotal.com/gui/file/34de4c8beded481a4084a1fd77855c3e977e8ac643e5c5842d0f15f7f9b9086f/behavior, https://www.virustotal.com/gui/file/4abe1395a09fda06d897a9c4eb247278c1b6cddda5d126ce5b3f4f499e3b8fa2/behavior",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

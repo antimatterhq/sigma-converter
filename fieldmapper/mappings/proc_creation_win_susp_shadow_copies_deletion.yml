@@ -1,17 +1,10 @@
-id: c947b146-0abc-4c87-9c64-b17e9d7274a2
 title: Shadow Copies Deletion Using Operating Systems Utilities
+id: c947b146-0abc-4c87-9c64-b17e9d7274a2
 status: stable
 level: high
-description: Shadow Copies deletion using operating systems utilities
 author: Florian Roth (Nextron Systems), Michael Haag, Teymur Kheirkhabarov, Daniil
     Yugoslavskiy, oscd.community, Andreas Hunkeler (@Karneades)
-date: '2019-10-22'
-modified: '2022-11-03'
-tags:
-    - attack.defense-evasion
-    - attack.impact
-    - attack.t1070
-    - attack.t1490
+description: Shadow Copies deletion using operating systems utilities
 references:
     - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
     - https://blog.talosintelligence.com/2017/05/wannacry.html
@@ -29,7 +22,13 @@ falsepositives:
     - Legitimate Administrator deletes Shadow Copies using operating systems utilities
         for legitimate reason
     - LANDesk LDClient Ivanti-PSModule (PS EncodedCommand)
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.impact
+    - attack.t1070
+    - attack.t1490
+date: '2019-10-22'
+modified: '2022-11-03'
 logsource:
     category: process_creation
     product: windows
@@ -77,21 +76,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:02.856446+00:00'
+            mapped_at: '2025-12-04T01:44:03.336212+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:02.856446+00:00'
+            mapped_at: '2025-12-04T01:44:03.336212+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:02.856476+00:00'
+            mapped_at: '2025-12-04T01:44:03.336236+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:02.856478+00:00'
+            mapped_at: '2025-12-04T01:44:03.336238+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:02.856480+00:00'
+            mapped_at: '2025-12-04T01:44:03.336240+00:00'

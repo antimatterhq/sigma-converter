@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "New Federated Domain Added",
+    "comment": "Detects the addition of a new Federated Domain.",
+    "annotations": {
+      "source": "sigma",
+      "product": "m365",
+      "service": "audit",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(action), lower('domain')) AND (contains(lower(action), lower('add')) OR contains(lower(action), lower('new'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the addition of a new Federated Domain.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: The creation of a new Federated domain is not necessarily malicious, however these events need to be followed closely, as it may indicate federated credential abuse or backdoor via federated identities at a similar or different cloud provider. References: https://research.splunk.com/cloud/e155876a-6048-11eb-ae93-0242ac130002/, https://o365blog.com/post/aadbackdoor/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1136",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

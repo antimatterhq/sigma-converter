@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Tap Installer Execution",
+    "comment": "Well-known TAP software installation. Possible preparation for data exfiltration using tunneling techniques",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\tapinstall.exe')) AND NOT (contains(lower(process.name), lower(':\\\\program files\\\\avast software\\\\secureline vpn\\\\')) OR contains(lower(process.name), lower(':\\\\program files (x86)\\\\avast software\\\\secureline vpn\\\\')) OR contains(lower(process.name), lower(':\\\\program files\\\\openvpn connect\\\\drivers\\\\tap\\\\')) OR contains(lower(process.name), lower(':\\\\program files (x86)\\\\proton technologies\\\\protonvpntap\\\\installer\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Well-known TAP software installation. Possible preparation for data exfiltration using tunneling techniques",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate OpenVPN TAP installation Reference: https://community.openvpn.net/openvpn/wiki/ManagingWindowsTAPDrivers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1048"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

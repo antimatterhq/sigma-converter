@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potential Suspicious Windows Feature Enabled - ProcCreation",
+    "comment": "Detects usage of the built-in PowerShell cmdlet \"Enable-WindowsOptionalFeature\" used as a Deployment Image Servicing and Management tool. Similar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure, and update features and packages in Windows images",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('enable-windowsoptionalfeature')) AND contains(lower(process.cmd_line), lower('-online')) AND contains(lower(process.cmd_line), lower('-featurename')) AND (contains(lower(process.cmd_line), lower('telnetserver')) OR contains(lower(process.cmd_line), lower('internet-explorer-optional-amd64')) OR contains(lower(process.cmd_line), lower('tftp')) OR contains(lower(process.cmd_line), lower('smb1protocol')) OR contains(lower(process.cmd_line), lower('client-projfs')) OR contains(lower(process.cmd_line), lower('microsoft-windows-subsystem-linux'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the built-in PowerShell cmdlet \"Enable-WindowsOptionalFeature\" used as a Deployment Image Servicing and Management tool. Similar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure, and update features and packages in Windows images",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of the features listed in the rule. References: https://learn.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature?view=windowsserver2022-ps, https://learn.microsoft.com/en-us/windows/win32/projfs/enabling-windows-projected-file-system, https://learn.microsoft.com/en-us/windows/wsl/install-on-server",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,18 +1,10 @@
-id: 99c840f2-2012-46fd-9141-c761987550ef
 title: Suspicious Download From Direct IP Via Bitsadmin
+id: 99c840f2-2012-46fd-9141-c761987550ef
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects usage of bitsadmin downloading a file using an URL that contains
     an IP
-author: Florian Roth (Nextron Systems)
-date: '2022-06-28'
-modified: '2023-02-15'
-tags:
-    - attack.defense-evasion
-    - attack.persistence
-    - attack.t1197
-    - attack.s0190
-    - attack.t1036.003
 references:
     - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
     - https://isc.sans.edu/diary/22264
@@ -23,9 +15,14 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''90f138c1-f578-4ac3-8c49-eecfd847c8b7''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+    - attack.s0190
+    - attack.t1036.003
+date: '2022-06-28'
+modified: '2023-02-15'
 logsource:
     category: process_creation
     product: windows
@@ -52,6 +49,9 @@ detection:
     filter_seven_zip:
         CommandLine|contains: ://7-
     condition: all of selection_* and not 1 of filter_*
+related:
+    -   id: 90f138c1-f578-4ac3-8c49-eecfd847c8b7
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -59,21 +59,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:29.470448+00:00'
+            mapped_at: '2025-12-04T01:46:55.611182+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:29.470448+00:00'
+            mapped_at: '2025-12-04T01:46:55.611182+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:29.470478+00:00'
+            mapped_at: '2025-12-04T01:46:55.611199+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:29.470482+00:00'
+            mapped_at: '2025-12-04T01:46:55.611201+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:29.470485+00:00'
+            mapped_at: '2025-12-04T01:46:55.611202+00:00'

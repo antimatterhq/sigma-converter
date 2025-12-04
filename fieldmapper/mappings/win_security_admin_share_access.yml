@@ -1,19 +1,18 @@
-id: 098d7118-55bc-4912-a836-dc6483a8d150
 title: Access To ADMIN$ Network Share
+id: 098d7118-55bc-4912-a836-dc6483a8d150
 status: test
 level: low
-description: Detects access to ADMIN$ network share
 author: Florian Roth (Nextron Systems)
-date: '2017-03-04'
-modified: '2024-01-16'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
+description: Detects access to ADMIN$ network share
 references:
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-5140
 falsepositives:
     - Legitimate administrative activity
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+date: '2017-03-04'
+modified: '2024-01-16'
 logsource:
     product: windows
     service: security
@@ -33,21 +32,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:17.540489+00:00'
+            mapped_at: '2025-12-04T01:56:13.128242+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:17.540489+00:00'
+            mapped_at: '2025-12-04T01:56:13.128242+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:19.634805+00:00'
+            mapped_at: '2025-12-04T01:56:13.128263+00:00'
         -   source_field: ShareName
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:19.634819+00:00'
+            mapped_at: '2025-12-04T01:56:13.128265+00:00'
         -   source_field: SubjectUserName
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:19.634822+00:00'
+            mapped_at: '2025-12-04T01:56:13.128267+00:00'

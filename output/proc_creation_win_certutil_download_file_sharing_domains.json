@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious File Downloaded From File-Sharing Website Via Certutil.EXE",
+    "comment": "Detects the execution of certutil with certain flags that allow the utility to download files from file-sharing websites.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certutil.exe')) AND lower(process.file.name) = lower('certutil.exe') AND (contains(lower(process.cmd_line), lower('urlcache ')) OR contains(lower(process.cmd_line), lower('verifyctl '))) AND (contains(lower(process.cmd_line), lower('.githubusercontent.com')) OR contains(lower(process.cmd_line), lower('anonfiles.com')) OR contains(lower(process.cmd_line), lower('cdn.discordapp.com')) OR contains(lower(process.cmd_line), lower('ddns.net')) OR contains(lower(process.cmd_line), lower('dl.dropboxusercontent.com')) OR contains(lower(process.cmd_line), lower('ghostbin.co')) OR contains(lower(process.cmd_line), lower('glitch.me')) OR contains(lower(process.cmd_line), lower('gofile.io')) OR contains(lower(process.cmd_line), lower('hastebin.com')) OR contains(lower(process.cmd_line), lower('mediafire.com')) OR contains(lower(process.cmd_line), lower('mega.nz')) OR contains(lower(process.cmd_line), lower('onrender.com')) OR contains(lower(process.cmd_line), lower('pages.dev')) OR contains(lower(process.cmd_line), lower('paste.ee')) OR contains(lower(process.cmd_line), lower('pastebin.com')) OR contains(lower(process.cmd_line), lower('pastebin.pl')) OR contains(lower(process.cmd_line), lower('pastetext.net')) OR contains(lower(process.cmd_line), lower('privatlab.com')) OR contains(lower(process.cmd_line), lower('privatlab.net')) OR contains(lower(process.cmd_line), lower('send.exploit.in')) OR contains(lower(process.cmd_line), lower('sendspace.com')) OR contains(lower(process.cmd_line), lower('storage.googleapis.com')) OR contains(lower(process.cmd_line), lower('storjshare.io')) OR contains(lower(process.cmd_line), lower('supabase.co')) OR contains(lower(process.cmd_line), lower('temp.sh')) OR contains(lower(process.cmd_line), lower('transfer.sh')) OR contains(lower(process.cmd_line), lower('trycloudflare.com')) OR contains(lower(process.cmd_line), lower('ufile.io')) OR contains(lower(process.cmd_line), lower('w3spaces.com')) OR contains(lower(process.cmd_line), lower('workers.dev'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of certutil with certain flags that allow the utility to download files from file-sharing websites.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil, https://forensicitguy.github.io/agenttesla-vba-certutil-download/, https://news.sophos.com/en-us/2021/04/13/compromised-exchange-server-hosting-cryptojacker-targeting-other-exchange-servers/, https://twitter.com/egre55/status/1087685529016193025, https://lolbas-project.github.io/lolbas/Binaries/Certutil/, https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

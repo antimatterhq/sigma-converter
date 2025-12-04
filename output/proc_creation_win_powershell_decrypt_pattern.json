@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "PowerShell Execution With Potential Decryption Capabilities",
+    "comment": "Detects PowerShell commands that decrypt an \".LNK\" \"file to drop the next stage of the malware.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower('get-childitem ')) OR contains(lower(process.cmd_line), lower('dir ')) OR contains(lower(process.cmd_line), lower('gci ')) OR contains(lower(process.cmd_line), lower('ls '))) AND (contains(lower(process.cmd_line), lower('get-content ')) OR contains(lower(process.cmd_line), lower('gc ')) OR contains(lower(process.cmd_line), lower('cat ')) OR contains(lower(process.cmd_line), lower('type ')) OR contains(lower(process.cmd_line), lower('readallbytes'))) AND contains(lower(process.cmd_line), lower(' ^| ')) AND contains(lower(process.cmd_line), lower('*.lnk')) AND contains(lower(process.cmd_line), lower('-recurse')) AND contains(lower(process.cmd_line), lower('-skip ')) AND contains(lower(process.cmd_line), lower(' -expandproperty ')) AND contains(lower(process.cmd_line), lower('*.lnk')) AND contains(lower(process.cmd_line), lower('writeallbytes')) AND contains(lower(process.cmd_line), lower(' .length ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell commands that decrypt an \".LNK\" \"file to drop the next stage of the malware.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://research.checkpoint.com/2023/chinese-threat-actors-targeting-europe-in-smugx-campaign/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

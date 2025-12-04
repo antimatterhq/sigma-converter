@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Service Security Descriptor Tampering Via Sc.EXE",
+    "comment": "Detection of sc.exe utility adding a new service with special permission which hides that service.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sc.exe')) AND lower(process.file.name) = lower('sc.exe') AND contains(lower(process.cmd_line), lower('sdset')))"
+      }
+    },
+    "output": {
+      "summary": "Detection of sc.exe utility adding a new service with special permission which hides that service.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blog.talosintelligence.com/2021/10/threat-hunting-in-large-datasets-by.html, https://www.sans.org/blog/red-team-tactics-hiding-windows-services/, https://twitter.com/Alh4zr3d/status/1580925761996828672, https://twitter.com/0gtweet/status/1628720819537936386, https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1574",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,16 +1,10 @@
-id: 46530378-f9db-4af9-a9e5-889c177d3881
 title: Azure Device or Configuration Modified or Deleted
+id: 46530378-f9db-4af9-a9e5-889c177d3881
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Identifies when a device or device configuration in azure is modified
     or deleted.
-author: Austin Songer @austinsonger
-date: '2021-09-03'
-modified: '2022-10-09'
-tags:
-    - attack.impact
-    - attack.t1485
-    - attack.t1565.001
 references:
     - https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities#core-directory
 falsepositives:
@@ -21,7 +15,12 @@ falsepositives:
     - Device or device configuration modified or deleted from unfamiliar users should
         be investigated. If known behavior is causing false positives, it can be exempted
         from the rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1485
+    - attack.t1565.001
+date: '2021-09-03'
+modified: '2022-10-09'
 logsource:
     product: azure
     service: activitylogs
@@ -40,13 +39,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:05.977375+00:00'
+            mapped_at: '2025-12-04T01:38:31.673084+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:05.977375+00:00'
+            mapped_at: '2025-12-04T01:38:31.673084+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:21:05.977405+00:00'
+            mapped_at: '2025-12-04T01:38:31.673104+00:00'

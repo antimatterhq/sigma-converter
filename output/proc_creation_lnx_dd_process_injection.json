@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Linux Process Code Injection Via DD Utility",
+    "comment": "Detects the injection of code by overwriting the memory map of a Linux process using the \"dd\" Linux command.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND endswith(lower(process.name), lower('/dd')) AND contains(lower(process.cmd_line), lower('of=')) AND contains(lower(process.cmd_line), lower('/proc/')) AND contains(lower(process.cmd_line), lower('/mem')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the injection of code by overwriting the memory map of a Linux process using the \"dd\" Linux command.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.aon.com/cyber-solutions/aon_cyber_labs/linux-based-inter-process-code-injection-without-ptrace2/, https://github.com/AonCyberLabs/Cexigua/blob/34d338620afae4c6335ba8d8d499e1d7d3d5d7b5/overwrite.sh",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055",
+          "subTechniqueId": "009"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

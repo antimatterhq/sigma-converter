@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Local Groups Discovery - MacOs",
+    "comment": "Detects enumeration of local system groups",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/dscacheutil')) AND contains(lower(process.cmd_line), lower('-q')) AND contains(lower(process.cmd_line), lower('group')) OR endswith(lower(process.name), lower('/cat')) AND contains(lower(process.cmd_line), lower('/etc/group')) OR endswith(lower(process.name), lower('/dscl')) AND contains(lower(process.cmd_line), lower('-list')) AND contains(lower(process.cmd_line), lower('/groups'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects enumeration of local system groups",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.001/T1069.001.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1069",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

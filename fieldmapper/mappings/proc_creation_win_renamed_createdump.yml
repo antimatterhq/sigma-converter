@@ -1,24 +1,21 @@
-id: 1a1ed54a-2ba4-4221-94d5-01dee560d71e
 title: Renamed CreateDump Utility Execution
+id: 1a1ed54a-2ba4-4221-94d5-01dee560d71e
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects uses of a renamed legitimate createdump.exe LOLOBIN utility to
     dump process memory
-author: Florian Roth (Nextron Systems)
-date: '2022-09-20'
-modified: '2023-02-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
-    - attack.t1003.001
 references:
     - https://www.crowdstrike.com/blog/overwatch-exposes-aquatic-panda-in-possession-of-log-4-shell-exploit-tools/
     - https://twitter.com/bopin2020/status/1366400799199272960
 falsepositives:
     - Command lines that use the same flags
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+    - attack.t1003.001
+date: '2022-09-20'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
     filter:
         Image|endswith: \createdump.exe
     condition: 1 of selection_* and not filter
+related:
+    -   id: 515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:01.961702+00:00'
+            mapped_at: '2025-12-04T01:48:59.511598+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:01.961702+00:00'
+            mapped_at: '2025-12-04T01:48:59.511598+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:01.961720+00:00'
+            mapped_at: '2025-12-04T01:48:59.511616+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:01.961723+00:00'
+            mapped_at: '2025-12-04T01:48:59.511617+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:01.961724+00:00'
+            mapped_at: '2025-12-04T01:48:59.511619+00:00'

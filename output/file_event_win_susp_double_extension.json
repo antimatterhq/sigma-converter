@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Double Extension Files",
+    "comment": "Detects dropped files with double extensions, which is often used by malware as a method to abuse the fact that Windows hide default extensions by default.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.iso')) OR endswith(lower(file.path), lower('.rar')) OR endswith(lower(file.path), lower('.zip'))) AND (contains(lower(file.path), lower('.doc.')) OR contains(lower(file.path), lower('.docx.')) OR contains(lower(file.path), lower('.jpg.')) OR contains(lower(file.path), lower('.pdf.')) OR contains(lower(file.path), lower('.ppt.')) OR contains(lower(file.path), lower('.pptx.')) OR contains(lower(file.path), lower('.xls.')) OR contains(lower(file.path), lower('.xlsx.'))) OR endswith(lower(file.path), lower('.rar.exe')) OR endswith(lower(file.path), lower('.zip.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects dropped files with double extensions, which is often used by malware as a method to abuse the fact that Windows hide default extensions by default.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://www.crowdstrike.com/blog/meet-crowdstrikes-adversary-of-the-month-for-june-mustang-panda/, https://www.anomali.com/blog/china-based-apt-mustang-panda-targets-minority-groups-public-and-private-sector-organizations, https://www.cybereason.com/blog/research/a-bazar-of-tricks-following-team9s-development-cycles, https://twitter.com/malwrhunterteam/status/1235135745611960321, https://twitter.com/luc4m/status/1073181154126254080",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

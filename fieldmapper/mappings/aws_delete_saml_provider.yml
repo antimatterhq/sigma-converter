@@ -1,7 +1,8 @@
-id: ccd6a6c8-bb4e-4a91-9d2a-07e632819374
 title: AWS SAML Provider Deletion Activity
+id: ccd6a6c8-bb4e-4a91-9d2a-07e632819374
 status: experimental
 level: medium
+author: Ivan Saakov
 description: 'Detects the deletion of an AWS SAML provider, potentially indicating
     malicious intent to disrupt administrative or security team access.
 
@@ -10,12 +11,6 @@ description: 'Detects the deletion of an AWS SAML provider, potentially indicati
     at the time of the attack and after it.
 
     '
-author: Ivan Saakov
-date: '2024-12-19'
-tags:
-    - attack.t1078.004
-    - attack.privilege-escalation
-    - attack.t1531
 references:
     - https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteSAMLProvider.html
 falsepositives:
@@ -25,7 +20,11 @@ falsepositives:
         they are expected.
     - Deletions by unfamiliar users should be investigated. If the behavior is known
         and expected, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.t1078.004
+    - attack.privilege-escalation
+    - attack.t1531
+date: '2024-12-19'
 logsource:
     product: aws
     service: cloudtrail
@@ -42,21 +41,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:25.494034+00:00'
+            mapped_at: '2025-12-04T01:39:13.199621+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:25.494034+00:00'
+            mapped_at: '2025-12-04T01:39:13.199621+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:22:25.494047+00:00'
+            mapped_at: '2025-12-04T01:39:13.199635+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:22:25.494050+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:13.199637+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:22:25.494051+00:00'
+            mapped_at: '2025-12-04T01:39:13.199638+00:00'

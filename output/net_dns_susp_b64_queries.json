@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Suspicious DNS Query with B64 Encoded String",
+    "comment": "Detects suspicious DNS queries using base64 encoding",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(query.hostname), lower('==.')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious DNS queries using base64 encoding",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/krmaxwell/dns-exfiltration",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1048",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1071",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

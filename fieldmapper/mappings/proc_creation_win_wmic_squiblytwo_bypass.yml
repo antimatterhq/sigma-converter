@@ -1,19 +1,10 @@
-id: 8d63dadf-b91b-4187-87b6-34a1114577ea
 title: Potential SquiblyTwo Technique Execution
+id: 8d63dadf-b91b-4187-87b6-34a1114577ea
 status: test
 level: medium
+author: Markus Neis, Florian Roth
 description: Detects potential SquiblyTwo attack technique with possible renamed WMIC
     via Imphash and OriginalFileName fields
-author: Markus Neis, Florian Roth
-date: '2019-01-16'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1047
-    - attack.t1220
-    - attack.execution
-    - attack.t1059.005
-    - attack.t1059.007
 references:
     - https://web.archive.org/web/20190209154607/https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html
     - https://twitter.com/mattifestation/status/986280382042595328
@@ -21,7 +12,15 @@ references:
     - https://lolbas-project.github.io/lolbas/Binaries/Wmic/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1047
+    - attack.t1220
+    - attack.execution
+    - attack.t1059.005
+    - attack.t1059.007
+date: '2019-01-16'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -45,25 +44,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:38.762101+00:00'
+            mapped_at: '2025-12-04T01:43:43.964554+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:38.762101+00:00'
+            mapped_at: '2025-12-04T01:43:43.964554+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:38.762121+00:00'
+            mapped_at: '2025-12-04T01:43:43.964578+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:38.762123+00:00'
+            mapped_at: '2025-12-04T01:43:43.964580+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:28:38.762125+00:00'
+            mapped_at: '2025-12-04T01:43:43.964582+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:38.762126+00:00'
+            mapped_at: '2025-12-04T01:43:43.964583+00:00'

@@ -1,7 +1,8 @@
-id: 6d3a3952-6530-44a3-8554-cf17c116c615
 title: Potentially Suspicious JWT Token Search Via CLI
+id: 6d3a3952-6530-44a3-8554-cf17c116c615
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects possible search for JWT tokens via CLI by looking for the string
     "eyJ0eX" or "eyJhbG".
 
@@ -9,17 +10,15 @@ description: 'Detects possible search for JWT tokens via CLI by looking for the 
     microsoft office and similar apps.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-25'
-modified: '2024-10-06'
-tags:
-    - attack.credential-access
-    - attack.t1528
 references:
     - https://mrd0x.com/stealing-tokens-from-office-applications/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1528
+date: '2022-10-25'
+modified: '2024-10-06'
 logsource:
     category: process_creation
     product: windows
@@ -42,13 +41,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:06.633102+00:00'
+            mapped_at: '2025-12-04T01:44:54.070156+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:06.633102+00:00'
+            mapped_at: '2025-12-04T01:44:54.070156+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:06.633121+00:00'
+            mapped_at: '2025-12-04T01:44:54.070171+00:00'

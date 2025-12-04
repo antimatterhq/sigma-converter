@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Okta FastPass Phishing Detection",
+    "comment": "Detects when Okta FastPass prevents a known phishing site.",
+    "annotations": {
+      "source": "sigma",
+      "product": "okta",
+      "service": "okta",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(status_detail) = lower('fastpass declined phishing attempt') AND lower(actor.authorizations.decision) = lower('failure') AND lower(action) = lower('user.authentication.auth_via_mfa'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when Okta FastPass prevents a known phishing site.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://sec.okta.com/fastpassphishingdetection, https://developer.okta.com/docs/reference/api/system-log/, https://developer.okta.com/docs/reference/api/event-types/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

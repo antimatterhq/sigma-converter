@@ -1,22 +1,19 @@
-id: fdfcbd78-48f1-4a4b-90ac-d82241e368c5
 title: PsExec Service Execution
+id: fdfcbd78-48f1-4a4b-90ac-d82241e368c5
 status: test
 level: medium
+author: Thomas Patzke, Romaissa Adjailia, Florian Roth (Nextron Systems)
 description: Detects launch of the PSEXESVC service, which means that this system
     was the target of a psexec remote execution
-author: Thomas Patzke, Romaissa Adjailia, Florian Roth (Nextron Systems)
-date: '2017-06-12'
-modified: '2023-02-28'
-tags:
-    - attack.execution
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
     - https://www.youtube.com/watch?v=ro2QuZTIMBM
 falsepositives:
     - Legitimate administrative tasks
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fa91cc36-24c9-41ce-b3c8-3bbc3f2f67ba''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2017-06-12'
+modified: '2023-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -25,6 +22,9 @@ detection:
         Image: C:\Windows\PSEXESVC.exe
         OriginalFileName: psexesvc.exe
     condition: selection
+related:
+    -   id: fa91cc36-24c9-41ce-b3c8-3bbc3f2f67ba
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -32,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:12.467031+00:00'
+            mapped_at: '2025-12-04T01:48:17.948794+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:12.467031+00:00'
+            mapped_at: '2025-12-04T01:48:17.948794+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:12.467053+00:00'
+            mapped_at: '2025-12-04T01:48:17.948807+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:12.467056+00:00'
+            mapped_at: '2025-12-04T01:48:17.948809+00:00'

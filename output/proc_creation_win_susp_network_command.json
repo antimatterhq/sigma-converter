@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Network Command",
+    "comment": "Adversaries may look for details about the network configuration and settings of systems they access or through information discovery of remote systems",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('ipconfig /all')) OR contains(lower(process.cmd_line), lower('netsh interface show interface')) OR contains(lower(process.cmd_line), lower('arp -a')) OR contains(lower(process.cmd_line), lower('nbtstat -n')) OR contains(lower(process.cmd_line), lower('net config')) OR contains(lower(process.cmd_line), lower('route print'))))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may look for details about the network configuration and settings of systems they access or through information discovery of remote systems",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrator, hotline ask to user Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1016/T1016.md#atomic-test-1---system-network-configuration-discovery-on-windows",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1016"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

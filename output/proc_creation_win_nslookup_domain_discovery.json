@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Network Reconnaissance Activity",
+    "comment": "Detects a set of suspicious network related commands often used in recon stages",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('nslookup')) AND contains(lower(process.cmd_line), lower('_ldap._tcp.dc._msdcs.')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a set of suspicious network related commands often used in recon stages",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives depend on scripts and administrative tools used in the monitored environment Reference: https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

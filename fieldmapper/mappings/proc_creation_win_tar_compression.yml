@@ -1,26 +1,25 @@
-id: 418a3163-3247-4b7b-9933-dcfcb7c52ea9
 title: Compressed File Creation Via Tar.EXE
+id: 418a3163-3247-4b7b-9933-dcfcb7c52ea9
 status: test
 level: low
+author: Nasreddine Bencherchali (Nextron Systems), AdmU3
 description: 'Detects execution of "tar.exe" in order to create a compressed file.
 
     Adversaries may abuse various utilities to compress or encrypt data before exfiltration.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), AdmU3
-date: '2023-12-19'
-tags:
-    - attack.collection
-    - attack.exfiltration
-    - attack.t1560
-    - attack.t1560.001
 references:
     - https://unit42.paloaltonetworks.com/chromeloader-malware/
     - https://lolbas-project.github.io/lolbas/Binaries/Tar/
     - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/cicada-apt10-japan-espionage
 falsepositives:
     - Likely
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.exfiltration
+    - attack.t1560
+    - attack.t1560.001
+date: '2023-12-19'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:38.695627+00:00'
+            mapped_at: '2025-12-04T01:47:52.452320+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:38.695627+00:00'
+            mapped_at: '2025-12-04T01:47:52.452320+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:38.695656+00:00'
+            mapped_at: '2025-12-04T01:47:52.452341+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:38.695661+00:00'
+            mapped_at: '2025-12-04T01:47:52.452343+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:38.695663+00:00'
+            mapped_at: '2025-12-04T01:47:52.452345+00:00'

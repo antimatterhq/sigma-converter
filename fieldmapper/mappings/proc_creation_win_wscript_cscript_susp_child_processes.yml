@@ -1,7 +1,8 @@
-id: b6676963-0353-4f88-90f5-36c20d443c6a
 title: Cscript/Wscript Potentially Suspicious Child Process
+id: b6676963-0353-4f88-90f5-36c20d443c6a
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), Alejandro Houspanossian ('@lekz86')
 description: 'Detects potentially suspicious child processes of Wscript/Cscript. These
     include processes such as rundll32 with uncommon exports or PowerShell spawning
     rundll32 or regsvr32.
@@ -10,11 +11,6 @@ description: 'Detects potentially suspicious child processes of Wscript/Cscript.
     as many others.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Alejandro Houspanossian ('@lekz86')
-date: '2023-05-15'
-modified: '2024-01-02'
-tags:
-    - attack.execution
 references:
     - Internal Research
     - https://github.com/pr0xylife/Pikabot/blob/main/Pikabot_30.10.2023.txt
@@ -22,7 +18,10 @@ references:
 falsepositives:
     - Some false positives might occur with admin or third party software scripts.
         Investigate and apply additional filters accordingly.
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-05-15'
+modified: '2024-01-02'
 logsource:
     category: process_creation
     product: windows
@@ -62,21 +61,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:41.502474+00:00'
+            mapped_at: '2025-12-04T01:49:34.798838+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:41.502474+00:00'
+            mapped_at: '2025-12-04T01:49:34.798838+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:41.502497+00:00'
+            mapped_at: '2025-12-04T01:49:34.798864+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:41.502499+00:00'
+            mapped_at: '2025-12-04T01:49:34.798868+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:41.502501+00:00'
+            mapped_at: '2025-12-04T01:49:34.798870+00:00'

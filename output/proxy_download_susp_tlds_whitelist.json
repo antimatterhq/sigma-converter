@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "name": "Download From Suspicious TLD - Whitelist",
+    "comment": "Detects executable downloads from suspicious remote systems",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (lower(LOWER(http_request.url)) in ('exe', 'vbs', 'bat', 'rar', 'ps1', 'doc', 'docm', 'xls', 'xlsm', 'pptm', 'rtf', 'hta', 'dll', 'ws', 'wsf', 'sct', 'zip')) AND NOT (endswith(lower(dst_endpoint.hostname), lower('.com')) OR endswith(lower(dst_endpoint.hostname), lower('.org')) OR endswith(lower(dst_endpoint.hostname), lower('.net')) OR endswith(lower(dst_endpoint.hostname), lower('.edu')) OR endswith(lower(dst_endpoint.hostname), lower('.gov')) OR endswith(lower(dst_endpoint.hostname), lower('.uk')) OR endswith(lower(dst_endpoint.hostname), lower('.ca')) OR endswith(lower(dst_endpoint.hostname), lower('.de')) OR endswith(lower(dst_endpoint.hostname), lower('.jp')) OR endswith(lower(dst_endpoint.hostname), lower('.fr')) OR endswith(lower(dst_endpoint.hostname), lower('.au')) OR endswith(lower(dst_endpoint.hostname), lower('.us')) OR endswith(lower(dst_endpoint.hostname), lower('.ch')) OR endswith(lower(dst_endpoint.hostname), lower('.it')) OR endswith(lower(dst_endpoint.hostname), lower('.nl')) OR endswith(lower(dst_endpoint.hostname), lower('.se')) OR endswith(lower(dst_endpoint.hostname), lower('.no')) OR endswith(lower(dst_endpoint.hostname), lower('.es'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects executable downloads from suspicious remote systems",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ClientIP, http_request.url False positive: All kind of software downloads Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1203"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,13 +1,9 @@
-id: 9541f321-7cba-4b43-80fc-fbd1fb922808
 title: Azure Kubernetes Cluster Created or Deleted
+id: 9541f321-7cba-4b43-80fc-fbd1fb922808
 status: test
 level: low
-description: Detects when a Azure Kubernetes Cluster is created or deleted.
 author: Austin Songer @austinsonger
-date: '2021-08-07'
-modified: '2022-08-23'
-tags:
-    - attack.impact
+description: Detects when a Azure Kubernetes Cluster is created or deleted.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
     - https://www.microsoft.com/security/blog/2021/03/23/secure-containerized-environments-with-updated-threat-matrix-for-kubernetes/
@@ -21,7 +17,10 @@ falsepositives:
     - Kubernetes cluster created or deleted from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-07'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -38,13 +37,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:54.297838+00:00'
+            mapped_at: '2025-12-04T01:38:20.324673+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:20:54.297838+00:00'
+            mapped_at: '2025-12-04T01:38:20.324673+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:20:54.297855+00:00'
+            mapped_at: '2025-12-04T01:38:20.324689+00:00'

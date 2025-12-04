@@ -1,21 +1,20 @@
-id: 9f6a34b4-2688-4eb7-a7f5-e39fef573d0e
 title: Suspicious Windows Strings In URI
+id: 9f6a34b4-2688-4eb7-a7f5-e39fef573d0e
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious Windows strings in URI which could indicate possible
     exfiltration or webshell communication
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-06'
-modified: '2023-01-02'
-tags:
-    - attack.persistence
-    - attack.exfiltration
-    - attack.t1505.003
 references:
     - https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/
 falsepositives:
     - Legitimate application and websites that use windows paths in their URL
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.exfiltration
+    - attack.t1505.003
+date: '2022-06-06'
+modified: '2023-01-02'
 logsource:
     category: webserver
 detection:
@@ -35,9 +34,9 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: webserver
-            mapped_at: '2025-11-26T02:14:25.182734+00:00'
+            mapped_at: '2025-12-04T01:35:00.795536+00:00'
     detection_fields:
         -   source_field: cs-uri-query
             target_table: http_activity
             target_field: http_request.args
-            mapped_at: '2025-11-26T02:14:26.031017+00:00'
+            mapped_at: '2025-12-04T01:35:00.795548+00:00'

@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "name": "Cred Dump Tools Dropped Files",
+    "comment": "Files with well-known filenames (parts of credential dump software or files produced by them) creation",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(file.path), lower('\\\\fgdump-log')) OR contains(lower(file.path), lower('\\\\kirbi')) OR contains(lower(file.path), lower('\\\\pwdump')) OR contains(lower(file.path), lower('\\\\pwhashes')) OR contains(lower(file.path), lower('\\\\wce_ccache')) OR contains(lower(file.path), lower('\\\\wce_krbtkts'))) AND (endswith(lower(file.path), lower('\\\\cachedump.exe')) OR endswith(lower(file.path), lower('\\\\cachedump64.exe')) OR endswith(lower(file.path), lower('\\\\dumpext.dll')) OR endswith(lower(file.path), lower('\\\\dumpsvc.exe')) OR endswith(lower(file.path), lower('\\\\dumpy.exe')) OR endswith(lower(file.path), lower('\\\\fgexec.exe')) OR endswith(lower(file.path), lower('\\\\lsremora.dll')) OR endswith(lower(file.path), lower('\\\\lsremora64.dll')) OR endswith(lower(file.path), lower('\\\\ntds.out')) OR endswith(lower(file.path), lower('\\\\procdump64.exe')) OR endswith(lower(file.path), lower('\\\\pstgdump.exe')) OR endswith(lower(file.path), lower('\\\\pwdump.exe')) OR endswith(lower(file.path), lower('\\\\sam.out')) OR endswith(lower(file.path), lower('\\\\security.out')) OR endswith(lower(file.path), lower('\\\\servpw.exe')) OR endswith(lower(file.path), lower('\\\\servpw64.exe')) OR endswith(lower(file.path), lower('\\\\system.out')) OR endswith(lower(file.path), lower('\\\\test.pwd')) OR endswith(lower(file.path), lower('\\\\wceaux.dll'))))"
+      }
+    },
+    "output": {
+      "summary": "Files with well-known filenames (parts of credential dump software or files produced by them) creation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate Administrator using tool for password recovery Reference: https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "004"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

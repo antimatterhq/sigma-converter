@@ -1,15 +1,11 @@
-id: fcc6d700-68d9-4241-9a1a-06874d621b06
 title: Suspicious File Created Via OneNote Application
+id: fcc6d700-68d9-4241-9a1a-06874d621b06
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious files created via the OneNote application. This could
     indicate a potential malicious ".one"/".onepkg" file was executed as seen being
     used in malware activity in the wild
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-09'
-modified: '2023-02-27'
-tags:
-    - attack.defense-evasion
 references:
     - https://www.bleepingcomputer.com/news/security/hackers-now-use-microsoft-onenote-attachments-to-spread-malware/
     - https://blog.osarmor.com/319/onenote-attachment-delivers-asyncrat-malware/
@@ -22,7 +18,10 @@ falsepositives:
         if you don't heavily utilize OneNote.
     - Occasional FPs might occur if OneNote is used internally to share different
         embedded documents
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-02-09'
+modified: '2023-02-27'
 logsource:
     category: file_event
     product: windows
@@ -56,17 +55,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:06.760699+00:00'
+            mapped_at: '2025-12-04T01:51:57.345352+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:06.760699+00:00'
+            mapped_at: '2025-12-04T01:51:57.345352+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:06.760731+00:00'
+            mapped_at: '2025-12-04T01:51:57.345366+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:06.760735+00:00'
+            mapped_at: '2025-12-04T01:51:57.345368+00:00'

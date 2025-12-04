@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Powershell Defender Exclusion",
+    "comment": "Detects requests to exclude files, folders or processes from Antivirus scanning using PowerShell cmdlets",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('add-mppreference ')) OR contains(lower(process.cmd_line), lower('set-mppreference '))) AND (contains(lower(process.cmd_line), lower(' -exclusionpath ')) OR contains(lower(process.cmd_line), lower(' -exclusionextension ')) OR contains(lower(process.cmd_line), lower(' -exclusionprocess ')) OR contains(lower(process.cmd_line), lower(' -exclusionipaddress '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects requests to exclude files, folders or processes from Antivirus scanning using PowerShell cmdlets",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Possible Admin Activity 2. Other Cmdlets that may use the same parameters References: https://learn.microsoft.com/en-us/defender-endpoint/configure-process-opened-file-exclusions-microsoft-defender-antivirus, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md, https://twitter.com/AdamTheAnalyst/status/1483497517119590403",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

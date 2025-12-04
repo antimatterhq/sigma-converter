@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "PSExec and WMI Process Creations Block",
+    "comment": "Detects blocking of process creations originating from PSExec and WMI commands",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "windefend",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 1121 AND (endswith(lower(process.name), lower('\\\\wmiprvse.exe')) OR endswith(lower(process.name), lower('\\\\psexesvc.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects blocking of process creations originating from PSExec and WMI commands",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#block-process-creations-originating-from-psexec-and-wmi-commands, https://twitter.com/duff22b/status/1280166329660497920",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1569",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

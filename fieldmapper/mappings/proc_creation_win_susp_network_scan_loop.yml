@@ -1,24 +1,23 @@
-id: f8ad2e2c-40b6-4117-84d7-20b89896ab23
 title: Suspicious Scan Loop Network
+id: f8ad2e2c-40b6-4117-84d7-20b89896ab23
 status: test
 level: medium
+author: frack113
 description: Adversaries may attempt to get a listing of other systems by IP address,
     hostname, or other logical identifier on a network that may be used for Lateral
     Movement from the current system
-author: frack113
-date: '2022-03-12'
-tags:
-    - attack.execution
-    - attack.t1059
-    - attack.discovery
-    - attack.t1018
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md
     - https://ss64.com/nt/for.html
     - https://ss64.com/ps/foreach-object.html
 falsepositives:
     - Legitimate script
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+    - attack.discovery
+    - attack.t1018
+date: '2022-03-12'
 logsource:
     category: process_creation
     product: windows
@@ -39,13 +38,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:02.805313+00:00'
+            mapped_at: '2025-12-04T01:44:51.069858+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:02.805313+00:00'
+            mapped_at: '2025-12-04T01:44:51.069858+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:02.805330+00:00'
+            mapped_at: '2025-12-04T01:44:51.069920+00:00'

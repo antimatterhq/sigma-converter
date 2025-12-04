@@ -1,22 +1,21 @@
-id: 58f4ea09-0fc2-4520-ba18-b85c540b0eaf
 title: Suspicious Serv-U Process Pattern
+id: 58f4ea09-0fc2-4520-ba18-b85c540b0eaf
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects a suspicious process pattern which could be a sign of an exploited
     Serv-U service
-author: Florian Roth (Nextron Systems)
-date: '2021-07-14'
-modified: '2022-07-14'
-tags:
-    - attack.credential-access
-    - attack.t1555
-    - cve.2021-35211
 references:
     - https://www.microsoft.com/security/blog/2021/07/13/microsoft-discovers-threat-actor-targeting-solarwinds-serv-u-software-with-0-day-exploit/
 falsepositives:
     - Legitimate uses in which users or programs use the SSH service of Serv-U for
         remote command execution
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1555
+    - cve.2021-35211
+date: '2021-07-14'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -47,17 +46,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:14.024585+00:00'
+            mapped_at: '2025-12-04T01:41:39.923864+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:14.024585+00:00'
+            mapped_at: '2025-12-04T01:41:39.923864+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:14.024609+00:00'
+            mapped_at: '2025-12-04T01:41:39.923878+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:14.024613+00:00'
+            mapped_at: '2025-12-04T01:41:39.923880+00:00'

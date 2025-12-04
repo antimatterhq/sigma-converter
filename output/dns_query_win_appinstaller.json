@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "AppX Package Installation Attempts Via AppInstaller.EXE",
+    "comment": "Detects DNS queries made by \"AppInstaller.EXE\". The AppInstaller is the default handler for the \"ms-appinstaller\" URI. It attempts to load/install a package from the referenced URL",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns_query",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (startswith(lower(process.name), lower('c:\\\\program files\\\\windowsapps\\\\microsoft.desktopappinstaller_')) AND endswith(lower(process.name), lower('\\\\appinstaller.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects DNS queries made by \"AppInstaller.EXE\". The AppInstaller is the default handler for the \"ms-appinstaller\" URI. It attempts to load/install a package from the referenced URL",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/notwhickey/status/1333900137232523264, https://lolbas-project.github.io/lolbas/Binaries/AppInstaller/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

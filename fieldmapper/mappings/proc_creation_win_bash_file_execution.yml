@@ -1,7 +1,8 @@
-id: 2d22a514-e024-4428-9dba-41505bd63a5b
 title: Indirect Command Execution From Script File Via Bash.EXE
+id: 2d22a514-e024-4428-9dba-41505bd63a5b
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects execution of Microsoft bash launcher without any flags to execute
     the content of a bash script directly.
 
@@ -9,20 +10,16 @@ description: 'Detects execution of Microsoft bash launcher without any flags to 
     binaries directly via bash.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-08-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1202
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Bash/
     - https://linux.die.net/man/1/bash
     - Internal Research
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5edc2273-c26f-406c-83f3-f4d948e740dd''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+date: '2023-08-15'
 logsource:
     category: process_creation
     product: windows
@@ -45,6 +42,9 @@ detection:
             - bash.exe
             - bash
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 5edc2273-c26f-406c-83f3-f4d948e740dd
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -52,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:12.553483+00:00'
+            mapped_at: '2025-12-04T01:41:38.957424+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:12.553483+00:00'
+            mapped_at: '2025-12-04T01:41:38.957424+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:12.553502+00:00'
+            mapped_at: '2025-12-04T01:41:38.957436+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:12.553504+00:00'
+            mapped_at: '2025-12-04T01:41:38.957438+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:12.553505+00:00'
+            mapped_at: '2025-12-04T01:41:38.957440+00:00'

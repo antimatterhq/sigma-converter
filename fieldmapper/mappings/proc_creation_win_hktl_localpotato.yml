@@ -1,22 +1,21 @@
-id: 6bd75993-9888-4f91-9404-e1e4e4e34b77
 title: HackTool - LocalPotato Execution
+id: 6bd75993-9888-4f91-9404-e1e4e4e34b77
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of the LocalPotato POC based on basic PE metadata
     information and default CLI examples
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-14'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - cve.2023-21746
 references:
     - https://www.localpotato.com/localpotato_html/LocalPotato.html
     - https://github.com/decoder-it/LocalPotato
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - cve.2023-21746
+date: '2023-02-14'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:51.180025+00:00'
+            mapped_at: '2025-12-04T01:47:14.825009+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:51.180025+00:00'
+            mapped_at: '2025-12-04T01:47:14.825009+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:51.180049+00:00'
+            mapped_at: '2025-12-04T01:47:14.825021+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:51.180052+00:00'
+            mapped_at: '2025-12-04T01:47:14.825024+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:32:51.180055+00:00'
+            mapped_at: '2025-12-04T01:47:14.825025+00:00'

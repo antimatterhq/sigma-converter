@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "VolumeShadowCopy Symlink Creation Via Mklink",
+    "comment": "Shadow Copies storage symbolic link creation using operating systems utilities",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('mklink')) AND contains(lower(process.cmd_line), lower('harddiskvolumeshadowcopy')))"
+      }
+    },
+    "output": {
+      "summary": "Shadow Copies storage symbolic link creation using operating systems utilities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrator working with shadow copies, access for backup purposes Reference: https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

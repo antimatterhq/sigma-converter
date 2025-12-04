@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Data Exfiltration to Unsanctioned Apps",
+    "comment": "Detects when a Microsoft Cloud App Security reported when a user or IP address uses an app that is not sanctioned to perform an activity that resembles an attempt to exfiltrate information from your organization.",
+    "annotations": {
+      "source": "sigma",
+      "product": "m365",
+      "service": "threat_management",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('securitycompliancecenter') AND lower(metadata.event_code) = lower('data exfiltration to unsanctioned apps') AND lower(actor.authorizations.decision) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a Microsoft Cloud App Security reported when a user or IP address uses an app that is not sanctioned to perform an activity that resembles an attempt to exfiltrate information from your organization.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy, https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1537"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,20 +1,19 @@
-id: 2afafd61-6aae-4df4-baed-139fa1f4c345
 title: Invocation of Active Directory Diagnostic Tool (ntdsutil.exe)
+id: 2afafd61-6aae-4df4-baed-139fa1f4c345
 status: test
 level: medium
+author: Thomas Patzke
 description: Detects execution of ntdsutil.exe, which can be used for various attacks
     against the NTDS database (NTDS.DIT)
-author: Thomas Patzke
-date: '2019-01-16'
-modified: '2022-03-11'
-tags:
-    - attack.credential-access
-    - attack.t1003.003
 references:
     - https://jpcertcc.github.io/ToolAnalysisResultSheet/details/ntdsutil.htm
 falsepositives:
     - NTDS maintenance
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+date: '2019-01-16'
+modified: '2022-03-11'
 logsource:
     category: process_creation
     product: windows
@@ -29,13 +28,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:50.306535+00:00'
+            mapped_at: '2025-12-04T01:49:40.515489+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:50.306535+00:00'
+            mapped_at: '2025-12-04T01:49:40.515489+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:50.306553+00:00'
+            mapped_at: '2025-12-04T01:49:40.515513+00:00'

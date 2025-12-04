@@ -1,12 +1,16 @@
-id: d7a95147-145f-4678-b85d-d1ff4a3bb3f6
 title: CobaltStrike Service Installations - Security
+id: d7a95147-145f-4678-b85d-d1ff4a3bb3f6
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Wojciech Lesicki
 description: Detects known malicious service installs that appear in cases in which
     a Cobalt Strike beacon elevates privileges or lateral movement
-author: Florian Roth (Nextron Systems), Wojciech Lesicki
-date: '2021-05-26'
-modified: '2022-11-27'
+references:
+    - https://www.sans.org/webcasts/119395
+    - https://www.crowdstrike.com/blog/getting-the-bacon-from-cobalt-strike-beacon/
+    - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.privilege-escalation
@@ -14,15 +18,8 @@ tags:
     - attack.t1021.002
     - attack.t1543.003
     - attack.t1569.002
-references:
-    - https://www.sans.org/webcasts/119395
-    - https://www.crowdstrike.com/blog/getting-the-bacon-from-cobalt-strike-beacon/
-    - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5a105d34-05fc-401e-8553-272b45c1522d''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2021-05-26'
+modified: '2022-11-27'
 logsource:
     product: windows
     service: security
@@ -45,6 +42,9 @@ detection:
     selection4:
         ServiceFileName|base64offset|contains: 'IEX (New-Object Net.Webclient).DownloadString(''http://127.0.0.1:'
     condition: event_id and 1 of selection*
+related:
+    -   id: 5a105d34-05fc-401e-8553-272b45c1522d
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -52,17 +52,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:27.583497+00:00'
+            mapped_at: '2025-12-04T01:56:16.794818+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:27.583497+00:00'
+            mapped_at: '2025-12-04T01:56:16.794818+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:27.583532+00:00'
+            mapped_at: '2025-12-04T01:56:16.794860+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:27.583536+00:00'
+            mapped_at: '2025-12-04T01:56:16.794869+00:00'

@@ -1,20 +1,19 @@
-id: 63de06b9-a385-40b5-8b32-73f2b9ef84b6
 title: Fsutil Drive Enumeration
+id: 63de06b9-a385-40b5-8b32-73f2b9ef84b6
 status: test
 level: low
-description: Attackers may leverage fsutil to enumerated connected drives.
 author: Christopher Peacock '@securepeacock', SCYTHE '@scythe_io'
-date: '2022-03-29'
-modified: '2022-07-14'
-tags:
-    - attack.discovery
-    - attack.t1120
+description: Attackers may leverage fsutil to enumerated connected drives.
 references:
     - Turla has used fsutil fsinfo drives to list connected drives.
     - https://github.com/elastic/detection-rules/blob/414d32027632a49fb239abb8fbbb55d3fa8dd861/rules/windows/discovery_peripheral_device.toml
 falsepositives:
     - Certain software or administrative tasks may trigger false positives.
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1120
+date: '2022-03-29'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -32,21 +31,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:25.510237+00:00'
+            mapped_at: '2025-12-04T01:46:53.854238+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:25.510237+00:00'
+            mapped_at: '2025-12-04T01:46:53.854238+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:25.510254+00:00'
+            mapped_at: '2025-12-04T01:46:53.854264+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:25.510256+00:00'
+            mapped_at: '2025-12-04T01:46:53.854266+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:25.510258+00:00'
+            mapped_at: '2025-12-04T01:46:53.854267+00:00'

@@ -1,23 +1,22 @@
-id: c61daa90-3c1e-4f18-af62-8f288b5c9aaf
 title: Uncommon File Creation By Mysql Daemon Process
+id: c61daa90-3c1e-4f18-af62-8f288b5c9aaf
 status: experimental
 level: high
+author: Joseph Kamau
 description: 'Detects the creation of files with scripting or executable extensions
     by Mysql daemon.
 
     Which could be an indicator of "User Defined Functions" abuse to download malware.
 
     '
-author: Joseph Kamau
-date: '2024-05-27'
-tags:
-    - attack.defense-evasion
 references:
     - https://asec.ahnlab.com/en/58878/
     - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/honeypot-recon-mysql-malware-infection-via-user-defined-functions-udf/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2024-05-27'
 logsource:
     category: file_event
     product: windows
@@ -43,17 +42,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:47.085006+00:00'
+            mapped_at: '2025-12-04T01:53:20.770222+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:47.085006+00:00'
+            mapped_at: '2025-12-04T01:53:20.770222+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:47.085018+00:00'
+            mapped_at: '2025-12-04T01:53:20.770236+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:47.085021+00:00'
+            mapped_at: '2025-12-04T01:53:20.770238+00:00'

@@ -1,24 +1,21 @@
-id: 455b9d50-15a1-4b99-853f-8d37655a4c1b
 title: PUA - Suspicious ActiveDirectory Enumeration Via AdFind.EXE
+id: 455b9d50-15a1-4b99-853f-8d37655a4c1b
 status: test
 level: high
+author: frack113
 description: Detects active directory enumeration activity using known AdFind CLI
     flags
-author: frack113
-date: '2021-12-13'
-modified: '2023-03-05'
-tags:
-    - attack.discovery
-    - attack.t1087.002
 references:
     - https://www.joeware.net/freetools/tools/adfind/
     - https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1087.002/T1087.002.md
 falsepositives:
     - Authorized administrative activity
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9a132afa-654e-11eb-ae93-0242ac130002''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1087.002
+date: '2021-12-13'
+modified: '2023-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +35,9 @@ detection:
     selection_enum_exchange:
         CommandLine|contains: -sc exchaddresses
     condition: 1 of selection_*
+related:
+    -   id: 9a132afa-654e-11eb-ae93-0242ac130002
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,13 +45,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:51.649623+00:00'
+            mapped_at: '2025-12-04T01:46:21.649752+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:51.649623+00:00'
+            mapped_at: '2025-12-04T01:46:21.649752+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:51.649637+00:00'
+            mapped_at: '2025-12-04T01:46:21.649765+00:00'

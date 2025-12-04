@@ -1,22 +1,19 @@
-id: 999bff6d-dc15-44c9-9f5c-e1051bfc86e1
 title: Nslookup PowerShell Download Cradle
+id: 999bff6d-dc15-44c9-9f5c-e1051bfc86e1
 status: test
 level: medium
+author: Sai Prashanth Pulisetti @pulisettis, Aishwarya Singam
 description: Detects a powershell download cradle using nslookup. This cradle uses
     nslookup to extract payloads from DNS records.
-author: Sai Prashanth Pulisetti @pulisettis, Aishwarya Singam
-date: '2022-12-10'
-modified: '2023-10-27'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://twitter.com/Alh4zr3d/status/1566489367232651264
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1b3b01c7-84e9-4072-86e5-fc285a41ff23''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2022-12-10'
+modified: '2023-10-27'
 logsource:
     category: ps_classic_start
     product: windows
@@ -30,6 +27,9 @@ detection:
             - -q=txt http
             - -querytype=txt http
     condition: selection
+related:
+    -   id: 1b3b01c7-84e9-4072-86e5-fc285a41ff23
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

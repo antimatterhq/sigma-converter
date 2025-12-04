@@ -1,23 +1,22 @@
-id: 0d5675be-bc88-4172-86d3-1e96a4476536
 title: Potential Tampering With RDP Related Registry Keys Via Reg.EXE
+id: 0d5675be-bc88-4172-86d3-1e96a4476536
 status: test
 level: high
+author: pH-T (Nextron Systems), @Kostastsale, @TheDFIRReport
 description: Detects the execution of "reg.exe" for enabling/disabling the RDP service
     on the host by tampering with the 'CurrentControlSet\Control\Terminal Server'
     values
-author: pH-T (Nextron Systems), @Kostastsale, @TheDFIRReport
-date: '2022-02-12'
-modified: '2023-02-05'
+references:
+    - https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.lateral-movement
     - attack.t1021.001
     - attack.t1112
-references:
-    - https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-02-12'
+modified: '2023-02-05'
 logsource:
     category: process_creation
     product: windows
@@ -56,21 +55,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:54.170651+00:00'
+            mapped_at: '2025-12-04T01:48:05.806327+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:54.170651+00:00'
+            mapped_at: '2025-12-04T01:48:05.806327+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:54.170665+00:00'
+            mapped_at: '2025-12-04T01:48:05.806364+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:54.170671+00:00'
+            mapped_at: '2025-12-04T01:48:05.806366+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:54.170673+00:00'
+            mapped_at: '2025-12-04T01:48:05.806367+00:00'

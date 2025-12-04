@@ -1,17 +1,10 @@
-id: fe10751f-1995-40a5-aaa2-c97ccb4123fe
 title: Linux Capabilities Discovery
+id: fe10751f-1995-40a5-aaa2-c97ccb4123fe
 status: test
 level: low
+author: Pawel Mazur
 description: Detects attempts to discover the files with setuid/setgid capability
     on them. That would allow adversary to escalate their privileges.
-author: Pawel Mazur
-date: '2021-11-28'
-modified: '2022-12-25'
-tags:
-    - attack.collection
-    - attack.privilege-escalation
-    - attack.t1123
-    - attack.t1548
 references:
     - https://man7.org/linux/man-pages/man8/getcap.8.html
     - https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/
@@ -19,7 +12,13 @@ references:
     - https://int0x33.medium.com/day-44-linux-capabilities-privilege-escalation-via-openssl-with-selinux-enabled-and-enforced-74d2bec02099
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.privilege-escalation
+    - attack.t1123
+    - attack.t1548
+date: '2021-11-28'
+modified: '2022-12-25'
 logsource:
     product: linux
     service: auditd
@@ -37,25 +36,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:14.456744+00:00'
+            mapped_at: '2025-12-04T01:35:41.318006+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:14.456744+00:00'
+            mapped_at: '2025-12-04T01:35:41.318006+00:00'
     detection_fields:
         -   source_field: type
             target_table: process_activity
             target_field: action
-            mapped_at: '2025-11-26T02:16:14.456766+00:00'
+            mapped_at: '2025-12-04T01:35:41.318022+00:00'
         -   source_field: a0
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:14.456768+00:00'
+            mapped_at: '2025-12-04T01:35:41.318024+00:00'
         -   source_field: a1
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:14.456770+00:00'
+            mapped_at: '2025-12-04T01:35:41.318025+00:00'
         -   source_field: a2
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:14.456793+00:00'
+            mapped_at: '2025-12-04T01:35:41.318026+00:00'

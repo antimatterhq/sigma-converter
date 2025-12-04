@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Wusa.EXE Executed By Parent Process Located In Suspicious Location",
+    "comment": "Detects execution of the \"wusa.exe\" (Windows Update Standalone Installer) utility by a parent process that is located in a suspicious location. Attackers could instantiate an instance of \"wusa.exe\" in order to bypass User Account Control (UAC). They can duplicate the access token from \"wusa.exe\" to gain elevated privileges.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wusa.exe')) AND (contains(lower(process.parent_process.name), lower(':\\\\perflogs\\\\')) OR contains(lower(process.parent_process.name), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.parent_process.name), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\temporary internet')) OR contains(lower(process.parent_process.name), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.name), lower('\\\\favorites\\\\')) AND contains(lower(process.parent_process.name), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.name), lower('\\\\favourites\\\\')) AND contains(lower(process.parent_process.name), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.name), lower('\\\\contacts\\\\')) AND contains(lower(process.parent_process.name), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.name), lower('\\\\pictures\\\\'))) AND NOT contains(lower(process.cmd_line), lower('.msu')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the \"wusa.exe\" (Windows Update Standalone Installer) utility by a parent process that is located in a suspicious location. Attackers could instantiate an instance of \"wusa.exe\" in order to bypass User Account Control (UAC). They can duplicate the access token from \"wusa.exe\" to gain elevated privileges.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.fortinet.com/blog/threat-research/konni-campaign-distributed-via-malicious-document",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

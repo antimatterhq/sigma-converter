@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "name": "HackTool - CrackMapExec Execution",
+    "comment": "This rule detect common flag combinations used by CrackMapExec in order to detect its use even if the binary has been replaced.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\crackmapexec.exe')) OR contains(lower(process.cmd_line), lower(' -m pe_inject ')) OR contains(lower(process.cmd_line), lower(' --local-auth')) AND contains(lower(process.cmd_line), lower(' -u ')) AND contains(lower(process.cmd_line), lower(' -x ')) OR contains(lower(process.cmd_line), lower(' --local-auth')) AND contains(lower(process.cmd_line), lower(' -u ')) AND contains(lower(process.cmd_line), lower(' -p ')) AND contains(lower(process.cmd_line), lower(' -h \\'nthash\\'')) OR contains(lower(process.cmd_line), lower(' mssql ')) AND contains(lower(process.cmd_line), lower(' -u ')) AND contains(lower(process.cmd_line), lower(' -p ')) AND contains(lower(process.cmd_line), lower(' -m ')) AND contains(lower(process.cmd_line), lower(' -d ')) OR contains(lower(process.cmd_line), lower(' smb ')) AND contains(lower(process.cmd_line), lower(' -u ')) AND contains(lower(process.cmd_line), lower(' -h ')) AND contains(lower(process.cmd_line), lower(' -m ')) AND contains(lower(process.cmd_line), lower(' -o ')) OR contains(lower(process.cmd_line), lower(' smb ')) AND contains(lower(process.cmd_line), lower(' -u ')) AND contains(lower(process.cmd_line), lower(' -p ')) AND contains(lower(process.cmd_line), lower(' --local-auth')) OR contains(lower(process.cmd_line), lower(' --local-auth')) AND contains(lower(process.cmd_line), lower(' -u ')) AND contains(lower(process.cmd_line), lower(' -p ')) AND contains(lower(process.cmd_line), lower(' 10.')) AND contains(lower(process.cmd_line), lower(' 192.168.')) AND contains(lower(process.cmd_line), lower('/24 '))))"
+      }
+    },
+    "output": {
+      "summary": "This rule detect common flag combinations used by CrackMapExec in order to detect its use even if the binary has been replaced.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ComputerName, actor.user.name, process.cmd_line False positive: Unknown References: https://mpgn.gitbook.io/crackmapexec/smb-protocol/authentication/checking-credentials-local, https://www.mandiant.com/resources/telegram-malware-iranian-espionage, https://www.infosecmatter.com/crackmapexec-module-library/?cmem=mssql-mimikatz, https://www.infosecmatter.com/crackmapexec-module-library/?cmem=smb-pe_inject",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1110"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1201"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

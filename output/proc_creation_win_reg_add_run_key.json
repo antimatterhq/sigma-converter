@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Persistence Attempt Via Run Keys Using Reg.EXE",
+    "comment": "Detects suspicious command line reg.exe tool adding key to RUN key in Registry",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('reg')) AND contains(lower(process.cmd_line), lower(' add ')) AND contains(lower(process.cmd_line), lower('software\\\\microsoft\\\\windows\\\\currentversion\\\\run')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious command line reg.exe tool adding key to RUN key in Registry",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate software automatically (mostly, during installation) sets up autorun keys for legitimate reasons. 2. Legitimate administrator sets up autorun keys for legitimate reasons. 3. Discord References: https://app.any.run/tasks/9c0f37bc-867a-4314-b685-e101566766d7/, https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1547",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

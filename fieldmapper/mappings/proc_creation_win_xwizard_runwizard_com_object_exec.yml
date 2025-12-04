@@ -1,27 +1,26 @@
-id: 53d4bb30-3f36-4e8a-b078-69d36c4a79ff
 title: COM Object Execution via Xwizard.EXE
+id: 53d4bb30-3f36-4e8a-b078-69d36c4a79ff
 status: test
 level: medium
+author: Ensar Şamil, @sblmsrsn, @oscd_initiative, Nasreddine Bencherchali (Nextron
+    Systems)
 description: 'Detects the execution of Xwizard tool with the "RunWizard" flag and
     a GUID like argument.
 
     This utility can be abused in order to run custom COM object created in the registry.
 
     '
-author: Ensar Şamil, @sblmsrsn, @oscd_initiative, Nasreddine Bencherchali (Nextron
-    Systems)
-date: '2020-10-07'
-modified: '2024-08-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Xwizard/
     - https://www.elastic.co/guide/en/security/current/execution-of-com-object-via-xwizard.html
     - https://www.hexacorn.com/blog/2017/07/31/the-wizard-of-x-oppa-plugx-style/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-07'
+modified: '2024-08-15'
 logsource:
     category: process_creation
     product: windows
@@ -37,13 +36,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:45.504770+00:00'
+            mapped_at: '2025-12-04T01:50:27.814216+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:45.504770+00:00'
+            mapped_at: '2025-12-04T01:50:27.814216+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:45.504799+00:00'
+            mapped_at: '2025-12-04T01:50:27.814239+00:00'

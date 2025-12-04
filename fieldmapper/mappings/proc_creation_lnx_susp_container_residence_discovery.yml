@@ -1,14 +1,10 @@
-id: 746c86fb-ccda-4816-8997-01386263acc4
 title: Container Residence Discovery Via Proc Virtual FS
+id: 746c86fb-ccda-4816-8997-01386263acc4
 status: test
 level: low
+author: Seth Hanford
 description: Detects potential container discovery via listing of certain kernel features
     in the "/proc" virtual filesystem
-author: Seth Hanford
-date: '2023-08-23'
-tags:
-    - attack.discovery
-    - attack.t1082
 references:
     - https://blog.skyplabs.net/posts/container-detection/
     - https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker
@@ -16,7 +12,10 @@ falsepositives:
     - Legitimate system administrator usage of these commands
     - Some container tools or deployments may use these techniques natively to determine
         how they proceed with execution, and will need to be filtered
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1082
+date: '2023-08-23'
 logsource:
     category: process_creation
     product: linux
@@ -46,17 +45,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:28.333299+00:00'
+            mapped_at: '2025-12-04T01:36:35.064856+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:28.333299+00:00'
+            mapped_at: '2025-12-04T01:36:35.064856+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:28.333318+00:00'
+            mapped_at: '2025-12-04T01:36:35.064873+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:28.333320+00:00'
+            mapped_at: '2025-12-04T01:36:35.064875+00:00'

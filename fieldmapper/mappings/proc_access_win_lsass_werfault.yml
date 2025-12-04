@@ -1,23 +1,22 @@
-id: e5b33f7d-eb93-48b6-9851-09e1e610b6d7
 title: Credential Dumping Attempt Via WerFault
+id: e5b33f7d-eb93-48b6-9851-09e1e610b6d7
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects process LSASS memory dump using Mimikatz, NanoDump, Invoke-Mimikatz,
     Procdump or Taskmgr based on the CallTrace pointing to ntdll.dll, dbghelp.dll
     or dbgcore.dll for win10, server2016 and up.
-author: Florian Roth (Nextron Systems)
-date: '2012-06-27'
-modified: '2023-11-29'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
-    - attack.s0002
 references:
     - https://github.com/helpsystems/nanodump/commit/578116faea3d278d53d70ea932e2bbfe42569507
 falsepositives:
     - Actual failures in lsass.exe that trigger a crash dump (unlikely)
     - Unknown cases in which WerFault accesses lsass.exe
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0002
+date: '2012-06-27'
+modified: '2023-11-29'
 logsource:
     category: process_access
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:11.702432+00:00'
+            mapped_at: '2025-12-04T01:40:12.784526+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:11.702432+00:00'
+            mapped_at: '2025-12-04T01:40:12.784526+00:00'
     detection_fields:
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:11.702456+00:00'
+            mapped_at: '2025-12-04T01:40:12.784540+00:00'
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:11.702460+00:00'
+            mapped_at: '2025-12-04T01:40:12.784542+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:11.702462+00:00'
+            mapped_at: '2025-12-04T01:40:12.784543+00:00'

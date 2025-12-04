@@ -1,19 +1,18 @@
-id: 0ee4d8a5-4e67-4faf-acfa-62a78457d1f2
 title: HybridConnectionManager Service Installation
+id: 0ee4d8a5-4e67-4faf-acfa-62a78457d1f2
 status: test
 level: high
-description: Rule to detect the Hybrid Connection Manager service installation.
 author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2021-04-12'
-modified: '2022-10-09'
-tags:
-    - attack.persistence
-    - attack.t1554
+description: Rule to detect the Hybrid Connection Manager service installation.
 references:
     - https://twitter.com/Cyb3rWard0g/status/1381642789369286662
 falsepositives:
     - Legitimate use of Hybrid Connection Manager via Azure function apps.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1554
+date: '2021-04-12'
+modified: '2022-10-09'
 logsource:
     product: windows
     service: security
@@ -32,21 +31,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:02.017920+00:00'
+            mapped_at: '2025-12-04T01:55:42.060849+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:02.017920+00:00'
+            mapped_at: '2025-12-04T01:55:42.060849+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:02.017946+00:00'
+            mapped_at: '2025-12-04T01:55:42.060864+00:00'
         -   source_field: ServiceName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:02.017949+00:00'
+            mapped_at: '2025-12-04T01:55:42.060866+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:02.017951+00:00'
+            mapped_at: '2025-12-04T01:55:42.060867+00:00'

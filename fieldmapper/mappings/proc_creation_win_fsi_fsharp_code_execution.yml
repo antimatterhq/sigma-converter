@@ -1,18 +1,13 @@
-id: b96b2031-7c17-4473-afe7-a30ce714db29
 title: Use of FSharp Interpreters
+id: b96b2031-7c17-4473-afe7-a30ce714db29
 status: test
 level: medium
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
 description: 'Detects the execution of FSharp Interpreters "FsiAnyCpu.exe" and "FSi.exe"
 
     Both can be used for AWL bypass and to execute F# code via scripts or inline.
 
     '
-author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
-date: '2022-06-02'
-modified: '2024-04-23'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac
     - https://bohops.com/2020/11/02/exploring-the-wdac-microsoft-recommended-block-rules-part-ii-wfc-fsi/
@@ -20,7 +15,11 @@ references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Fsi/
 falsepositives:
     - Legitimate use by a software developer.
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-06-02'
+modified: '2024-04-23'
 logsource:
     category: process_creation
     product: windows
@@ -40,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:41.496781+00:00'
+            mapped_at: '2025-12-04T01:46:12.366937+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:41.496781+00:00'
+            mapped_at: '2025-12-04T01:46:12.366937+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:41.496796+00:00'
+            mapped_at: '2025-12-04T01:46:12.366970+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:41.496797+00:00'
+            mapped_at: '2025-12-04T01:46:12.366975+00:00'

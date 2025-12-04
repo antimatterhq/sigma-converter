@@ -1,26 +1,22 @@
-id: c90362e0-2df3-4e61-94fe-b37615814cb1
 title: Potential Persistence Via Netsh Helper DLL - Registry
+id: c90362e0-2df3-4e61-94fe-b37615814cb1
 status: test
 level: medium
+author: Anish Bogati
 description: 'Detects changes to the Netsh registry key to add a new DLL value. This
     change might be an indication of a potential persistence attempt by adding a malicious
     Netsh helper
 
     '
-author: Anish Bogati
-date: '2023-11-28'
-tags:
-    - attack.persistence
-    - attack.t1546.007
 references:
     - https://www.ired.team/offensive-security/persistence/t1128-netsh-helper-dll
     - https://pentestlab.blog/2019/10/29/persistence-netsh-helper-dll/
 falsepositives:
     - Legitimate helper added by different programs and the OS
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''56321594-9087-49d9-bf10-524fe8479452''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''e7b18879-676e-4a0e-ae18-27039185a8e7''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1546.007
+date: '2023-11-28'
 logsource:
     category: registry_set
     product: windows
@@ -29,6 +25,11 @@ detection:
         TargetObject|contains: \SOFTWARE\Microsoft\NetSh
         Details|contains: .dll
     condition: selection
+related:
+    -   id: 56321594-9087-49d9-bf10-524fe8479452
+        type: similar
+    -   id: e7b18879-676e-4a0e-ae18-27039185a8e7
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

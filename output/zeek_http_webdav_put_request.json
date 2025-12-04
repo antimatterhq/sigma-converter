@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "WebDav Put Request",
+    "comment": "A General detection for WebDav user-agent being used to PUT files on a WebDav network share. This could be an indicator of exfiltration.",
+    "annotations": {
+      "source": "sigma",
+      "product": "zeek",
+      "service": "http",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('7') AND contains(lower(http_request.user_agent), lower('webdav')) AND lower(http_request.http_method) = lower('put') AND NOT (((CAST(split(dst_endpoint.ip, '\\\\.')[0] AS BIGINT) * 16777216 + CAST(split(dst_endpoint.ip, '\\\\.')[1] AS BIGINT) * 65536 + CAST(split(dst_endpoint.ip, '\\\\.')[2] AS BIGINT) * 256 + CAST(split(dst_endpoint.ip, '\\\\.')[3] AS BIGINT)) & 4278190080) = 167772160 /* CIDR: 10.0.0.0/8 */ OR ((CAST(split(dst_endpoint.ip, '\\\\.')[0] AS BIGINT) * 16777216 + CAST(split(dst_endpoint.ip, '\\\\.')[1] AS BIGINT) * 65536 + CAST(split(dst_endpoint.ip, '\\\\.')[2] AS BIGINT) * 256 + CAST(split(dst_endpoint.ip, '\\\\.')[3] AS BIGINT)) & 4278190080) = 2130706432 /* CIDR: 127.0.0.0/8 */ OR ((CAST(split(dst_endpoint.ip, '\\\\.')[0] AS BIGINT) * 16777216 + CAST(split(dst_endpoint.ip, '\\\\.')[1] AS BIGINT) * 65536 + CAST(split(dst_endpoint.ip, '\\\\.')[2] AS BIGINT) * 256 + CAST(split(dst_endpoint.ip, '\\\\.')[3] AS BIGINT)) & 4293918720) = 2886729728 /* CIDR: 172.16.0.0/12 */ OR ((CAST(split(dst_endpoint.ip, '\\\\.')[0] AS BIGINT) * 16777216 + CAST(split(dst_endpoint.ip, '\\\\.')[1] AS BIGINT) * 65536 + CAST(split(dst_endpoint.ip, '\\\\.')[2] AS BIGINT) * 256 + CAST(split(dst_endpoint.ip, '\\\\.')[3] AS BIGINT)) & 4294901760) = 3232235520 /* CIDR: 192.168.0.0/16 */ OR ((CAST(split(dst_endpoint.ip, '\\\\.')[0] AS BIGINT) * 16777216 + CAST(split(dst_endpoint.ip, '\\\\.')[1] AS BIGINT) * 65536 + CAST(split(dst_endpoint.ip, '\\\\.')[2] AS BIGINT) * 256 + CAST(split(dst_endpoint.ip, '\\\\.')[3] AS BIGINT)) & 4294901760) = 2851995648 /* CIDR: 169.254.0.0/16 */))"
+      }
+    },
+    "output": {
+      "summary": "A General detection for WebDav user-agent being used to PUT files on a WebDav network share. This could be an indicator of exfiltration.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/OTRF/detection-hackathon-apt29/issues/17",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1048",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

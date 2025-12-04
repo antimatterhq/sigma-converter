@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Load Of RstrtMgr.DLL By A Suspicious Process",
+    "comment": "Detects the load of RstrtMgr DLL (Restart Manager) by a suspicious process. This library has been used during ransomware campaigns to kill processes that would prevent file encryption by locking them (e.g. Conti ransomware, Cactus ransomware). It has also recently been seen used by the BiBi wiper for Windows. It could also be used for anti-analysis purposes by shut downing specific processes.",
+    "annotations": {
+      "source": "sigma",
+      "category": "image_load",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(module.file.path), lower('\\\\rstrtmgr.dll')) AND lower(process.file.name) = lower('rstrtmgr.dll') AND (contains(lower(process.name), lower(':\\\\perflogs\\\\')) OR contains(lower(process.name), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower('\\\\temporary internet')) OR contains(lower(process.name), lower(':\\\\users\\\\')) AND contains(lower(process.name), lower('\\\\favorites\\\\')) AND contains(lower(process.name), lower(':\\\\users\\\\')) AND contains(lower(process.name), lower('\\\\favourites\\\\')) AND contains(lower(process.name), lower(':\\\\users\\\\')) AND contains(lower(process.name), lower('\\\\contacts\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the load of RstrtMgr DLL (Restart Manager) by a suspicious process. This library has been used during ransomware campaigns to kill processes that would prevent file encryption by locking them (e.g. Conti ransomware, Cactus ransomware). It has also recently been seen used by the BiBi wiper for Windows. It could also be used for anti-analysis purposes by shut downing specific processes.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Processes related to software installation References: https://www.crowdstrike.com/blog/windows-restart-manager-part-1/, https://www.crowdstrike.com/blog/windows-restart-manager-part-2/, https://web.archive.org/web/20231221193106/https://www.swascan.com/cactus-ransomware-malware-analysis/, https://taiwan.postsen.com/business/88601/Hamas-hackers-use-data-destruction-software-BiBi-which-consumes-a-lot-of-processor-resources-to-wipe-Windows-computer-data--iThome.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1486"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

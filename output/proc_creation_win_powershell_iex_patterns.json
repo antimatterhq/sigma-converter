@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell IEX Execution Patterns",
+    "comment": "Detects suspicious ways to run Invoke-Execution using IEX alias",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (contains(lower(process.cmd_line), lower(' | iex;')) OR contains(lower(process.cmd_line), lower(' | iex ')) OR contains(lower(process.cmd_line), lower(' | iex}')) OR contains(lower(process.cmd_line), lower(' | iex ;')) OR contains(lower(process.cmd_line), lower(' | iex -error')) OR contains(lower(process.cmd_line), lower(' | iex (new')) OR contains(lower(process.cmd_line), lower(');iex '))) AND (contains(lower(process.cmd_line), lower('::frombase64string')) OR contains(lower(process.cmd_line), lower('.getstring([system.convert]::'))) OR contains(lower(process.cmd_line), lower(')|iex;$')) OR contains(lower(process.cmd_line), lower(');iex($')) OR contains(lower(process.cmd_line), lower(');iex $')) OR contains(lower(process.cmd_line), lower(' | iex | ')) OR contains(lower(process.cmd_line), lower(' | iex\\\\\"'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious ways to run Invoke-Execution using IEX alias",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate scripts that use IEX References: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.2, https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,21 +1,15 @@
-id: 3f6b7b62-61aa-45db-96bd-9c31b36b653c
 title: RDP Sensitive Settings Changed
+id: 3f6b7b62-61aa-45db-96bd-9c31b36b653c
 status: test
 level: high
+author: Samir Bousseaden, David ANDRE, Roberto Rodriguez @Cyb3rWard0g, Nasreddine
+    Bencherchali
 description: 'Detects tampering of RDP Terminal Service/Server sensitive settings.
 
     Such as allowing unauthorized users access to a system via the ''fAllowUnsolicited''
     or enabling RDP via ''fDenyTSConnections''...etc
 
     '
-author: Samir Bousseaden, David ANDRE, Roberto Rodriguez @Cyb3rWard0g, Nasreddine
-    Bencherchali
-date: '2022-08-06'
-modified: '2024-02-08'
-tags:
-    - attack.defense-evasion
-    - attack.persistence
-    - attack.t1112
 references:
     - https://web.archive.org/web/20200929062532/https://blog.menasec.net/2019/02/threat-hunting-rdp-hijacking-via.html
     - http://woshub.com/rds-shadow-how-to-connect-to-a-user-session-in-windows-server-2012-r2/
@@ -30,11 +24,12 @@ references:
 falsepositives:
     - Some of the keys mentioned here could be modified by an administrator while
         setting group policy (it should be investigated either way)
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''171b67e1-74b4-460e-8d55-b331f3e32d67''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''41904ebe-d56c-4904-b9ad-7a77bdf154b3''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''a2863fbc-d5cb-48d5-83fb-d976d4b1743b''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1112
+date: '2022-08-06'
+modified: '2024-02-08'
 logsource:
     category: registry_set
     product: windows
@@ -66,6 +61,13 @@ detection:
             - \services\TermService\Parameters\ServiceDll
             - \Windows NT\Terminal Services\InitialProgram
     condition: selection_shadow or selection_terminal_services_key or selection_tamper_only
+related:
+    -   id: 171b67e1-74b4-460e-8d55-b331f3e32d67
+        type: obsolete
+    -   id: 41904ebe-d56c-4904-b9ad-7a77bdf154b3
+        type: obsolete
+    -   id: a2863fbc-d5cb-48d5-83fb-d976d4b1743b
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

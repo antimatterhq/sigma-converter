@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Uncommon System Information Discovery Via Wmic.EXE",
+    "comment": "Detects the use of the WMI command-line (WMIC) utility to identify and display various system information, including OS, CPU, GPU, and disk drive names; memory capacity; display resolution; and baseboard, BIOS, and GPU driver products/versions. Some of these commands were used by Aurora Stealer in late 2022/early 2023.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(device.desc) = lower('wmi commandline utility') AND lower(process.file.name) = lower('wmic.exe') AND endswith(lower(process.name), lower('\\\\wmic.exe')) AND (contains(lower(process.cmd_line), lower('logicaldisk get name,size,freespace')) OR contains(lower(process.cmd_line), lower('os get caption,osarchitecture,version'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of the WMI command-line (WMIC) utility to identify and display various system information, including OS, CPU, GPU, and disk drive names; memory capacity; display resolution; and baseboard, BIOS, and GPU driver products/versions. Some of these commands were used by Aurora Stealer in late 2022/early 2023.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/a2ccd19c37d0278b4ffa8583add3cf52060a5418/atomics/T1082/T1082.md#atomic-test-25---system-information-discovery-with-wmic, https://nwgat.ninja/getting-system-information-with-wmic-on-windows/, https://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar, https://blog.cyble.com/2023/01/18/aurora-a-stealer-using-shapeshifting-tactics/, https://app.any.run/tasks/a6aa0057-82ec-451f-8f99-55650ca537da/, https://www.virustotal.com/gui/file/d6f6bc10ae0e634ed4301d584f61418cee18e5d58ad9af72f8aa552dc4aaeca3/behavior",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

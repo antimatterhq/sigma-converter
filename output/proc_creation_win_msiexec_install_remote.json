@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Msiexec Quiet Install From Remote Location",
+    "comment": "Detects usage of Msiexec.exe to install packages hosted remotely quietly",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\msiexec.exe')) AND lower(process.file.name) = lower('msiexec.exe') AND (contains(lower(process.cmd_line), lower('-i')) OR contains(lower(process.cmd_line), lower('/i')) OR contains(lower(process.cmd_line), lower('\u2013i')) OR contains(lower(process.cmd_line), lower('\u2014i')) OR contains(lower(process.cmd_line), lower('\u2015i')) OR contains(lower(process.cmd_line), lower('-package')) OR contains(lower(process.cmd_line), lower('/package')) OR contains(lower(process.cmd_line), lower('\u2013package')) OR contains(lower(process.cmd_line), lower('\u2014package')) OR contains(lower(process.cmd_line), lower('\u2015package')) OR contains(lower(process.cmd_line), lower('-a')) OR contains(lower(process.cmd_line), lower('/a')) OR contains(lower(process.cmd_line), lower('\u2013a')) OR contains(lower(process.cmd_line), lower('\u2014a')) OR contains(lower(process.cmd_line), lower('\u2015a')) OR contains(lower(process.cmd_line), lower('-j')) OR contains(lower(process.cmd_line), lower('/j')) OR contains(lower(process.cmd_line), lower('\u2013j')) OR contains(lower(process.cmd_line), lower('\u2014j')) OR contains(lower(process.cmd_line), lower('\u2015j'))) AND (contains(lower(process.cmd_line), lower('-q')) OR contains(lower(process.cmd_line), lower('/q')) OR contains(lower(process.cmd_line), lower('\u2013q')) OR contains(lower(process.cmd_line), lower('\u2014q')) OR contains(lower(process.cmd_line), lower('\u2015q'))) AND (contains(lower(process.cmd_line), lower('http')) OR contains(lower(process.cmd_line), lower('\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of Msiexec.exe to install packages hosted remotely quietly",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

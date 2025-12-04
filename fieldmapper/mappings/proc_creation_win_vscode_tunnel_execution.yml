@@ -1,21 +1,20 @@
-id: 90d6bd71-dffb-4989-8d86-a827fedd6624
 title: Visual Studio Code Tunnel Execution
+id: 90d6bd71-dffb-4989-8d86-a827fedd6624
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), citron_ninja
 description: Detects Visual Studio Code tunnel execution. Attackers can abuse this
     functionality to establish a C2 channel
-author: Nasreddine Bencherchali (Nextron Systems), citron_ninja
-date: '2023-10-25'
-tags:
-    - attack.command-and-control
-    - attack.t1071.001
 references:
     - https://ipfyx.fr/post/visual-studio-code-tunnel/
     - https://badoption.eu/blog/2023/01/31/code_c2.html
     - https://code.visualstudio.com/docs/remote/tunnels
 falsepositives:
     - Legitimate use of Visual Studio Code tunnel
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+date: '2023-10-25'
 logsource:
     category: process_creation
     product: windows
@@ -43,25 +42,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:13.846765+00:00'
+            mapped_at: '2025-12-04T01:46:42.407950+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:13.846765+00:00'
+            mapped_at: '2025-12-04T01:46:42.407950+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:13.846800+00:00'
+            mapped_at: '2025-12-04T01:46:42.407970+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:13.846805+00:00'
+            mapped_at: '2025-12-04T01:46:42.407972+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:32:13.846807+00:00'
+            mapped_at: '2025-12-04T01:46:42.407973+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:13.846810+00:00'
+            mapped_at: '2025-12-04T01:46:42.407974+00:00'

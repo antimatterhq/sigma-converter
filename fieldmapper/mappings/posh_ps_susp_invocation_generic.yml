@@ -1,22 +1,18 @@
-id: ed965133-513f-41d9-a441-e38076a0798f
 title: Suspicious PowerShell Invocations - Generic
+id: ed965133-513f-41d9-a441-e38076a0798f
 status: test
 level: high
-description: Detects suspicious PowerShell invocation command parameters
 author: Florian Roth (Nextron Systems)
-date: '2017-03-12'
-modified: '2023-01-03'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects suspicious PowerShell invocation command parameters
 references:
     - Internal Research
 falsepositives:
     - Very special / sneaky PowerShell scripts
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3d304fda-78aa-43ed-975c-d740798a49c1''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''bbb80e91-5746-4fbe-8898-122e2cafdbf4''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2017-03-12'
+modified: '2023-01-03'
 logsource:
     category: ps_script
     product: windows
@@ -38,6 +34,11 @@ detection:
             - ' -noni '
             - ' -noninteractive '
     condition: all of selection*
+related:
+    -   id: 3d304fda-78aa-43ed-975c-d740798a49c1
+        type: derived
+    -   id: bbb80e91-5746-4fbe-8898-122e2cafdbf4
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -45,13 +46,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:19.448311+00:00'
+            mapped_at: '2025-12-04T01:53:41.342320+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:19.448311+00:00'
+            mapped_at: '2025-12-04T01:53:41.342320+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:19.448340+00:00'
+            mapped_at: '2025-12-04T01:53:41.342341+00:00'

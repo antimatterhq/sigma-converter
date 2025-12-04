@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Delete Important Scheduled Task",
+    "comment": "Detects when adversaries stop services or processes by deleting their respective scheduled tasks in order to conduct data destructive activities",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(process.name), lower('\\\\schtasks.exe')) AND contains(lower(process.cmd_line), lower('/delete')) AND contains(lower(process.cmd_line), lower('/tn')) AND (contains(lower(process.cmd_line), lower('\\\\windows\\\\bitlocker')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\exploitguard')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\systemrestore\\\\sr')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\updateorchestrator\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\windows defender\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\windowsbackup\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\windowsupdate\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when adversaries stop services or processes by deleting their respective scheduled tasks in order to conduct data destructive activities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1489"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

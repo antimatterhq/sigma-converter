@@ -1,21 +1,20 @@
-id: f1edd233-30b5-4823-9e6a-c4171b24d316
 title: Rundll32 Registered COM Objects
+id: f1edd233-30b5-4823-9e6a-c4171b24d316
 status: test
 level: high
-description: load malicious registered COM objects
 author: frack113
-date: '2022-02-13'
-modified: '2023-02-09'
-tags:
-    - attack.privilege-escalation
-    - attack.persistence
-    - attack.t1546.015
+description: load malicious registered COM objects
 references:
     - https://nasbench.medium.com/a-deep-dive-into-rundll32-exe-642344b41e90
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.015/T1546.015.md
 falsepositives:
     - Legitimate use
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1546.015
+date: '2022-02-13'
+modified: '2023-02-09'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:21.346598+00:00'
+            mapped_at: '2025-12-04T01:50:02.438898+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:21.346598+00:00'
+            mapped_at: '2025-12-04T01:50:02.438898+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:21.346609+00:00'
+            mapped_at: '2025-12-04T01:50:02.438915+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:21.346611+00:00'
+            mapped_at: '2025-12-04T01:50:02.438917+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:21.346612+00:00'
+            mapped_at: '2025-12-04T01:50:02.438918+00:00'

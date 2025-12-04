@@ -1,27 +1,26 @@
-id: c539afac-c12a-46ed-b1bd-5a5567c9f045
 title: Potential Remote PowerShell Session Initiated
+id: c539afac-c12a-46ed-b1bd-5a5567c9f045
 status: test
 level: high
+author: Roberto Rodriguez @Cyb3rWard0g
 description: 'Detects a process that initiated a network connection over ports 5985
     or 5986 from a non-network service account.
 
     This could potentially indicates a remote PowerShell connection.
 
     '
-author: Roberto Rodriguez @Cyb3rWard0g
-date: '2019-09-12'
-modified: '2024-02-02'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.lateral-movement
-    - attack.t1021.006
 references:
     - https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html
 falsepositives:
     - Legitimate usage of remote PowerShell, e.g. remote administration and monitoring.
     - Network Service user name of a not-covered localization
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.lateral-movement
+    - attack.t1021.006
+date: '2019-09-12'
+modified: '2024-02-02'
 logsource:
     category: network_connection
     product: windows
@@ -60,37 +59,37 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:28.545901+00:00'
+            mapped_at: '2025-12-04T01:51:37.263968+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:28.545901+00:00'
+            mapped_at: '2025-12-04T01:51:37.263968+00:00'
     detection_fields:
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:31.539305+00:00'
+            mapped_at: '2025-12-04T01:51:37.263986+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:31.539326+00:00'
+            mapped_at: '2025-12-04T01:51:37.263988+00:00'
         -   source_field: SourceIsIpv6
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:31.539329+00:00'
+            mapped_at: '2025-12-04T01:51:37.263989+00:00'
         -   source_field: User
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:31.539332+00:00'
+            mapped_at: '2025-12-04T01:51:37.263991+00:00'
         -   source_field: SourceIp
             target_table: network_activity
             target_field: src_endpoint.ip
-            mapped_at: '2025-11-26T02:38:31.539334+00:00'
+            mapped_at: '2025-12-04T01:51:37.263992+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:31.539337+00:00'
+            mapped_at: '2025-12-04T01:51:37.263993+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:31.539339+00:00'
+            mapped_at: '2025-12-04T01:51:37.263994+00:00'

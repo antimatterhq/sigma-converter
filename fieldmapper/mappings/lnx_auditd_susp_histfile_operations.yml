@@ -1,14 +1,9 @@
-id: eae8ce9f-bde9-47a6-8e79-f20d18419910
 title: Suspicious History File Operations - Linux
+id: eae8ce9f-bde9-47a6-8e79-f20d18419910
 status: test
 level: medium
-description: Detects commandline operations on shell history files
 author: Mikhail Larin, oscd.community
-date: '2020-10-17'
-modified: '2022-11-28'
-tags:
-    - attack.credential-access
-    - attack.t1552.003
+description: Detects commandline operations on shell history files
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.003/T1552.003.md
 fields:
@@ -20,7 +15,11 @@ fields:
 falsepositives:
     - Legitimate administrative activity
     - Legitimate software, cleaning hist file
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1552.003
+date: '2020-10-17'
+modified: '2022-11-28'
 logsource:
     product: linux
     service: auditd
@@ -42,13 +41,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:00.310635+00:00'
+            mapped_at: '2025-12-04T01:35:34.706669+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:00.310635+00:00'
+            mapped_at: '2025-12-04T01:35:34.706669+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:00.310650+00:00'
+            mapped_at: '2025-12-04T01:35:34.706697+00:00'

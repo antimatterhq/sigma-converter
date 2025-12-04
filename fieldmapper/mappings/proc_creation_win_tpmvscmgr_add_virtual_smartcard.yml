@@ -1,17 +1,16 @@
-id: c633622e-cab9-4eaa-bb13-66a1d68b3e47
 title: New Virtual Smart Card Created Via TpmVscMgr.EXE
+id: c633622e-cab9-4eaa-bb13-66a1d68b3e47
 status: test
 level: medium
-description: Detects execution of "Tpmvscmgr.exe" to create a new virtual smart card.
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-06-15'
-tags:
-    - attack.execution
+description: Detects execution of "Tpmvscmgr.exe" to create a new virtual smart card.
 references:
     - https://learn.microsoft.com/en-us/windows/security/identity-protection/virtual-smart-cards/virtual-smart-card-tpmvscmgr
 falsepositives:
     - Legitimate usage by an administrator
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-06-15'
 logsource:
     category: process_creation
     product: windows
@@ -29,21 +28,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:12.340912+00:00'
+            mapped_at: '2025-12-04T01:43:23.937865+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:12.340912+00:00'
+            mapped_at: '2025-12-04T01:43:23.937865+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:12.340928+00:00'
+            mapped_at: '2025-12-04T01:43:23.937905+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:12.340930+00:00'
+            mapped_at: '2025-12-04T01:43:23.937909+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:12.340932+00:00'
+            mapped_at: '2025-12-04T01:43:23.937912+00:00'

@@ -1,21 +1,18 @@
-id: 736ffa74-5f6f-44ca-94ef-1c0df4f51d2a
 title: HackTool - CrackMapExec File Indicators
+id: 736ffa74-5f6f-44ca-94ef-1c0df4f51d2a
 status: experimental
 level: high
-description: Detects file creation events with filename patterns used by CrackMapExec.
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-03-11'
-modified: '2024-06-27'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
+description: Detects file creation events with filename patterns used by CrackMapExec.
 references:
     - https://github.com/byt3bl33d3r/CrackMapExec/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9433ff9c-5d3f-4269-99f8-95fc826ea489''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2024-03-11'
+modified: '2024-06-27'
 logsource:
     category: file_event
     product: windows
@@ -31,6 +28,9 @@ detection:
             - \\[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.txt$
             - \\[a-zA-Z]{8}\.tmp$
     condition: selection_path and 1 of selection_names_*
+related:
+    -   id: 9433ff9c-5d3f-4269-99f8-95fc826ea489
+        type: obsolete
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -38,13 +38,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:23.902918+00:00'
+            mapped_at: '2025-12-04T01:53:01.735934+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:23.902918+00:00'
+            mapped_at: '2025-12-04T01:53:01.735934+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:23.902935+00:00'
+            mapped_at: '2025-12-04T01:53:01.735967+00:00'

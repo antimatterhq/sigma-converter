@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious File Created In PerfLogs",
+    "comment": "Detects suspicious file based on their extension being created in \"C:\\PerfLogs\\\". Note that this directory mostly contains \".etl\" files",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND startswith(lower(file.path), lower('c:\\\\perflogs\\\\')) AND (endswith(lower(file.path), lower('.7z')) OR endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.bin')) OR endswith(lower(file.path), lower('.chm')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.hta')) OR endswith(lower(file.path), lower('.lnk')) OR endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.psm1')) OR endswith(lower(file.path), lower('.py')) OR endswith(lower(file.path), lower('.scr')) OR endswith(lower(file.path), lower('.sys')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.vbs')) OR endswith(lower(file.path), lower('.zip'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious file based on their extension being created in \"C:\\PerfLogs\\\". Note that this directory mostly contains \".etl\" files",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: Internal Research, https://labs.withsecure.com/publications/fin7-target-veeam-servers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

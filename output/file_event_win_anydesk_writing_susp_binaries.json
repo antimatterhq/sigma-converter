@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Binary Writes Via AnyDesk",
+    "comment": "Detects AnyDesk writing binary files to disk other than \"gcapi.dll\". According to RedCanary research it is highly abnormal for AnyDesk to write executable files to disk besides gcapi.dll, which is a legitimate DLL that is part of the Google Chrome web browser used to interact with the Google Cloud API. (See reference section for more details)",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND endswith(lower(actor.process.name), lower('\\\\anydesk.exe')) AND (endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe'))) AND NOT endswith(lower(file.path), lower('\\\\gcapi.dll')))"
+      }
+    },
+    "output": {
+      "summary": "Detects AnyDesk writing binary files to disk other than \"gcapi.dll\". According to RedCanary research it is highly abnormal for AnyDesk to write executable files to disk besides gcapi.dll, which is a legitimate DLL that is part of the Google Chrome web browser used to interact with the Google Cloud API. (See reference section for more details)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://redcanary.com/blog/misbehaving-rats/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1219"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,29 +1,25 @@
-id: 4782eb5a-a513-4523-a0ac-f3082b26ac5c
 title: Mshtml.DLL RunHTMLApplication Suspicious Usage
+id: 4782eb5a-a513-4523-a0ac-f3082b26ac5c
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems),  Florian Roth (Nextron Systems),
+    Josh Nickels, frack113, Zaw Min Htun (ZETA)
 description: 'Detects execution of commands that leverage the "mshtml.dll" RunHTMLApplication
     export to run arbitrary code via different protocol handlers (vbscript, javascript,
     file, http...)
 
     '
-author: Nasreddine Bencherchali (Nextron Systems),  Florian Roth (Nextron Systems),
-    Josh Nickels, frack113, Zaw Min Htun (ZETA)
-date: '2022-08-14'
-modified: '2024-02-23'
-tags:
-    - attack.defense-evasion
-    - attack.execution
 references:
     - https://twitter.com/n1nj4sec/status/1421190238081277959
     - https://hyp3rlinx.altervista.org/advisories/MICROSOFT_WINDOWS_DEFENDER_TROJAN.WIN32.POWESSERE.G_MITIGATION_BYPASS_PART2.txt
     - http://hyp3rlinx.altervista.org/advisories/MICROSOFT_WINDOWS_DEFENDER_DETECTION_BYPASS.txt
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9f06447a-a33a-4cbe-a94f-a3f43184a7a3''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''73fcad2e-ff14-4c38-b11d-4172c8ac86c7''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+date: '2022-08-14'
+modified: '2024-02-23'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +32,11 @@ detection:
             - '#135'
             - RunHTMLApplication
     condition: selection
+related:
+    -   id: 9f06447a-a33a-4cbe-a94f-a3f43184a7a3
+        type: obsolete
+    -   id: 73fcad2e-ff14-4c38-b11d-4172c8ac86c7
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,13 +44,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:20.421896+00:00'
+            mapped_at: '2025-12-04T01:45:03.962398+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:20.421896+00:00'
+            mapped_at: '2025-12-04T01:45:03.962398+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:20.421923+00:00'
+            mapped_at: '2025-12-04T01:45:03.962412+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "DNS Query To Devtunnels Domain",
+    "comment": "Detects DNS query requests to Devtunnels domains. Attackers can abuse that feature to establish a reverse shell or persistence on a machine.",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns_query",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(query.hostname), lower('.devtunnels.ms')))"
+      }
+    },
+    "output": {
+      "summary": "Detects DNS query requests to Devtunnels domains. Attackers can abuse that feature to establish a reverse shell or persistence on a machine.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of Devtunnels will also trigger this. References: https://blueteamops.medium.com/detecting-dev-tunnels-16f0994dc3e2, https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security, https://cydefops.com/devtunnels-unleashed",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

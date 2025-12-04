@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Sticky Key Like Backdoor Execution",
+    "comment": "Detects the usage and installation of a backdoor that uses an option to register a malicious debugger for built-in tools that are accessible in the login screen",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\winlogon.exe')) AND (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR endswith(lower(process.name), lower('\\\\wt.exe'))) AND (contains(lower(process.cmd_line), lower('sethc.exe')) OR contains(lower(process.cmd_line), lower('utilman.exe')) OR contains(lower(process.cmd_line), lower('osk.exe')) OR contains(lower(process.cmd_line), lower('magnify.exe')) OR contains(lower(process.cmd_line), lower('narrator.exe')) OR contains(lower(process.cmd_line), lower('displayswitch.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage and installation of a backdoor that uses an option to register a malicious debugger for built-in tools that are accessible in the login screen",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://learn.microsoft.com/en-us/archive/blogs/jonathantrull/detecting-sticky-key-backdoors",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1546",
+          "subTechniqueId": "008"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

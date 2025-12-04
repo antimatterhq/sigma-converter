@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Renamed Microsoft Teams Execution",
+    "comment": "Detects the execution of a renamed Microsoft Teams binary.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(process.file.name)) in ('msteams\\.exe', 'teams\\.exe')) AND NOT (endswith(lower(process.name), lower('\\\\msteams.exe')) OR endswith(lower(process.name), lower('\\\\teams.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a renamed Microsoft Teams binary.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

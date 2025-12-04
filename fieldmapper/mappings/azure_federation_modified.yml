@@ -1,15 +1,10 @@
-id: 352a54e1-74ba-4929-9d47-8193d67aba1e
 title: Azure Domain Federation Settings Modified
+id: 352a54e1-74ba-4929-9d47-8193d67aba1e
 status: test
 level: medium
+author: Austin Songer
 description: Identifies when an user or application modified the federation settings
     on the domain.
-author: Austin Songer
-date: '2021-09-06'
-modified: '2022-06-08'
-tags:
-    - attack.initial-access
-    - attack.t1078
 references:
     - https://learn.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-monitor-federation-changes
 falsepositives:
@@ -18,7 +13,11 @@ falsepositives:
         changes in your environment.
     - Federation Settings modified from unfamiliar users should be investigated. If
         known behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1078
+date: '2021-09-06'
+modified: '2022-06-08'
 logsource:
     product: azure
     service: auditlogs
@@ -33,13 +32,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:41.802158+00:00'
+            mapped_at: '2025-12-04T01:37:51.605810+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:41.802158+00:00'
+            mapped_at: '2025-12-04T01:37:51.605810+00:00'
     detection_fields:
         -   source_field: ActivityDisplayName
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:42.791651+00:00'
+            mapped_at: '2025-12-04T01:37:51.605823+00:00'

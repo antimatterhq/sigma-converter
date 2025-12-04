@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "End User Consent Blocked",
+    "comment": "Detects when end user consent is blocked due to risk-based consent.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "auditlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(status_detail) = lower('microsoft.online.security.userconsentblockedforriskyappsexceptions'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when end user consent is blocked due to risk-based consent.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#end-user-stopped-due-to-risk-based-consent",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1528"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

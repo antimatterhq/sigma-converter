@@ -1,23 +1,20 @@
-id: 93d94efc-d7ad-4161-ad7d-1638c4f908d8
 title: HackTool - Dumpert Process Dumper Default File
+id: 93d94efc-d7ad-4161-ad7d-1638c4f908d8
 status: test
 level: critical
+author: Florian Roth (Nextron Systems)
 description: Detects the creation of the default dump file used by Outflank Dumpert
     tool. A process dumper, which dumps the lsass process memory
-author: Florian Roth (Nextron Systems)
-date: '2020-02-04'
-modified: '2023-05-09'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://github.com/outflanknl/Dumpert
     - https://unit42.paloaltonetworks.com/actors-still-exploiting-sharepoint-vulnerability/
 falsepositives:
     - Very unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''2704ab9e-afe2-4854-a3b1-0c0706d03578''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2020-02-04'
+modified: '2023-05-09'
 logsource:
     category: file_event
     product: windows
@@ -25,6 +22,9 @@ detection:
     selection:
         TargetFilename|endswith: dumpert.dmp
     condition: selection
+related:
+    -   id: 2704ab9e-afe2-4854-a3b1-0c0706d03578
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 3
@@ -32,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:38.431019+00:00'
+            mapped_at: '2025-12-04T01:53:13.925057+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:38.431019+00:00'
+            mapped_at: '2025-12-04T01:53:13.925057+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:38.431046+00:00'
+            mapped_at: '2025-12-04T01:53:13.925078+00:00'

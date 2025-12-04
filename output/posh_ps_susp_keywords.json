@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Suspicious PowerShell Keywords",
+    "comment": "Detects potentially suspicious keywords that could indicate the use of a PowerShell exploitation framework",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('system.reflection.assembly.load($')) OR contains(lower(script.script_content.value), lower('[system.reflection.assembly]::load($')) OR contains(lower(script.script_content.value), lower('[reflection.assembly]::load($')) OR contains(lower(script.script_content.value), lower('system.reflection.assemblyname')) OR contains(lower(script.script_content.value), lower('reflection.emit.assemblybuilderaccess')) OR contains(lower(script.script_content.value), lower('reflection.emit.customattributebuilder')) OR contains(lower(script.script_content.value), lower('runtime.interopservices.unmanagedtype')) OR contains(lower(script.script_content.value), lower('runtime.interopservices.dllimportattribute')) OR contains(lower(script.script_content.value), lower('suspendthread')) OR contains(lower(script.script_content.value), lower('rundll32'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially suspicious keywords that could indicate the use of a PowerShell exploitation framework",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://posts.specterops.io/entering-a-covenant-net-command-and-control-e11038bcf462, https://github.com/PowerShellMafia/PowerSploit/blob/d943001a7defb5e0d1657085a77a0e78609be58f/CodeExecution/Invoke-ReflectivePEInjection.ps1, https://github.com/hlldz/Phant0m/blob/30c2935d8cf4aafda17ee2fab7cd0c4aa9a607c2/old/Invoke-Phant0m.ps1, https://gist.github.com/MHaggis/0dbe00ad401daa7137c81c99c268cfb7",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

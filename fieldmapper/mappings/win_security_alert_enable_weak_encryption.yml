@@ -1,21 +1,20 @@
-id: f6de9536-0441-4b3f-a646-f4e00f300ffd
 title: Weak Encryption Enabled and Kerberoast
+id: f6de9536-0441-4b3f-a646-f4e00f300ffd
 status: test
 level: high
+author: '@neu5ron'
 description: Detects scenario where weak encryption is enabled for a user profile
     which could be used for hash/password cracking.
-author: '@neu5ron'
-date: '2017-07-30'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://adsecurity.org/?p=2053
     - https://blog.harmj0y.net/redteaming/another-word-on-delegation/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2017-07-30'
+modified: '2021-11-27'
 logsource:
     product: windows
     service: security
@@ -95,21 +94,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:53.659597+00:00'
+            mapped_at: '2025-12-04T01:56:04.755681+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:53.659597+00:00'
+            mapped_at: '2025-12-04T01:56:04.755681+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: account_change
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:54.628861+00:00'
+            mapped_at: '2025-12-04T01:56:04.755705+00:00'
         -   source_field: OldUacValue
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:54.628878+00:00'
+            mapped_at: '2025-12-04T01:56:04.755707+00:00'
         -   source_field: NewUacValue
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:54.628881+00:00'
+            mapped_at: '2025-12-04T01:56:04.755714+00:00'

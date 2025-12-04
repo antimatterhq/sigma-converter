@@ -1,17 +1,11 @@
-id: 3940b5f1-3f46-44aa-b746-ebe615b879e0
 title: AWS Route 53 Domain Transfer Lock Disabled
+id: 3940b5f1-3f46-44aa-b746-ebe615b879e0
 status: test
 level: low
+author: Elastic, Austin Songer @austinsonger
 description: Detects when a transfer lock was removed from a Route 53 domain. It is
     recommended to refrain from performing this action unless intending to transfer
     the domain to a different registrar.
-author: Elastic, Austin Songer @austinsonger
-date: '2021-07-22'
-modified: '2022-10-09'
-tags:
-    - attack.persistence
-    - attack.credential-access
-    - attack.t1098
 references:
     - https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/integrations/aws/persistence_route_53_domain_transfer_lock_disabled.toml
     - https://docs.aws.amazon.com/Route53/latest/APIReference/API_Operations_Amazon_Route_53.html
@@ -22,7 +16,12 @@ falsepositives:
         changes in your environment. Activity from unfamiliar users or hosts should
         be investigated. If known behavior is causing false positives, it can be exempted
         from the rule.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.credential-access
+    - attack.t1098
+date: '2021-07-22'
+modified: '2022-10-09'
 logsource:
     product: aws
     service: cloudtrail
@@ -38,17 +37,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:59.985136+00:00'
+            mapped_at: '2025-12-04T01:39:30.045559+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:59.985136+00:00'
+            mapped_at: '2025-12-04T01:39:30.045559+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:59.985163+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:30.045572+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:59.985168+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:30.045574+00:00'

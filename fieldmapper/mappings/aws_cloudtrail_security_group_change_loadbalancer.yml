@@ -1,7 +1,8 @@
-id: 7a4409fc-f8ca-45f6-8006-127d779eaad9
 title: LoadBalancer Security Group Modification
+id: 7a4409fc-f8ca-45f6-8006-127d779eaad9
 status: test
 level: medium
+author: jamesc-grafana
 description: 'Detects changes to the security groups associated with an Elastic Load
     Balancer (ELB) or Application Load Balancer (ALB).
 
@@ -10,17 +11,15 @@ description: 'Detects changes to the security groups associated with an Elastic 
     connections into a VPC or subnet controlled by the account.
 
     '
-author: jamesc-grafana
-date: '2024-07-11'
-tags:
-    - attack.initial-access
-    - attack.t1190
 references:
     - https://www.gorillastack.com/blog/real-time-events/important-aws-cloudtrail-security-events-tracking/
 falsepositives:
     - Repurposing of an ELB or ALB to serve a different or additional application
     - Changes to security groups to allow for new services to be deployed
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1190
+date: '2024-07-11'
 logsource:
     product: aws
     service: cloudtrail
@@ -38,17 +37,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:34.520513+00:00'
+            mapped_at: '2025-12-04T01:39:18.368194+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:34.520513+00:00'
+            mapped_at: '2025-12-04T01:39:18.368194+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:34.520545+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:18.368214+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:34.520548+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:18.368216+00:00'

@@ -1,19 +1,18 @@
-id: 602f5669-6927-4688-84db-0d4b7afb2150
 title: Disable Powershell Command History
+id: 602f5669-6927-4688-84db-0d4b7afb2150
 status: test
 level: high
+author: Ali Alwashali
 description: Detects scripts or commands that disabled the Powershell command history
     by removing psreadline module
-author: Ali Alwashali
-date: '2022-08-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.003
 references:
     - https://twitter.com/DissectMalware/status/1062879286749773824
 falsepositives:
     - Legitimate script that disables the command history
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.003
+date: '2022-08-21'
 logsource:
     category: ps_script
     product: windows
@@ -31,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:11.365235+00:00'
+            mapped_at: '2025-12-04T01:53:36.312619+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:11.365235+00:00'
+            mapped_at: '2025-12-04T01:53:36.312619+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:11.365250+00:00'
+            mapped_at: '2025-12-04T01:53:36.312645+00:00'

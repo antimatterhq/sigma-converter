@@ -1,21 +1,14 @@
-id: add64136-62e5-48ea-807e-88638d02df1e
 title: Fsutil Suspicious Invocation
+id: add64136-62e5-48ea-807e-88638d02df1e
 status: stable
 level: high
+author: Ecco, E.M. Anhaus, oscd.community
 description: 'Detects suspicious parameters of fsutil (deleting USN journal, configuring
     it with small size, etc).
 
     Might be used by ransomwares during the attack (seen by NotPetya and others).
 
     '
-author: Ecco, E.M. Anhaus, oscd.community
-date: '2019-09-26'
-modified: '2023-09-09'
-tags:
-    - attack.defense-evasion
-    - attack.impact
-    - attack.t1070
-    - attack.t1485
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070/T1070.md
@@ -25,7 +18,13 @@ references:
 falsepositives:
     - Admin activity
     - Scripts and administrative tools used in the monitored environment
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.impact
+    - attack.t1070
+    - attack.t1485
+date: '2019-09-26'
+modified: '2023-09-09'
 logsource:
     category: process_creation
     product: windows
@@ -46,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:20.210632+00:00'
+            mapped_at: '2025-12-04T01:48:24.376067+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:20.210632+00:00'
+            mapped_at: '2025-12-04T01:48:24.376067+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:20.210663+00:00'
+            mapped_at: '2025-12-04T01:48:24.376080+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:20.210668+00:00'
+            mapped_at: '2025-12-04T01:48:24.376082+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:20.210672+00:00'
+            mapped_at: '2025-12-04T01:48:24.376083+00:00'

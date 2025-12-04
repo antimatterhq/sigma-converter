@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Copying Sensitive Files with Credential Data",
+    "comment": "Files with well-known filenames (sensitive files with credential data) copying",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\esentutl.exe')) AND lower(process.file.name) = lower('\\\\esentutl.exe') AND (contains(lower(process.cmd_line), lower('vss')) OR contains(lower(process.cmd_line), lower(' -m ')) OR contains(lower(process.cmd_line), lower(' /m ')) OR contains(lower(process.cmd_line), lower(' \u2013m ')) OR contains(lower(process.cmd_line), lower(' \u2014m ')) OR contains(lower(process.cmd_line), lower(' \u2015m ')) OR contains(lower(process.cmd_line), lower(' -y ')) OR contains(lower(process.cmd_line), lower(' /y ')) OR contains(lower(process.cmd_line), lower(' \u2013y ')) OR contains(lower(process.cmd_line), lower(' \u2014y ')) OR contains(lower(process.cmd_line), lower(' \u2015y '))) OR contains(lower(process.cmd_line), lower('\\\\config\\\\regback\\\\sam')) OR contains(lower(process.cmd_line), lower('\\\\config\\\\regback\\\\security')) OR contains(lower(process.cmd_line), lower('\\\\config\\\\regback\\\\system')) OR contains(lower(process.cmd_line), lower('\\\\config\\\\sam')) OR contains(lower(process.cmd_line), lower('\\\\config\\\\security')) OR contains(lower(process.cmd_line), lower('\\\\config\\\\system ')) OR contains(lower(process.cmd_line), lower('\\\\repair\\\\sam')) OR contains(lower(process.cmd_line), lower('\\\\repair\\\\security')) OR contains(lower(process.cmd_line), lower('\\\\repair\\\\system')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\ntds\\\\ntds.dit'))))"
+      }
+    },
+    "output": {
+      "summary": "Files with well-known filenames (sensitive files with credential data) copying",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Copying sensitive files for legitimate use (eg. backup) or forensic investigation by legitimate incident responder or forensic investigator. References: https://room362.com/post/2013/2013-06-10-volume-shadow-copy-ntdsdit-domain-hashes-remotely-part-1/, https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment, https://dfironthemountain.wordpress.com/2018/12/06/locked-file-access-using-esentutl-exe/, https://github.com/LOLBAS-Project/LOLBAS/blob/2cc01b01132b5c304027a658c698ae09dd6a92bf/yml/OSBinaries/Esentutl.yml",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

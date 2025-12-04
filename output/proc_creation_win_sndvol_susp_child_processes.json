@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Uncommon Child Processes Of SndVol.exe",
+    "comment": "Detects potentially uncommon child processes of SndVol.exe (the Windows volume mixer)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\sndvol.exe')) AND NOT (endswith(lower(process.name), lower('\\\\rundll32.exe')) AND contains(lower(process.cmd_line), lower(' shell32.dll,control_rundll '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially uncommon child processes of SndVol.exe (the Windows volume mixer)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/Max_Mal_/status/1661322732456353792",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

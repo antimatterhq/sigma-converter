@@ -1,21 +1,18 @@
-id: 30fc8de7-d833-40c4-96b6-28319fbc4f6c
 title: UAC Bypass Using Event Viewer RecentViews
+id: 30fc8de7-d833-40c4-96b6-28319fbc4f6c
 status: test
 level: high
-description: Detects the pattern of UAC Bypass using Event Viewer RecentViews
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-11-22'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
+description: Detects the pattern of UAC Bypass using Event Viewer RecentViews
 references:
     - https://twitter.com/orange_8361/status/1518970259868626944
     - https://lolbas-project.github.io/lolbas/Binaries/Eventvwr/#execute
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''63e4f530-65dc-49cc-8f80-ccfa95c69d43''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+date: '2022-11-22'
 logsource:
     category: process_creation
     product: windows
@@ -27,6 +24,9 @@ detection:
     selection_redirect:
         CommandLine|contains: '>'
     condition: all of selection_*
+related:
+    -   id: 63e4f530-65dc-49cc-8f80-ccfa95c69d43
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -34,13 +34,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:03.526620+00:00'
+            mapped_at: '2025-12-04T01:41:31.107526+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:03.526620+00:00'
+            mapped_at: '2025-12-04T01:41:31.107526+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:03.526648+00:00'
+            mapped_at: '2025-12-04T01:41:31.107538+00:00'

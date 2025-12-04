@@ -1,23 +1,20 @@
-id: 8b0e12da-d3c3-49db-bb4f-256703f380e5
 title: PUA - Chisel Tunneling Tool Execution
+id: 8b0e12da-d3c3-49db-bb4f-256703f380e5
 status: test
 level: high
-description: Detects usage of the Chisel tunneling tool via the commandline arguments
 author: Florian Roth (Nextron Systems)
-date: '2022-09-13'
-modified: '2023-02-13'
-tags:
-    - attack.command-and-control
-    - attack.t1090.001
+description: Detects usage of the Chisel tunneling tool via the commandline arguments
 references:
     - https://github.com/jpillora/chisel/
     - https://arcticwolf.com/resources/blog/lorenz-ransomware-chiseling-in/
     - https://blog.sekoia.io/lucky-mouse-incident-response-to-detection-engineering/
 falsepositives:
     - Some false positives may occur with other tools with similar commandlines
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cf93e05e-d798-4d9e-b522-b0248dc61eaf''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090.001
+date: '2022-09-13'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
             - '-tls-skip-verify '
             - :socks
     condition: selection_img or all of selection_param*
+related:
+    -   id: cf93e05e-d798-4d9e-b522-b0248dc61eaf
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,17 +44,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:14.893863+00:00'
+            mapped_at: '2025-12-04T01:45:00.590452+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:14.893863+00:00'
+            mapped_at: '2025-12-04T01:45:00.590452+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:14.893894+00:00'
+            mapped_at: '2025-12-04T01:45:00.590468+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:14.893897+00:00'
+            mapped_at: '2025-12-04T01:45:00.590470+00:00'

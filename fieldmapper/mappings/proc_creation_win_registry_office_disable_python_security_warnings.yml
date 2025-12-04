@@ -1,7 +1,8 @@
-id: 023c654f-8f16-44d9-bb2b-00ff36a62af9
 title: Python Function Execution Security Warning Disabled In Excel
+id: 023c654f-8f16-44d9-bb2b-00ff36a62af9
 status: test
 level: high
+author: '@Kostastsale'
 description: 'Detects changes to the registry value "PythonFunctionWarnings" that
     would prevent any warnings or alerts from showing when Python functions are about
     to be executed.
@@ -10,18 +11,14 @@ description: 'Detects changes to the registry value "PythonFunctionWarnings" tha
     that allows Python to run within the spreadsheet.
 
     '
-author: '@Kostastsale'
-date: '2023-08-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://support.microsoft.com/en-us/office/data-security-and-python-in-excel-33cc88a4-4a87-485e-9ff9-f35958278327
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''17e53739-a1fc-4a62-b1b9-87711c2d5e44''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2023-08-22'
 logsource:
     category: process_creation
     product: windows
@@ -33,6 +30,9 @@ detection:
             - PythonFunctionWarnings
         CommandLine|contains: ' 0'
     condition: selection
+related:
+    -   id: 17e53739-a1fc-4a62-b1b9-87711c2d5e44
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -40,13 +40,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:03.474961+00:00'
+            mapped_at: '2025-12-04T01:49:00.904265+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:03.474961+00:00'
+            mapped_at: '2025-12-04T01:49:00.904265+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:03.474975+00:00'
+            mapped_at: '2025-12-04T01:49:00.904278+00:00'

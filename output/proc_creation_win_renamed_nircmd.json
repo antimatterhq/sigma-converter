@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Renamed NirCmd.EXE Execution",
+    "comment": "Detects the execution of a renamed \"NirCmd.exe\" binary based on the PE metadata fields.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('nircmd.exe') AND NOT (endswith(lower(process.name), lower('\\\\nircmd.exe')) OR endswith(lower(process.name), lower('\\\\nircmdc.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a renamed \"NirCmd.exe\" binary based on the PE metadata fields.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/, https://www.nirsoft.net/utils/nircmd.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,23 +1,22 @@
-id: 90d50722-0483-4065-8e35-57efaadd354d
 title: Arbitrary MSI Download Via Devinit.EXE
+id: 90d50722-0483-4065-8e35-57efaadd354d
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects a certain command line flag combination used by "devinit.exe",
     which can be abused as a LOLBIN to download arbitrary MSI packages on a Windows
     system
-author: Florian Roth (Nextron Systems)
-date: '2022-01-11'
-modified: '2023-04-06'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://twitter.com/mrd0x/status/1460815932402679809
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Devinit/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-01-11'
+modified: '2023-04-06'
 logsource:
     category: process_creation
     product: windows
@@ -34,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:02.400619+00:00'
+            mapped_at: '2025-12-04T01:48:59.874829+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:02.400619+00:00'
+            mapped_at: '2025-12-04T01:48:59.874829+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:02.400633+00:00'
+            mapped_at: '2025-12-04T01:48:59.874842+00:00'

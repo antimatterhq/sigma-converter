@@ -1,7 +1,8 @@
-id: ee4c5d06-3abc-48cc-8885-77f1c20f4451
 title: DLL Sideloading Of ShellChromeAPI.DLL
+id: ee4c5d06-3abc-48cc-8885-77f1c20f4451
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects processes loading the non-existent DLL "ShellChromeAPI". One
     known example is the "DeviceEnroller" binary in combination with the "PhoneDeepLink"
     flag tries to load this DLL.
@@ -10,22 +11,18 @@ description: 'Detects processes loading the non-existent DLL "ShellChromeAPI". O
     using this parameter
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-01'
+references:
+    - https://mobile.twitter.com/0gtweet/status/1564131230941122561
+    - https://strontic.github.io/xcyclopedia/library/DeviceEnroller.exe-24BEF0D6B0ECED36BB41831759FDE18D.html
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.persistence
     - attack.privilege-escalation
     - attack.t1574.001
     - attack.t1574.002
-references:
-    - https://mobile.twitter.com/0gtweet/status/1564131230941122561
-    - https://strontic.github.io/xcyclopedia/library/DeviceEnroller.exe-24BEF0D6B0ECED36BB41831759FDE18D.html
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e173ad47-4388-4012-ae62-bd13f71c18a8''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2022-12-01'
 logsource:
     category: image_load
     product: windows
@@ -33,6 +30,9 @@ detection:
     selection:
         ImageLoaded|endswith: \ShellChromeAPI.dll
     condition: selection
+related:
+    -   id: e173ad47-4388-4012-ae62-bd13f71c18a8
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,7 +1,8 @@
-id: 28ac00d6-22d9-4a3c-927f-bbd770104573
 title: RestrictedAdminMode Registry Value Tampering - ProcCreation
+id: 28ac00d6-22d9-4a3c-927f-bbd770104573
 status: test
 level: high
+author: frack113
 description: 'Detects changes to the "DisableRestrictedAdmin" registry value in order
     to disable or enable RestrictedAdmin mode.
 
@@ -12,21 +13,17 @@ description: 'Detects changes to the "DisableRestrictedAdmin" registry value in 
     process if the remote server has been compromise
 
     '
-author: frack113
-date: '2023-01-13'
-modified: '2023-12-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/a8e3cf63e97b973a25903d3df9fd55da6252e564/atomics/T1112/T1112.md
     - https://social.technet.microsoft.com/wiki/contents/articles/32905.remote-desktop-services-enable-restricted-admin-mode.aspx
     - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d6ce7ebd-260b-4323-9768-a9631c8d4db2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+date: '2023-01-13'
+modified: '2023-12-15'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
             - \System\CurrentControlSet\Control\Lsa\
             - DisableRestrictedAdmin
     condition: selection
+related:
+    -   id: d6ce7ebd-260b-4323-9768-a9631c8d4db2
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,13 +43,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:09.588419+00:00'
+            mapped_at: '2025-12-04T01:44:55.836638+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:09.588419+00:00'
+            mapped_at: '2025-12-04T01:44:55.836638+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:09.588430+00:00'
+            mapped_at: '2025-12-04T01:44:55.836650+00:00'

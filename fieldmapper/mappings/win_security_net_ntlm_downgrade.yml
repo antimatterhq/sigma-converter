@@ -1,22 +1,19 @@
-id: d3abac66-f11c-4ed0-8acb-50cc29c97eed
 title: NetNTLM Downgrade Attack
+id: d3abac66-f11c-4ed0-8acb-50cc29c97eed
 status: test
 level: high
-description: Detects NetNTLM downgrade attack
 author: Florian Roth (Nextron Systems), wagga
-date: '2018-03-20'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
-    - attack.t1112
+description: Detects NetNTLM downgrade attack
 references:
     - https://www.optiv.com/blog/post-exploitation-using-netntlm-downgrade-attacks
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d67572a0-e2ec-45d6-b8db-c100d14b8ef2''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+    - attack.t1112
+date: '2018-03-20'
+modified: '2022-10-09'
 logsource:
     product: windows
     service: security
@@ -33,6 +30,9 @@ detection:
             - NtlmMinClientSec
             - RestrictSendingNTLMTraffic
     condition: selection
+related:
+    -   id: d67572a0-e2ec-45d6-b8db-c100d14b8ef2
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

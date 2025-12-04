@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Monitoring For Persistence Via BITS",
+    "comment": "BITS will allow you to schedule a command to execute after a successful download to notify you that the job is finished. When the job runs on the system the command specified in the BITS job will be executed. This can be abused by actors to create a backdoor within the system and for persistence. It will be chained in a BITS job to schedule the download of malware/additional binaries and execute the program after being downloaded.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\bitsadmin.exe')) AND lower(process.file.name) = lower('bitsadmin.exe') AND (contains(lower(process.cmd_line), lower('/setnotifycmdline')) AND (contains(lower(process.cmd_line), lower('%comspec%')) OR contains(lower(process.cmd_line), lower('cmd.exe')) OR contains(lower(process.cmd_line), lower('regsvr32.exe'))) OR contains(lower(process.cmd_line), lower('/addfile')) AND (contains(lower(process.cmd_line), lower('http:')) OR contains(lower(process.cmd_line), lower('https:')) OR contains(lower(process.cmd_line), lower('ftp:')) OR contains(lower(process.cmd_line), lower('ftps:')))))"
+      }
+    },
+    "output": {
+      "summary": "BITS will allow you to schedule a command to execute after a successful download to notify you that the job is finished. When the job runs on the system the command specified in the BITS job will be executed. This can be abused by actors to create a backdoor within the system and for persistence. It will be chained in a BITS job to schedule the download of malware/additional binaries and execute the program after being downloaded.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html, http://0xthem.blogspot.com/2014/03/t-emporal-persistence-with-and-schtasks.html, https://isc.sans.edu/diary/Wipe+the+drive+Stealthy+Malware+Persistence+Mechanism+-+Part+1/15394",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1197"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

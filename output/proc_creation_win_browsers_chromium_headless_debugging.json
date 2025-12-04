@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Data Stealing Via Chromium Headless Debugging",
+    "comment": "Detects chromium based browsers starting in headless and debugging mode and pointing to a user profile. This could be a sign of data stealing or remote control",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('--remote-debugging-')) AND contains(lower(process.cmd_line), lower('--user-data-dir')) AND contains(lower(process.cmd_line), lower('--headless')))"
+      }
+    },
+    "output": {
+      "summary": "Detects chromium based browsers starting in headless and debugging mode and pointing to a user profile. This could be a sign of data stealing or remote control",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/defaultnamehere/cookie_crimes/, https://mango.pdf.zone/stealing-chrome-cookies-without-a-password, https://embracethered.com/blog/posts/2020/cookie-crimes-on-mirosoft-edge/, https://embracethered.com/blog/posts/2020/chrome-spy-remote-control/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1185"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

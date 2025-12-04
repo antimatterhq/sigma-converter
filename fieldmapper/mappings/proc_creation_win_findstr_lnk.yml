@@ -1,22 +1,21 @@
-id: 33339be3-148b-4e16-af56-ad16ec6c7e7b
 title: Findstr Launching .lnk File
+id: 33339be3-148b-4e16-af56-ad16ec6c7e7b
 status: test
 level: medium
+author: Trent Liffick
 description: Detects usage of findstr to identify and execute a lnk file as seen within
     the HHS redirect attack
-author: Trent Liffick
-date: '2020-05-01'
-modified: '2024-01-15'
+references:
+    - https://www.bleepingcomputer.com/news/security/hhsgov-open-redirect-used-by-coronavirus-phishing-to-spread-malware/
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1036
     - attack.t1202
     - attack.t1027.003
-references:
-    - https://www.bleepingcomputer.com/news/security/hhsgov-open-redirect-used-by-coronavirus-phishing-to-spread-malware/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2020-05-01'
+modified: '2024-01-15'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:40.315802+00:00'
+            mapped_at: '2025-12-04T01:44:34.377865+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:40.315802+00:00'
+            mapped_at: '2025-12-04T01:44:34.377865+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:40.315826+00:00'
+            mapped_at: '2025-12-04T01:44:34.377880+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:40.315828+00:00'
+            mapped_at: '2025-12-04T01:44:34.377882+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:40.315829+00:00'
+            mapped_at: '2025-12-04T01:44:34.377883+00:00'

@@ -1,24 +1,21 @@
-id: 178e615d-e666-498b-9630-9ed363038101
 title: Elevated System Shell Spawned From Uncommon Parent Location
+id: 178e615d-e666-498b-9630-9ed363038101
 status: test
 level: medium
+author: frack113, Tim Shelton (update fp)
 description: Detects when a shell program such as the Windows command prompt or PowerShell
     is launched with system privileges from a uncommon parent location.
-author: frack113, Tim Shelton (update fp)
-date: '2022-12-05'
-modified: '2023-11-23'
+references:
+    - https://github.com/Wh04m1001/SysmonEoP
+falsepositives:
+    - Unknown
 tags:
     - attack.privilege-escalation
     - attack.defense-evasion
     - attack.execution
     - attack.t1059
-references:
-    - https://github.com/Wh04m1001/SysmonEoP
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''61065c72-5d7d-44ef-bf41-6a36684b545f''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2022-12-05'
+modified: '2023-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -60,6 +57,9 @@ detection:
     filter_main_parent_empty:
         ParentImage: ''
     condition: all of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: 61065c72-5d7d-44ef-bf41-6a36684b545f
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -67,37 +67,37 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:27.259941+00:00'
+            mapped_at: '2025-12-04T01:45:08.599699+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:27.259941+00:00'
+            mapped_at: '2025-12-04T01:45:08.599699+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:27.259960+00:00'
+            mapped_at: '2025-12-04T01:45:08.599714+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:27.259962+00:00'
+            mapped_at: '2025-12-04T01:45:08.599716+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:30:27.259964+00:00'
+            mapped_at: '2025-12-04T01:45:08.599717+00:00'
         -   source_field: LogonId
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:30:27.259965+00:00'
+            mapped_at: '2025-12-04T01:45:08.599718+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:27.259966+00:00'
+            mapped_at: '2025-12-04T01:45:08.599719+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:27.259967+00:00'
+            mapped_at: '2025-12-04T01:45:08.599720+00:00'
         -   source_field: CurrentDirectory
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:30:27.259969+00:00'
+            mapped_at: '2025-12-04T01:45:08.599721+00:00'

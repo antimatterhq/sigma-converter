@@ -1,23 +1,20 @@
-id: 24c8392b-aa3c-46b7-a545-43f71657fe98
 title: Suspicious Schtasks Schedule Types
+id: 24c8392b-aa3c-46b7-a545-43f71657fe98
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects scheduled task creations or modification on a suspicious schedule
     type
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-09'
-tags:
-    - attack.execution
-    - attack.t1053.005
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-change
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create
     - http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html
 falsepositives:
     - Legitimate processes that run at logon. Filter according to your environment
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7a02e22e-b885-4404-b38b-1ddc7e65258a''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1053.005
+date: '2022-09-09'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
             - ' SYSTEM'
             - HIGHEST
     condition: all of selection_* and not 1 of filter_*
+related:
+    -   id: 7a02e22e-b885-4404-b38b-1ddc7e65258a
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:50.656109+00:00'
+            mapped_at: '2025-12-04T01:47:14.432690+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:50.656109+00:00'
+            mapped_at: '2025-12-04T01:47:14.432690+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:50.656123+00:00'
+            mapped_at: '2025-12-04T01:47:14.432716+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:50.656125+00:00'
+            mapped_at: '2025-12-04T01:47:14.432718+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:50.656127+00:00'
+            mapped_at: '2025-12-04T01:47:14.432720+00:00'

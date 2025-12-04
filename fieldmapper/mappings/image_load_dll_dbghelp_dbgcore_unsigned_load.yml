@@ -1,7 +1,8 @@
-id: bdc64095-d59a-42a2-8588-71fd9c9d9abc
 title: Suspicious Unsigned Dbghelp/Dbgcore DLL Loaded
+id: bdc64095-d59a-42a2-8588-71fd9c9d9abc
 status: test
 level: high
+author: Perez Diego (@darkquassar), oscd.community, Ecco
 description: 'Detects the load of dbghelp/dbgcore DLL (used to make memory dumps)
     by suspicious processes.
 
@@ -13,21 +14,17 @@ description: 'Detects the load of dbghelp/dbgcore DLL (used to make memory dumps
     attacker''s machine.
 
     '
-author: Perez Diego (@darkquassar), oscd.community, Ecco
-date: '2019-10-27'
-modified: '2022-12-09'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/nf-minidumpapiset-minidumpwritedump
     - https://www.pinvoke.net/default.aspx/dbghelp/MiniDumpWriteDump.html
     - https://medium.com/@fsx30/bypass-edrs-memory-protection-introduction-to-hooking-2efb21acffd6
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0e277796-5f23-4e49-a490-483131d4f6e1''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2019-10-27'
+modified: '2022-12-09'
 logsource:
     category: image_load
     product: windows
@@ -38,6 +35,9 @@ detection:
             - \dbgcore.dll
         Signed: 'false'
     condition: selection
+related:
+    -   id: 0e277796-5f23-4e49-a490-483131d4f6e1
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,7 +1,8 @@
-id: 6f7e1c10-2dc9-4312-adb6-9574ff09a5c8
 title: Cisco Duo Successful MFA Authentication Via Bypass Code
+id: 6f7e1c10-2dc9-4312-adb6-9574ff09a5c8
 status: experimental
 level: medium
+author: Nikita Khalimonenkov
 description: 'Detects when a successful MFA authentication occurs due to the use of
     a bypass code.
 
@@ -13,18 +14,16 @@ description: 'Detects when a successful MFA authentication occurs due to the use
     services) can still access their Duo-protected systems.
 
     '
-author: Nikita Khalimonenkov
-date: '2024-04-17'
-tags:
-    - attack.credential-access
-    - attack.defense-evasion
-    - attack.initial-access
 references:
     - https://duo.com/docs/adminapi#logs
     - https://help.duo.com/s/article/6327?language=en_US
 falsepositives:
     - Legitimate user that was assigned on purpose to a bypass group
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.defense-evasion
+    - attack.initial-access
+date: '2024-04-17'
 logsource:
     product: cisco
     service: duo
@@ -40,17 +39,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: cisco
-            mapped_at: '2025-11-26T02:21:18.885453+00:00'
+            mapped_at: '2025-12-04T01:38:41.660720+00:00'
         service:
             source_field: service
             source_value: duo
-            mapped_at: '2025-11-26T02:21:18.885453+00:00'
+            mapped_at: '2025-12-04T01:38:41.660720+00:00'
     detection_fields:
         -   source_field: event_type
             target_table: authentication
             target_field: action
-            mapped_at: '2025-11-26T02:21:19.973103+00:00'
+            mapped_at: '2025-12-04T01:38:41.660735+00:00'
         -   source_field: reason
             target_table: authentication
             target_field: actor.process.session.expiration_reason
-            mapped_at: '2025-11-26T02:21:19.973119+00:00'
+            mapped_at: '2025-12-04T01:38:41.660737+00:00'

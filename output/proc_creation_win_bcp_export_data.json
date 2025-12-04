@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Data Export From MSSQL Table Via BCP.EXE",
+    "comment": "Detects the execution of the BCP utility in order to export data from the database. Attackers were seen saving their malware to a database column or table and then later extracting it via \"bcp.exe\" into a file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\bcp.exe')) AND lower(process.file.name) = lower('bcp.exe') AND (contains(lower(process.cmd_line), lower(' out ')) OR contains(lower(process.cmd_line), lower(' queryout '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the BCP utility in order to export data from the database. Attackers were seen saving their malware to a database column or table and then later extracting it via \"bcp.exe\" into a file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate data export operations. References: https://docs.microsoft.com/en-us/sql/tools/bcp-utility, https://asec.ahnlab.com/en/61000/, https://asec.ahnlab.com/en/78944/, https://www.huntress.com/blog/attacking-mssql-servers, https://www.huntress.com/blog/attacking-mssql-servers-pt-ii, https://news.sophos.com/en-us/2024/08/07/sophos-mdr-hunt-tracks-mimic-ransomware-campaign-against-organizations-in-india/, https://research.nccgroup.com/2018/03/10/apt15-is-alive-and-strong-an-analysis-of-royalcli-and-royaldns/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1048"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

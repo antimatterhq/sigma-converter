@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "name": "Transferring Files with Credential Data via Network Shares",
+    "comment": "Transferring files with well-known filenames (sensitive files with credential data) using network shares",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 5145 AND (contains(lower(file.path), lower('\\\\mimidrv')) OR contains(lower(file.path), lower('\\\\lsass')) OR contains(lower(file.path), lower('\\\\windows\\\\minidump\\\\')) OR contains(lower(file.path), lower('\\\\hiberfil')) OR contains(lower(file.path), lower('\\\\sqldmpr')) OR contains(lower(file.path), lower('\\\\sam')) OR contains(lower(file.path), lower('\\\\ntds.dit')) OR contains(lower(file.path), lower('\\\\security'))))"
+      }
+    },
+    "output": {
+      "summary": "Transferring files with well-known filenames (sensitive files with credential data) using network shares",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Transferring sensitive files for legitimate administration work by legitimate administrator Reference: https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

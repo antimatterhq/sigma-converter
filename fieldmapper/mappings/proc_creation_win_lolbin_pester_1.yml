@@ -1,23 +1,22 @@
-id: 59e938ff-0d6d-4dc3-b13f-36cc28734d4e
 title: Execute Code with Pester.bat
+id: 59e938ff-0d6d-4dc3-b13f-36cc28734d4e
 status: test
 level: medium
+author: Julia Fomina, oscd.community
 description: Detects code execution via Pester.bat (Pester - Powershell Modulte for
     testing)
-author: Julia Fomina, oscd.community
-date: '2020-10-08'
-modified: '2023-11-09'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.defense-evasion
-    - attack.t1216
 references:
     - https://twitter.com/Oddvarmoe/status/993383596244258816
     - https://github.com/api0cradle/LOLBAS/blob/d148d278f5f205ce67cfaf49afdfb68071c7252a/OSScripts/pester.md
 falsepositives:
     - Legitimate use of Pester for writing tests for Powershell scripts and modules
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1216
+date: '2020-10-08'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -46,17 +45,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:03.037591+00:00'
+            mapped_at: '2025-12-04T01:50:44.854471+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:03.037591+00:00'
+            mapped_at: '2025-12-04T01:50:44.854471+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:03.037612+00:00'
+            mapped_at: '2025-12-04T01:50:44.854492+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:03.037621+00:00'
+            mapped_at: '2025-12-04T01:50:44.854494+00:00'

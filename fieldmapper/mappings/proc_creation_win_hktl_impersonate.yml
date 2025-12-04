@@ -1,23 +1,22 @@
-id: cf0c254b-22f1-4b2b-8221-e137b3c0af94
 title: HackTool - Impersonate Execution
+id: cf0c254b-22f1-4b2b-8221-e137b3c0af94
 status: test
 level: medium
+author: Sai Prashanth Pulisetti @pulisettis
 description: Detects execution of the Impersonate tool. Which can be used to manipulate
     tokens on a Windows computers remotely (PsExec/WmiExec) or interactively
-author: Sai Prashanth Pulisetti @pulisettis
-date: '2022-12-21'
-modified: '2024-11-23'
-tags:
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1134.001
-    - attack.t1134.003
 references:
     - https://sensepost.com/blog/2022/abusing-windows-tokens-to-compromise-active-directory-without-touching-lsass/
     - https://github.com/sensepost/impersonate
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1134.001
+    - attack.t1134.003
+date: '2022-12-21'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:12.426931+00:00'
+            mapped_at: '2025-12-04T01:44:10.020921+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:12.426931+00:00'
+            mapped_at: '2025-12-04T01:44:10.020921+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:12.426950+00:00'
+            mapped_at: '2025-12-04T01:44:10.020935+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:29:12.426952+00:00'
+            mapped_at: '2025-12-04T01:44:10.020937+00:00'

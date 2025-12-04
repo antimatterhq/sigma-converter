@@ -1,22 +1,21 @@
-id: 0f63e1ef-1eb9-4226-9d54-8927ca08520a
 title: Admin User Remote Logon
+id: 0f63e1ef-1eb9-4226-9d54-8927ca08520a
 status: test
 level: low
-description: Detect remote login by Administrator user (depending on internal pattern).
 author: juju4
-date: '2017-10-29'
-modified: '2022-10-09'
+description: Detect remote login by Administrator user (depending on internal pattern).
+references:
+    - https://car.mitre.org/wiki/CAR-2016-04-005
+falsepositives:
+    - Legitimate administrative activity.
 tags:
     - attack.lateral-movement
     - attack.t1078.001
     - attack.t1078.002
     - attack.t1078.003
     - car.2016-04-005
-references:
-    - https://car.mitre.org/wiki/CAR-2016-04-005
-falsepositives:
-    - Legitimate administrative activity.
-taxonomy: sigma
+date: '2017-10-29'
+modified: '2022-10-09'
 logsource:
     product: windows
     service: security
@@ -37,25 +36,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:50.789584+00:00'
+            mapped_at: '2025-12-04T01:56:53.768306+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:47:50.789584+00:00'
+            mapped_at: '2025-12-04T01:56:53.768306+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:50.789600+00:00'
+            mapped_at: '2025-12-04T01:56:53.768340+00:00'
         -   source_field: LogonType
             target_table: authentication
             target_field: logon_type
-            mapped_at: '2025-11-26T02:47:50.789602+00:00'
+            mapped_at: '2025-12-04T01:56:53.768343+00:00'
         -   source_field: AuthenticationPackageName
             target_table: authentication
             target_field: auth_protocol
-            mapped_at: '2025-11-26T02:47:50.789603+00:00'
+            mapped_at: '2025-12-04T01:56:53.768344+00:00'
         -   source_field: TargetUserName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:50.789605+00:00'
+            mapped_at: '2025-12-04T01:56:53.768345+00:00'

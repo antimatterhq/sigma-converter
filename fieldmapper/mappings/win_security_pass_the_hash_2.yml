@@ -1,22 +1,21 @@
-id: 8eef149c-bd26-49f2-9e5a-9b00e3af499b
 title: Pass the Hash Activity 2
+id: 8eef149c-bd26-49f2-9e5a-9b00e3af499b
 status: stable
 level: medium
+author: Dave Kennedy, Jeff Warren (method) / David Vassallo (rule)
 description: Detects the attack technique pass the hash which is used to move laterally
     inside the network
-author: Dave Kennedy, Jeff Warren (method) / David Vassallo (rule)
-date: '2019-06-14'
-modified: '2022-10-05'
-tags:
-    - attack.lateral-movement
-    - attack.t1550.002
 references:
     - https://github.com/iadgov/Event-Forwarding-Guidance/tree/master/Events
     - https://web.archive.org/web/20170909091934/https://blog.binarydefense.com/reliably-detecting-pass-the-hash-through-event-log-analysis
     - https://blog.stealthbits.com/how-to-detect-pass-the-hash-attacks/
 falsepositives:
     - Administrator activity
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1550.002
+date: '2019-06-14'
+modified: '2022-10-05'
 logsource:
     product: windows
     service: security
@@ -43,33 +42,33 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:45.831385+00:00'
+            mapped_at: '2025-12-04T01:56:52.290946+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:47:45.831385+00:00'
+            mapped_at: '2025-12-04T01:56:52.290946+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:46.630032+00:00'
+            mapped_at: '2025-12-04T01:56:52.290965+00:00'
         -   source_field: SubjectUserSid
             target_table: authentication
             target_field: actor.user.uid
-            mapped_at: '2025-11-26T02:47:46.630050+00:00'
+            mapped_at: '2025-12-04T01:56:52.290967+00:00'
         -   source_field: LogonType
             target_table: authentication
             target_field: logon_type
-            mapped_at: '2025-11-26T02:47:46.630053+00:00'
+            mapped_at: '2025-12-04T01:56:52.290976+00:00'
         -   source_field: LogonProcessName
             target_table: authentication
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:47:46.630055+00:00'
+            mapped_at: '2025-12-04T01:56:52.290977+00:00'
         -   source_field: KeyLength
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:46.630058+00:00'
+            mapped_at: '2025-12-04T01:56:52.290978+00:00'
         -   source_field: TargetUserName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:46.630079+00:00'
+            mapped_at: '2025-12-04T01:56:52.290979+00:00'

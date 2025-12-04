@@ -1,13 +1,20 @@
-id: d557dc06-62e8-4468-a8e8-7984124908ce
 title: HackTool - WinPwn Execution
+id: d557dc06-62e8-4468-a8e8-7984124908ce
 status: test
 level: high
+author: Swachchhanda Shrawan Poudel
 description: 'Detects commandline keywords indicative of potential usge of the tool
     WinPwn. A tool for Windows and Active Directory reconnaissance and exploitation.
 
     '
-author: Swachchhanda Shrawan Poudel
-date: '2023-12-04'
+references:
+    - https://github.com/S3cur3Th1sSh1t/WinPwn
+    - https://www.publicnow.com/view/EB87DB49C654D9B63995FAD4C9DE3D3CC4F6C3ED?1671634841
+    - https://reconshell.com/winpwn-tool-for-internal-windows-pentesting-and-ad-security/
+    - https://github.com/redcanaryco/atomic-red-team/blob/4d6c4e8e23d465af7a2388620cfe3f8c76e16cf0/atomics/T1082/T1082.md
+    - https://grep.app/search?q=winpwn&filter[repo][0]=redcanaryco/atomic-red-team
+falsepositives:
+    - Unknown
 tags:
     - attack.credential-access
     - attack.defense-evasion
@@ -22,17 +29,7 @@ tags:
     - attack.t1552.001
     - attack.t1555
     - attack.t1555.003
-references:
-    - https://github.com/S3cur3Th1sSh1t/WinPwn
-    - https://www.publicnow.com/view/EB87DB49C654D9B63995FAD4C9DE3D3CC4F6C3ED?1671634841
-    - https://reconshell.com/winpwn-tool-for-internal-windows-pentesting-and-ad-security/
-    - https://github.com/redcanaryco/atomic-red-team/blob/4d6c4e8e23d465af7a2388620cfe3f8c76e16cf0/atomics/T1082/T1082.md
-    - https://grep.app/search?q=winpwn&filter[repo][0]=redcanaryco/atomic-red-team
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''851fd622-b675-4d26-b803-14bc7baa517a''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2023-12-04'
 logsource:
     category: process_creation
     product: windows
@@ -44,6 +41,9 @@ detection:
             - WinPwn.exe
             - WinPwn.ps1
     condition: selection
+related:
+    -   id: 851fd622-b675-4d26-b803-14bc7baa517a
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -51,13 +51,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:36.555146+00:00'
+            mapped_at: '2025-12-04T01:48:37.286098+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:36.555146+00:00'
+            mapped_at: '2025-12-04T01:48:37.286098+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:36.555169+00:00'
+            mapped_at: '2025-12-04T01:48:37.286118+00:00'

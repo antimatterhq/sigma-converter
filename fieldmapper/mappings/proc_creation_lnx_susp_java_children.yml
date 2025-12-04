@@ -1,18 +1,17 @@
-id: d292e0af-9a18-420c-9525-ec0ac3936892
 title: Suspicious Java Children Processes
+id: d292e0af-9a18-420c-9525-ec0ac3936892
 status: test
 level: high
-description: Detects java process spawning suspicious children
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-03'
-tags:
-    - attack.execution
-    - attack.t1059
+description: Detects java process spawning suspicious children
 references:
     - https://www.tecmint.com/different-types-of-linux-shells/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-06-03'
 logsource:
     category: process_creation
     product: linux
@@ -38,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:39.301385+00:00'
+            mapped_at: '2025-12-04T01:35:56.094721+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:39.301385+00:00'
+            mapped_at: '2025-12-04T01:35:56.094721+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:16:39.301401+00:00'
+            mapped_at: '2025-12-04T01:35:56.094740+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:39.301415+00:00'
+            mapped_at: '2025-12-04T01:35:56.094743+00:00'

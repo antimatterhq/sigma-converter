@@ -1,19 +1,18 @@
-id: c3e76af5-4ce0-4a14-9c9a-25ceb8fda182
 title: WerFault LSASS Process Memory Dump
+id: c3e76af5-4ce0-4a14-9c9a-25ceb8fda182
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects WerFault creating a dump file with a name that indicates that
     the dump file could be an LSASS process memory, which contains user credentials
-author: Florian Roth (Nextron Systems)
-date: '2022-06-27'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://github.com/helpsystems/nanodump
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2022-06-27'
 logsource:
     category: file_event
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:33.225044+00:00'
+            mapped_at: '2025-12-04T01:53:10.111351+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:33.225044+00:00'
+            mapped_at: '2025-12-04T01:53:10.111351+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:33.225060+00:00'
+            mapped_at: '2025-12-04T01:53:10.111370+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:33.225062+00:00'
+            mapped_at: '2025-12-04T01:53:10.111373+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Linux Base64 Encoded Pipe to Shell",
+    "comment": "Detects suspicious process command line that uses base64 encoded input for execution with a shell",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('base64 ')) AND (contains(lower(process.cmd_line), lower('| bash ')) OR contains(lower(process.cmd_line), lower('| sh ')) OR contains(lower(process.cmd_line), lower('|bash ')) OR contains(lower(process.cmd_line), lower('|sh '))) AND (endswith(lower(process.cmd_line), lower(' |sh')) OR endswith(lower(process.cmd_line), lower('| bash')) OR endswith(lower(process.cmd_line), lower('| sh')) OR endswith(lower(process.cmd_line), lower('|bash'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious process command line that uses base64 encoded input for execution with a shell",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://github.com/arget13/DDexec, https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1140"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

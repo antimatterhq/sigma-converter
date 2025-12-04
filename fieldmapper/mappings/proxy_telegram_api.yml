@@ -1,17 +1,10 @@
-id: b494b165-6634-483d-8c47-2026a6c52372
 title: Telegram API Access
+id: b494b165-6634-483d-8c47-2026a6c52372
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious requests to Telegram API without the usual Telegram
     User-Agent
-author: Florian Roth (Nextron Systems)
-date: '2018-06-05'
-modified: '2023-05-18'
-tags:
-    - attack.defense-evasion
-    - attack.command-and-control
-    - attack.t1071.001
-    - attack.t1102.002
 references:
     - https://researchcenter.paloaltonetworks.com/2018/03/unit42-telerat-another-android-trojan-leveraging-telegrams-bot-api-to-target-iranian-users/
     - https://blog.malwarebytes.com/threat-analysis/2016/11/telecrypt-the-ransomware-abusing-telegram-api-defeated/
@@ -22,7 +15,13 @@ fields:
     - c-useragent
 falsepositives:
     - Legitimate use of Telegram bots in the company
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.command-and-control
+    - attack.t1071.001
+    - attack.t1102.002
+date: '2018-06-05'
+modified: '2023-05-18'
 logsource:
     category: proxy
 detection:
@@ -40,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:13:56.395327+00:00'
+            mapped_at: '2025-12-04T01:34:44.415554+00:00'
     detection_fields:
         -   source_field: cs-host
             target_table: http_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:13:57.266572+00:00'
+            mapped_at: '2025-12-04T01:34:44.415582+00:00'
         -   source_field: c-useragent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:13:57.266583+00:00'
+            mapped_at: '2025-12-04T01:34:44.415584+00:00'

@@ -1,25 +1,22 @@
-id: a94cdd87-6c54-4678-a6cc-2814ffe5a13d
 title: Unix Shell Configuration Modification
+id: a94cdd87-6c54-4678-a6cc-2814ffe5a13d
 status: test
 level: medium
+author: Peter Matkovski, IAI
 description: Detect unix shell configuration modification. Adversaries may establish
     persistence through executing malicious commands triggered when a new shell is
     opened.
-author: Peter Matkovski, IAI
-date: '2023-03-06'
-modified: '2023-03-15'
-tags:
-    - attack.persistence
-    - attack.t1546.004
 references:
     - https://objective-see.org/blog/blog_0x68.html
     - https://web.archive.org/web/20221204161143/https://www.glitch-cat.com/p/green-lambert-and-attack
     - https://www.anomali.com/blog/pulling-linux-rabbit-rabbot-malware-out-of-a-hat
 falsepositives:
     - Admin or User activity are expected to generate some false positives
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e74e15cc-c4b6-4c80-b7eb-dfe49feb7fe9''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1546.004
+date: '2023-03-06'
+modified: '2023-03-15'
 logsource:
     product: linux
     service: auditd
@@ -53,6 +50,9 @@ detection:
             - /home/*/.zlogin
             - /home/*/.zlogout
     condition: selection
+related:
+    -   id: e74e15cc-c4b6-4c80-b7eb-dfe49feb7fe9
+        type: obsolete
 ocsf_mapping:
     class_name: file_activity
     activity_id: 3
@@ -60,17 +60,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:15.030988+00:00'
+            mapped_at: '2025-12-04T01:35:41.767035+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:15.030988+00:00'
+            mapped_at: '2025-12-04T01:35:41.767035+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:15.031004+00:00'
+            mapped_at: '2025-12-04T01:35:41.767050+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:16:15.031006+00:00'
+            mapped_at: '2025-12-04T01:35:41.767052+00:00'

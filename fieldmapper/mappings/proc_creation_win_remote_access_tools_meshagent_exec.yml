@@ -1,7 +1,8 @@
-id: 74a2b202-73e0-4693-9a3a-9d36146d0775
 title: Remote Access Tool - MeshAgent Command Execution via MeshCentral
+id: 74a2b202-73e0-4693-9a3a-9d36146d0775
 status: experimental
 level: medium
+author: '@Kostastsale'
 description: 'Detects the use of MeshAgent to execute commands on the target host,
     particularly when threat actors might abuse it to execute commands directly.
 
@@ -10,11 +11,6 @@ description: 'Detects the use of MeshAgent to execute commands on the target hos
     with child processes.
 
     '
-author: '@Kostastsale'
-date: '2024-09-22'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://github.com/Ylianst/MeshAgent
     - https://github.com/Ylianst/MeshAgent/blob/52cf129ca43d64743181fbaf940e0b4ddb542a37/modules/win-dispatcher.js#L173
@@ -24,7 +20,10 @@ falsepositives:
         analysis should prioritize the grandparent process, MessAgent.exe, and scrutinize
         the resulting child processes triggered by any suspicious interactive commands
         directed at the target host.
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2024-09-22'
 logsource:
     category: process_creation
     product: windows
@@ -43,17 +42,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:04.846638+00:00'
+            mapped_at: '2025-12-04T01:45:40.826129+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:04.846638+00:00'
+            mapped_at: '2025-12-04T01:45:40.826129+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:04.846655+00:00'
+            mapped_at: '2025-12-04T01:45:40.826141+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:04.846658+00:00'
+            mapped_at: '2025-12-04T01:45:40.826143+00:00'

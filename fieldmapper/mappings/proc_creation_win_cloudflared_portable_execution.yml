@@ -1,16 +1,12 @@
-id: fadb84f0-4e84-4f6d-a1ce-9ef2bffb6ccd
 title: Cloudflared Portable Execution
+id: fadb84f0-4e84-4f6d-a1ce-9ef2bffb6ccd
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of the "cloudflared" binary from a non standard
     location.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-12-20'
-tags:
-    - attack.command-and-control
-    - attack.t1090.001
 references:
     - https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/
     - https://github.com/cloudflare/cloudflared
@@ -19,7 +15,10 @@ references:
     - https://github.com/cloudflare/cloudflared/releases
 falsepositives:
     - Legitimate usage of Cloudflared portable versions
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090.001
+date: '2023-12-20'
 logsource:
     category: process_creation
     product: windows
@@ -38,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:39.959646+00:00'
+            mapped_at: '2025-12-04T01:47:06.240960+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:39.959646+00:00'
+            mapped_at: '2025-12-04T01:47:06.240960+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:39.959659+00:00'
+            mapped_at: '2025-12-04T01:47:06.241059+00:00'

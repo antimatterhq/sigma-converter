@@ -1,25 +1,24 @@
-id: 5468045b-4fcc-4d1a-973c-c9c9578edacb
 title: Raw Paste Service Access
+id: 5468045b-4fcc-4d1a-973c-c9c9578edacb
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects direct access to raw pastes in different paste services often
     used by malware in their second stages to download malicious code in encrypted
     or encoded form
-author: Florian Roth (Nextron Systems)
-date: '2019-12-05'
-modified: '2023-01-19'
+references:
+    - https://www.virustotal.com/gui/domain/paste.ee/relations
+falsepositives:
+    - User activity (e.g. developer that shared and copied code snippets and used
+        the raw link instead of just copy & paste)
 tags:
     - attack.command-and-control
     - attack.t1071.001
     - attack.t1102.001
     - attack.t1102.003
     - attack.defense-evasion
-references:
-    - https://www.virustotal.com/gui/domain/paste.ee/relations
-falsepositives:
-    - User activity (e.g. developer that shared and copied code snippets and used
-        the raw link instead of just copy & paste)
-taxonomy: sigma
+date: '2019-12-05'
+modified: '2023-01-19'
 logsource:
     category: proxy
 detection:
@@ -40,9 +39,9 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:04.644533+00:00'
+            mapped_at: '2025-12-04T01:34:50.300777+00:00'
     detection_fields:
         -   source_field: c-uri
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:14:04.644549+00:00'
+            mapped_at: '2025-12-04T01:34:50.300791+00:00'

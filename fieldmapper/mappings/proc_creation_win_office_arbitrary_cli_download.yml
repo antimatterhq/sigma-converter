@@ -1,14 +1,9 @@
-id: 4ae3e30b-b03f-43aa-87e3-b622f4048eed
 title: Potential Arbitrary File Download Using Office Application
+id: 4ae3e30b-b03f-43aa-87e3-b622f4048eed
 status: test
 level: high
-description: Detects potential arbitrary file download using a Microsoft Office application
 author: Nasreddine Bencherchali (Nextron Systems), Beyu Denis, oscd.community
-date: '2022-05-17'
-modified: '2023-06-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1202
+description: Detects potential arbitrary file download using a Microsoft Office application
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Winword/
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Powerpnt/
@@ -16,9 +11,11 @@ references:
     - https://medium.com/@reegun/unsanitized-file-validation-leads-to-malicious-payload-download-via-office-binaries-202d02db7191
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0c79148b-118e-472b-bdb7-9b57b444cc19''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+date: '2022-05-17'
+modified: '2023-06-22'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
             - http://
             - https://
     condition: all of selection_*
+related:
+    -   id: 0c79148b-118e-472b-bdb7-9b57b444cc19
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:39.743980+00:00'
+            mapped_at: '2025-12-04T01:46:10.885635+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:39.743980+00:00'
+            mapped_at: '2025-12-04T01:46:10.885635+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:39.743994+00:00'
+            mapped_at: '2025-12-04T01:46:10.885662+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:39.744006+00:00'
+            mapped_at: '2025-12-04T01:46:10.885664+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:39.744008+00:00'
+            mapped_at: '2025-12-04T01:46:10.885665+00:00'

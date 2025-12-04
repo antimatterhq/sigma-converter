@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "TeamViewer Log File Deleted",
+    "comment": "Detects the deletion of the TeamViewer log files which may indicate an attempt to destroy forensic evidence",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_delete",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND contains(lower(file.path), lower('\\\\teamviewer_')) AND endswith(lower(file.path), lower('.log')) AND NOT lower(actor.process.name) = lower('c:\\\\windows\\\\system32\\\\svchost.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the deletion of the TeamViewer log files which may indicate an attempt to destroy forensic evidence",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.004/T1070.004.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

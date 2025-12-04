@@ -1,21 +1,20 @@
-id: 424273ea-7cf8-43a6-b712-375f925e481f
 title: Scheduled Task Executed From A Suspicious Location
+id: 424273ea-7cf8-43a6-b712-375f925e481f
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of Scheduled Tasks where the Program being run
     is located in a suspicious location or it's an unusale program to be run from
     a Scheduled Task
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-05'
-modified: '2023-02-07'
-tags:
-    - attack.persistence
-    - attack.t1053.005
 references:
     - Internal Research
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1053.005
+date: '2022-12-05'
+modified: '2023-02-07'
 logsource:
     product: windows
     service: taskscheduler
@@ -40,17 +39,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:26.180933+00:00'
+            mapped_at: '2025-12-04T01:55:13.847647+00:00'
         service:
             source_field: service
             source_value: taskscheduler
-            mapped_at: '2025-11-26T02:43:26.180933+00:00'
+            mapped_at: '2025-12-04T01:55:13.847647+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:26.180973+00:00'
+            mapped_at: '2025-12-04T01:55:13.847673+00:00'
         -   source_field: Path
             target_table: scheduled_job_activity
             target_field: job.file.path
-            mapped_at: '2025-11-26T02:43:26.180978+00:00'
+            mapped_at: '2025-12-04T01:55:13.847676+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Driver Install by pnputil.exe",
+    "comment": "Detects when a possible suspicious driver is being installed via pnputil.exe lolbin",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('-i')) OR contains(lower(process.cmd_line), lower('/install')) OR contains(lower(process.cmd_line), lower('-a')) OR contains(lower(process.cmd_line), lower('/add-driver')) OR contains(lower(process.cmd_line), lower('.inf'))) AND endswith(lower(process.name), lower('\\\\pnputil.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a possible suspicious driver is being installed via pnputil.exe lolbin",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ComputerName, actor.user.name, process.cmd_line, process.parent_process.cmd_line False positives: 1. Pnputil.exe being used may be performed by a system administrator. 2. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 3. Pnputil.exe being executed from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule. References: https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/pnputil-command-syntax, https://strontic.github.io/xcyclopedia/library/pnputil.exe-60EDC5E6BDBAEE441F2E3AEACD0340D2.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1547"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

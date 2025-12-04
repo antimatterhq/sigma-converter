@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Email Exifiltration Via Powershell",
+    "comment": "Detects email exfiltration via powershell cmdlets",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('add-pssnapin')) AND contains(lower(process.cmd_line), lower('get-recipient')) AND contains(lower(process.cmd_line), lower('-expandproperty')) AND contains(lower(process.cmd_line), lower('emailaddresses')) AND contains(lower(process.cmd_line), lower('smtpaddress')) AND contains(lower(process.cmd_line), lower('-hidetableheaders')))"
+      }
+    },
+    "output": {
+      "summary": "Detects email exfiltration via powershell cmdlets",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/, https://github.com/Azure/Azure-Sentinel/blob/7e6aa438e254d468feec061618a7877aa528ee9f/Hunting%20Queries/Microsoft%20365%20Defender/Ransomware/DEV-0270/Email%20data%20exfiltration%20via%20PowerShell.yaml",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

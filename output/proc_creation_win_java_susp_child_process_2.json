@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Shell Process Spawned by Java.EXE",
+    "comment": "Detects shell spawned from Java host process, which could be a sign of exploitation (e.g. log4j exploitation)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\java.exe')) AND (endswith(lower(process.name), lower('\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND NOT (contains(lower(process.parent_process.name), lower('build')) AND contains(lower(process.cmd_line), lower('build'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects shell spawned from Java host process, which could be a sign of exploitation (e.g. log4j exploitation)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate calls to system binaries 2. Company specific internal usage Reference: https://web.archive.org/web/20231230220738/https://www.lunasec.io/docs/blog/log4j-zero-day/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

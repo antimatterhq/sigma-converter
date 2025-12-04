@@ -1,7 +1,8 @@
-id: 3669afd2-9891-4534-a626-e5cf03810a61
 title: Load Of RstrtMgr.DLL By An Uncommon Process
+id: 3669afd2-9891-4534-a626-e5cf03810a61
 status: test
 level: low
+author: Luc Génaux
 description: 'Detects the load of RstrtMgr DLL (Restart Manager) by an uncommon process.
 
     This library has been used during ransomware campaigns to kill processes that
@@ -11,13 +12,6 @@ description: 'Detects the load of RstrtMgr DLL (Restart Manager) by an uncommon 
     It could also be used for anti-analysis purposes by shut downing specific processes.
 
     '
-author: Luc Génaux
-date: '2023-11-28'
-tags:
-    - attack.impact
-    - attack.defense-evasion
-    - attack.t1486
-    - attack.t1562.001
 references:
     - https://www.crowdstrike.com/blog/windows-restart-manager-part-1/
     - https://www.crowdstrike.com/blog/windows-restart-manager-part-2/
@@ -26,9 +20,12 @@ references:
 falsepositives:
     - Other legitimate Windows processes not currently listed
     - Processes related to software installation
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b48492dc-c5ef-4572-8dff-32bc241c15c8''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.defense-evasion
+    - attack.t1486
+    - attack.t1562.001
+date: '2023-11-28'
 logsource:
     category: image_load
     product: windows
@@ -59,6 +56,9 @@ detection:
     filter_main_admin_software_installations:
         Image|contains: :\Windows\Temp\
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: b48492dc-c5ef-4572-8dff-32bc241c15c8
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -66,21 +66,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: image_load
-            mapped_at: '2025-11-26T02:24:45.165800+00:00'
+            mapped_at: '2025-12-04T01:40:39.104835+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:45.165800+00:00'
+            mapped_at: '2025-12-04T01:40:39.104835+00:00'
     detection_fields:
         -   source_field: ImageLoaded
             target_table: process_activity
             target_field: module.file.path
-            mapped_at: '2025-11-26T02:24:45.165825+00:00'
+            mapped_at: '2025-12-04T01:40:39.104879+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:24:45.165828+00:00'
+            mapped_at: '2025-12-04T01:40:39.104884+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:24:45.165829+00:00'
+            mapped_at: '2025-12-04T01:40:39.104887+00:00'

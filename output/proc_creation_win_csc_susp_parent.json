@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "name": "Csc.EXE Execution Form Potentially Suspicious Parent",
+    "comment": "Detects a potentially suspicious parent of \"csc.exe\", which could be a sign of payload delivery.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\csc.exe')) AND lower(process.file.name) = lower('csc.exe') AND (endswith(lower(process.parent_process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\excel.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\onenote.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\outlook.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powerpnt.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\winword.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wscript.exe')) OR (endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe'))) AND (contains(lower(process.parent_process.cmd_line), lower('-encoded ')) OR contains(lower(process.parent_process.cmd_line), lower('frombase64string'))) OR process.parent_process.cmd_line rlike '\\(\\[Pp\\]rogram\\[Dd\\]ata|%\\(\\[Ll\\]ocal\\)?\\[Aa\\]pp\\[Dd\\]ata%|\\\\\\\\\\[Aa\\]pp\\[Dd\\]ata\\\\\\\\\\(\\[Ll\\]ocal\\(\\[Ll\\]ow\\)?|\\[Rr\\]oaming\\)\\)\\\\\\\\\\[^\\\\\\\\\\]\\{1,256\\}$' AND (contains(lower(process.parent_process.cmd_line), lower(':\\\\perflogs\\\\')) OR contains(lower(process.parent_process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.parent_process.cmd_line), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.parent_process.cmd_line), lower('\\\\temporary internet'))) AND contains(lower(process.parent_process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.cmd_line), lower('\\\\favorites\\\\')) AND contains(lower(process.parent_process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.cmd_line), lower('\\\\favourites\\\\')) AND contains(lower(process.parent_process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.cmd_line), lower('\\\\contacts\\\\')) AND contains(lower(process.parent_process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.parent_process.cmd_line), lower('\\\\pictures\\\\'))) AND NOT (startswith(lower(process.parent_process.name), lower('c:\\\\program files (x86)\\\\')) OR startswith(lower(process.parent_process.name), lower('c:\\\\program files\\\\')) OR lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\sdiagnhost.exe') OR lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\inetsrv\\\\w3wp.exe')) AND NOT (lower(process.parent_process.name) = lower('c:\\\\programdata\\\\chocolatey\\\\choco.exe') OR contains(lower(process.parent_process.cmd_line), lower('\\\\programdata\\\\microsoft\\\\windows defender advanced threat protection')) OR contains(lower(process.parent_process.cmd_line), lower('jwb7aciazgbhagkabablagqaiga6ahqacgb1agualaaiag0acwbnaciaogaiaeeabgbzagkaygbsaguaiabyaguacqb1agkacgblahmaiabqag8adwblahiauwboaguababsacaadgazac4amaagag8acgagag4azqb3aguacgaiah0ajw')) OR contains(lower(process.parent_process.cmd_line), lower('caewaiagyayqbpagwazqbkaciaogb0ahiadqblacwaigbtahmazwaiadoaigbbag4acwbpagiabablacaacgblaheadqbpahiazqbzacaauabvahcazqbyafmaaablagwabaagahyamwauadaaiabvahiaiabuaguadwblahiaigb9acca')) OR contains(lower(process.parent_process.cmd_line), lower('nahsaigbmageaaqbsaguazaaiadoadabyahuazqasaciabqbzagcaiga6aciaqqbuahmaaqbiagwazqagahiazqbxahuaaqbyaguacwagafaabwb3aguacgbtaggazqbsagwaiab2admalgawacaabwbyacaabgblahcazqbyaciafqana'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a potentially suspicious parent of \"csc.exe\", which could be a sign of payload delivery.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.uptycs.com/blog/warzonerat-can-now-evade-with-process-hollowing, https://reaqta.com/2017/11/short-journey-darkvnc/, https://www.pwc.com/gx/en/issues/cybersecurity/cyber-threat-intelligence/yellow-liderc-ships-its-scripts-delivers-imaploader-malware.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1027",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

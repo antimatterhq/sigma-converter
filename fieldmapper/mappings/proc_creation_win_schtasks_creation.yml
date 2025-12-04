@@ -1,12 +1,15 @@
-id: 92626ddd-662c-49e3-ac59-f6535f12d189
 title: Scheduled Task Creation Via Schtasks.EXE
+id: 92626ddd-662c-49e3-ac59-f6535f12d189
 status: test
 level: low
+author: Florian Roth (Nextron Systems)
 description: Detects the creation of scheduled tasks by user accounts via the "schtasks"
     utility.
-author: Florian Roth (Nextron Systems)
-date: '2019-01-16'
-modified: '2024-01-18'
+references:
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create
+falsepositives:
+    - Administrative activity
+    - Software installation
 tags:
     - attack.execution
     - attack.persistence
@@ -15,12 +18,8 @@ tags:
     - attack.s0111
     - car.2013-08-001
     - stp.1u
-references:
-    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create
-falsepositives:
-    - Administrative activity
-    - Software installation
-taxonomy: sigma
+date: '2019-01-16'
+modified: '2024-01-18'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:31.296756+00:00'
+            mapped_at: '2025-12-04T01:50:13.170552+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:31.296756+00:00'
+            mapped_at: '2025-12-04T01:50:13.170552+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:31.296775+00:00'
+            mapped_at: '2025-12-04T01:50:13.170584+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:31.296776+00:00'
+            mapped_at: '2025-12-04T01:50:13.170588+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:36:31.296778+00:00'
+            mapped_at: '2025-12-04T01:50:13.170591+00:00'

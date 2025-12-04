@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "HackTool - SharpDPAPI Execution",
+    "comment": "Detects the execution of the SharpDPAPI tool based on CommandLine flags and PE metadata. SharpDPAPI is a C# port of some DPAPI functionality from the Mimikatz project.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\sharpdpapi.exe')) AND lower(process.file.name) = lower('sharpdpapi.exe') OR (contains(lower(process.cmd_line), lower(' backupkey ')) OR contains(lower(process.cmd_line), lower(' blob ')) OR contains(lower(process.cmd_line), lower(' certificates ')) OR contains(lower(process.cmd_line), lower(' credentials ')) OR contains(lower(process.cmd_line), lower(' keepass ')) OR contains(lower(process.cmd_line), lower(' masterkeys ')) OR contains(lower(process.cmd_line), lower(' rdg ')) OR contains(lower(process.cmd_line), lower(' vaults '))) AND (contains(lower(process.cmd_line), lower(' {')) AND contains(lower(process.cmd_line), lower('}:')) OR contains(lower(process.cmd_line), lower(' /file:')) OR contains(lower(process.cmd_line), lower(' /machine')) OR contains(lower(process.cmd_line), lower(' /mkfile:')) OR contains(lower(process.cmd_line), lower(' /password:')) OR contains(lower(process.cmd_line), lower(' /pvk:')) OR contains(lower(process.cmd_line), lower(' /server:')) OR contains(lower(process.cmd_line), lower(' /target:')) OR contains(lower(process.cmd_line), lower(' /unprotect')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the SharpDPAPI tool based on CommandLine flags and PE metadata. SharpDPAPI is a C# port of some DPAPI functionality from the Mimikatz project.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/GhostPack/SharpDPAPI",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1134",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1134",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,23 +1,20 @@
-id: 6bfb8fa7-b2e7-4f6c-8d9d-824e5d06ea9e
 title: Invoke-Obfuscation VAR+ Launcher - PowerShell Module
+id: 6bfb8fa7-b2e7-4f6c-8d9d-824e5d06ea9e
 status: test
 level: high
-description: Detects Obfuscated use of Environment Variables to execute PowerShell
 author: Jonathan Cheong, oscd.community
-date: '2020-10-15'
-modified: '2024-04-05'
+description: Detects Obfuscated use of Environment Variables to execute PowerShell
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0adfbc14-0ed1-11eb-adc1-0242ac120002''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-15'
+modified: '2024-04-05'
 logsource:
     category: ps_module
     product: windows
@@ -26,6 +23,9 @@ detection:
     selection_4103:
         Payload|re: cmd.{0,5}(?:/c|/r)(?:\s|)"set\s[a-zA-Z]{3,6}.*(?:\{\d\}){1,}\\"\s+?-f(?:.*\)){1,}.*"
     condition: selection_4103
+related:
+    -   id: 0adfbc14-0ed1-11eb-adc1-0242ac120002
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

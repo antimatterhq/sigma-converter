@@ -1,19 +1,18 @@
-id: f8d6a15e-4bc8-4c27-8e5d-2b10f0b73e5b
 title: Suspicious Powercfg Execution To Change Lock Screen Timeout
+id: f8d6a15e-4bc8-4c27-8e5d-2b10f0b73e5b
 status: test
 level: medium
+author: frack113
 description: Detects suspicious execution of 'Powercfg.exe' to change lock screen
     timeout
-author: frack113
-date: '2022-11-18'
-tags:
-    - attack.defense-evasion
 references:
     - https://blogs.vmware.com/security/2022/11/batloader-the-evasive-downloader-malware.html
     - https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-11-18'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:34.263699+00:00'
+            mapped_at: '2025-12-04T01:44:28.082223+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:34.263699+00:00'
+            mapped_at: '2025-12-04T01:44:28.082223+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:34.263712+00:00'
+            mapped_at: '2025-12-04T01:44:28.082238+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:34.263713+00:00'
+            mapped_at: '2025-12-04T01:44:28.082239+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:34.263715+00:00'
+            mapped_at: '2025-12-04T01:44:28.082241+00:00'

@@ -1,23 +1,22 @@
-id: 94771a71-ba41-4b6e-a757-b531372eaab6
 title: File Download From Browser Process Via Inline URL
+id: 94771a71-ba41-4b6e-a757-b531372eaab6
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of a browser process with a URL argument pointing to
     a file with a potentially interesting extension. This can be abused to download
     arbitrary files or to hide from the user for example by launching the browser
     in a minimized state.
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-01-11'
-modified: '2023-11-09'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://twitter.com/mrd0x/status/1478116126005641220
     - https://lolbas-project.github.io/lolbas/Binaries/Msedge/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-01-11'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -52,17 +51,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:37.898883+00:00'
+            mapped_at: '2025-12-04T01:48:38.687292+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:37.898883+00:00'
+            mapped_at: '2025-12-04T01:48:38.687292+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:37.898902+00:00'
+            mapped_at: '2025-12-04T01:48:38.687305+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:37.898905+00:00'
+            mapped_at: '2025-12-04T01:48:38.687307+00:00'

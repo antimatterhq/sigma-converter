@@ -1,22 +1,19 @@
-id: 28208707-fe31-437f-9a7f-4b1108b94d2e
 title: Suspicious Startup Folder Persistence
+id: 28208707-fe31-437f-9a7f-4b1108b94d2e
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects when a file with a suspicious extension is created in the startup
     folder
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-10'
-modified: '2023-01-06'
-tags:
-    - attack.persistence
-    - attack.t1547.001
 references:
     - https://github.com/last-byte/PersistenceSniper
 falsepositives:
     - Rare legitimate usage of some of the extensions mentioned in the rule
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''2aa0a6b4-a865-495b-ab51-c28249537b75''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.001
+date: '2022-08-10'
+modified: '2023-01-06'
 logsource:
     category: file_event
     product: windows
@@ -35,6 +32,9 @@ detection:
             - .scr
             - .cmd
     condition: selection
+related:
+    -   id: 2aa0a6b4-a865-495b-ab51-c28249537b75
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -42,13 +42,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:22.371741+00:00'
+            mapped_at: '2025-12-04T01:52:14.191485+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:22.371741+00:00'
+            mapped_at: '2025-12-04T01:52:14.191485+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:22.371763+00:00'
+            mapped_at: '2025-12-04T01:52:14.191504+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Tap Driver Installation",
+    "comment": "Well-known TAP software installation. Possible preparation for data exfiltration using tunnelling techniques",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND contains(lower(process.file.path), lower('tap0901')))"
+      }
+    },
+    "output": {
+      "summary": "Well-known TAP software installation. Possible preparation for data exfiltration using tunnelling techniques",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate OpenVPN TAP installation Reference: https://community.openvpn.net/openvpn/wiki/ManagingWindowsTAPDrivers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1048"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,16 +1,10 @@
-id: b97cd4b1-30b8-4a9d-bd72-6293928d52bc
 title: Indirect Command Execution By Program Compatibility Wizard
+id: b97cd4b1-30b8-4a9d-bd72-6293928d52bc
 status: test
 level: low
+author: A. Sungurov , oscd.community
 description: Detect indirect command execution via Program Compatibility Assistant
     pcwrun.exe
-author: A. Sungurov , oscd.community
-date: '2020-10-12'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
-    - attack.execution
 references:
     - https://twitter.com/pabraeken/status/991335019833708544
     - https://lolbas-project.github.io/lolbas/Binaries/Pcwrun/
@@ -23,7 +17,12 @@ falsepositives:
     - Need to use extra processing with 'unique_count' / 'filter' to focus on outliers
         as opposed to commonly seen artifacts
     - Legit usage of scripts
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.execution
+date: '2020-10-12'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -38,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:36.415737+00:00'
+            mapped_at: '2025-12-04T01:44:30.281854+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:36.415737+00:00'
+            mapped_at: '2025-12-04T01:44:30.281854+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:29:36.415764+00:00'
+            mapped_at: '2025-12-04T01:44:30.281867+00:00'

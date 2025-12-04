@@ -1,20 +1,19 @@
-id: caa06de8-fdef-4c91-826a-7f9e163eef4b
 title: RunDLL32 Spawning Explorer
+id: caa06de8-fdef-4c91-826a-7f9e163eef4b
 status: test
 level: high
+author: elhoim, CD_ROM_
 description: Detects RunDLL32.exe spawning explorer.exe as child, which is very uncommon,
     often observes Gamarue spawning the explorer.exe process in an unusual way
-author: elhoim, CD_ROM_
-date: '2022-04-27'
-modified: '2022-05-25'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
 references:
     - https://redcanary.com/blog/intelligence-insights-november-2021/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+date: '2022-04-27'
+modified: '2022-05-25'
 logsource:
     category: process_creation
     product: windows
@@ -32,21 +31,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:09.200579+00:00'
+            mapped_at: '2025-12-04T01:48:15.488598+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:09.200579+00:00'
+            mapped_at: '2025-12-04T01:48:15.488598+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:34:09.200613+00:00'
+            mapped_at: '2025-12-04T01:48:15.488612+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:09.200617+00:00'
+            mapped_at: '2025-12-04T01:48:15.488614+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:34:09.200621+00:00'
+            mapped_at: '2025-12-04T01:48:15.488616+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Excel.EXE DCOM Lateral Movement Via ActivateMicrosoftApp",
+    "comment": "Detects suspicious child processes of Excel which could be an indicator of lateral movement leveraging the \"ActivateMicrosoftApp\" Excel DCOM object.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\excel.exe')) AND (lower(LOWER(process.file.name)) in ('foxprow\\.exe', 'schdplus\\.exe', 'winproj\\.exe')) AND (endswith(lower(process.name), lower('\\\\foxprow.exe')) OR endswith(lower(process.name), lower('\\\\schdplus.exe')) OR endswith(lower(process.name), lower('\\\\winproj.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes of Excel which could be an indicator of lateral movement leveraging the \"ActivateMicrosoftApp\" Excel DCOM object.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://posts.specterops.io/lateral-movement-abuse-the-power-of-dcom-excel-application-3c016d0d9922, https://github.com/grayhatkiller/SharpExShell, https://learn.microsoft.com/en-us/office/vba/api/excel.xlmsapplication",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1021",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

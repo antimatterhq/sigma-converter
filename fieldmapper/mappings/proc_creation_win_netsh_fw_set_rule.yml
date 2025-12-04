@@ -1,19 +1,18 @@
-id: a70dcb37-3bee-453a-99df-d0c683151be6
 title: Firewall Rule Update Via Netsh.EXE
+id: a70dcb37-3bee-453a-99df-d0c683151be6
 status: test
 level: medium
+author: X__Junior (Nextron Systems)
 description: Detects execution of netsh with the "advfirewall" and the "set" option
     in order to set new values for properties of a existing rule
-author: X__Junior (Nextron Systems)
-date: '2023-07-18'
-tags:
-    - attack.defense-evasion
 references:
     - https://ss64.com/nt/netsh.html
 falsepositives:
     - Legitimate administration activity
     - Software installations and removal
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-07-18'
 logsource:
     category: process_creation
     product: windows
@@ -33,21 +32,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:42.441278+00:00'
+            mapped_at: '2025-12-04T01:46:12.822557+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:42.441278+00:00'
+            mapped_at: '2025-12-04T01:46:12.822557+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:42.441299+00:00'
+            mapped_at: '2025-12-04T01:46:12.822592+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:42.441307+00:00'
+            mapped_at: '2025-12-04T01:46:12.822594+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:42.441308+00:00'
+            mapped_at: '2025-12-04T01:46:12.822595+00:00'

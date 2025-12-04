@@ -1,17 +1,16 @@
-id: cb9cc1d1-e84e-4bdc-b7ad-c31b1b7908ec
 title: Insecure Transfer Via Curl.EXE
+id: cb9cc1d1-e84e-4bdc-b7ad-c31b1b7908ec
 status: test
 level: medium
-description: Detects execution of "curl.exe" with the "--insecure" flag.
 author: X__Junior (Nextron Systems)
-date: '2023-06-30'
-tags:
-    - attack.execution
+description: Detects execution of "curl.exe" with the "--insecure" flag.
 references:
     - https://curl.se/docs/manpage.html
 falsepositives:
     - Access to badly maintained internal or development systems
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-06-30'
 logsource:
     category: process_creation
     product: windows
@@ -30,21 +29,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:26.150263+00:00'
+            mapped_at: '2025-12-04T01:41:48.897904+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:26.150263+00:00'
+            mapped_at: '2025-12-04T01:41:48.897904+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:26.150283+00:00'
+            mapped_at: '2025-12-04T01:41:48.897917+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:26.150285+00:00'
+            mapped_at: '2025-12-04T01:41:48.897925+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:26.150287+00:00'
+            mapped_at: '2025-12-04T01:41:48.897926+00:00'

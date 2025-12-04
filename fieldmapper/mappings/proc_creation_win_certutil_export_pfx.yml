@@ -1,22 +1,21 @@
-id: 3ffd6f51-e6c1-47b7-94b4-c1e61d4117c5
 title: Certificate Exported Via Certutil.EXE
+id: 3ffd6f51-e6c1-47b7-94b4-c1e61d4117c5
 status: test
 level: medium
-description: Detects the execution of the certutil with the "exportPFX" flag which
-    allows the utility to export certificates.
 author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community, Nasreddine
     Bencherchali (Nextron Systems)
-date: '2023-02-15'
-modified: '2024-03-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1027
+description: Detects the execution of the certutil with the "exportPFX" flag which
+    allows the utility to export certificates.
 references:
     - https://www.splunk.com/en_us/blog/security/a-golden-saml-journey-solarwinds-continued.html
 falsepositives:
     - There legitimate reasons to export certificates. Investigate the activity to
         determine if it's benign
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+date: '2023-02-15'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:38.097366+00:00'
+            mapped_at: '2025-12-04T01:42:00.476270+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:38.097366+00:00'
+            mapped_at: '2025-12-04T01:42:00.476270+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:38.097396+00:00'
+            mapped_at: '2025-12-04T01:42:00.476284+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:38.097400+00:00'
+            mapped_at: '2025-12-04T01:42:00.476286+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:38.097402+00:00'
+            mapped_at: '2025-12-04T01:42:00.476288+00:00'

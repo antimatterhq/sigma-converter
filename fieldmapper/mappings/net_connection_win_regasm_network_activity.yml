@@ -1,20 +1,19 @@
-id: 0531e43a-d77d-47c2-b89f-5fe50321c805
 title: RegAsm.EXE Initiating Network Connection To Public IP
+id: 0531e43a-d77d-47c2-b89f-5fe50321c805
 status: experimental
 level: medium
-description: Detects "RegAsm.exe" initiating a network connection to public IP adresses
 author: frack113
-date: '2024-04-25'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.009
+description: Detects "RegAsm.exe" initiating a network connection to public IP adresses
 references:
     - https://app.any.run/tasks/ec207948-4916-47eb-a0f4-4c6abb2e7668/
     - https://research.splunk.com/endpoint/07921114-6db4-4e2e-ae58-3ea8a52ae93f/
     - https://lolbas-project.github.io/lolbas/Binaries/Regasm/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.009
+date: '2024-04-25'
 logsource:
     category: network_connection
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:11.994557+00:00'
+            mapped_at: '2025-12-04T01:51:32.973064+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:11.994557+00:00'
+            mapped_at: '2025-12-04T01:51:32.973064+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:11.994576+00:00'
+            mapped_at: '2025-12-04T01:51:32.973082+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:11.994578+00:00'
+            mapped_at: '2025-12-04T01:51:32.973085+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:11.994579+00:00'
+            mapped_at: '2025-12-04T01:51:32.973086+00:00'

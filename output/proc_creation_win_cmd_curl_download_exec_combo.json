@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Curl Download And Execute Combination",
+    "comment": "Adversaries can use curl to download payloads remotely and execute them. Curl is included by default in Windows 10 build 17063 and later.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' -c ')) OR contains(lower(process.cmd_line), lower(' /c ')) OR contains(lower(process.cmd_line), lower(' \u2013c ')) OR contains(lower(process.cmd_line), lower(' \u2014c ')) OR contains(lower(process.cmd_line), lower(' \u2015c '))) AND contains(lower(process.cmd_line), lower('curl ')) AND contains(lower(process.cmd_line), lower('http')) AND contains(lower(process.cmd_line), lower('-o')) AND contains(lower(process.cmd_line), lower('&')))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries can use curl to download payloads remotely and execute them. Curl is included by default in Windows 10 build 17063 and later.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://medium.com/@reegun/curl-exe-is-the-new-rundll32-exe-lolbin-3f79c5f35983",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

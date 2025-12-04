@@ -1,22 +1,21 @@
-id: ebbeb024-5b1d-4e16-9c0c-917f86c708a7
 title: User Added to an Administrator's Azure AD Role
+id: ebbeb024-5b1d-4e16-9c0c-917f86c708a7
 status: test
 level: medium
-description: User Added to an Administrator's Azure AD Role
 author: Raphaël CALVET, @MetallicHack
-date: '2021-10-04'
-modified: '2022-10-09'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1098.003
-    - attack.t1078
+description: User Added to an Administrator's Azure AD Role
 references:
     - https://m365internals.com/2021/07/13/what-ive-learned-from-doing-a-year-of-cloud-forensics-in-azure-ad/
 falsepositives:
     - PIM (Privileged Identity Management) generates this event each time 'eligible
         role' is enabled.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1098.003
+    - attack.t1078
+date: '2021-10-04'
+modified: '2022-10-09'
 logsource:
     product: azure
     service: activitylogs
@@ -30,26 +29,26 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: account_change
-    activity_id: 1
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:10.526739+00:00'
+            mapped_at: '2025-12-04T01:38:35.699928+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:10.526739+00:00'
+            mapped_at: '2025-12-04T01:38:35.699928+00:00'
     detection_fields:
         -   source_field: Operation
             target_table: account_change
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:11.356367+00:00'
+            mapped_at: '2025-12-04T01:38:35.699945+00:00'
         -   source_field: Workload
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:11.356379+00:00'
+            mapped_at: '2025-12-04T01:38:35.699947+00:00'
         -   source_field: ModifiedProperties{}.NewValue
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:11.356380+00:00'
+            mapped_at: '2025-12-04T01:38:35.699949+00:00'

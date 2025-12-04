@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Credential Dumping Attempt Via PowerShell Remote Thread",
+    "comment": "Detects remote thread creation by PowerShell processes into \"lsass.exe\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "create_remote_thread",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND (endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe'))) AND endswith(lower(process.file.path), lower('\\\\lsass.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects remote thread creation by PowerShell processes into \"lsass.exe\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

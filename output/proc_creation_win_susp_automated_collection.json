@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Automated Collection Command Prompt",
+    "comment": "Once established within a system or network, an adversary may use automated techniques for collecting internal data.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('.doc')) OR contains(lower(process.cmd_line), lower('.docx')) OR contains(lower(process.cmd_line), lower('.xls')) OR contains(lower(process.cmd_line), lower('.xlsx')) OR contains(lower(process.cmd_line), lower('.ppt')) OR contains(lower(process.cmd_line), lower('.pptx')) OR contains(lower(process.cmd_line), lower('.rtf')) OR contains(lower(process.cmd_line), lower('.pdf')) OR contains(lower(process.cmd_line), lower('.txt'))) AND (contains(lower(process.cmd_line), lower('dir ')) AND contains(lower(process.cmd_line), lower(' /b ')) AND contains(lower(process.cmd_line), lower(' /s ')) OR lower(process.file.name) = lower('findstr.exe') AND (contains(lower(process.cmd_line), lower(' /e ')) OR contains(lower(process.cmd_line), lower(' /si ')))))"
+      }
+    },
+    "output": {
+      "summary": "Once established within a system or network, an adversary may use automated techniques for collecting internal data.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.001/T1552.001.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1119"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1552",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

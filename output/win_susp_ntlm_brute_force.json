@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "NTLM Brute Force",
+    "comment": "Detects common NTLM brute force device names",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "ntlm",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 8004 AND (lower(LOWER(dst_endpoint.hostname)) in ('rdesktop', 'remmina', 'freerdp', 'windows7', 'windows8', 'windows2012', 'windows2016', 'windows2019')))"
+      }
+    },
+    "output": {
+      "summary": "Detects common NTLM brute force device names",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Systems with names equal to the spoofed ones used by the brute force tools Reference: https://www.varonis.com/blog/investigate-ntlm-brute-force",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1110"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

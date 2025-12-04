@@ -1,23 +1,22 @@
-id: 7610a4ea-c06d-495f-a2ac-0a696abcfd3b
 title: Outbound Network Connection To Public IP Via Winlogon
+id: 7610a4ea-c06d-495f-a2ac-0a696abcfd3b
 status: test
 level: medium
+author: Christopher Peacock @securepeacock, SCYTHE @scythe_io
 description: Detects a "winlogon.exe" process that initiate network communications
     with public IP addresses
-author: Christopher Peacock @securepeacock, SCYTHE @scythe_io
-date: '2023-04-28'
-modified: '2024-03-12'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.command-and-control
-    - attack.t1218.011
 references:
     - https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/
 falsepositives:
     - Communication to other corporate systems that use IP addresses from public address
         spaces
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.command-and-control
+    - attack.t1218.011
+date: '2023-04-28'
+modified: '2024-03-12'
 logsource:
     category: network_connection
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:33.676783+00:00'
+            mapped_at: '2025-12-04T01:51:38.917852+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:33.676783+00:00'
+            mapped_at: '2025-12-04T01:51:38.917852+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:33.676796+00:00'
+            mapped_at: '2025-12-04T01:51:38.917869+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:33.676808+00:00'
+            mapped_at: '2025-12-04T01:51:38.917871+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:33.676809+00:00'
+            mapped_at: '2025-12-04T01:51:38.917872+00:00'

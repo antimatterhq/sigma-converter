@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Execution via WorkFolders.exe",
+    "comment": "Detects using WorkFolders.exe to execute an arbitrary control.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\control.exe')) AND endswith(lower(process.parent_process.name), lower('\\\\workfolders.exe')) AND NOT lower(process.name) = lower('c:\\\\windows\\\\system32\\\\control.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects using WorkFolders.exe to execute an arbitrary control.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of the uncommon Windows Work Folders feature. Reference: https://twitter.com/elliotkillick/status/1449812843772227588",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

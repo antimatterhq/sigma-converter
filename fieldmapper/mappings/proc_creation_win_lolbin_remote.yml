@@ -1,20 +1,19 @@
-id: 4eddc365-79b4-43ff-a9d7-99422dc34b93
 title: Use of Remote.exe
+id: 4eddc365-79b4-43ff-a9d7-99422dc34b93
 status: test
 level: medium
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
 description: Remote.exe is part of WinDbg in the Windows SDK and can be used for AWL
     bypass and running remote files.
-author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
-date: '2022-06-02'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://blog.thecybersecuritytutor.com/Exeuction-AWL-Bypass-Remote-exe-LOLBin/
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Remote/
 falsepositives:
     - Approved installs of Windows SDK with Debugging Tools for Windows (WinDbg).
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2022-06-02'
 logsource:
     category: process_creation
     product: windows
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:12.130569+00:00'
+            mapped_at: '2025-12-04T01:48:17.527089+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:12.130569+00:00'
+            mapped_at: '2025-12-04T01:48:17.527089+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:12.130591+00:00'
+            mapped_at: '2025-12-04T01:48:17.527115+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:12.130595+00:00'
+            mapped_at: '2025-12-04T01:48:17.527118+00:00'

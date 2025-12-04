@@ -1,19 +1,10 @@
-id: 2617e7ed-adb7-40ba-b0f3-8f9945fe6c09
 title: Suspicious SYSTEM User Process Creation
+id: 2617e7ed-adb7-40ba-b0f3-8f9945fe6c09
 status: test
 level: high
+author: Florian Roth (Nextron Systems), David ANDRE (additional keywords)
 description: Detects a suspicious process creation as SYSTEM user (suspicious program
     or command line parameter)
-author: Florian Roth (Nextron Systems), David ANDRE (additional keywords)
-date: '2021-12-20'
-modified: '2024-12-01'
-tags:
-    - attack.credential-access
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1134
-    - attack.t1003
-    - attack.t1027
 references:
     - Internal Research
     - https://tools.thehacker.recipes/mimikatz/modules
@@ -21,7 +12,15 @@ falsepositives:
     - Administrative activity
     - Scripts and administrative tools used in the monitored environment
     - Monitoring activity
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1134
+    - attack.t1003
+    - attack.t1027
+date: '2021-12-20'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -109,33 +108,33 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:26.739898+00:00'
+            mapped_at: '2025-12-04T01:43:36.023424+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:26.739898+00:00'
+            mapped_at: '2025-12-04T01:43:36.023424+00:00'
     detection_fields:
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:26.739967+00:00'
+            mapped_at: '2025-12-04T01:43:36.023439+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:28:26.739972+00:00'
+            mapped_at: '2025-12-04T01:43:36.023441+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:26.739976+00:00'
+            mapped_at: '2025-12-04T01:43:36.023442+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:26.739979+00:00'
+            mapped_at: '2025-12-04T01:43:36.023443+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:28:26.739982+00:00'
+            mapped_at: '2025-12-04T01:43:36.023445+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:26.739988+00:00'
+            mapped_at: '2025-12-04T01:43:36.023446+00:00'

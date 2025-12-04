@@ -1,7 +1,8 @@
-id: 297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7
 title: New Connection Initiated To Potential Dead Drop Resolver Domain
+id: 297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7
 status: test
 level: high
+author: Sorina Ionescu, X__Junior (Nextron Systems)
 description: 'Detects an executable, which is not an internet browser or known application,
     initiating network connections to legit popular websites, which were seen to be
     used as dead drop resolvers in previous attacks.
@@ -10,13 +11,6 @@ description: 'Detects an executable, which is not an internet browser or known a
     etc. In order to pass through undetected.
 
     '
-author: Sorina Ionescu, X__Junior (Nextron Systems)
-date: '2022-08-17'
-modified: '2024-10-21'
-tags:
-    - attack.command-and-control
-    - attack.t1102
-    - attack.t1102.001
 references:
     - https://web.archive.org/web/20220830134315/https://content.fireeye.com/apt-41/rpt-apt41/
     - https://securelist.com/the-tetrade-brazilian-banking-malware/97779/
@@ -28,9 +22,12 @@ falsepositives:
     - One might need to exclude other internet browsers found in it's network or other
         applications like ones mentioned above from Microsoft Defender.
     - Ninite contacting githubusercontent.com
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d7b09985-95a3-44be-8450-b6eadf49833e''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1102
+    - attack.t1102.001
+date: '2022-08-17'
+modified: '2024-10-21'
 logsource:
     category: network_connection
     product: windows
@@ -240,6 +237,9 @@ detection:
     filter_main_empty:
         Image: ''
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: d7b09985-95a3-44be-8450-b6eadf49833e
+        type: obsolete
 ocsf_mapping:
     class_name: network_activity
     activity_id: 1
@@ -247,21 +247,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:37:51.024244+00:00'
+            mapped_at: '2025-12-04T01:51:23.846521+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:51.024244+00:00'
+            mapped_at: '2025-12-04T01:51:23.846521+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:51.024262+00:00'
+            mapped_at: '2025-12-04T01:51:23.846540+00:00'
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:37:51.024263+00:00'
+            mapped_at: '2025-12-04T01:51:23.846542+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:51.024265+00:00'
+            mapped_at: '2025-12-04T01:51:23.846543+00:00'

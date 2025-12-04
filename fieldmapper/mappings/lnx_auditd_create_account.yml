@@ -1,23 +1,22 @@
-id: 759d0d51-bc99-4b5e-9add-8f5b2c8e7512
 title: Creation Of An User Account
+id: 759d0d51-bc99-4b5e-9add-8f5b2c8e7512
 status: test
 level: medium
+author: Marie Euler, Pawel Mazur
 description: Detects the creation of a new user account. Such accounts may be used
     for persistence that do not require persistent remote access tools to be deployed
     on the system.
-author: Marie Euler, Pawel Mazur
-date: '2020-05-18'
-modified: '2022-12-20'
-tags:
-    - attack.t1136.001
-    - attack.persistence
 references:
     - https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/sec-understanding_audit_log_files
     - https://access.redhat.com/articles/4409591#audit-record-types-2
     - https://www.youtube.com/watch?v=VmvY5SQm5-Y&ab_channel=M45C07
 falsepositives:
     - Admin activity
-taxonomy: sigma
+tags:
+    - attack.t1136.001
+    - attack.persistence
+date: '2020-05-18'
+modified: '2022-12-20'
 logsource:
     product: linux
     service: auditd
@@ -35,17 +34,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:20.678537+00:00'
+            mapped_at: '2025-12-04T01:35:44.139259+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:20.678537+00:00'
+            mapped_at: '2025-12-04T01:35:44.139259+00:00'
     detection_fields:
         -   source_field: type
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:21.607827+00:00'
+            mapped_at: '2025-12-04T01:35:44.139289+00:00'
         -   source_field: exe
             target_table: account_change
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:16:21.607842+00:00'
+            mapped_at: '2025-12-04T01:35:44.139293+00:00'

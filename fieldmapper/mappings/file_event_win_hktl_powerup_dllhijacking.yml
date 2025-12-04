@@ -1,7 +1,8 @@
-id: 602a1f13-c640-4d73-b053-be9a2fa58b96
 title: HackTool - Powerup Write Hijack DLL
+id: 602a1f13-c640-4d73-b053-be9a2fa58b96
 status: test
 level: high
+author: Subhash Popuri (@pbssubhash)
 description: 'Powerup tool''s Write Hijack DLL exploits DLL hijacking for privilege
     escalation.
 
@@ -12,19 +13,17 @@ description: 'Powerup tool''s Write Hijack DLL exploits DLL hijacking for privil
     default).
 
     '
-author: Subhash Popuri (@pbssubhash)
-date: '2021-08-21'
-modified: '2024-06-27'
+references:
+    - https://powersploit.readthedocs.io/en/latest/Privesc/Write-HijackDll/
+falsepositives:
+    - Any powershell script that creates bat files
 tags:
     - attack.persistence
     - attack.privilege-escalation
     - attack.defense-evasion
     - attack.t1574.001
-references:
-    - https://powersploit.readthedocs.io/en/latest/Privesc/Write-HijackDll/
-falsepositives:
-    - Any powershell script that creates bat files
-taxonomy: sigma
+date: '2021-08-21'
+modified: '2024-06-27'
 logsource:
     category: file_event
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:23.521190+00:00'
+            mapped_at: '2025-12-04T01:52:15.647432+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:23.521190+00:00'
+            mapped_at: '2025-12-04T01:52:15.647432+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:23.521208+00:00'
+            mapped_at: '2025-12-04T01:52:15.647448+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:23.521212+00:00'
+            mapped_at: '2025-12-04T01:52:15.647451+00:00'

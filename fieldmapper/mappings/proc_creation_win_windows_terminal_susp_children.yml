@@ -1,21 +1,20 @@
-id: 8de89e52-f6e1-4b5b-afd1-41ecfa300d48
 title: Suspicious WindowsTerminal Child Processes
+id: 8de89e52-f6e1-4b5b-afd1-41ecfa300d48
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious children spawned via the Windows Terminal application
     which could be a sign of persistence via WindowsTerminal (see references section)
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-25'
-modified: '2023-02-14'
-tags:
-    - attack.execution
-    - attack.persistence
 references:
     - https://persistence-info.github.io/Data/windowsterminalprofile.html
     - https://twitter.com/nas_bench/status/1550836225652686848
 falsepositives:
     - Other legitimate "Windows Terminal" profiles
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.persistence
+date: '2022-07-25'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -69,21 +68,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:14.814626+00:00'
+            mapped_at: '2025-12-04T01:42:29.805852+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:14.814626+00:00'
+            mapped_at: '2025-12-04T01:42:29.805852+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:14.814661+00:00'
+            mapped_at: '2025-12-04T01:42:29.805877+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:14.814666+00:00'
+            mapped_at: '2025-12-04T01:42:29.805879+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:14.814670+00:00'
+            mapped_at: '2025-12-04T01:42:29.805880+00:00'

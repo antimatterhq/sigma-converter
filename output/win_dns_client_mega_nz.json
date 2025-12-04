@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "DNS Query To MEGA Hosting Website - DNS Client",
+    "comment": "Detects DNS queries for subdomains related to MEGA sharing website",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "dns-client",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 3008 AND contains(lower(query.hostname), lower('userstorage.mega.co.nz')))"
+      }
+    },
+    "output": {
+      "summary": "Detects DNS queries for subdomains related to MEGA sharing website",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate DNS queries and usage of Mega Reference: https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

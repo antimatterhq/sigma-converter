@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Activity from Anonymous IP Addresses",
+    "comment": "Detects when a Microsoft Cloud App Security reported when users were active from an IP address that has been identified as an anonymous proxy IP address.",
+    "annotations": {
+      "source": "sigma",
+      "product": "m365",
+      "service": "threat_management",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('securitycompliancecenter') AND lower(metadata.event_code) = lower('activity from anonymous ip addresses') AND lower(actor.authorizations.decision) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a Microsoft Cloud App Security reported when users were active from an IP address that has been identified as an anonymous proxy IP address.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: User using a VPN or Proxy References: https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy, https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1573"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

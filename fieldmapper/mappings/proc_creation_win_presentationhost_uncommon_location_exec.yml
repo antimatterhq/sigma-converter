@@ -1,24 +1,23 @@
-id: d22e2925-cfd8-463f-96f6-89cec9d9bc5f
 title: XBAP Execution From Uncommon Locations Via PresentationHost.EXE
+id: d22e2925-cfd8-463f-96f6-89cec9d9bc5f
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of ".xbap" (Browser Applications) files via PresentationHost.EXE
     from an uncommon location. These files can be abused to run malicious ".xbap"
     files any bypass AWL
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-01'
-modified: '2023-11-09'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Presentationhost/
 falsepositives:
     - Legitimate ".xbap" being executed via "PresentationHost"
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+date: '2022-07-01'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:43.329861+00:00'
+            mapped_at: '2025-12-04T01:48:43.397704+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:43.329861+00:00'
+            mapped_at: '2025-12-04T01:48:43.397704+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:43.329892+00:00'
+            mapped_at: '2025-12-04T01:48:43.397723+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:43.329896+00:00'
+            mapped_at: '2025-12-04T01:48:43.397725+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:43.329899+00:00'
+            mapped_at: '2025-12-04T01:48:43.397727+00:00'

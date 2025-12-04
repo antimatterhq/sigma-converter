@@ -1,22 +1,21 @@
-id: d80d5c81-04ba-45b4-84e4-92eba40e0ad3
 title: Arbitrary DLL or Csproj Code Execution Via Dotnet.EXE
+id: d80d5c81-04ba-45b4-84e4-92eba40e0ad3
 status: test
 level: medium
+author: Beyu Denis, oscd.community
 description: Detects execution of arbitrary DLLs or unsigned code via a ".csproj"
     files via Dotnet.EXE.
-author: Beyu Denis, oscd.community
-date: '2020-10-18'
-modified: '2024-04-24'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dotnet/
     - https://twitter.com/_felamos/status/1204705548668555264
     - https://bohops.com/2019/08/19/dotnet-core-a-vector-for-awl-bypass-defense-evasion/
 falsepositives:
     - Legitimate administrator usage
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-18'
+modified: '2024-04-24'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:34.772951+00:00'
+            mapped_at: '2025-12-04T01:49:28.903214+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:34.772951+00:00'
+            mapped_at: '2025-12-04T01:49:28.903214+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:34.772975+00:00'
+            mapped_at: '2025-12-04T01:49:28.903229+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:34.772981+00:00'
+            mapped_at: '2025-12-04T01:49:28.903231+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:34.772983+00:00'
+            mapped_at: '2025-12-04T01:49:28.903240+00:00'

@@ -1,15 +1,10 @@
-id: 42a5f1e7-9603-4f6d-97ae-3f37d130d794
 title: Suspicious File Downloaded From File-Sharing Website Via Certutil.EXE
+id: 42a5f1e7-9603-4f6d-97ae-3f37d130d794
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of certutil with certain flags that allow the utility
     to download files from file-sharing websites.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-15'
-modified: '2024-08-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1027
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
     - https://forensicitguy.github.io/agenttesla-vba-certutil-download/
@@ -19,10 +14,11 @@ references:
     - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''19b08b1c-861d-4e75-a1ef-ea0c1baf202b''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''13e6fe51-d478-4c7e-b0f2-6da9b400a829''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+date: '2023-02-15'
+modified: '2024-08-22'
 logsource:
     category: process_creation
     product: windows
@@ -67,6 +63,11 @@ detection:
             - w3spaces.com
             - workers.dev
     condition: all of selection_*
+related:
+    -   id: 19b08b1c-861d-4e75-a1ef-ea0c1baf202b
+        type: similar
+    -   id: 13e6fe51-d478-4c7e-b0f2-6da9b400a829
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -74,21 +75,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:23.534042+00:00'
+            mapped_at: '2025-12-04T01:47:41.389662+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:23.534042+00:00'
+            mapped_at: '2025-12-04T01:47:41.389662+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:23.534065+00:00'
+            mapped_at: '2025-12-04T01:47:41.389682+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:23.534069+00:00'
+            mapped_at: '2025-12-04T01:47:41.389685+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:23.534072+00:00'
+            mapped_at: '2025-12-04T01:47:41.389687+00:00'

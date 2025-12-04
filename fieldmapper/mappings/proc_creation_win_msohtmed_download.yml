@@ -1,20 +1,19 @@
-id: 459f2f98-397b-4a4a-9f47-6a5ec2f1c69d
 title: Arbitrary File Download Via MSOHTMED.EXE
+id: 459f2f98-397b-4a4a-9f47-6a5ec2f1c69d
 status: test
 level: medium
-description: Detects usage of "MSOHTMED" to download arbitrary files
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-19'
-modified: '2023-11-09'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218
+description: Detects usage of "MSOHTMED" to download arbitrary files
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/pull/238/files
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+date: '2022-08-19'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:38.160545+00:00'
+            mapped_at: '2025-12-04T01:47:51.936064+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:38.160545+00:00'
+            mapped_at: '2025-12-04T01:47:51.936064+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:38.160556+00:00'
+            mapped_at: '2025-12-04T01:47:51.936083+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:38.160558+00:00'
+            mapped_at: '2025-12-04T01:47:51.936085+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:38.160559+00:00'
+            mapped_at: '2025-12-04T01:47:51.936087+00:00'

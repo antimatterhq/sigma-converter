@@ -1,21 +1,20 @@
-id: 087790e3-3287-436c-bccf-cbd0184a7db1
 title: Potential CommandLine Path Traversal Via Cmd.EXE
+id: 087790e3-3287-436c-bccf-cbd0184a7db1
 status: test
 level: high
+author: xknow @xknow_infosec, Tim Shelton
 description: Detects potential path traversal attempt via cmd.exe. Could indicate
     possible command/argument confusion/hijacking
-author: xknow @xknow_infosec, Tim Shelton
-date: '2020-06-11'
-modified: '2023-03-06'
-tags:
-    - attack.execution
-    - attack.t1059.003
 references:
     - https://hackingiscool.pl/cmdhijack-command-argument-confusion-with-path-traversal-in-cmd-exe/
     - https://twitter.com/Oddvarmoe/status/1270633613449723905
 falsepositives:
     - Java tools are known to produce false-positive when loading libraries
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.003
+date: '2020-06-11'
+modified: '2023-03-06'
 logsource:
     category: process_creation
     product: windows
@@ -46,29 +45,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:05.327508+00:00'
+            mapped_at: '2025-12-04T01:47:25.575017+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:05.327508+00:00'
+            mapped_at: '2025-12-04T01:47:25.575017+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:33:05.327526+00:00'
+            mapped_at: '2025-12-04T01:47:25.575033+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:05.327529+00:00'
+            mapped_at: '2025-12-04T01:47:25.575036+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:05.327532+00:00'
+            mapped_at: '2025-12-04T01:47:25.575037+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:33:05.327533+00:00'
+            mapped_at: '2025-12-04T01:47:25.575039+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:05.327535+00:00'
+            mapped_at: '2025-12-04T01:47:25.575040+00:00'

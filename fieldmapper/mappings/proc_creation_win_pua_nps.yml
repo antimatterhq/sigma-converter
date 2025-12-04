@@ -1,20 +1,19 @@
-id: 68d37776-61db-42f5-bf54-27e87072d17e
 title: PUA - NPS Tunneling Tool Execution
+id: 68d37776-61db-42f5-bf54-27e87072d17e
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the use of NPS, a port forwarding and intranet penetration proxy
     server
-author: Florian Roth (Nextron Systems)
-date: '2022-10-08'
-modified: '2024-11-23'
-tags:
-    - attack.command-and-control
-    - attack.t1090
 references:
     - https://github.com/ehang-io/nps
 falsepositives:
     - Legitimate use
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090
+date: '2022-10-08'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:44.002586+00:00'
+            mapped_at: '2025-12-04T01:48:43.865366+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:44.002586+00:00'
+            mapped_at: '2025-12-04T01:48:43.865366+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:44.002605+00:00'
+            mapped_at: '2025-12-04T01:48:43.865384+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:44.002608+00:00'
+            mapped_at: '2025-12-04T01:48:43.865386+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:34:44.002610+00:00'
+            mapped_at: '2025-12-04T01:48:43.865389+00:00'

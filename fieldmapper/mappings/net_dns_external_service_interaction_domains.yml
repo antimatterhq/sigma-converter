@@ -1,21 +1,20 @@
-id: aff715fa-4dd5-497a-8db3-910bea555566
 title: DNS Query to External Service Interaction Domains
+id: aff715fa-4dd5-497a-8db3-910bea555566
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Matt Kelly (list of domains)
 description: Detects suspicious DNS queries to external service interaction domains
     often used for out-of-band interactions after successful RCE
-author: Florian Roth (Nextron Systems), Matt Kelly (list of domains)
-date: '2022-06-07'
+references:
+    - https://twitter.com/breakersall/status/1533493587828260866
+falsepositives:
+    - Unknown
 tags:
     - attack.initial-access
     - attack.t1190
     - attack.reconnaissance
     - attack.t1595.002
-references:
-    - https://twitter.com/breakersall/status/1533493587828260866
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-06-07'
 logsource:
     category: dns
 detection:
@@ -41,9 +40,9 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns
-            mapped_at: '2025-11-26T02:15:24.400893+00:00'
+            mapped_at: '2025-12-04T01:35:20.280393+00:00'
     detection_fields:
         -   source_field: query
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:15:24.400909+00:00'
+            mapped_at: '2025-12-04T01:35:20.280406+00:00'

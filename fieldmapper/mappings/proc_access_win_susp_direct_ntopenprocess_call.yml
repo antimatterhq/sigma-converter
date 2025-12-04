@@ -1,19 +1,18 @@
-id: 3f3f3506-1895-401b-9cc3-e86b16e630d0
 title: Potential Direct Syscall of NtOpenProcess
+id: 3f3f3506-1895-401b-9cc3-e86b16e630d0
 status: test
 level: medium
-description: Detects potential calls to NtOpenProcess directly from NTDLL.
 author: Christian Burkard (Nextron Systems), Tim Shelton (FP)
-date: '2021-07-28'
-modified: '2023-12-13'
-tags:
-    - attack.execution
-    - attack.t1106
+description: Detects potential calls to NtOpenProcess directly from NTDLL.
 references:
     - https://medium.com/falconforce/falconfriday-direct-system-calls-and-cobalt-strike-bofs-0xff14-741fa8e1bdd6
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1106
+date: '2021-07-28'
+modified: '2023-12-13'
 logsource:
     category: process_access
     product: windows
@@ -77,29 +76,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:23.311194+00:00'
+            mapped_at: '2025-12-04T01:40:30.328690+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:23.311194+00:00'
+            mapped_at: '2025-12-04T01:40:30.328690+00:00'
     detection_fields:
         -   source_field: CallTrace
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:24.260276+00:00'
+            mapped_at: '2025-12-04T01:40:30.328707+00:00'
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:24.260293+00:00'
+            mapped_at: '2025-12-04T01:40:30.328709+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:24.260297+00:00'
+            mapped_at: '2025-12-04T01:40:30.328711+00:00'
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:24:24.260300+00:00'
+            mapped_at: '2025-12-04T01:40:30.328712+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:24.260302+00:00'
+            mapped_at: '2025-12-04T01:40:30.328713+00:00'

@@ -1,15 +1,11 @@
-id: 3e8207c5-fcd2-4ea6-9418-15d45b4890e4
 title: Potential Data Stealing Via Chromium Headless Debugging
+id: 3e8207c5-fcd2-4ea6-9418-15d45b4890e4
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects chromium based browsers starting in headless and debugging mode
     and pointing to a user profile. This could be a sign of data stealing or remote
     control
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-23'
-tags:
-    - attack.credential-access
-    - attack.t1185
 references:
     - https://github.com/defaultnamehere/cookie_crimes/
     - https://mango.pdf.zone/stealing-chrome-cookies-without-a-password
@@ -17,9 +13,10 @@ references:
     - https://embracethered.com/blog/posts/2020/chrome-spy-remote-control/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b3d34dc5-2efd-4ae3-845f-8ec14921f449''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1185
+date: '2022-12-23'
 logsource:
     category: process_creation
     product: windows
@@ -30,6 +27,9 @@ detection:
             - --user-data-dir
             - --headless
     condition: selection
+related:
+    -   id: b3d34dc5-2efd-4ae3-845f-8ec14921f449
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -37,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:59.347342+00:00'
+            mapped_at: '2025-12-04T01:44:47.279718+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:59.347342+00:00'
+            mapped_at: '2025-12-04T01:44:47.279718+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:59.347357+00:00'
+            mapped_at: '2025-12-04T01:44:47.279887+00:00'

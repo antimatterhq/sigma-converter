@@ -1,20 +1,19 @@
-id: 1bac86ba-41aa-4f62-9d6b-405eac99b485
 title: Systemd Service Creation
+id: 1bac86ba-41aa-4f62-9d6b-405eac99b485
 status: test
 level: medium
+author: Pawel Mazur
 description: Detects a creation of systemd services which could be used by adversaries
     to execute malicious code.
-author: Pawel Mazur
-date: '2022-02-03'
-modified: '2022-02-06'
-tags:
-    - attack.persistence
-    - attack.t1543.002
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.002/T1543.002.md
 falsepositives:
     - Admin work like legit service installs.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1543.002
+date: '2022-02-03'
+modified: '2022-02-06'
 logsource:
     product: linux
     service: auditd
@@ -36,21 +35,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:02.006996+00:00'
+            mapped_at: '2025-12-04T01:35:35.693364+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:02.006996+00:00'
+            mapped_at: '2025-12-04T01:35:35.693364+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:02.871932+00:00'
+            mapped_at: '2025-12-04T01:35:35.693383+00:00'
         -   source_field: nametype
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:02.871947+00:00'
+            mapped_at: '2025-12-04T01:35:35.693385+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:16:02.871950+00:00'
+            mapped_at: '2025-12-04T01:35:35.693386+00:00'

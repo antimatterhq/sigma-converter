@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "Wab Execution From Non Default Location",
+    "comment": "Detects execution of wab.exe (Windows Contacts) and Wabmig.exe (Microsoft Address Book Import Tool) from non default locations as seen with bumblebee activity",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\wab.exe')) OR endswith(lower(process.name), lower('\\\\wabmig.exe'))) AND NOT (startswith(lower(process.name), lower('c:\\\\windows\\\\winsxs\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files\\\\windows mail\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files (x86)\\\\windows mail\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of wab.exe (Windows Contacts) and Wabmig.exe (Microsoft Address Book Import Tool) from non default locations as seen with bumblebee activity",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://thedfirreport.com/2022/08/08/bumblebee-roasts-its-way-to-domain-admin/, https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bumblebee-loader-cybercrime, https://thedfirreport.com/2022/09/26/bumblebee-round-two/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

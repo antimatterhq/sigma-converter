@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Uncommon Child Process Of Appvlp.EXE",
+    "comment": "Detects uncommon child processes of Appvlp.EXE Appvlp or the Application Virtualization Utility is included with Microsoft Office. Attackers are able to abuse \"AppVLP\" to execute shell commands. Normally, this binary is used for Application Virtualization, but it can also be abused to circumvent the ASR file path rule folder or to mark a file as a system file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\appvlp.exe')) AND NOT (endswith(lower(process.name), lower(':\\\\windows\\\\syswow64\\\\rundll32.exe')) OR endswith(lower(process.name), lower(':\\\\windows\\\\system32\\\\rundll32.exe'))) AND NOT (contains(lower(process.name), lower(':\\\\program files\\\\microsoft office')) AND endswith(lower(process.name), lower('\\\\msoasb.exe')) OR contains(lower(process.name), lower(':\\\\program files\\\\microsoft office')) AND contains(lower(process.name), lower('\\\\skypesrv\\\\')) AND endswith(lower(process.name), lower('\\\\skypeserver.exe')) OR contains(lower(process.name), lower(':\\\\program files\\\\microsoft office')) AND endswith(lower(process.name), lower('\\\\msouc.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects uncommon child processes of Appvlp.EXE Appvlp or the Application Virtualization Utility is included with Microsoft Office. Attackers are able to abuse \"AppVLP\" to execute shell commands. Normally, this binary is used for Application Virtualization, but it can also be abused to circumvent the ASR file path rule folder or to mark a file as a system file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Appvlp/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

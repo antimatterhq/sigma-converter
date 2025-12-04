@@ -1,12 +1,17 @@
-id: 39a80702-d7ca-4a83-b776-525b1f86a36d
 title: Potential Secure Deletion with SDelete
+id: 39a80702-d7ca-4a83-b776-525b1f86a36d
 status: test
 level: medium
+author: Thomas Patzke
 description: Detects files that have extensions commonly seen while SDelete is used
     to wipe files.
-author: Thomas Patzke
-date: '2017-06-14'
-modified: '2024-12-13'
+references:
+    - https://jpcertcc.github.io/ToolAnalysisResultSheet/details/sdelete.htm
+    - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+    - https://learn.microsoft.com/en-gb/sysinternals/downloads/sdelete
+falsepositives:
+    - Legitimate usage of SDelete
+    - Files that are interacted with that have these extensions legitimately
 tags:
     - attack.impact
     - attack.defense-evasion
@@ -15,14 +20,8 @@ tags:
     - attack.t1485
     - attack.t1553.002
     - attack.s0195
-references:
-    - https://jpcertcc.github.io/ToolAnalysisResultSheet/details/sdelete.htm
-    - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
-    - https://learn.microsoft.com/en-gb/sysinternals/downloads/sdelete
-falsepositives:
-    - Legitimate usage of SDelete
-    - Files that are interacted with that have these extensions legitimately
-taxonomy: sigma
+date: '2017-06-14'
+modified: '2024-12-13'
 logsource:
     product: windows
     service: security
@@ -43,17 +42,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:49.740612+00:00'
+            mapped_at: '2025-12-04T01:56:03.293677+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:49.740612+00:00'
+            mapped_at: '2025-12-04T01:56:03.293677+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:49.740629+00:00'
+            mapped_at: '2025-12-04T01:56:03.293745+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:49.740632+00:00'
+            mapped_at: '2025-12-04T01:56:03.293753+00:00'

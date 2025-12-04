@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "LSASS Process Memory Dump Files",
+    "comment": "Detects creation of files with names used by different memory dumping tools to create a memory dump of the LSASS process memory, which contains user credentials.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(file.path), lower('\\\\andrew.dmp')) OR endswith(lower(file.path), lower('\\\\coredump.dmp')) OR endswith(lower(file.path), lower('\\\\lsass.dmp')) OR endswith(lower(file.path), lower('\\\\lsass.rar')) OR endswith(lower(file.path), lower('\\\\lsass.zip')) OR endswith(lower(file.path), lower('\\\\notlsass.zip')) OR endswith(lower(file.path), lower('\\\\pplblade.dmp')) OR endswith(lower(file.path), lower('\\\\rustive.dmp')) OR contains(lower(file.path), lower('\\\\lsass_2')) OR contains(lower(file.path), lower('\\\\lsassdmp')) OR contains(lower(file.path), lower('\\\\lsassdump')) OR contains(lower(file.path), lower('\\\\lsass')) AND contains(lower(file.path), lower('.dmp')) OR contains(lower(file.path), lower('sqldmpr')) AND endswith(lower(file.path), lower('.mdmp')) OR (contains(lower(file.path), lower('\\\\nanodump')) OR contains(lower(file.path), lower('\\\\proc_'))) AND endswith(lower(file.path), lower('.dmp'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of files with names used by different memory dumping tools to create a memory dump of the LSASS process memory, which contains user credentials.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.google.com/search?q=procdump+lsass, https://medium.com/@markmotig/some-ways-to-dump-lsass-exe-c4a75fdc49bf, https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/windows/credential_access_lsass_memdump_file_created.toml, https://www.whiteoaksecurity.com/blog/attacks-defenses-dumping-lsass-no-mimikatz/, https://github.com/helpsystems/nanodump, https://github.com/CCob/MirrorDump, https://github.com/safedv/RustiveDump/blob/1a9b026b477587becfb62df9677cede619d42030/src/main.rs#L35, https://github.com/ricardojoserf/NativeDump/blob/01d8cd17f31f51f5955a38e85cd3c83a17596175/NativeDump/Program.cs#L258",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

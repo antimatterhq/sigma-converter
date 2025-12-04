@@ -1,15 +1,10 @@
-id: fc4f4817-0c53-4683-a4ee-b17a64bc1039
 title: Suspicious Desktopimgdownldr Target File
+id: fc4f4817-0c53-4683-a4ee-b17a64bc1039
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects a suspicious Microsoft desktopimgdownldr file creation that stores
     a file to a suspicious location or contains a file with a suspicious extension
-author: Florian Roth (Nextron Systems)
-date: '2020-07-03'
-modified: '2022-06-02'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/
     - https://twitter.com/SBousseaden/status/1278977301745741825
@@ -19,7 +14,11 @@ fields:
 falsepositives:
     - False positives depend on scripts and administrative tools used in the monitored
         environment
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2020-07-03'
+modified: '2022-06-02'
 logsource:
     category: file_event
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:11.188715+00:00'
+            mapped_at: '2025-12-04T01:52:01.702628+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:11.188715+00:00'
+            mapped_at: '2025-12-04T01:52:01.702628+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:11.188728+00:00'
+            mapped_at: '2025-12-04T01:52:01.702640+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:11.188730+00:00'
+            mapped_at: '2025-12-04T01:52:01.702642+00:00'

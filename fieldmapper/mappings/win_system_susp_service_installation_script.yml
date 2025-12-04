@@ -1,21 +1,20 @@
-id: 70f00d10-60b2-4f34-b9a0-dc3df3fe762a
 title: Suspicious Service Installation Script
+id: 70f00d10-60b2-4f34-b9a0-dc3df3fe762a
 status: test
 level: high
-description: Detects suspicious service installation scripts
 author: pH-T (Nextron Systems)
-date: '2022-03-18'
-modified: '2024-03-05'
+description: Detects suspicious service installation scripts
+references:
+    - Internal Research
+falsepositives:
+    - Unknown
 tags:
     - attack.persistence
     - attack.privilege-escalation
     - car.2013-09-005
     - attack.t1543.003
-references:
-    - Internal Research
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-03-18'
+modified: '2024-03-05'
 logsource:
     product: windows
     service: system
@@ -45,21 +44,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:04.812927+00:00'
+            mapped_at: '2025-12-04T01:57:00.974363+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:04.812927+00:00'
+            mapped_at: '2025-12-04T01:57:00.974363+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:04.812939+00:00'
+            mapped_at: '2025-12-04T01:57:00.974381+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:04.812941+00:00'
+            mapped_at: '2025-12-04T01:57:00.974383+00:00'
         -   source_field: ImagePath
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:48:04.812943+00:00'
+            mapped_at: '2025-12-04T01:57:00.974385+00:00'

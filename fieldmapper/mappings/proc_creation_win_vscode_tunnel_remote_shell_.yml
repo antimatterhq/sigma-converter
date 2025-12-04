@@ -1,22 +1,21 @@
-id: f4a623c2-4ef5-4c33-b811-0642f702c9f1
 title: Visual Studio Code Tunnel Shell Execution
+id: f4a623c2-4ef5-4c33-b811-0642f702c9f1
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of a shell (powershell, bash, wsl...) via Visual
     Studio Code tunnel. Attackers can abuse this functionality to establish a C2 channel
     and execute arbitrary commands on the system.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-10-25'
-tags:
-    - attack.command-and-control
-    - attack.t1071.001
 references:
     - https://ipfyx.fr/post/visual-studio-code-tunnel/
     - https://badoption.eu/blog/2023/01/31/code_c2.html
     - https://code.visualstudio.com/docs/remote/tunnels
 falsepositives:
     - Legitimate use of Visual Studio Code tunnel and running code from there
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+date: '2023-10-25'
 logsource:
     category: process_creation
     product: windows
@@ -42,25 +41,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:26.520880+00:00'
+            mapped_at: '2025-12-04T01:46:54.379116+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:26.520880+00:00'
+            mapped_at: '2025-12-04T01:46:54.379116+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:26.520901+00:00'
+            mapped_at: '2025-12-04T01:46:54.379129+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:32:26.520903+00:00'
+            mapped_at: '2025-12-04T01:46:54.379132+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:26.520905+00:00'
+            mapped_at: '2025-12-04T01:46:54.379133+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:26.520906+00:00'
+            mapped_at: '2025-12-04T01:46:54.379134+00:00'

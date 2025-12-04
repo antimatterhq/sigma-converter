@@ -1,17 +1,11 @@
-id: 100ef69e-3327-481c-8e5c-6d80d9507556
 title: Important Windows Eventlog Cleared
+id: 100ef69e-3327-481c-8e5c-6d80d9507556
 status: test
 level: high
-description: Detects the clearing of one of the Windows Core Eventlogs. e.g. caused
-    by "wevtutil cl" command execution
 author: Florian Roth (Nextron Systems), Tim Shelton, Nasreddine Bencherchali (Nextron
     Systems)
-date: '2022-05-17'
-modified: '2023-11-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.001
-    - car.2016-04-002
+description: Detects the clearing of one of the Windows Core Eventlogs. e.g. caused
+    by "wevtutil cl" command execution
 references:
     - https://twitter.com/deviouspolack/status/832535435960209408
     - https://www.hybrid-analysis.com/sample/027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b30f6b0d7d3a745?environmentId=100
@@ -19,9 +13,12 @@ falsepositives:
     - Rollout of log collection agents (the setup routine often includes a reset of
         the local Eventlog)
     - System provisioning (system reset before the golden image creation)
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a62b37e0-45d3-48d9-a517-90c1a1b0186b''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.001
+    - car.2016-04-002
+date: '2022-05-17'
+modified: '2023-11-15'
 logsource:
     product: windows
     service: system
@@ -37,6 +34,9 @@ detection:
             - System
             - Windows PowerShell
     condition: selection
+related:
+    -   id: a62b37e0-45d3-48d9-a517-90c1a1b0186b
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: <UNMAPPED>
@@ -44,21 +44,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:30.625350+00:00'
+            mapped_at: '2025-12-04T01:57:23.100018+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:30.625350+00:00'
+            mapped_at: '2025-12-04T01:57:23.100018+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: file_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:31.602612+00:00'
+            mapped_at: '2025-12-04T01:57:23.100039+00:00'
         -   source_field: Provider_Name
             target_table: file_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:31.602632+00:00'
+            mapped_at: '2025-12-04T01:57:23.100041+00:00'
         -   source_field: Channel
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:31.602636+00:00'
+            mapped_at: '2025-12-04T01:57:23.100043+00:00'

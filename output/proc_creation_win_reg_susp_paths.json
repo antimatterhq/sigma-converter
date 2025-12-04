@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Reg Add Suspicious Paths",
+    "comment": "Detects when an adversary uses the reg.exe utility to add or modify new keys or subkeys",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\reg.exe')) AND lower(process.file.name) = lower('reg.exe') AND (contains(lower(process.cmd_line), lower('\\\\appdatalow\\\\software\\\\microsoft\\\\')) OR contains(lower(process.cmd_line), lower('\\\\policies\\\\microsoft\\\\windows\\\\oobe')) OR contains(lower(process.cmd_line), lower('\\\\policies\\\\microsoft\\\\windows nt\\\\currentversion\\\\winlogon')) OR contains(lower(process.cmd_line), lower('\\\\software\\\\microsoft\\\\windows nt\\\\currentversion\\\\winlogon')) OR contains(lower(process.cmd_line), lower('\\\\currentcontrolset\\\\control\\\\securityproviders\\\\wdigest')) OR contains(lower(process.cmd_line), lower('\\\\microsoft\\\\windows defender\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when an adversary uses the reg.exe utility to add or modify new keys or subkeys",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Rare legitimate add to registry via cli (to these locations) References: https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1112/T1112.md, https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1562.001/T1562.001.md, https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1112"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

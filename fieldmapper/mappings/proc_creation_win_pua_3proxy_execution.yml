@@ -1,20 +1,19 @@
-id: f38a82d2-fba3-4781-b549-525efbec8506
 title: PUA - 3Proxy Execution
+id: f38a82d2-fba3-4781-b549-525efbec8506
 status: test
 level: high
-description: Detects the use of 3proxy, a tiny free proxy server
 author: Florian Roth (Nextron Systems)
-date: '2022-09-13'
-modified: '2023-02-21'
-tags:
-    - attack.command-and-control
-    - attack.t1572
+description: Detects the use of 3proxy, a tiny free proxy server
 references:
     - https://github.com/3proxy/3proxy
     - https://blog.talosintelligence.com/2022/09/lazarus-three-rats.html
 falsepositives:
     - Administrative activity
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1572
+date: '2022-09-13'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -33,21 +32,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:37.349338+00:00'
+            mapped_at: '2025-12-04T01:44:31.082533+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:37.349338+00:00'
+            mapped_at: '2025-12-04T01:44:31.082533+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:37.349350+00:00'
+            mapped_at: '2025-12-04T01:44:31.082559+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:29:37.349352+00:00'
+            mapped_at: '2025-12-04T01:44:31.082563+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:37.349353+00:00'
+            mapped_at: '2025-12-04T01:44:31.082564+00:00'

@@ -1,21 +1,20 @@
-id: a35f5a72-f347-4e36-8895-9869b0d5fc6d
 title: Suspicious Program Location Whitelisted In Firewall Via Netsh.EXE
+id: a35f5a72-f347-4e36-8895-9869b0d5fc6d
 status: test
 level: high
+author: Sander Wiebing, Jonhnathan Ribeiro, Daniil Yugoslavskiy, oscd.community
 description: Detects Netsh command execution that whitelists a program located in
     a suspicious location in the Windows Firewall
-author: Sander Wiebing, Jonhnathan Ribeiro, Daniil Yugoslavskiy, oscd.community
-date: '2020-05-25'
-modified: '2023-12-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.004
 references:
     - https://www.virusradar.com/en/Win32_Kasidet.AD/description
     - https://www.hybrid-analysis.com/sample/07e789f4f2f3259e7559fdccb36e96814c2dbff872a21e1fa03de9ee377d581f?environmentId=100
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.004
+date: '2020-05-25'
+modified: '2023-12-11'
 logsource:
     category: process_creation
     product: windows
@@ -67,21 +66,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:47.079056+00:00'
+            mapped_at: '2025-12-04T01:42:09.809919+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:47.079056+00:00'
+            mapped_at: '2025-12-04T01:42:09.809919+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:47.079085+00:00'
+            mapped_at: '2025-12-04T01:42:09.809956+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:47.079089+00:00'
+            mapped_at: '2025-12-04T01:42:09.810002+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:47.079092+00:00'
+            mapped_at: '2025-12-04T01:42:09.810018+00:00'

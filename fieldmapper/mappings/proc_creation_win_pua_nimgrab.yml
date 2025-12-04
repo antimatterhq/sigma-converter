@@ -1,20 +1,19 @@
-id: 74a12f18-505c-4114-8d0b-8448dd5485c6
 title: PUA - Nimgrab Execution
+id: 74a12f18-505c-4114-8d0b-8448dd5485c6
 status: test
 level: high
+author: frack113
 description: Detects the usage of nimgrab, a tool bundled with the Nim programming
     framework and used for downloading files.
-author: frack113
-date: '2022-08-28'
-modified: '2024-11-23'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/28d190330fe44de6ff4767fc400cc10fa7cd6540/atomics/T1105/T1105.md
 falsepositives:
     - Legitimate use of Nim on a developer systems
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-08-28'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:55.169774+00:00'
+            mapped_at: '2025-12-04T01:47:18.313328+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:55.169774+00:00'
+            mapped_at: '2025-12-04T01:47:18.313328+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:55.169796+00:00'
+            mapped_at: '2025-12-04T01:47:18.313341+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:32:55.169799+00:00'
+            mapped_at: '2025-12-04T01:47:18.313343+00:00'

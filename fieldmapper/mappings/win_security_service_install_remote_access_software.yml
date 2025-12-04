@@ -1,24 +1,21 @@
-id: c8b00925-926c-47e3-beea-298fd563728e
 title: Remote Access Tool Services Have Been Installed - Security
+id: c8b00925-926c-47e3-beea-298fd563728e
 status: test
 level: medium
+author: Connor Martin, Nasreddine Bencherchali (Nextron Systems)
 description: Detects service installation of different remote access tools software.
     These software are often abused by threat actors to perform
-author: Connor Martin, Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-23'
-modified: '2024-12-07'
-tags:
-    - attack.persistence
-    - attack.t1543.003
-    - attack.t1569.002
 references:
     - https://redcanary.com/blog/misbehaving-rats/
 falsepositives:
     - The rule doesn't look for anything suspicious so false positives are expected.
         If you use one of the tools mentioned, comment it out
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1a31b18a-f00c-4061-9900-f735b96c99fc''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1543.003
+    - attack.t1569.002
+date: '2022-12-23'
+modified: '2024-12-07'
 logsource:
     product: windows
     service: security
@@ -51,6 +48,9 @@ detection:
             - vncserver
             - Zoho
     condition: selection
+related:
+    -   id: 1a31b18a-f00c-4061-9900-f735b96c99fc
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -58,17 +58,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:45.054997+00:00'
+            mapped_at: '2025-12-04T01:55:19.046858+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:43:45.054997+00:00'
+            mapped_at: '2025-12-04T01:55:19.046858+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:45.893418+00:00'
+            mapped_at: '2025-12-04T01:55:19.046874+00:00'
         -   source_field: ServiceName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:45.893443+00:00'
+            mapped_at: '2025-12-04T01:55:19.046877+00:00'

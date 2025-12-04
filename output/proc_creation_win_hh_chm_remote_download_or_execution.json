@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Remote CHM File Download/Execution Via HH.EXE",
+    "comment": "Detects the usage of \"hh.exe\" to execute/download remotely hosted \".chm\" files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('hh.exe') AND endswith(lower(process.name), lower('\\\\hh.exe')) AND (contains(lower(process.cmd_line), lower('http://')) OR contains(lower(process.cmd_line), lower('https://')) OR contains(lower(process.cmd_line), lower('\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage of \"hh.exe\" to execute/download remotely hosted \".chm\" files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.splunk.com/en_us/blog/security/follina-for-protocol-handlers.html, https://github.com/redcanaryco/atomic-red-team/blob/1cf4dd51f83dcb0ebe6ade902d6157ad2dbc6ac8/atomics/T1218.001/T1218.001.md, https://www.zscaler.com/blogs/security-research/unintentional-leak-glimpse-attack-vectors-apt37",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

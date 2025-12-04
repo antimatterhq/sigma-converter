@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential PowerShell Downgrade Attack",
+    "comment": "Detects PowerShell downgrade attack by comparing the host versions with the actually used engine version 2.0",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\powershell.exe')) AND (contains(lower(process.cmd_line), lower(' -version 2 ')) OR contains(lower(process.cmd_line), lower(' -versio 2 ')) OR contains(lower(process.cmd_line), lower(' -versi 2 ')) OR contains(lower(process.cmd_line), lower(' -vers 2 ')) OR contains(lower(process.cmd_line), lower(' -ver 2 ')) OR contains(lower(process.cmd_line), lower(' -ve 2 ')) OR contains(lower(process.cmd_line), lower(' -v 2 '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell downgrade attack by comparing the host versions with the actually used engine version 2.0",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: http://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/, https://github.com/r00t-3xp10it/hacking-material-books/blob/43cb1e1932c16ff1f58b755bc9ab6b096046853f/obfuscation/simple_obfuscation.md#bypass-or-avoid-amsi-by-version-downgrade-",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

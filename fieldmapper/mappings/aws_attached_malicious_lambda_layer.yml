@@ -1,7 +1,8 @@
-id: 97fbabf8-8e1b-47a2-b7d5-a418d2b95e3d
 title: AWS Attached Malicious Lambda Layer
+id: 97fbabf8-8e1b-47a2-b7d5-a418d2b95e3d
 status: test
 level: medium
+author: Austin Songer
 description: 'Detects when an user attached a Lambda layer to an existing function
     to override a library that is in use by the function, where their malicious code
     could utilize the function''s IAM role for AWS API calls.
@@ -10,11 +11,6 @@ description: 'Detects when an user attached a Lambda layer to an existing functi
     service role that is attached to that function.
 
     '
-author: Austin Songer
-date: '2021-09-23'
-modified: '2022-10-09'
-tags:
-    - attack.privilege-escalation
 references:
     - https://docs.aws.amazon.com/lambda/latest/dg/API_UpdateFunctionConfiguration.html
 falsepositives:
@@ -23,7 +19,10 @@ falsepositives:
         in your environment.
     - Lambda Layer being attached from unfamiliar users should be investigated. If
         known behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+date: '2021-09-23'
+modified: '2022-10-09'
 logsource:
     product: aws
     service: cloudtrail
@@ -39,17 +38,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:43.599567+00:00'
+            mapped_at: '2025-12-04T01:39:21.949064+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:43.599567+00:00'
+            mapped_at: '2025-12-04T01:39:21.949064+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:43.599588+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:21.949108+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:43.599591+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:21.949111+00:00'

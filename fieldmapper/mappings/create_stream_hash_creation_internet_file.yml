@@ -1,21 +1,20 @@
-id: 573df571-a223-43bc-846e-3f98da481eca
 title: Creation Of a Suspicious ADS File Outside a Browser Download
+id: 573df571-a223-43bc-846e-3f98da481eca
 status: test
 level: medium
+author: frack113
 description: Detects the creation of a suspicious ADS (Alternate Data Stream) file
     by software other than browsers
-author: frack113
-date: '2022-10-22'
-modified: '2023-06-12'
-tags:
-    - attack.defense-evasion
 references:
     - https://www.bleepingcomputer.com/news/security/exploited-windows-zero-day-lets-javascript-files-bypass-security-warnings/
 falsepositives:
     - Other legitimate browsers not currently included in the filter (please add them)
     - Legitimate downloads via scripting or command-line tools (Investigate to determine
         if it's legitimate)
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-10-22'
+modified: '2023-06-12'
 logsource:
     category: create_stream_hash
     product: windows
@@ -95,21 +94,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_stream_hash
-            mapped_at: '2025-11-26T02:38:58.792312+00:00'
+            mapped_at: '2025-12-04T01:51:52.803382+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:58.792312+00:00'
+            mapped_at: '2025-12-04T01:51:52.803382+00:00'
     detection_fields:
         -   source_field: Contents
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:58.792330+00:00'
+            mapped_at: '2025-12-04T01:51:52.803399+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:38:58.792332+00:00'
+            mapped_at: '2025-12-04T01:51:52.803401+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:38:58.792334+00:00'
+            mapped_at: '2025-12-04T01:51:52.803404+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Outlook Child Process",
+    "comment": "Detects a suspicious process spawning from an Outlook process.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\outlook.exe')) AND (endswith(lower(process.name), lower('\\\\appvlp.exe')) OR endswith(lower(process.name), lower('\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\forfiles.exe')) OR endswith(lower(process.name), lower('\\\\hh.exe')) OR endswith(lower(process.name), lower('\\\\mftrace.exe')) OR endswith(lower(process.name), lower('\\\\msbuild.exe')) OR endswith(lower(process.name), lower('\\\\msdt.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\msiexec.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\schtasks.exe')) OR endswith(lower(process.name), lower('\\\\scrcons.exe')) OR endswith(lower(process.name), lower('\\\\scriptrunner.exe')) OR endswith(lower(process.name), lower('\\\\sh.exe')) OR endswith(lower(process.name), lower('\\\\svchost.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious process spawning from an Outlook process.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Unknown References: https://www.hybrid-analysis.com/sample/465aabe132ccb949e75b8ab9c5bda36d80cf2fd503d52b8bad54e295f28bbc21?environmentId=100, https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

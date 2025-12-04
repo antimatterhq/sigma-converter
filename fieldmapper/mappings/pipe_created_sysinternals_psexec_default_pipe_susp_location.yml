@@ -1,26 +1,23 @@
-id: 41504465-5e3a-4a5b-a5b4-2a0baadd4463
 title: PsExec Tool Execution From Suspicious Locations - PipeName
+id: 41504465-5e3a-4a5b-a5b4-2a0baadd4463
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects PsExec default pipe creation where the image executed is located
     in a suspicious location. Which could indicate that the tool is being used in
     an attack
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-04'
-modified: '2023-09-20'
-tags:
-    - attack.execution
-    - attack.t1569.002
-    - attack.s0029
 references:
     - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
     - https://jpcertcc.github.io/ToolAnalysisResultSheet
 falsepositives:
     - Rare legitimate use of psexec from the locations mentioned above. This will
         require initial tuning based on your environment.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f3f3a972-f982-40ad-b63c-bca6afdfad7c''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1569.002
+    - attack.s0029
+date: '2022-08-04'
+modified: '2023-09-20'
 logsource:
     category: pipe_created
     product: windows
@@ -40,6 +37,9 @@ detection:
             - \Desktop\
             - \Downloads\
     condition: selection
+related:
+    -   id: f3f3a972-f982-40ad-b63c-bca6afdfad7c
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -47,17 +47,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: pipe_created
-            mapped_at: '2025-11-26T02:23:52.276495+00:00'
+            mapped_at: '2025-12-04T01:40:05.486078+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:23:52.276495+00:00'
+            mapped_at: '2025-12-04T01:40:05.486078+00:00'
     detection_fields:
         -   source_field: PipeName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:53.484796+00:00'
+            mapped_at: '2025-12-04T01:40:05.486092+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:23:53.484831+00:00'
+            mapped_at: '2025-12-04T01:40:05.486093+00:00'

@@ -1,19 +1,18 @@
-id: e6e88853-5f20-4c4a-8d26-cd469fd8d31f
 title: Ntdsutil Abuse
+id: e6e88853-5f20-4c4a-8d26-cd469fd8d31f
 status: test
 level: medium
-description: Detects potential abuse of ntdsutil to dump ntds.dit database
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-14'
-tags:
-    - attack.credential-access
-    - attack.t1003.003
+description: Detects potential abuse of ntdsutil to dump ntds.dit database
 references:
     - https://twitter.com/mgreen27/status/1558223256704122882
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/jj574207(v=ws.11)
 falsepositives:
     - Legitimate backup operation/creating shadow copies
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+date: '2022-08-14'
 logsource:
     product: windows
     service: application
@@ -34,21 +33,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:58.142882+00:00'
+            mapped_at: '2025-12-04T01:57:33.572620+00:00'
         service:
             source_field: service
             source_value: application
-            mapped_at: '2025-11-26T02:48:58.142882+00:00'
+            mapped_at: '2025-12-04T01:57:33.572620+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:58.142895+00:00'
+            mapped_at: '2025-12-04T01:57:33.572645+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:58.142897+00:00'
+            mapped_at: '2025-12-04T01:57:33.572648+00:00'
         -   source_field: Data
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:58.142898+00:00'
+            mapped_at: '2025-12-04T01:57:33.572651+00:00'

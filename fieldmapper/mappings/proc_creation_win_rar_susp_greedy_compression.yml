@@ -1,20 +1,19 @@
-id: afe52666-401e-4a02-b4ff-5d128990b8cb
 title: Suspicious Greedy Compression Using Rar.EXE
+id: afe52666-401e-4a02-b4ff-5d128990b8cb
 status: test
 level: high
+author: X__Junior (Nextron Systems), Florian Roth (Nextron Systems)
 description: Detects RAR usage that creates an archive from a suspicious folder, either
     a system folder or one of the folders often used by attackers for staging purposes
-author: X__Junior (Nextron Systems), Florian Roth (Nextron Systems)
-date: '2022-12-15'
-modified: '2024-01-02'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://decoded.avast.io/martinchlumecky/png-steganography
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-12-15'
+modified: '2024-01-02'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:11.792681+00:00'
+            mapped_at: '2025-12-04T01:40:50.816384+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:11.792681+00:00'
+            mapped_at: '2025-12-04T01:40:50.816384+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:11.792701+00:00'
+            mapped_at: '2025-12-04T01:40:50.816412+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:25:11.792704+00:00'
+            mapped_at: '2025-12-04T01:40:50.816414+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:11.792705+00:00'
+            mapped_at: '2025-12-04T01:40:50.816416+00:00'

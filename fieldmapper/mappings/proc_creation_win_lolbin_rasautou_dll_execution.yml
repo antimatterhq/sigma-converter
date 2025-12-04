@@ -1,21 +1,20 @@
-id: cd3d1298-eb3b-476c-ac67-12847de55813
 title: DLL Execution via Rasautou.exe
+id: cd3d1298-eb3b-476c-ac67-12847de55813
 status: test
 level: medium
+author: Julia Fomina, oscd.community
 description: Detects using Rasautou.exe for loading arbitrary .DLL specified in -d
     option and executes the export specified in -p.
-author: Julia Fomina, oscd.community
-date: '2020-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Rasautou/
     - https://github.com/fireeye/DueDLLigence
     - https://www.fireeye.com/blog/threat-research/2019/10/staying-hidden-on-the-endpoint-evading-detection-with-shellcode.html
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:57.824561+00:00'
+            mapped_at: '2025-12-04T01:48:55.799377+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:57.824561+00:00'
+            mapped_at: '2025-12-04T01:48:55.799377+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:57.824578+00:00'
+            mapped_at: '2025-12-04T01:48:55.799392+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:57.824580+00:00'
+            mapped_at: '2025-12-04T01:48:55.799394+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:57.824581+00:00'
+            mapped_at: '2025-12-04T01:48:55.799396+00:00'

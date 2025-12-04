@@ -1,21 +1,20 @@
-id: db014773-b1d3-46bd-ba26-133337c0ffee
 title: AWS IAM S3Browser LoginProfile Creation
+id: db014773-b1d3-46bd-ba26-133337c0ffee
 status: test
 level: high
+author: daniel.bohannon@permiso.io (@danielhbohannon)
 description: Detects S3 Browser utility performing reconnaissance looking for existing
     IAM Users without a LoginProfile defined then (when found) creating a LoginProfile.
-author: daniel.bohannon@permiso.io (@danielhbohannon)
-date: '2023-05-17'
+references:
+    - https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
+falsepositives:
+    - Valid usage of S3 Browser for IAM LoginProfile listing and/or creation
 tags:
     - attack.execution
     - attack.persistence
     - attack.t1059.009
     - attack.t1078.004
-references:
-    - https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
-falsepositives:
-    - Valid usage of S3 Browser for IAM LoginProfile listing and/or creation
-taxonomy: sigma
+date: '2023-05-17'
 logsource:
     product: aws
     service: cloudtrail
@@ -34,21 +33,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:08.794933+00:00'
+            mapped_at: '2025-12-04T01:39:07.177047+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:08.794933+00:00'
+            mapped_at: '2025-12-04T01:39:07.177047+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: api_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:11.153544+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:07.177062+00:00'
         -   source_field: eventName
             target_table: api_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:11.153566+00:00'
+            target_field: api.operation
+            mapped_at: '2025-12-04T01:39:07.177064+00:00'
         -   source_field: userAgent
             target_table: api_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:22:11.153571+00:00'
+            mapped_at: '2025-12-04T01:39:07.177066+00:00'

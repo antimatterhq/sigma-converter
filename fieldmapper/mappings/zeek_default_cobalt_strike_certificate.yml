@@ -1,15 +1,10 @@
-id: 7100f7e3-92ce-4584-b7b7-01b40d3d4118
 title: Default Cobalt Strike Certificate
+id: 7100f7e3-92ce-4584-b7b7-01b40d3d4118
 status: test
 level: high
+author: Bhabesh Raj
 description: Detects the presence of default Cobalt Strike certificate in the HTTPS
     traffic
-author: Bhabesh Raj
-date: '2021-06-23'
-modified: '2022-10-09'
-tags:
-    - attack.command-and-control
-    - attack.s0154
 references:
     - https://sergiusechel.medium.com/improving-the-network-based-detection-of-cobalt-strike-c2-servers-in-the-wild-while-reducing-the-6964205f6468
 fields:
@@ -18,7 +13,11 @@ fields:
     - certificate.issuer
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.s0154
+date: '2021-06-23'
+modified: '2022-10-09'
 logsource:
     product: zeek
     service: x509
@@ -33,13 +32,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:18.076284+00:00'
+            mapped_at: '2025-12-04T01:35:18.020937+00:00'
         service:
             source_field: service
             source_value: x509
-            mapped_at: '2025-11-26T02:15:18.076284+00:00'
+            mapped_at: '2025-12-04T01:35:18.020937+00:00'
     detection_fields:
         -   source_field: certificate.serial
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:18.978468+00:00'
+            mapped_at: '2025-12-04T01:35:18.020962+00:00'

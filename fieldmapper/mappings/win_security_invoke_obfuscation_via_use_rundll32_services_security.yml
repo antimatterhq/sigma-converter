@@ -1,23 +1,20 @@
-id: cd0f7229-d16f-42de-8fe3-fba365fbcb3a
 title: Invoke-Obfuscation Via Use Rundll32 - Security
+id: cd0f7229-d16f-42de-8fe3-fba365fbcb3a
 status: test
 level: high
-description: Detects Obfuscated Powershell via use Rundll32 in Scripts
 author: Nikita Nazarov, oscd.community
-date: '2020-10-09'
-modified: '2022-11-29'
+description: Detects Obfuscated Powershell via use Rundll32 in Scripts
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''641a4bfb-c017-44f7-800c-2aee0184ce9b''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-09'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -37,6 +34,9 @@ detection:
             - comspec
             - iex
     condition: selection
+related:
+    -   id: 641a4bfb-c017-44f7-800c-2aee0184ce9b
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -44,17 +44,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:14.805894+00:00'
+            mapped_at: '2025-12-04T01:55:25.276055+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:14.805894+00:00'
+            mapped_at: '2025-12-04T01:55:25.276055+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:14.805918+00:00'
+            mapped_at: '2025-12-04T01:55:25.276074+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:14.805920+00:00'
+            mapped_at: '2025-12-04T01:55:25.276076+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Troubleshooting Pack Cmdlet Execution",
+    "comment": "Detects execution of \"TroubleshootingPack\" cmdlets to leverage CVE-2022-30190 or action similar to \"msdt\" lolbin (as described in LOLBAS)",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('invoke-troubleshootingpack')) AND contains(lower(script.script_content.value), lower('c:\\\\windows\\\\diagnostics\\\\system\\\\pcw')) AND contains(lower(script.script_content.value), lower('-answerfile')) AND contains(lower(script.script_content.value), lower('-unattended')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"TroubleshootingPack\" cmdlets to leverage CVE-2022-30190 or action similar to \"msdt\" lolbin (as described in LOLBAS)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of \"TroubleshootingPack\" cmdlet for troubleshooting purposes References: https://twitter.com/nas_bench/status/1537919885031772161, https://lolbas-project.github.io/lolbas/Binaries/Msdt/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

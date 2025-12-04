@@ -1,28 +1,23 @@
-id: 1cb0c6ce-3d00-44fc-ab9c-6d6d577bf20b
 title: DNS Query To Devtunnels Domain
+id: 1cb0c6ce-3d00-44fc-ab9c-6d6d577bf20b
 status: test
 level: medium
+author: citron_ninja
 description: 'Detects DNS query requests to Devtunnels domains. Attackers can abuse
     that feature to establish a reverse shell or persistence on a machine.
 
     '
-author: citron_ninja
-date: '2023-10-25'
-modified: '2023-11-20'
-tags:
-    - attack.command-and-control
-    - attack.t1071.001
 references:
     - https://blueteamops.medium.com/detecting-dev-tunnels-16f0994dc3e2
     - https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security
     - https://cydefops.com/devtunnels-unleashed
 falsepositives:
     - Legitimate use of Devtunnels will also trigger this.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9501f8e6-8e3d-48fc-a8a6-1089dd5d7ef4''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''4b657234-038e-4ad5-997c-4be42340bce4''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''b3e6418f-7c7a-4fad-993a-93b65027a9f1''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1071.001
+date: '2023-10-25'
+modified: '2023-11-20'
 logsource:
     category: dns_query
     product: windows
@@ -30,6 +25,13 @@ detection:
     selection:
         QueryName|endswith: .devtunnels.ms
     condition: selection
+related:
+    -   id: 9501f8e6-8e3d-48fc-a8a6-1089dd5d7ef4
+        type: similar
+    -   id: 4b657234-038e-4ad5-997c-4be42340bce4
+        type: similar
+    -   id: b3e6418f-7c7a-4fad-993a-93b65027a9f1
+        type: similar
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -37,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:40.587714+00:00'
+            mapped_at: '2025-12-04T01:51:14.283002+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:40.587714+00:00'
+            mapped_at: '2025-12-04T01:51:14.283002+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:40.587739+00:00'
+            mapped_at: '2025-12-04T01:51:14.283017+00:00'

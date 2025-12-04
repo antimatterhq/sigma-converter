@@ -1,20 +1,19 @@
-id: 4a2a2c3e-209f-4d01-b513-4155a540b469
 title: Suspicious MsiExec Embedding Parent
+id: 4a2a2c3e-209f-4d01-b513-4155a540b469
 status: test
 level: medium
+author: frack113
 description: Adversaries may abuse msiexec.exe to proxy the execution of malicious
     payloads
-author: frack113
-date: '2022-04-16'
-modified: '2022-07-14'
-tags:
-    - attack.t1218.007
-    - attack.defense-evasion
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1218.007
+    - attack.defense-evasion
+date: '2022-04-16'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:56.384198+00:00'
+            mapped_at: '2025-12-04T01:48:53.823036+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:56.384198+00:00'
+            mapped_at: '2025-12-04T01:48:53.823036+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:56.384214+00:00'
+            mapped_at: '2025-12-04T01:48:53.823053+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:34:56.384217+00:00'
+            mapped_at: '2025-12-04T01:48:53.823056+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:56.384219+00:00'
+            mapped_at: '2025-12-04T01:48:53.823058+00:00'

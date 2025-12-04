@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious File Download From File Sharing Domain Via PowerShell.EXE",
+    "comment": "Detects potentially suspicious file downloads from file sharing domains using PowerShell.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower('anonfiles.com')) OR contains(lower(process.cmd_line), lower('cdn.discordapp.com')) OR contains(lower(process.cmd_line), lower('ddns.net')) OR contains(lower(process.cmd_line), lower('dl.dropboxusercontent.com')) OR contains(lower(process.cmd_line), lower('ghostbin.co')) OR contains(lower(process.cmd_line), lower('glitch.me')) OR contains(lower(process.cmd_line), lower('gofile.io')) OR contains(lower(process.cmd_line), lower('hastebin.com')) OR contains(lower(process.cmd_line), lower('mediafire.com')) OR contains(lower(process.cmd_line), lower('mega.nz')) OR contains(lower(process.cmd_line), lower('onrender.com')) OR contains(lower(process.cmd_line), lower('pages.dev')) OR contains(lower(process.cmd_line), lower('paste.ee')) OR contains(lower(process.cmd_line), lower('pastebin.com')) OR contains(lower(process.cmd_line), lower('pastebin.pl')) OR contains(lower(process.cmd_line), lower('pastetext.net')) OR contains(lower(process.cmd_line), lower('pixeldrain.com')) OR contains(lower(process.cmd_line), lower('privatlab.com')) OR contains(lower(process.cmd_line), lower('privatlab.net')) OR contains(lower(process.cmd_line), lower('send.exploit.in')) OR contains(lower(process.cmd_line), lower('sendspace.com')) OR contains(lower(process.cmd_line), lower('storage.googleapis.com')) OR contains(lower(process.cmd_line), lower('storjshare.io')) OR contains(lower(process.cmd_line), lower('supabase.co')) OR contains(lower(process.cmd_line), lower('temp.sh')) OR contains(lower(process.cmd_line), lower('transfer.sh')) OR contains(lower(process.cmd_line), lower('trycloudflare.com')) OR contains(lower(process.cmd_line), lower('ufile.io')) OR contains(lower(process.cmd_line), lower('w3spaces.com')) OR contains(lower(process.cmd_line), lower('workers.dev'))) AND (contains(lower(process.cmd_line), lower('.downloadstring(')) OR contains(lower(process.cmd_line), lower('.downloadfile(')) OR contains(lower(process.cmd_line), lower('invoke-webrequest ')) OR contains(lower(process.cmd_line), lower('iwr ')) OR contains(lower(process.cmd_line), lower('wget '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially suspicious file downloads from file sharing domains using PowerShell.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://labs.withsecure.com/publications/fin7-target-veeam-servers, https://github.com/WithSecureLabs/iocs/blob/344203de742bb7e68bd56618f66d34be95a9f9fc/FIN7VEEAM/iocs.csv, https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/, https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

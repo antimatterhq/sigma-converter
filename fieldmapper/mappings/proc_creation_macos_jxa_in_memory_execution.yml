@@ -1,23 +1,20 @@
-id: f1408a58-0e94-4165-b80a-da9f96cf6fc3
 title: JXA In-memory Execution Via OSAScript
+id: f1408a58-0e94-4165-b80a-da9f96cf6fc3
 status: test
 level: high
-description: Detects possible malicious execution of JXA in-memory via OSAScript
 author: Sohan G (D4rkCiph3r)
-date: '2023-01-31'
-tags:
-    - attack.t1059.002
-    - attack.t1059.007
-    - attack.execution
+description: Detects possible malicious execution of JXA in-memory via OSAScript
 references:
     - https://redcanary.com/blog/applescript/
 fields:
     - CommandLine
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1bc2e6c5-0885-472b-bed6-be5ea8eace55''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.t1059.002
+    - attack.t1059.007
+    - attack.execution
+date: '2023-01-31'
 logsource:
     category: process_creation
     product: macos
@@ -34,6 +31,9 @@ detection:
             - JavaScript
         CommandLine|contains: .js
     condition: all of selection_*
+related:
+    -   id: 1bc2e6c5-0885-472b-bed6-be5ea8eace55
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -41,13 +41,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:12.545516+00:00'
+            mapped_at: '2025-12-04T01:34:10.056608+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:12.545516+00:00'
+            mapped_at: '2025-12-04T01:34:10.056608+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:12.545539+00:00'
+            mapped_at: '2025-12-04T01:34:10.056622+00:00'

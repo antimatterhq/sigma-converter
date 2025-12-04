@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "DNS TXT Answer with Possible Execution Strings",
+    "comment": "Detects strings used in command execution in DNS TXT Answer",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND lower(query.type) = lower('txt') AND (contains(lower(answers.rdata), lower('iex')) OR contains(lower(answers.rdata), lower('invoke-expression')) OR contains(lower(answers.rdata), lower('cmd.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects strings used in command execution in DNS TXT Answer",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/stvemillertime/status/1024707932447854592, https://github.com/samratashok/nishang/blob/414ee1104526d7057f9adaeee196d91ae447283e/Backdoors/DNS_TXT_Pwnage.ps1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

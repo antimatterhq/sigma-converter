@@ -1,19 +1,18 @@
-id: 1f6399cf-2c80-4924-ace1-6fcff3393480
 title: DirectorySearcher Powershell Exploitation
+id: 1f6399cf-2c80-4924-ace1-6fcff3393480
 status: test
 level: medium
+author: frack113
 description: Enumerates Active Directory to determine computers that are joined to
     the domain
-author: frack113
-date: '2022-02-12'
-tags:
-    - attack.discovery
-    - attack.t1018
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md#atomic-test-15---enumerate-domain-computers-within-active-directory-using-directorysearcher
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1018
+date: '2022-02-12'
 logsource:
     category: ps_script
     product: windows
@@ -29,18 +28,18 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: script_activity
-    activity_id: <UNMAPPED>
+    activity_id: 1
     logsource:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:04.127534+00:00'
+            mapped_at: '2025-12-04T01:54:17.795283+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:04.127534+00:00'
+            mapped_at: '2025-12-04T01:54:17.795283+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:04.127566+00:00'
+            mapped_at: '2025-12-04T01:54:17.795296+00:00'

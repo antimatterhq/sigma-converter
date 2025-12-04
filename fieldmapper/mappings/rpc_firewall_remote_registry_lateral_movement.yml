@@ -1,15 +1,10 @@
-id: 35c55673-84ca-4e99-8d09-e334f3c29539
 title: Remote Registry Lateral Movement
+id: 35c55673-84ca-4e99-8d09-e334f3c29539
 status: test
 level: high
+author: Sagie Dulce, Dekel Paz
 description: Detects remote RPC calls to modify the registry and possible execute
     code
-author: Sagie Dulce, Dekel Paz
-date: '2022-01-01'
-modified: '2022-01-01'
-tags:
-    - attack.lateral-movement
-    - attack.t1112
 references:
     - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rrp/0fa3191d-bb79-490a-81bd-54c2601b7a78
     - https://github.com/jsecurity101/MSRPC-to-ATTACK/blob/ddd4608fe8684fcf2fcf9b48c5f0b3c28097f8a3/documents/MS-RRP.md
@@ -17,7 +12,11 @@ references:
     - https://zeronetworks.com/blog/stopping-lateral-movement-via-the-rpc-firewall/
 falsepositives:
     - Remote administration of registry values
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1112
+date: '2022-01-01'
+modified: '2022-01-01'
 logsource:
     category: application
     product: rpc_firewall
@@ -47,25 +46,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:18.975691+00:00'
+            mapped_at: '2025-12-04T01:39:43.394674+00:00'
         product:
             source_field: product
             source_value: rpc_firewall
-            mapped_at: '2025-11-26T02:23:18.975691+00:00'
+            mapped_at: '2025-12-04T01:39:43.394674+00:00'
     detection_fields:
         -   source_field: EventLog
             target_table: network_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:23:18.975707+00:00'
+            mapped_at: '2025-12-04T01:39:43.394690+00:00'
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:23:18.975709+00:00'
+            mapped_at: '2025-12-04T01:39:43.394692+00:00'
         -   source_field: InterfaceUuid
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:18.975710+00:00'
+            mapped_at: '2025-12-04T01:39:43.394693+00:00'
         -   source_field: OpNum
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:18.975711+00:00'
+            mapped_at: '2025-12-04T01:39:43.394695+00:00'

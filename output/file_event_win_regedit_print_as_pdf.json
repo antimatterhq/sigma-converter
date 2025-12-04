@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "PDF File Created By RegEdit.EXE",
+    "comment": "Detects the creation of a file with the \".pdf\" extension by the \"RegEdit.exe\" process. This indicates that a user is trying to print/save a registry key as a PDF in order to potentially extract sensitive information and bypass defenses.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(actor.process.name), lower('\\\\regedit.exe')) AND endswith(lower(file.path), lower('.pdf')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a file with the \".pdf\" extension by the \"RegEdit.exe\" process. This indicates that a user is trying to print/save a registry key as a PDF in order to potentially extract sensitive information and bypass defenses.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://sensepost.com/blog/2024/dumping-lsa-secrets-a-story-about-task-decorrelation/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

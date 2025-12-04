@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Regsvr32 Commandline Flag Anomaly",
+    "comment": "Detects a potential command line flag anomaly related to \"regsvr32\" in which the \"/i\" flag is used without the \"/n\" which should be uncommon.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\regsvr32.exe')) AND (contains(lower(process.cmd_line), lower(' -i:')) OR contains(lower(process.cmd_line), lower(' /i:')) OR contains(lower(process.cmd_line), lower(' \u2013i:')) OR contains(lower(process.cmd_line), lower(' \u2014i:')) OR contains(lower(process.cmd_line), lower(' \u2015i:'))) AND NOT contains(lower(process.cmd_line), lower(' -n ')) OR contains(lower(process.cmd_line), lower(' /n ')) OR contains(lower(process.cmd_line), lower(' \u2013n ')) OR contains(lower(process.cmd_line), lower(' \u2014n ')) OR contains(lower(process.cmd_line), lower(' \u2015n ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a potential command line flag anomaly related to \"regsvr32\" in which the \"/i\" flag is used without the \"/n\" which should be uncommon.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrator typo might cause some false positives Reference: https://twitter.com/sbousseaden/status/1282441816986484737?s=12",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

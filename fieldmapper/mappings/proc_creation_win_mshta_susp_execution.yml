@@ -1,19 +1,10 @@
-id: cc7abbd0-762b-41e3-8a26-57ad50d2eea3
 title: MSHTA Suspicious Execution 01
+id: cc7abbd0-762b-41e3-8a26-57ad50d2eea3
 status: test
 level: high
+author: Diego Perez (@darkquassar), Markus Neis, Swisscom (Improve Rule)
 description: Detection for mshta.exe suspicious execution patterns sometimes involving
     file polyglotism
-author: Diego Perez (@darkquassar), Markus Neis, Swisscom (Improve Rule)
-date: '2019-02-22'
-modified: '2022-11-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1140
-    - attack.t1218.005
-    - attack.execution
-    - attack.t1059.007
-    - cve.2020-1599
 references:
     - http://blog.sevagas.com/?Hacking-around-HTA-files
     - https://0x00sec.org/t/clientside-exploitation-in-2018-how-pentesting-has-changed/7356
@@ -23,7 +14,15 @@ references:
 falsepositives:
     - False positives depend on scripts and administrative tools used in the monitored
         environment
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1140
+    - attack.t1218.005
+    - attack.execution
+    - attack.t1059.007
+    - cve.2020-1599
+date: '2019-02-22'
+modified: '2022-11-07'
 logsource:
     category: process_creation
     product: windows
@@ -47,17 +46,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:16.985138+00:00'
+            mapped_at: '2025-12-04T01:49:11.648022+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:16.985138+00:00'
+            mapped_at: '2025-12-04T01:49:11.648022+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:16.985153+00:00'
+            mapped_at: '2025-12-04T01:49:11.648037+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:16.985156+00:00'
+            mapped_at: '2025-12-04T01:49:11.648039+00:00'

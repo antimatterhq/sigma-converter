@@ -1,23 +1,20 @@
-id: 7a922f1b-2635-4d6c-91ef-af228b198ad3
 title: Invoke-Obfuscation COMPRESS OBFUSCATION - Security
+id: 7a922f1b-2635-4d6c-91ef-af228b198ad3
 status: test
 level: medium
-description: Detects Obfuscated Powershell via COMPRESS OBFUSCATION
 author: Timur Zinniatullin, oscd.community
-date: '2020-10-18'
-modified: '2022-11-29'
+description: Detects Obfuscated Powershell via COMPRESS OBFUSCATION
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''175997c5-803c-4b08-8bb0-70b099f47595''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-18'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -34,6 +31,9 @@ detection:
             - system.io.compression.deflatestream
             - system.io.streamreader
     condition: selection
+related:
+    -   id: 175997c5-803c-4b08-8bb0-70b099f47595
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -41,17 +41,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:51.980503+00:00'
+            mapped_at: '2025-12-04T01:55:37.358626+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:51.980503+00:00'
+            mapped_at: '2025-12-04T01:55:37.358626+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:51.980530+00:00'
+            mapped_at: '2025-12-04T01:55:37.358719+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:51.980534+00:00'
+            mapped_at: '2025-12-04T01:55:37.358727+00:00'

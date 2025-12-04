@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "DSInternals Suspicious PowerShell Cmdlets",
+    "comment": "Detects execution and usage of the DSInternals PowerShell module. Which can be used to perform what might be considered as suspicious activity such as dumping DPAPI backup keys or manipulating NTDS.DIT files. The DSInternals PowerShell Module exposes several internal features of Active Directory and Azure Active Directory. These include FIDO2 and NGC key auditing, offline ntds.dit file manipulation, password auditing, DC recovery from IFM backups and password hash calculation.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('add-addbsidhistory')) OR contains(lower(process.cmd_line), lower('add-adngckey')) OR contains(lower(process.cmd_line), lower('add-adreplngckey')) OR contains(lower(process.cmd_line), lower('convertfrom-admanagedpasswordblob')) OR contains(lower(process.cmd_line), lower('convertfrom-gpprefpassword')) OR contains(lower(process.cmd_line), lower('convertfrom-managedpasswordblob')) OR contains(lower(process.cmd_line), lower('convertfrom-unattendxmlpassword')) OR contains(lower(process.cmd_line), lower('convertfrom-unicodepassword')) OR contains(lower(process.cmd_line), lower('convertto-aadhash')) OR contains(lower(process.cmd_line), lower('convertto-gpprefpassword')) OR contains(lower(process.cmd_line), lower('convertto-kerberoskey')) OR contains(lower(process.cmd_line), lower('convertto-lmhash')) OR contains(lower(process.cmd_line), lower('convertto-msopasswordhash')) OR contains(lower(process.cmd_line), lower('convertto-nthash')) OR contains(lower(process.cmd_line), lower('convertto-orgidhash')) OR contains(lower(process.cmd_line), lower('convertto-unicodepassword')) OR contains(lower(process.cmd_line), lower('disable-addbaccount')) OR contains(lower(process.cmd_line), lower('enable-addbaccount')) OR contains(lower(process.cmd_line), lower('get-addbaccount')) OR contains(lower(process.cmd_line), lower('get-addbbackupkey')) OR contains(lower(process.cmd_line), lower('get-addbdomaincontroller')) OR contains(lower(process.cmd_line), lower('get-addbgroupmanagedserviceaccount')) OR contains(lower(process.cmd_line), lower('get-addbkdsrootkey')) OR contains(lower(process.cmd_line), lower('get-addbschemaattribute')) OR contains(lower(process.cmd_line), lower('get-addbserviceaccount')) OR contains(lower(process.cmd_line), lower('get-addefaultpasswordpolicy')) OR contains(lower(process.cmd_line), lower('get-adkeycredential')) OR contains(lower(process.cmd_line), lower('get-adpasswordpolicy')) OR contains(lower(process.cmd_line), lower('get-adreplaccount')) OR contains(lower(process.cmd_line), lower('get-adreplbackupkey')) OR contains(lower(process.cmd_line), lower('get-adreplicationaccount')) OR contains(lower(process.cmd_line), lower('get-adsiaccount')) OR contains(lower(process.cmd_line), lower('get-azureaduserex')) OR contains(lower(process.cmd_line), lower('get-bootkey')) OR contains(lower(process.cmd_line), lower('get-keycredential')) OR contains(lower(process.cmd_line), lower('get-lsabackupkey')) OR contains(lower(process.cmd_line), lower('get-lsapolicy')) OR contains(lower(process.cmd_line), lower('get-sampasswordpolicy')) OR contains(lower(process.cmd_line), lower('get-syskey')) OR contains(lower(process.cmd_line), lower('get-systemkey')) OR contains(lower(process.cmd_line), lower('new-addbrestorefrommediascript')) OR contains(lower(process.cmd_line), lower('new-adkeycredential')) OR contains(lower(process.cmd_line), lower('new-adngckey')) OR contains(lower(process.cmd_line), lower('new-nthashset')) OR contains(lower(process.cmd_line), lower('remove-addbobject')) OR contains(lower(process.cmd_line), lower('save-dpapiblob')) OR contains(lower(process.cmd_line), lower('set-adaccountpasswordhash')) OR contains(lower(process.cmd_line), lower('set-addbaccountpassword')) OR contains(lower(process.cmd_line), lower('set-addbbootkey')) OR contains(lower(process.cmd_line), lower('set-addbdomaincontroller')) OR contains(lower(process.cmd_line), lower('set-addbprimarygroup')) OR contains(lower(process.cmd_line), lower('set-addbsyskey')) OR contains(lower(process.cmd_line), lower('set-azureaduserex')) OR contains(lower(process.cmd_line), lower('set-lsapolicy')) OR contains(lower(process.cmd_line), lower('set-samaccountpasswordhash')) OR contains(lower(process.cmd_line), lower('set-winuserpasswordhash')) OR contains(lower(process.cmd_line), lower('test-addbpasswordquality')) OR contains(lower(process.cmd_line), lower('test-adpasswordquality')) OR contains(lower(process.cmd_line), lower('test-adreplpasswordquality')) OR contains(lower(process.cmd_line), lower('test-passwordquality')) OR contains(lower(process.cmd_line), lower('unlock-addbaccount')) OR contains(lower(process.cmd_line), lower('write-adngckey')) OR contains(lower(process.cmd_line), lower('write-adreplngckey'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution and usage of the DSInternals PowerShell module. Which can be used to perform what might be considered as suspicious activity such as dumping DPAPI backup keys or manipulating NTDS.DIT files. The DSInternals PowerShell Module exposes several internal features of Active Directory and Azure Active Directory. These include FIDO2 and NGC key auditing, offline ntds.dit file manipulation, password auditing, DC recovery from IFM backups and password hash calculation.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of DSInternals for administration or audit purpose. Reference: https://github.com/MichaelGrafnetter/DSInternals/blob/39ee8a69bbdc1cfd12c9afdd7513b4788c4895d4/Src/DSInternals.PowerShell/DSInternals.psd1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,22 +1,21 @@
-id: f57c58b3-ee69-4ef5-9041-455bf39aaa89
 title: Remote CHM File Download/Execution Via HH.EXE
+id: f57c58b3-ee69-4ef5-9041-455bf39aaa89
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the usage of "hh.exe" to execute/download remotely hosted ".chm"
     files.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-29'
-modified: '2024-01-31'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.001
 references:
     - https://www.splunk.com/en_us/blog/security/follina-for-protocol-handlers.html
     - https://github.com/redcanaryco/atomic-red-team/blob/1cf4dd51f83dcb0ebe6ade902d6157ad2dbc6ac8/atomics/T1218.001/T1218.001.md
     - https://www.zscaler.com/blogs/security-research/unintentional-leak-glimpse-attack-vectors-apt37
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.001
+date: '2022-09-29'
+modified: '2024-01-31'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:58.534745+00:00'
+            mapped_at: '2025-12-04T01:41:27.464503+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:58.534745+00:00'
+            mapped_at: '2025-12-04T01:41:27.464503+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:58.534760+00:00'
+            mapped_at: '2025-12-04T01:41:27.464517+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:58.534762+00:00'
+            mapped_at: '2025-12-04T01:41:27.464519+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:58.534763+00:00'
+            mapped_at: '2025-12-04T01:41:27.464520+00:00'

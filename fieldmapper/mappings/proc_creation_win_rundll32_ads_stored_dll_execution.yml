@@ -1,20 +1,19 @@
-id: 9248c7e1-2bf3-4661-a22c-600a8040b446
 title: Potential Rundll32 Execution With DLL Stored In ADS
+id: 9248c7e1-2bf3-4661-a22c-600a8040b446
 status: test
 level: high
+author: Harjot Singh, '@cyb3rjy0t'
 description: Detects execution of rundll32 where the DLL being called is stored in
     an Alternate Data Stream (ADS).
-author: Harjot Singh, '@cyb3rjy0t'
-date: '2023-01-21'
-modified: '2023-02-08'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.004
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Rundll32
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.004
+date: '2023-01-21'
+modified: '2023-02-08'
 logsource:
     category: process_creation
     product: windows
@@ -32,21 +31,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:31.433542+00:00'
+            mapped_at: '2025-12-04T01:46:57.028144+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:31.433542+00:00'
+            mapped_at: '2025-12-04T01:46:57.028144+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:31.433564+00:00'
+            mapped_at: '2025-12-04T01:46:57.028166+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:31.433568+00:00'
+            mapped_at: '2025-12-04T01:46:57.028168+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:31.433569+00:00'
+            mapped_at: '2025-12-04T01:46:57.028169+00:00'

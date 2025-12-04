@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "File Decoded From Base64/Hex Via Certutil.EXE",
+    "comment": "Detects the execution of certutil with either the \"decode\" or \"decodehex\" flags to decode base64 or hex encoded files. This can be abused by attackers to decode an encoded payload before execution",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certutil.exe')) AND lower(process.file.name) = lower('certutil.exe') AND (contains(lower(process.cmd_line), lower('-decode ')) OR contains(lower(process.cmd_line), lower('/decode ')) OR contains(lower(process.cmd_line), lower('\u2013decode ')) OR contains(lower(process.cmd_line), lower('\u2014decode ')) OR contains(lower(process.cmd_line), lower('\u2015decode ')) OR contains(lower(process.cmd_line), lower('-decodehex ')) OR contains(lower(process.cmd_line), lower('/decodehex ')) OR contains(lower(process.cmd_line), lower('\u2013decodehex ')) OR contains(lower(process.cmd_line), lower('\u2014decodehex ')) OR contains(lower(process.cmd_line), lower('\u2015decodehex '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of certutil with either the \"decode\" or \"decodehex\" flags to decode base64 or hex encoded files. This can be abused by attackers to decode an encoded payload before execution",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil, https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/, https://news.sophos.com/en-us/2021/04/13/compromised-exchange-server-hosting-cryptojacker-targeting-other-exchange-servers/, https://twitter.com/JohnLaTwC/status/835149808817991680, https://learn.microsoft.com/en-us/archive/blogs/pki/basic-crl-checking-with-certutil, https://lolbas-project.github.io/lolbas/Binaries/Certutil/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

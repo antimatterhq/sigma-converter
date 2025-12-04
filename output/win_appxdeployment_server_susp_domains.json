@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious Remote AppX Package Locations",
+    "comment": "Detects an appx package added to the pipeline of the \"to be processed\" packages which was downloaded from a suspicious domain.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "appxdeployment-server",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 854 AND (contains(lower(job.file.path), lower('.githubusercontent.com')) OR contains(lower(job.file.path), lower('anonfiles.com')) OR contains(lower(job.file.path), lower('cdn.discordapp.com')) OR contains(lower(job.file.path), lower('ddns.net')) OR contains(lower(job.file.path), lower('dl.dropboxusercontent.com')) OR contains(lower(job.file.path), lower('ghostbin.co')) OR contains(lower(job.file.path), lower('glitch.me')) OR contains(lower(job.file.path), lower('gofile.io')) OR contains(lower(job.file.path), lower('hastebin.com')) OR contains(lower(job.file.path), lower('mediafire.com')) OR contains(lower(job.file.path), lower('mega.nz')) OR contains(lower(job.file.path), lower('onrender.com')) OR contains(lower(job.file.path), lower('pages.dev')) OR contains(lower(job.file.path), lower('paste.ee')) OR contains(lower(job.file.path), lower('pastebin.com')) OR contains(lower(job.file.path), lower('pastebin.pl')) OR contains(lower(job.file.path), lower('pastetext.net')) OR contains(lower(job.file.path), lower('privatlab.com')) OR contains(lower(job.file.path), lower('privatlab.net')) OR contains(lower(job.file.path), lower('send.exploit.in')) OR contains(lower(job.file.path), lower('sendspace.com')) OR contains(lower(job.file.path), lower('storage.googleapis.com')) OR contains(lower(job.file.path), lower('storjshare.io')) OR contains(lower(job.file.path), lower('supabase.co')) OR contains(lower(job.file.path), lower('temp.sh')) OR contains(lower(job.file.path), lower('transfer.sh')) OR contains(lower(job.file.path), lower('trycloudflare.com')) OR contains(lower(job.file.path), lower('ufile.io')) OR contains(lower(job.file.path), lower('w3spaces.com')) OR contains(lower(job.file.path), lower('workers.dev'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects an appx package added to the pipeline of the \"to be processed\" packages which was downloaded from a suspicious domain.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: Internal Research, https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/, https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting, https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

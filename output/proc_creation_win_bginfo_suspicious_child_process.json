@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "name": "Suspicious Child Process Of BgInfo.EXE",
+    "comment": "Detects suspicious child processes of \"BgInfo.exe\" which could be a sign of potential abuse of the binary to proxy execution via external VBScript",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\bginfo.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\bginfo64.exe'))) AND (endswith(lower(process.name), lower('\\\\calc.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\notepad.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))) AND (contains(lower(process.name), lower('\\\\appdata\\\\local\\\\')) OR contains(lower(process.name), lower('\\\\appdata\\\\roaming\\\\')) OR contains(lower(process.name), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower(':\\\\temp\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.name), lower(':\\\\perflogs\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes of \"BgInfo.exe\" which could be a sign of potential abuse of the binary to proxy execution via external VBScript",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Bginfo/, https://oddvar.moe/2017/05/18/bypassing-application-whitelisting-with-bginfo/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

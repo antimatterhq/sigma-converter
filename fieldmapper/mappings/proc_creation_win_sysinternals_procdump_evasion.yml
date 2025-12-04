@@ -1,22 +1,21 @@
-id: 79b06761-465f-4f88-9ef2-150e24d3d737
 title: Potential SysInternals ProcDump Evasion
+id: 79b06761-465f-4f88-9ef2-150e24d3d737
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects uses of the SysInternals ProcDump utility in which ProcDump or
     its output get renamed, or a dump file is moved or copied to a different name
-author: Florian Roth (Nextron Systems)
-date: '2022-01-11'
-modified: '2023-05-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
-    - attack.t1003.001
 references:
     - https://twitter.com/mrd0x/status/1480785527901204481
 falsepositives:
     - False positives are expected in cases in which ProcDump just gets copied to
         a different directory without any renaming
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+    - attack.t1003.001
+date: '2022-01-11'
+modified: '2023-05-09'
 logsource:
     category: process_creation
     product: windows
@@ -45,13 +44,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:23.917008+00:00'
+            mapped_at: '2025-12-04T01:49:17.130409+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:23.917008+00:00'
+            mapped_at: '2025-12-04T01:49:17.130409+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:23.917026+00:00'
+            mapped_at: '2025-12-04T01:49:17.130423+00:00'

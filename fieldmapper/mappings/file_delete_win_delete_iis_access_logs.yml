@@ -1,21 +1,20 @@
-id: 3eb8c339-a765-48cc-a150-4364c04652bf
 title: IIS WebServer Access Logs Deleted
+id: 3eb8c339-a765-48cc-a150-4364c04652bf
 status: test
 level: medium
+author: Tim Rauch (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects the deletion of IIS WebServer access logs which may indicate
     an attempt to destroy forensic evidence
-author: Tim Rauch (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-16'
-modified: '2023-02-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1070
 references:
     - https://www.elastic.co/guide/en/security/current/webserver-access-logs-deleted.html
 falsepositives:
     - During uninstallation of the IIS service
     - During log rotation
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070
+date: '2022-09-16'
+modified: '2023-02-15'
 logsource:
     category: file_delete
     product: windows
@@ -31,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_delete
-            mapped_at: '2025-11-26T02:40:47.716549+00:00'
+            mapped_at: '2025-12-04T01:53:21.107718+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:47.716549+00:00'
+            mapped_at: '2025-12-04T01:53:21.107718+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:47.716565+00:00'
+            mapped_at: '2025-12-04T01:53:21.107732+00:00'

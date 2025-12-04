@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Quarks PwDump Execution",
+    "comment": "Detects usage of the Quarks PwDump tool via commandline arguments",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\quarkspwdump.exe')) OR lower(LOWER(process.cmd_line)) in (' -dhl', ' --dump-hash-local', ' -dhdc', ' --dump-hash-domain-cached', ' --dump-bitlocker', ' -dhd ', ' --dump-hash-domain ', '--ntds-file')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the Quarks PwDump tool via commandline arguments",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://github.com/quarkslab/quarkspwdump, https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/seedworm-apt-iran-middle-east",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

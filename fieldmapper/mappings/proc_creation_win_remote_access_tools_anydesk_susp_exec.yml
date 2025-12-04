@@ -1,7 +1,8 @@
-id: 065b00ca-5d5c-4557-ac95-64a6d0b64d86
 title: Remote Access Tool - Anydesk Execution From Suspicious Folder
+id: 065b00ca-5d5c-4557-ac95-64a6d0b64d86
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'An adversary may use legitimate desktop support and remote access software,
     such as Team Viewer, Go2Assist, LogMein, AmmyyAdmin, etc, to establish an interactive
     command and control channel to target systems within networks.
@@ -14,19 +15,15 @@ description: 'An adversary may use legitimate desktop support and remote access 
     Living off the Land)
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-05-20'
-modified: '2023-03-05'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1219/T1219.md#atomic-test-2---anydesk-files-detected-test-on-windows
 falsepositives:
     - Legitimate use of AnyDesk from a non-standard folder
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b52e84a3-029e-4529-b09b-71d19dd27e94''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2022-05-20'
+modified: '2023-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -42,6 +39,9 @@ detection:
             - Program Files (x86)\AnyDesk
             - Program Files\AnyDesk
     condition: selection and not filter
+related:
+    -   id: b52e84a3-029e-4529-b09b-71d19dd27e94
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -49,25 +49,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:08.278194+00:00'
+            mapped_at: '2025-12-04T01:45:42.894616+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:08.278194+00:00'
+            mapped_at: '2025-12-04T01:45:42.894616+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:08.278229+00:00'
+            mapped_at: '2025-12-04T01:45:42.894632+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:31:08.278234+00:00'
+            mapped_at: '2025-12-04T01:45:42.894634+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:31:08.278237+00:00'
+            mapped_at: '2025-12-04T01:45:42.894635+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:31:08.278240+00:00'
+            mapped_at: '2025-12-04T01:45:42.894637+00:00'

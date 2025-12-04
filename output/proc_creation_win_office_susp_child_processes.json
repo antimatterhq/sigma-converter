@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "Suspicious Microsoft Office Child Process",
+    "comment": "Detects a suspicious process spawning from one of the Microsoft Office suite products (Word, Excel, PowerPoint, Publisher, Visio, etc.)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\eqnedt32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\excel.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msaccess.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\mspub.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\onenote.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powerpnt.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\visio.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\winword.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wordpad.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wordview.exe'))) AND ((lower(LOWER(process.file.name)) in ('bitsadmin\\.exe', 'certoc\\.exe', 'certutil\\.exe', 'cmd\\.exe', 'cmstp\\.exe', 'cscript\\.exe', 'curl\\.exe', 'hh\\.exe', 'ieexec\\.exe', 'installutil\\.exe', 'javaw\\.exe', 'microsoft\\.workflow\\.compiler\\.exe', 'msdt\\.exe', 'mshta\\.exe', 'msiexec\\.exe', 'msxsl\\.exe', 'odbcconf\\.exe', 'pcalua\\.exe', 'powershell\\.exe', 'regasm\\.exe', 'regsvcs\\.exe', 'regsvr32\\.exe', 'rundll32\\.exe', 'schtasks\\.exe', 'scriptrunner\\.exe', 'wmic\\.exe', 'workfolders\\.exe', 'wscript\\.exe')) AND (endswith(lower(process.name), lower('\\\\appvlp.exe')) OR endswith(lower(process.name), lower('\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\bitsadmin.exe')) OR endswith(lower(process.name), lower('\\\\certoc.exe')) OR endswith(lower(process.name), lower('\\\\certutil.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cmstp.exe')) OR endswith(lower(process.name), lower('\\\\control.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\curl.exe')) OR endswith(lower(process.name), lower('\\\\forfiles.exe')) OR endswith(lower(process.name), lower('\\\\hh.exe')) OR endswith(lower(process.name), lower('\\\\ieexec.exe')) OR endswith(lower(process.name), lower('\\\\installutil.exe')) OR endswith(lower(process.name), lower('\\\\javaw.exe')) OR endswith(lower(process.name), lower('\\\\mftrace.exe')) OR endswith(lower(process.name), lower('\\\\microsoft.workflow.compiler.exe')) OR endswith(lower(process.name), lower('\\\\msbuild.exe')) OR endswith(lower(process.name), lower('\\\\msdt.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\msidb.exe')) OR endswith(lower(process.name), lower('\\\\msiexec.exe')) OR endswith(lower(process.name), lower('\\\\msxsl.exe')) OR endswith(lower(process.name), lower('\\\\odbcconf.exe')) OR endswith(lower(process.name), lower('\\\\pcalua.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\regasm.exe')) OR endswith(lower(process.name), lower('\\\\regsvcs.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\schtasks.exe')) OR endswith(lower(process.name), lower('\\\\scrcons.exe')) OR endswith(lower(process.name), lower('\\\\scriptrunner.exe')) OR endswith(lower(process.name), lower('\\\\sh.exe')) OR endswith(lower(process.name), lower('\\\\svchost.exe')) OR endswith(lower(process.name), lower('\\\\verclsid.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\workfolders.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))) OR contains(lower(process.name), lower('\\\\appdata\\\\')) OR contains(lower(process.name), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower('\\\\programdata\\\\')) OR contains(lower(process.name), lower('\\\\windows\\\\tasks\\\\')) OR contains(lower(process.name), lower('\\\\windows\\\\temp\\\\')) OR contains(lower(process.name), lower('\\\\windows\\\\system32\\\\tasks\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious process spawning from one of the Microsoft Office suite products (Word, Excel, PowerPoint, Publisher, Visio, etc.)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.hybrid-analysis.com/sample/465aabe132ccb949e75b8ab9c5bda36d80cf2fd503d52b8bad54e295f28bbc21?environmentId=100, https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html, https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/, https://doublepulsar.com/follina-a-microsoft-office-code-execution-vulnerability-1a47fce5629e, https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml, https://github.com/splunk/security_content/blob/develop/detections/endpoint/office_spawning_control.yml, https://twitter.com/andythevariable/status/1576953781581144064?s=20&t=QiJILvK4ZiBdR8RJe24u-A, https://www.elastic.co/security-labs/exploring-the-ref2731-intrusion-set, https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/windows/defense_evasion_execution_msbuild_started_by_office_app.toml, https://www.vmray.com/analyses/2d2fa29185ad/report/overview.html, https://app.any.run/tasks/c903e9c8-0350-440c-8688-3881b556b8e0/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

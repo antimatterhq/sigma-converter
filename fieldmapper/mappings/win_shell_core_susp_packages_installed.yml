@@ -1,18 +1,17 @@
-id: 83c161b6-ca67-4f33-8ad0-644a0737cf07
 title: Suspicious Application Installed
+id: 83c161b6-ca67-4f33-8ad0-644a0737cf07
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious application installed by looking at the added shortcut
     to the app resolver cache
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-14'
-tags:
-    - attack.execution
 references:
     - https://nasbench.medium.com/finding-forensic-goodness-in-obscure-windows-event-logs-60e978ea45a3
 falsepositives:
     - Packages or applications being legitimately used by users or administrators
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2022-08-14'
 logsource:
     product: windows
     service: shell-core
@@ -39,21 +38,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:57.309137+00:00'
+            mapped_at: '2025-12-04T01:56:27.575998+00:00'
         service:
             source_field: service
             source_value: shell-core
-            mapped_at: '2025-11-26T02:46:57.309137+00:00'
+            mapped_at: '2025-12-04T01:56:27.575998+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:57.982508+00:00'
+            mapped_at: '2025-12-04T01:56:27.576017+00:00'
         -   source_field: Name
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:46:57.982530+00:00'
+            mapped_at: '2025-12-04T01:56:27.576019+00:00'
         -   source_field: AppID
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:57.982533+00:00'
+            mapped_at: '2025-12-04T01:56:27.576021+00:00'

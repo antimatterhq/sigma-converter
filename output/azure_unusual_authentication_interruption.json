@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Azure Unusual Authentication Interruption",
+    "comment": "Detects when there is a interruption in the authentication process.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "signinlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (status_id = 50097 AND lower(status_detail) = lower('device authentication is required') OR status_id = 50155 AND lower(status_detail) = lower('deviceauthenticationfailed') OR status_id = 50158 AND lower(status_detail) = lower('externalsecuritychallenge - external security challenge was not satisfied'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when there is a interruption in the authentication process.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1078"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

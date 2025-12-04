@@ -1,23 +1,18 @@
-id: 8ff28fdd-e2fa-4dfa-aeda-ef3d61c62090
 title: Suspicious PowerShell Invocations - Specific - PowerShell Module
+id: 8ff28fdd-e2fa-4dfa-aeda-ef3d61c62090
 status: test
 level: high
-description: Detects suspicious PowerShell invocation command parameters
 author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro
-date: '2017-03-05'
-modified: '2023-01-05'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects suspicious PowerShell invocation command parameters
 references:
     - Internal Research
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fce5f582-cc00-41e1-941a-c6fabf0fdb8c''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''ae7fbf8e-f3cb-49fd-8db4-5f3bed522c71''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''536e2947-3729-478c-9903-745aaffe60d2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2017-03-05'
+modified: '2023-01-05'
 logsource:
     category: ps_module
     product: windows
@@ -72,6 +67,13 @@ detection:
             - (New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1
             - Write-ChocolateyWarning
     condition: 1 of selection_* and not 1 of filter_*
+related:
+    -   id: fce5f582-cc00-41e1-941a-c6fabf0fdb8c
+        type: obsolete
+    -   id: ae7fbf8e-f3cb-49fd-8db4-5f3bed522c71
+        type: similar
+    -   id: 536e2947-3729-478c-9903-745aaffe60d2
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

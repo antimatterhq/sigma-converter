@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "WinSxS Executable File Creation By Non-System Process",
+    "comment": "Detects the creation of binaries in the WinSxS folder by non-system processes",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND startswith(lower(file.path), lower('c:\\\\windows\\\\winsxs\\\\')) AND endswith(lower(file.path), lower('.exe')) AND NOT (startswith(lower(actor.process.name), lower('c:\\\\windows\\\\systems32\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\windows\\\\syswow64\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\windows\\\\winsxs\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of binaries in the WinSxS folder by non-system processes",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

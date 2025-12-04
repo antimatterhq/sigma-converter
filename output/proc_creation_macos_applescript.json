@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "MacOS Scripting Interpreter AppleScript",
+    "comment": "Detects execution of AppleScript of the macOS scripting language AppleScript.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/osascript')) AND (contains(lower(process.cmd_line), lower(' -e ')) OR contains(lower(process.cmd_line), lower('.scpt')) OR contains(lower(process.cmd_line), lower('.js'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of AppleScript of the macOS scripting language AppleScript.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Application installers might contain scripts as part of the installation process. References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.002/T1059.002.md, https://redcanary.com/blog/applescript/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

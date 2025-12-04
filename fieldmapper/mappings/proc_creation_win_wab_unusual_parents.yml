@@ -1,23 +1,22 @@
-id: 63d1ccc0-2a43-4f4b-9289-361b308991ff
 title: Wab/Wabmig Unusual Parent Or Child Processes
+id: 63d1ccc0-2a43-4f4b-9289-361b308991ff
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects unusual parent or children of the wab.exe (Windows Contacts)
     and Wabmig.exe (Microsoft Address Book Import Tool) processes as seen being used
     with bumblebee activity
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-12'
-modified: '2022-09-27'
-tags:
-    - attack.defense-evasion
-    - attack.execution
 references:
     - https://thedfirreport.com/2022/08/08/bumblebee-roasts-its-way-to-domain-admin/
     - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bumblebee-loader-cybercrime
     - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+date: '2022-08-12'
+modified: '2022-09-27'
 logsource:
     category: process_creation
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:06.779711+00:00'
+            mapped_at: '2025-12-04T01:45:42.512547+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:06.779711+00:00'
+            mapped_at: '2025-12-04T01:45:42.512547+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:06.779724+00:00'
+            mapped_at: '2025-12-04T01:45:42.512569+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:06.779726+00:00'
+            mapped_at: '2025-12-04T01:45:42.512571+00:00'

@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential PowerShell Obfuscation Via Reversed Commands",
+    "comment": "Detects the presence of reversed PowerShell commands in the CommandLine. This is often used as a method of obfuscation by attackers",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower('hctac')) OR contains(lower(process.cmd_line), lower('kaerb')) OR contains(lower(process.cmd_line), lower('dnammoc')) OR contains(lower(process.cmd_line), lower('ekovn')) OR contains(lower(process.cmd_line), lower('elifd')) OR contains(lower(process.cmd_line), lower('rahc')) OR contains(lower(process.cmd_line), lower('etirw')) OR contains(lower(process.cmd_line), lower('golon')) OR contains(lower(process.cmd_line), lower('tninon')) OR contains(lower(process.cmd_line), lower('eddih')) OR contains(lower(process.cmd_line), lower('tpircs')) OR contains(lower(process.cmd_line), lower('ssecorp')) OR contains(lower(process.cmd_line), lower('llehsrewop')) OR contains(lower(process.cmd_line), lower('esnopser')) OR contains(lower(process.cmd_line), lower('daolnwod')) OR contains(lower(process.cmd_line), lower('tneilcbew')) OR contains(lower(process.cmd_line), lower('tneilc')) OR contains(lower(process.cmd_line), lower('ptth')) OR contains(lower(process.cmd_line), lower('elifotevas')) OR contains(lower(process.cmd_line), lower('46esab')) OR contains(lower(process.cmd_line), lower('htappmetteg')) OR contains(lower(process.cmd_line), lower('tcejbo')) OR contains(lower(process.cmd_line), lower('maerts')) OR contains(lower(process.cmd_line), lower('hcaerof')) OR contains(lower(process.cmd_line), lower('retupmoc'))) AND NOT (contains(lower(process.cmd_line), lower(' -encodedcommand ')) OR contains(lower(process.cmd_line), lower(' -enc '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the presence of reversed PowerShell commands in the CommandLine. This is often used as a method of obfuscation by attackers",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://2019.offzone.moscow/ru/report/hunting-for-powershell-abuses/, https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=66",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

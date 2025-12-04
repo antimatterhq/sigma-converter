@@ -1,23 +1,20 @@
-id: 60167e5c-84b2-4c95-a7ac-86281f27c445
 title: Remote PowerShell Session (PS Classic)
+id: 60167e5c-84b2-4c95-a7ac-86281f27c445
 status: test
 level: low
-description: Detects remote PowerShell sessions
 author: Roberto Rodriguez @Cyb3rWard0g
-date: '2019-08-10'
-modified: '2024-01-03'
+description: Detects remote PowerShell sessions
+references:
+    - https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html
+falsepositives:
+    - Legitimate use remote PowerShell sessions
 tags:
     - attack.execution
     - attack.t1059.001
     - attack.lateral-movement
     - attack.t1021.006
-references:
-    - https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html
-falsepositives:
-    - Legitimate use remote PowerShell sessions
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''96b9f619-aa91-478f-bacb-c3e50f8df575''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2019-08-10'
+modified: '2024-01-03'
 logsource:
     category: ps_classic_start
     product: windows
@@ -27,6 +24,9 @@ detection:
             - HostName=ServerRemoteHost
             - wsmprovhost.exe
     condition: selection
+related:
+    -   id: 96b9f619-aa91-478f-bacb-c3e50f8df575
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

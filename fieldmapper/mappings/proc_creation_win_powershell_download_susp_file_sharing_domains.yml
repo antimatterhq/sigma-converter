@@ -1,14 +1,10 @@
-id: b6e04788-29e1-4557-bb14-77f761848ab8
 title: Potentially Suspicious File Download From File Sharing Domain Via PowerShell.EXE
+id: b6e04788-29e1-4557-bb14-77f761848ab8
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potentially suspicious file downloads from file sharing domains
     using PowerShell.exe
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-02-23'
-modified: '2024-10-21'
-tags:
-    - attack.execution
 references:
     - https://labs.withsecure.com/publications/fin7-target-veeam-servers
     - https://github.com/WithSecureLabs/iocs/blob/344203de742bb7e68bd56618f66d34be95a9f9fc/FIN7VEEAM/iocs.csv
@@ -16,7 +12,10 @@ references:
     - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2024-02-23'
+modified: '2024-10-21'
 logsource:
     category: process_creation
     product: windows
@@ -75,21 +74,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:34.286378+00:00'
+            mapped_at: '2025-12-04T01:46:06.310275+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:34.286378+00:00'
+            mapped_at: '2025-12-04T01:46:06.310275+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:34.286394+00:00'
+            mapped_at: '2025-12-04T01:46:06.310291+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:34.286396+00:00'
+            mapped_at: '2025-12-04T01:46:06.310293+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:34.286397+00:00'
+            mapped_at: '2025-12-04T01:46:06.310294+00:00'

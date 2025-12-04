@@ -1,15 +1,10 @@
-id: fe513c69-734c-4d4a-8548-ac5f609be82b
 title: Google Cloud Firewall Modified or Deleted
+id: fe513c69-734c-4d4a-8548-ac5f609be82b
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Detects  when a firewall rule is modified or deleted in Google Cloud
     Platform (GCP).
-author: Austin Songer @austinsonger
-date: '2021-08-13'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1562
 references:
     - https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging
     - https://developers.google.com/resources/api-libraries/documentation/compute/v1/java/latest/com/google/api/services/compute/Compute.Firewalls.html
@@ -17,7 +12,11 @@ falsepositives:
     - Firewall rules being modified or deleted may be performed by a system administrator.
         Verify that the firewall configuration change was expected.
     - Exceptions can be added to this rule to filter expected behavior.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562
+date: '2021-08-13'
+modified: '2022-10-09'
 logsource:
     product: gcp
     service: gcp.audit
@@ -36,13 +35,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:22.987020+00:00'
+            mapped_at: '2025-12-04T01:38:43.521655+00:00'
         service:
             source_field: service
             source_value: gcp.audit
-            mapped_at: '2025-11-26T02:21:22.987020+00:00'
+            mapped_at: '2025-12-04T01:38:43.521655+00:00'
     detection_fields:
         -   source_field: gcp.audit.method_name
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:22.987050+00:00'
+            mapped_at: '2025-12-04T01:38:43.521673+00:00'

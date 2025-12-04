@@ -1,23 +1,22 @@
-id: fcdf69e5-a3d3-452a-9724-26f2308bf2b1
 title: Phishing Pattern ISO in Archive
+id: fcdf69e5-a3d3-452a-9724-26f2308bf2b1
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects cases in which an ISO files is opend within an archiver like
     7Zip or Winrar, which is a sign of phishing as threat actors put small ISO files
     in archives as email attachments to bypass certain filters and protective measures
     (mark of web)
-author: Florian Roth (Nextron Systems)
-date: '2022-06-07'
-tags:
-    - attack.initial-access
-    - attack.t1566
 references:
     - https://twitter.com/1ZRR4H/status/1534259727059787783
     - https://app.any.run/tasks/e1fe6a62-bce8-4323-a49a-63795d9afd5d/
 falsepositives:
     - Legitimate cases in which archives contain ISO or IMG files and the user opens
         the archive and the image via clicking and not extraction
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1566
+date: '2022-06-07'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:36.767872+00:00'
+            mapped_at: '2025-12-04T01:47:02.251481+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:36.767872+00:00'
+            mapped_at: '2025-12-04T01:47:02.251481+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:36.767889+00:00'
+            mapped_at: '2025-12-04T01:47:02.251494+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:36.767892+00:00'
+            mapped_at: '2025-12-04T01:47:02.251496+00:00'

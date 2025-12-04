@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "AgentExecutor PowerShell Execution",
+    "comment": "Detects execution of the AgentExecutor.exe binary. Which can be abused as a LOLBIN to execute powershell scripts with the ExecutionPolicy \"Bypass\" or any binary named \"powershell.exe\" located in the path provided by 6th positional argument",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.name) = lower('\\\\agentexecutor.exe') AND lower(process.file.name) = lower('agentexecutor.exe') AND (contains(lower(process.cmd_line), lower(' -powershell')) OR contains(lower(process.cmd_line), lower(' -remediationscript'))) AND NOT endswith(lower(process.parent_process.name), lower('\\\\microsoft.management.services.intunewindowsagent.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the AgentExecutor.exe binary. Which can be abused as a LOLBIN to execute powershell scripts with the ExecutionPolicy \"Bypass\" or any binary named \"powershell.exe\" located in the path provided by 6th positional argument",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use via Intune management. You exclude script paths and names to reduce FP rate References: https://twitter.com/lefterispan/status/1286259016436514816, https://lolbas-project.github.io/lolbas/OtherMSBinaries/Agentexecutor/, https://learn.microsoft.com/en-us/mem/intune/apps/intune-management-extension, https://twitter.com/jseerden/status/1247985304667066373/photo/1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

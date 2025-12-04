@@ -1,7 +1,8 @@
-id: ae6f14e6-14de-45b0-9f44-c0986f50dc89
 title: Change Default File Association To Executable Via Assoc
+id: ae6f14e6-14de-45b0-9f44-c0986f50dc89
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects when a program changes the default file association of any extension
     to an executable.
 
@@ -13,19 +14,15 @@ description: 'Detects when a program changes the default file association of any
     an arbitrary program when a file with the given extension is opened.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-28'
-modified: '2023-03-06'
-tags:
-    - attack.persistence
-    - attack.t1546.001
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/assoc
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3d3aa6cd-6272-44d6-8afc-7e88dfef7061''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1546.001
+date: '2022-06-28'
+modified: '2023-03-06'
 logsource:
     category: process_creation
     product: windows
@@ -40,6 +37,9 @@ detection:
     filter:
         CommandLine|contains: .exe=exefile
     condition: all of selection_* and not filter
+related:
+    -   id: 3d3aa6cd-6272-44d6-8afc-7e88dfef7061
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -47,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:47.781044+00:00'
+            mapped_at: '2025-12-04T01:42:10.426796+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:47.781044+00:00'
+            mapped_at: '2025-12-04T01:42:10.426796+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:47.781075+00:00'
+            mapped_at: '2025-12-04T01:42:10.426814+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:47.781080+00:00'
+            mapped_at: '2025-12-04T01:42:10.426816+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:47.781082+00:00'
+            mapped_at: '2025-12-04T01:42:10.426817+00:00'

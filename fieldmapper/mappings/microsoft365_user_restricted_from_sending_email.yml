@@ -1,22 +1,21 @@
-id: ff246f56-7f24-402a-baca-b86540e3925c
 title: Microsoft 365 - User Restricted from Sending Email
+id: ff246f56-7f24-402a-baca-b86540e3925c
 status: test
 level: medium
+author: austinsonger
 description: Detects when a Security Compliance Center reported a user who exceeded
     sending limits of the service policies and because of this has been restricted
     from sending email.
-author: austinsonger
-date: '2021-08-19'
-modified: '2022-10-09'
-tags:
-    - attack.initial-access
-    - attack.t1199
 references:
     - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
     - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1199
+date: '2021-08-19'
+modified: '2022-10-09'
 logsource:
     product: m365
     service: threat_management
@@ -33,21 +32,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:22:00.539994+00:00'
+            mapped_at: '2025-12-04T01:39:02.452669+00:00'
         service:
             source_field: service
             source_value: threat_management
-            mapped_at: '2025-11-26T02:22:00.539994+00:00'
+            mapped_at: '2025-12-04T01:39:02.452669+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:22:00.540028+00:00'
+            mapped_at: '2025-12-04T01:39:02.452683+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:22:00.540032+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:02.452685+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:22:00.540036+00:00'
+            mapped_at: '2025-12-04T01:39:02.452686+00:00'

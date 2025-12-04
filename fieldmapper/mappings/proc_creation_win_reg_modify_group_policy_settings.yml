@@ -1,22 +1,19 @@
-id: ada4b0c4-758b-46ac-9033-9004613a150d
 title: Modify Group Policy Settings
+id: ada4b0c4-758b-46ac-9033-9004613a150d
 status: test
 level: medium
+author: frack113
 description: Detect malicious GPO modifications can be used to implement many other
     malicious behaviors.
-author: frack113
-date: '2022-08-19'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1484.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1484.001/T1484.001.md
 falsepositives:
     - Legitimate use
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b7216a7d-687e-4c8d-82b1-3080b2ad961f''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1484.001
+date: '2022-08-19'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +32,9 @@ detection:
             - EnableSmartScreen
             - ShellSmartScreenLevel
     condition: all of selection_*
+related:
+    -   id: b7216a7d-687e-4c8d-82b1-3080b2ad961f
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -42,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:50.958581+00:00'
+            mapped_at: '2025-12-04T01:48:49.201710+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:50.958581+00:00'
+            mapped_at: '2025-12-04T01:48:49.201710+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:50.958607+00:00'
+            mapped_at: '2025-12-04T01:48:49.201730+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:50.958612+00:00'
+            mapped_at: '2025-12-04T01:48:49.201733+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:50.958615+00:00'
+            mapped_at: '2025-12-04T01:48:49.201735+00:00'

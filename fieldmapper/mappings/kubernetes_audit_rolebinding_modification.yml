@@ -1,23 +1,20 @@
-id: 10b97915-ec8d-455f-a815-9a78926585f6
 title: Kubernetes Rolebinding Modification
+id: 10b97915-ec8d-455f-a815-9a78926585f6
 status: experimental
 level: medium
+author: kelnage
 description: 'Detects when a Kubernetes Rolebinding is created or modified.
 
     '
-author: kelnage
-date: '2024-07-11'
-tags:
-    - attack.privilege-escalation
 references:
     - https://kubernetes.io/docs/reference/config-api/apiserver-audit.v1/
     - https://medium.com/@seifeddinerajhi/kubernetes-rbac-privilege-escalation-exploits-and-mitigations-26c07629eeab
 falsepositives:
     - Modifying a Kubernetes Rolebinding may need to be done by a system administrator.
     - Automated processes may need to take these actions and may need to be filtered.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0322d9f2-289a-47c2-b5e1-b63c90901a3e''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+date: '2024-07-11'
 logsource:
     product: kubernetes
     service: audit
@@ -34,6 +31,9 @@ detection:
             - replace
             - update
     condition: selection
+related:
+    -   id: 0322d9f2-289a-47c2-b5e1-b63c90901a3e
+        type: similar
 ocsf_mapping:
     class_name: scheduled_job_activity
     activity_id: 2
@@ -41,21 +41,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: kubernetes
-            mapped_at: '2025-11-26T02:23:45.086986+00:00'
+            mapped_at: '2025-12-04T01:40:02.329954+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:45.086986+00:00'
+            mapped_at: '2025-12-04T01:40:02.329954+00:00'
     detection_fields:
         -   source_field: objectRef.apiGroup
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:45.086999+00:00'
+            mapped_at: '2025-12-04T01:40:02.329966+00:00'
         -   source_field: objectRef.resource
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:45.087001+00:00'
+            mapped_at: '2025-12-04T01:40:02.329968+00:00'
         -   source_field: verb
             target_table: scheduled_job_activity
             target_field: action
-            mapped_at: '2025-11-26T02:23:45.087002+00:00'
+            mapped_at: '2025-12-04T01:40:02.329970+00:00'

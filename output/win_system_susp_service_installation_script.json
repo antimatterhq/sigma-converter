@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Service Installation Script",
+    "comment": "Detects suspicious service installation scripts",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND (contains(lower(process.file.path), lower(' -c ')) OR contains(lower(process.file.path), lower(' /c ')) OR contains(lower(process.file.path), lower(' \u2013c ')) OR contains(lower(process.file.path), lower(' \u2014c ')) OR contains(lower(process.file.path), lower(' \u2015c ')) OR contains(lower(process.file.path), lower(' -r ')) OR contains(lower(process.file.path), lower(' /r ')) OR contains(lower(process.file.path), lower(' \u2013r ')) OR contains(lower(process.file.path), lower(' \u2014r ')) OR contains(lower(process.file.path), lower(' \u2015r ')) OR contains(lower(process.file.path), lower(' -k ')) OR contains(lower(process.file.path), lower(' /k ')) OR contains(lower(process.file.path), lower(' \u2013k ')) OR contains(lower(process.file.path), lower(' \u2014k ')) OR contains(lower(process.file.path), lower(' \u2015k '))) AND (contains(lower(process.file.path), lower('cscript')) OR contains(lower(process.file.path), lower('mshta')) OR contains(lower(process.file.path), lower('powershell')) OR contains(lower(process.file.path), lower('pwsh')) OR contains(lower(process.file.path), lower('regsvr32')) OR contains(lower(process.file.path), lower('rundll32')) OR contains(lower(process.file.path), lower('wscript'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious service installation scripts",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1543",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

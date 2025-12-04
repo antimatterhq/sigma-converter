@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "New Kernel Driver Via SC.EXE",
+    "comment": "Detects creation of a new service (kernel driver) with the type \"kernel\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sc.exe')) AND (contains(lower(process.cmd_line), lower('create')) OR contains(lower(process.cmd_line), lower('config'))) AND contains(lower(process.cmd_line), lower('binpath')) AND contains(lower(process.cmd_line), lower('type')) AND contains(lower(process.cmd_line), lower('kernel')))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of a new service (kernel driver) with the type \"kernel\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Rare legitimate installation of kernel drivers via sc.exe Reference: https://www.aon.com/cyber-solutions/aon_cyber_labs/yours-truly-signed-av-driver-weaponizing-an-antivirus-driver/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1543",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

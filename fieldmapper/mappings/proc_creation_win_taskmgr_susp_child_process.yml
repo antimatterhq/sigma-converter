@@ -1,20 +1,19 @@
-id: 3d7679bd-0c00-440c-97b0-3f204273e6c7
 title: New Process Created Via Taskmgr.EXE
+id: 3d7679bd-0c00-440c-97b0-3f204273e6c7
 status: test
 level: low
+author: Florian Roth (Nextron Systems)
 description: Detects the creation of a process via the Windows task manager. This
     might be an attempt to bypass UAC
-author: Florian Roth (Nextron Systems)
-date: '2018-03-13'
-modified: '2024-01-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://twitter.com/ReneFreingruber/status/1172244989335810049
 falsepositives:
     - Administrative activity
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2018-03-13'
+modified: '2024-01-18'
 logsource:
     category: process_creation
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:52.568889+00:00'
+            mapped_at: '2025-12-04T01:46:22.274194+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:52.568889+00:00'
+            mapped_at: '2025-12-04T01:46:22.274194+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:52.568902+00:00'
+            mapped_at: '2025-12-04T01:46:22.274221+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:52.568904+00:00'
+            mapped_at: '2025-12-04T01:46:22.274224+00:00'

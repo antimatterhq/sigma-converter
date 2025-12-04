@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Volume Shadow Copy Mount",
+    "comment": "Detects volume shadow copy mount via Windows event log",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('12') AND lower(metadata.log_provider) = lower('microsoft-windows-ntfs') AND metadata.event_code = 98 AND contains(lower(device.name), lower('harddiskvolumeshadowcopy')))"
+      }
+    },
+    "output": {
+      "summary": "Detects volume shadow copy mount via Windows event log",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of volume shadow copy mounts (backups maybe). Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-3---esentutlexe-sam-copy",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

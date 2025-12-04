@@ -1,19 +1,11 @@
-id: 438025f9-5856-4663-83f7-52f878a70a50
 title: Suspicious Microsoft Office Child Process
+id: 438025f9-5856-4663-83f7-52f878a70a50
 status: test
 level: high
-description: Detects a suspicious process spawning from one of the Microsoft Office
-    suite products (Word, Excel, PowerPoint, Publisher, Visio, etc.)
 author: Florian Roth (Nextron Systems), Markus Neis, FPT.EagleEye Team, Vadim Khrykov,
     Cyb3rEng, Michael Haag, Christopher Peacock @securepeacock, @scythe_io
-date: '2018-04-06'
-modified: '2023-04-24'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1047
-    - attack.t1204.002
-    - attack.t1218.010
+description: Detects a suspicious process spawning from one of the Microsoft Office
+    suite products (Word, Excel, PowerPoint, Publisher, Visio, etc.)
 references:
     - https://www.hybrid-analysis.com/sample/465aabe132ccb949e75b8ab9c5bda36d80cf2fd503d52b8bad54e295f28bbc21?environmentId=100
     - https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html
@@ -28,13 +20,14 @@ references:
     - https://app.any.run/tasks/c903e9c8-0350-440c-8688-3881b556b8e0/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c27515df-97a9-4162-8a60-dc0eeb51b775''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''e1693bc8-7168-4eab-8718-cdcaa68a1738''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''23daeb52-e6eb-493c-8607-c4f0246cb7d8''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''518643ba-7d9c-4fa5-9f37-baed36059f6a''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''04f5363a-6bca-42ff-be70-0d28bf629ead''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1047
+    - attack.t1204.002
+    - attack.t1218.010
+date: '2018-04-06'
+modified: '2023-04-24'
 logsource:
     category: process_creation
     product: windows
@@ -131,6 +124,17 @@ detection:
             - \Windows\Temp\
             - \Windows\System32\Tasks\
     condition: selection_parent and 1 of selection_child_*
+related:
+    -   id: c27515df-97a9-4162-8a60-dc0eeb51b775
+        type: derived
+    -   id: e1693bc8-7168-4eab-8718-cdcaa68a1738
+        type: derived
+    -   id: 23daeb52-e6eb-493c-8607-c4f0246cb7d8
+        type: obsolete
+    -   id: 518643ba-7d9c-4fa5-9f37-baed36059f6a
+        type: obsolete
+    -   id: 04f5363a-6bca-42ff-be70-0d28bf629ead
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -138,21 +142,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:45.772636+00:00'
+            mapped_at: '2025-12-04T01:44:35.469399+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:45.772636+00:00'
+            mapped_at: '2025-12-04T01:44:35.469399+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:29:45.772669+00:00'
+            mapped_at: '2025-12-04T01:44:35.469415+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:45.772672+00:00'
+            mapped_at: '2025-12-04T01:44:35.469417+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:45.772674+00:00'
+            mapped_at: '2025-12-04T01:44:35.469419+00:00'

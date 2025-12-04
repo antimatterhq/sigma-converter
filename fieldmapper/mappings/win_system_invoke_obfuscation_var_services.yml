@@ -1,21 +1,20 @@
-id: 8ca7004b-e620-4ecb-870e-86129b5b8e75
 title: Invoke-Obfuscation VAR+ Launcher - System
+id: 8ca7004b-e620-4ecb-870e-86129b5b8e75
 status: test
 level: high
-description: Detects Obfuscated use of Environment Variables to execute PowerShell
 author: Jonathan Cheong, oscd.community
-date: '2020-10-15'
-modified: '2022-11-29'
+description: Detects Obfuscated use of Environment Variables to execute PowerShell
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2020-10-15'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: system
@@ -38,21 +37,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:26.162853+00:00'
+            mapped_at: '2025-12-04T01:57:19.327713+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:26.162853+00:00'
+            mapped_at: '2025-12-04T01:57:19.327713+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:26.162864+00:00'
+            mapped_at: '2025-12-04T01:57:19.327725+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:26.162866+00:00'
+            mapped_at: '2025-12-04T01:57:19.327727+00:00'
         -   source_field: ImagePath
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:48:26.162867+00:00'
+            mapped_at: '2025-12-04T01:57:19.327728+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "7Zip Compressing Dump Files",
+    "comment": "Detects execution of 7z in order to compress a file with a \".dmp\"/\".dump\" extension, which could be a step in a process of dump file exfiltration.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(device.desc), lower('7-zip')) AND (endswith(lower(process.name), lower('\\\\7z.exe')) OR endswith(lower(process.name), lower('\\\\7zr.exe')) OR endswith(lower(process.name), lower('\\\\7za.exe'))) AND (lower(LOWER(process.file.name)) in ('7z\\.exe', '7za\\.exe')) AND (contains(lower(process.cmd_line), lower('.dmp')) OR contains(lower(process.cmd_line), lower('.dump')) OR contains(lower(process.cmd_line), lower('.hdmp'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of 7z in order to compress a file with a \".dmp\"/\".dump\" extension, which could be a step in a process of dump file exfiltration.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate use of 7z with a command line in which \".dmp\" or \".dump\" appears accidentally 2. Legitimate use of 7z to compress WER \".dmp\" files for troubleshooting Reference: https://thedfirreport.com/2022/09/26/bumblebee-round-two/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1560",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

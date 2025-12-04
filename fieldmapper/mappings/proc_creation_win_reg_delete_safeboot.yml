@@ -1,23 +1,20 @@
-id: fc0e89b5-adb0-43c1-b749-c12a10ec37de
 title: SafeBoot Registry Key Deleted Via Reg.EXE
+id: fc0e89b5-adb0-43c1-b749-c12a10ec37de
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), Tim Shelton
 description: Detects execution of "reg.exe" commands with the "delete" flag on safe
     boot registry keys. Often used by attacker to prevent safeboot execution of security
     products
-author: Nasreddine Bencherchali (Nextron Systems), Tim Shelton
-date: '2022-08-08'
-modified: '2023-02-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://www.trendmicro.com/en_us/research/22/e/avoslocker-ransomware-variant-abuses-driver-file-to-disable-anti-Virus-scans-log4shell.html
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d7662ff6-9e97-4596-a61d-9839e32dee8d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-08-08'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -30,6 +27,9 @@ detection:
             - ' delete '
             - \SYSTEM\CurrentControlSet\Control\SafeBoot
     condition: all of selection_*
+related:
+    -   id: d7662ff6-9e97-4596-a61d-9839e32dee8d
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -37,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:42.170515+00:00'
+            mapped_at: '2025-12-04T01:50:24.462747+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:42.170515+00:00'
+            mapped_at: '2025-12-04T01:50:24.462747+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:42.170532+00:00'
+            mapped_at: '2025-12-04T01:50:24.462764+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:42.170547+00:00'
+            mapped_at: '2025-12-04T01:50:24.462765+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:42.170550+00:00'
+            mapped_at: '2025-12-04T01:50:24.462767+00:00'

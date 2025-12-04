@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "name": "Potential Initial Access via DLL Search Order Hijacking",
+    "comment": "Detects attempts to create a DLL file to a known desktop application dependencies folder such as Slack, Teams or OneDrive and by an unusual process. This may indicate an attempt to load a malicious module via DLL search order hijacking.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\winword.exe')) OR endswith(lower(actor.process.name), lower('\\\\excel.exe')) OR endswith(lower(actor.process.name), lower('\\\\powerpnt.exe')) OR endswith(lower(actor.process.name), lower('\\\\msaccess.exe')) OR endswith(lower(actor.process.name), lower('\\\\mspub.exe')) OR endswith(lower(actor.process.name), lower('\\\\fltldr.exe')) OR endswith(lower(actor.process.name), lower('\\\\cmd.exe')) OR endswith(lower(actor.process.name), lower('\\\\certutil.exe')) OR endswith(lower(actor.process.name), lower('\\\\mshta.exe')) OR endswith(lower(actor.process.name), lower('\\\\cscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\wscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\curl.exe')) OR endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe'))) AND endswith(lower(file.path), lower('.dll')) AND contains(lower(file.path), lower('\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\')) AND (contains(lower(file.path), lower('\\\\microsoft\\\\onedrive\\\\')) OR contains(lower(file.path), lower('\\\\microsoft onedrive\\\\')) OR contains(lower(file.path), lower('\\\\microsoft\\\\teams\\\\')) OR contains(lower(file.path), lower('\\\\local\\\\slack\\\\app-')) OR contains(lower(file.path), lower('\\\\local\\\\programs\\\\microsoft vs code\\\\'))) AND NOT (endswith(lower(actor.process.name), lower('\\\\cmd.exe')) AND contains(lower(file.path), lower('\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\')) AND contains(lower(file.path), lower('\\\\microsoft\\\\onedrive\\\\')) AND contains(lower(file.path), lower('\\\\api-ms-win-core-'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects attempts to create a DLL file to a known desktop application dependencies folder such as Slack, Teams or OneDrive and by an unusual process. This may indicate an attempt to load a malicious module via DLL search order hijacking.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-5d46dd4ac6866b4337ec126be8cee0e115467b3e8703794ba6f6df6432c806bc, https://posts.specterops.io/automating-dll-hijack-discovery-81c4295904b0",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1574",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1574"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

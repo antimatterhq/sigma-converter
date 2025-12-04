@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "AWS Snapshot Backup Exfiltration",
+    "comment": "Detects the modification of an EC2 snapshot's permissions to enable access from another account",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('ec2.amazonaws.com') AND lower(metadata.event_code) = lower('modifysnapshotattribute'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the modification of an EC2 snapshot's permissions to enable access from another account",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Valid change to a snapshot's permissions Reference: https://www.justice.gov/file/1080281/download",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1537"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

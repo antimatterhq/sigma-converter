@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Powershell Inline Execution From A File",
+    "comment": "Detects inline execution of PowerShell code from a file",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('iex ')) OR contains(lower(process.cmd_line), lower('invoke-expression ')) OR contains(lower(process.cmd_line), lower('invoke-command ')) OR contains(lower(process.cmd_line), lower('icm '))) AND (contains(lower(process.cmd_line), lower('cat ')) OR contains(lower(process.cmd_line), lower('get-content ')) OR contains(lower(process.cmd_line), lower('type '))) AND contains(lower(process.cmd_line), lower(' -raw')))"
+      }
+    },
+    "output": {
+      "summary": "Detects inline execution of PowerShell code from a file",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=50",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

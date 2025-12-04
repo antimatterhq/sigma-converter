@@ -1,7 +1,8 @@
-id: fc028194-969d-4122-8abe-0470d5b8f12f
 title: Access to Browser Login Data
+id: fc028194-969d-4122-8abe-0470d5b8f12f
 status: test
 level: medium
+author: frack113
 description: 'Adversaries may acquire credentials from web browsers by reading files
     specific to the target browser.
 
@@ -12,19 +13,14 @@ description: 'Adversaries may acquire credentials from web browsers by reading f
     store.
 
     '
-author: frack113
-date: '2022-01-30'
-tags:
-    - attack.credential-access
-    - attack.t1555.003
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.003/T1555.003.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''98f4c75c-3089-44f3-b733-b327b9cd9c9d''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''47147b5b-9e17-4d76-b8d2-7bac24c5ce1b''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1555.003
+date: '2022-01-30'
 logsource:
     category: ps_script
     product: windows
@@ -42,6 +38,11 @@ detection:
             - \Google\Chrome\User Data\Default\Login Data
             - \Google\Chrome\User Data\Default\Login Data For Account
     condition: all of selection_*
+related:
+    -   id: 98f4c75c-3089-44f3-b733-b327b9cd9c9d
+        type: obsolete
+    -   id: 47147b5b-9e17-4d76-b8d2-7bac24c5ce1b
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: <UNMAPPED>
@@ -49,13 +50,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:25.283303+00:00'
+            mapped_at: '2025-12-04T01:53:45.173131+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:25.283303+00:00'
+            mapped_at: '2025-12-04T01:53:45.173131+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:25.283332+00:00'
+            mapped_at: '2025-12-04T01:53:45.173144+00:00'

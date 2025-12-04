@@ -1,22 +1,21 @@
-id: 12827a56-61a4-476a-a9cb-f3068f191073
 title: HackTool - KrbRelayUp Execution
+id: 12827a56-61a4-476a-a9cb-f3068f191073
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects KrbRelayUp used to perform a universal no-fix local privilege
     escalation in Windows domain environments where LDAP signing is not enforced
-author: Florian Roth (Nextron Systems)
-date: '2022-04-26'
-modified: '2023-02-04'
+references:
+    - https://github.com/Dec0ne/KrbRelayUp
+falsepositives:
+    - Unlikely
 tags:
     - attack.credential-access
     - attack.t1558.003
     - attack.lateral-movement
     - attack.t1550.003
-references:
-    - https://github.com/Dec0ne/KrbRelayUp
-falsepositives:
-    - Unlikely
-taxonomy: sigma
+date: '2022-04-26'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -47,21 +46,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:08.683731+00:00'
+            mapped_at: '2025-12-04T01:43:21.276656+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:08.683731+00:00'
+            mapped_at: '2025-12-04T01:43:21.276656+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:08.683757+00:00'
+            mapped_at: '2025-12-04T01:43:21.276672+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:08.683761+00:00'
+            mapped_at: '2025-12-04T01:43:21.276674+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:08.683763+00:00'
+            mapped_at: '2025-12-04T01:43:21.276676+00:00'

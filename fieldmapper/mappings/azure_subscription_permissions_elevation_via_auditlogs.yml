@@ -1,7 +1,8 @@
-id: ca9bf243-465e-494a-9e54-bf9fc239057d
 title: Azure Subscription Permission Elevation Via AuditLogs
+id: ca9bf243-465e-494a-9e54-bf9fc239057d
 status: test
 level: high
+author: Austin Songer @austinsonger
 description: 'Detects when a user has been elevated to manage all Azure Subscriptions.
 
     This change should be investigated immediately if it isn''t planned.
@@ -9,17 +10,15 @@ description: 'Detects when a user has been elevated to manage all Azure Subscrip
     This setting could allow an attacker access to Azure subscriptions in your environment.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-11-26'
-modified: '2022-12-25'
-tags:
-    - attack.initial-access
-    - attack.t1078
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts#assignment-and-elevation
 falsepositives:
     - If this was approved by System Administrator.
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1078
+date: '2021-11-26'
+modified: '2022-12-25'
 logsource:
     product: azure
     service: auditlogs
@@ -35,17 +34,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:48.641736+00:00'
+            mapped_at: '2025-12-04T01:37:54.772845+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:48.641736+00:00'
+            mapped_at: '2025-12-04T01:37:54.772845+00:00'
     detection_fields:
         -   source_field: Category
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:49.692251+00:00'
+            mapped_at: '2025-12-04T01:37:54.772858+00:00'
         -   source_field: OperationName
             target_table: user_access
             target_field: api.operation
-            mapped_at: '2025-11-26T02:19:49.692273+00:00'
+            mapped_at: '2025-12-04T01:37:54.772860+00:00'

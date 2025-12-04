@@ -1,7 +1,8 @@
-id: ec541962-c05a-4420-b9ea-84de072d18f4
 title: New AWS Lambda Function URL Configuration Created
+id: ec541962-c05a-4420-b9ea-84de072d18f4
 status: experimental
 level: medium
+author: Ivan Saakov
 description: 'Detects when a user creates a Lambda function URL configuration, which
     could be used to expose the function to the internet and potentially allow unauthorized
     access to the function''s IAM role for AWS API calls.
@@ -10,11 +11,6 @@ description: 'Detects when a user creates a Lambda function URL configuration, w
     service role that is attached to that function.
 
     '
-author: Ivan Saakov
-date: '2024-12-19'
-tags:
-    - attack.initial-access
-    - attack.privilege-escalation
 references:
     - https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunctionUrlConfig.html
     - https://cloud.hacktricks.xyz/pentesting-cloud/aws-security/aws-privilege-escalation/aws-lambda-privesc
@@ -26,7 +22,10 @@ falsepositives:
     - Creating a Lambda function URL configuration from unfamiliar users should be
         investigated. If known behavior is causing false positives, it can be exempted
         from the rule.
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.privilege-escalation
+date: '2024-12-19'
 logsource:
     product: aws
     service: cloudtrail
@@ -42,17 +41,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:29.126615+00:00'
+            mapped_at: '2025-12-04T01:39:15.034539+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:29.126615+00:00'
+            mapped_at: '2025-12-04T01:39:15.034539+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:29.126650+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:15.034559+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:29.126655+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:15.034561+00:00'

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Kernel Memory Dump Via LiveKD",
+    "comment": "Detects execution of LiveKD with the \"-m\" flag to potentially dump the kernel memory",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\livekd.exe')) OR endswith(lower(process.name), lower('\\\\livekd64.exe'))) AND lower(process.file.name) = lower('livekd.exe') AND (contains(lower(process.cmd_line), lower(' -m')) OR contains(lower(process.cmd_line), lower(' /m')) OR contains(lower(process.cmd_line), lower(' \u2013m')) OR contains(lower(process.cmd_line), lower(' \u2014m')) OR contains(lower(process.cmd_line), lower(' \u2015m'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of LiveKD with the \"-m\" flag to potentially dump the kernel memory",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely in production environment References: https://learn.microsoft.com/en-us/sysinternals/downloads/livekd, https://4sysops.com/archives/creating-a-complete-memory-dump-without-a-blue-screen/, https://kb.acronis.com/content/60892",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

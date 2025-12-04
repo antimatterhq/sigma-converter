@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Touch Suspicious Service File",
+    "comment": "Detects usage of the \"touch\" process in service file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/touch')) AND contains(lower(process.cmd_line), lower(' -t ')) AND endswith(lower(process.cmd_line), lower('.service')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the \"touch\" process in service file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Admin changing date of files. References: https://blogs.blackberry.com/, https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "006"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Suspicious Microsoft OneNote Child Process",
+    "comment": "Detects suspicious child processes of the Microsoft OneNote application. This may indicate an attempt to execute malicious embedded objects from a .one file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\onenote.exe')) AND ((lower(LOWER(process.file.name)) in ('bitsadmin\\.exe', 'certoc\\.exe', 'certutil\\.exe', 'cmd\\.exe', 'cmstp\\.exe', 'cscript\\.exe', 'curl\\.exe', 'hh\\.exe', 'ieexec\\.exe', 'installutil\\.exe', 'javaw\\.exe', 'microsoft\\.workflow\\.compiler\\.exe', 'msdt\\.exe', 'mshta\\.exe', 'msiexec\\.exe', 'msxsl\\.exe', 'odbcconf\\.exe', 'pcalua\\.exe', 'powershell\\.exe', 'regasm\\.exe', 'regsvcs\\.exe', 'regsvr32\\.exe', 'rundll32\\.exe', 'schtasks\\.exe', 'scriptrunner\\.exe', 'wmic\\.exe', 'workfolders\\.exe', 'wscript\\.exe')) AND (endswith(lower(process.name), lower('\\\\appvlp.exe')) OR endswith(lower(process.name), lower('\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\bitsadmin.exe')) OR endswith(lower(process.name), lower('\\\\certoc.exe')) OR endswith(lower(process.name), lower('\\\\certutil.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cmstp.exe')) OR endswith(lower(process.name), lower('\\\\control.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\curl.exe')) OR endswith(lower(process.name), lower('\\\\forfiles.exe')) OR endswith(lower(process.name), lower('\\\\hh.exe')) OR endswith(lower(process.name), lower('\\\\ieexec.exe')) OR endswith(lower(process.name), lower('\\\\installutil.exe')) OR endswith(lower(process.name), lower('\\\\javaw.exe')) OR endswith(lower(process.name), lower('\\\\mftrace.exe')) OR endswith(lower(process.name), lower('\\\\microsoft.workflow.compiler.exe')) OR endswith(lower(process.name), lower('\\\\msbuild.exe')) OR endswith(lower(process.name), lower('\\\\msdt.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\msidb.exe')) OR endswith(lower(process.name), lower('\\\\msiexec.exe')) OR endswith(lower(process.name), lower('\\\\msxsl.exe')) OR endswith(lower(process.name), lower('\\\\odbcconf.exe')) OR endswith(lower(process.name), lower('\\\\pcalua.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\regasm.exe')) OR endswith(lower(process.name), lower('\\\\regsvcs.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\schtasks.exe')) OR endswith(lower(process.name), lower('\\\\scrcons.exe')) OR endswith(lower(process.name), lower('\\\\scriptrunner.exe')) OR endswith(lower(process.name), lower('\\\\sh.exe')) OR endswith(lower(process.name), lower('\\\\svchost.exe')) OR endswith(lower(process.name), lower('\\\\verclsid.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\workfolders.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))) OR endswith(lower(process.name), lower('\\\\explorer.exe')) AND (contains(lower(process.cmd_line), lower('.hta')) OR contains(lower(process.cmd_line), lower('.vb')) OR contains(lower(process.cmd_line), lower('.wsh')) OR contains(lower(process.cmd_line), lower('.js')) OR contains(lower(process.cmd_line), lower('.ps')) OR contains(lower(process.cmd_line), lower('.scr')) OR contains(lower(process.cmd_line), lower('.pif')) OR contains(lower(process.cmd_line), lower('.bat')) OR contains(lower(process.cmd_line), lower('.cmd'))) OR contains(lower(process.name), lower('\\\\appdata\\\\')) OR contains(lower(process.name), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower('\\\\programdata\\\\')) OR contains(lower(process.name), lower('\\\\windows\\\\tasks\\\\')) OR contains(lower(process.name), lower('\\\\windows\\\\temp\\\\')) OR contains(lower(process.name), lower('\\\\windows\\\\system32\\\\tasks\\\\'))) AND NOT (endswith(lower(process.name), lower('\\\\appdata\\\\local\\\\microsoft\\\\teams\\\\current\\\\teams.exe')) AND endswith(lower(process.cmd_line), lower('-embedding')) OR contains(lower(process.name), lower('\\\\appdata\\\\local\\\\microsoft\\\\onedrive\\\\')) AND endswith(lower(process.name), lower('\\\\filecoauth.exe')) AND endswith(lower(process.cmd_line), lower('-embedding'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes of the Microsoft OneNote application. This may indicate an attempt to execute malicious embedded objects from a .one file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: File located in the AppData folder with trusted signature References: https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-e34e43eb5666427602ddf488b2bf3b545bd9aae81af3e6f6c7949f9652abdf18, https://micahbabinski.medium.com/detecting-onenote-one-malware-delivery-407e9321ecf0",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1566",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

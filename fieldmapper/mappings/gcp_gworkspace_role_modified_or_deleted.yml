@@ -1,19 +1,18 @@
-id: 6aef64e3-60c6-4782-8db3-8448759c714e
 title: Google Workspace Role Modified or Deleted
+id: 6aef64e3-60c6-4782-8db3-8448759c714e
 status: test
 level: medium
-description: Detects when an a role is modified or deleted in Google Workspace.
 author: Austin Songer
-date: '2021-08-24'
-modified: '2023-10-11'
-tags:
-    - attack.impact
+description: Detects when an a role is modified or deleted in Google Workspace.
 references:
     - https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3
     - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-delegated-admin-settings
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-24'
+modified: '2023-10-11'
 logsource:
     product: gcp
     service: google_workspace.admin
@@ -32,17 +31,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:44.318374+00:00'
+            mapped_at: '2025-12-04T01:38:53.957137+00:00'
         service:
             source_field: service
             source_value: google_workspace.admin
-            mapped_at: '2025-11-26T02:21:44.318374+00:00'
+            mapped_at: '2025-12-04T01:38:53.957137+00:00'
     detection_fields:
         -   source_field: eventService
             target_table: entity_management
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:44.318410+00:00'
+            mapped_at: '2025-12-04T01:38:53.957151+00:00'
         -   source_field: eventName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:44.318415+00:00'
+            mapped_at: '2025-12-04T01:38:53.957153+00:00'

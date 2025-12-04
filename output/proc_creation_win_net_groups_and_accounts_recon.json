@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Suspicious Group And Account Reconnaissance Activity Using Net.EXE",
+    "comment": "Detects suspicious reconnaissance command line activity on Windows systems using Net.EXE Check if the user that executed the commands is suspicious (e.g. service accounts, LOCAL_SYSTEM)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe'))) AND (lower(LOWER(process.file.name)) in ('net\\.exe', 'net1\\.exe')) AND ((contains(lower(process.cmd_line), lower(' group ')) OR contains(lower(process.cmd_line), lower(' localgroup '))) AND (contains(lower(process.cmd_line), lower('domain admins')) OR contains(lower(process.cmd_line), lower(' administrator')) OR contains(lower(process.cmd_line), lower(' administrateur')) OR contains(lower(process.cmd_line), lower('enterprise admins')) OR contains(lower(process.cmd_line), lower('exchange trusted subsystem')) OR contains(lower(process.cmd_line), lower('remote desktop users')) OR contains(lower(process.cmd_line), lower('utilisateurs du bureau \u00e0 distance')) OR contains(lower(process.cmd_line), lower('usuarios de escritorio remoto')) OR contains(lower(process.cmd_line), lower(' /do'))) AND NOT contains(lower(process.cmd_line), lower(' /add')) OR contains(lower(process.cmd_line), lower(' accounts ')) AND contains(lower(process.cmd_line), lower(' /do'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious reconnaissance command line activity on Windows systems using Net.EXE Check if the user that executed the commands is suspicious (e.g. service accounts, LOCAL_SYSTEM)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Inventory tool runs 2. Administrative activity References: https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/, https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/, https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

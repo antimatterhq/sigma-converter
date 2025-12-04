@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "ETW Trace Evasion Activity",
+    "comment": "Detects command line activity that tries to clear or disable any ETW trace log which could be a sign of logging evasion.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('cl')) AND contains(lower(process.cmd_line), lower('/trace')) OR contains(lower(process.cmd_line), lower('clear-log')) AND contains(lower(process.cmd_line), lower('/trace')) OR contains(lower(process.cmd_line), lower('sl')) AND contains(lower(process.cmd_line), lower('/e:false')) OR contains(lower(process.cmd_line), lower('set-log')) AND contains(lower(process.cmd_line), lower('/e:false')) OR contains(lower(process.cmd_line), lower('logman')) AND contains(lower(process.cmd_line), lower('update')) AND contains(lower(process.cmd_line), lower('trace')) AND contains(lower(process.cmd_line), lower('--p')) AND contains(lower(process.cmd_line), lower('-ets')) OR contains(lower(process.cmd_line), lower('remove-etwtraceprovider')) OR contains(lower(process.cmd_line), lower('set-etwtraceprovider')) AND contains(lower(process.cmd_line), lower('0x11'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects command line activity that tries to clear or disable any ETW trace log which could be a sign of logging evasion.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil, https://abuse.io/lockergoga.txt, https://medium.com/palantir/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "006"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

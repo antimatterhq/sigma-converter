@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "New Federated Domain Added - Exchange",
+    "comment": "Detects the addition of a new Federated Domain.",
+    "annotations": {
+      "source": "sigma",
+      "product": "m365",
+      "service": "exchange",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('exchange') AND lower(metadata.event_code) = lower('add-federateddomain') AND lower(actor.authorizations.decision) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the addition of a new Federated Domain.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: The creation of a new Federated domain is not necessarily malicious, however these events need to be followed closely, as it may indicate federated credential abuse or backdoor via federated identities at a similar or different cloud provider. References: https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/wp-m-unc2452-2021-000343-01.pdf, https://us-cert.cisa.gov/ncas/alerts/aa21-008a, https://www.splunk.com/en_us/blog/security/a-golden-saml-journey-solarwinds-continued.html, https://www.sygnia.co/golden-saml-advisory, https://o365blog.com/post/aadbackdoor/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1136",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

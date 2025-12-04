@@ -1,20 +1,19 @@
-id: 3d48c9d3-1aa6-418d-98d3-8fd3c01a564e
 title: Potential Mftrace.EXE Abuse
+id: 3d48c9d3-1aa6-418d-98d3-8fd3c01a564e
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects child processes of the "Trace log generation tool for Media Foundation
     Tools" (Mftrace.exe) which can abused to execute arbitrary binaries.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-09'
-modified: '2023-08-03'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Mftrace/
 falsepositives:
     - Legitimate use for tracing purposes
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2022-06-09'
+modified: '2023-08-03'
 logsource:
     category: process_creation
     product: windows
@@ -29,13 +28,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:03.297099+00:00'
+            mapped_at: '2025-12-04T01:49:48.721491+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:03.297099+00:00'
+            mapped_at: '2025-12-04T01:49:48.721491+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:03.297112+00:00'
+            mapped_at: '2025-12-04T01:49:48.721504+00:00'

@@ -1,22 +1,19 @@
-id: 85ff530b-261d-48c6-a441-facaa2e81e48
 title: New Service Creation Using Sc.EXE
+id: 85ff530b-261d-48c6-a441-facaa2e81e48
 status: test
 level: low
-description: Detects the creation of a new service using the "sc.exe" utility.
 author: Timur Zinniatullin, Daniil Yugoslavskiy, oscd.community
-date: '2023-02-20'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1543.003
+description: Detects the creation of a new service using the "sc.exe" utility.
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.003/T1543.003.md
 falsepositives:
     - Legitimate administrator or user creates a service for legitimate reasons.
     - Software installation
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c02e96b7-c63a-4c47-bd83-4a9f74afcfb2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1543.003
+date: '2023-02-20'
 logsource:
     category: process_creation
     product: windows
@@ -27,6 +24,9 @@ detection:
             - create
             - binPath
     condition: selection
+related:
+    -   id: c02e96b7-c63a-4c47-bd83-4a9f74afcfb2
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -34,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:39.739960+00:00'
+            mapped_at: '2025-12-04T01:42:02.102384+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:39.739960+00:00'
+            mapped_at: '2025-12-04T01:42:02.102384+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:39.739975+00:00'
+            mapped_at: '2025-12-04T01:42:02.102402+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:39.739977+00:00'
+            mapped_at: '2025-12-04T01:42:02.102404+00:00'

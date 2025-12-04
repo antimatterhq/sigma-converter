@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "BloodHound Collection Files",
+    "comment": "Detects default file names outputted by the BloodHound collection tool SharpHound",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(file.path), lower('bloodhound.zip')) OR endswith(lower(file.path), lower('_computers.json')) OR endswith(lower(file.path), lower('_containers.json')) OR endswith(lower(file.path), lower('_domains.json')) OR endswith(lower(file.path), lower('_gpos.json')) OR endswith(lower(file.path), lower('_groups.json')) OR endswith(lower(file.path), lower('_ous.json')) OR endswith(lower(file.path), lower('_users.json'))) AND NOT (endswith(lower(actor.process.name), lower('\\\\svchost.exe')) AND startswith(lower(file.path), lower('c:\\\\program files\\\\windowsapps\\\\microsoft.')) AND endswith(lower(file.path), lower('\\\\pocket_containers.json'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects default file names outputted by the BloodHound collection tool SharpHound",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some false positives may arise in some environment and this may require some tuning. Add additional filters or reduce level depending on the level of noise Reference: https://academy.hackthebox.com/course/preview/active-directory-bloodhound/bloodhound--data-collection",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1069",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1482"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

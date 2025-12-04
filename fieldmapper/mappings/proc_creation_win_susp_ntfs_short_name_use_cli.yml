@@ -1,15 +1,10 @@
-id: dd6b39d9-d9be-4a3b-8fe0-fe3c6a5c1795
 title: Use NTFS Short Name in Command Line
+id: dd6b39d9-d9be-4a3b-8fe0-fe3c6a5c1795
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: Detect use of the Windows 8.3 short name. Which could be used as a method
     to avoid command-line detection
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-05'
-modified: '2022-09-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.004
 references:
     - https://www.acunetix.com/blog/articles/windows-short-8-3-filenames-web-security-problem/
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc959352(v=technet.10)
@@ -17,9 +12,11 @@ references:
 falsepositives:
     - Applications could use this notation occasionally which might generate some
         false positives. In that case Investigate the parent and child process.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3ef5605c-9eb9-47b0-9a71-b727e6aa5c3b''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.004
+date: '2022-08-05'
+modified: '2022-09-21'
 logsource:
     category: process_creation
     product: windows
@@ -50,6 +47,9 @@ detection:
             - \thor\thor64.exe
         CommandLine|contains: C:\xampp\vcredist\VCREDI~1.EXE
     condition: selection and not filter
+related:
+    -   id: 3ef5605c-9eb9-47b0-9a71-b727e6aa5c3b
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -57,17 +57,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:44.874478+00:00'
+            mapped_at: '2025-12-04T01:42:07.545550+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:44.874478+00:00'
+            mapped_at: '2025-12-04T01:42:07.545550+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:44.874509+00:00'
+            mapped_at: '2025-12-04T01:42:07.545566+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:44.874541+00:00'
+            mapped_at: '2025-12-04T01:42:07.545574+00:00'

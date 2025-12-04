@@ -1,15 +1,9 @@
-id: 611eab06-a145-4dfa-a295-3ccc5c20f59a
 title: Mimikatz DC Sync
+id: 611eab06-a145-4dfa-a295-3ccc5c20f59a
 status: test
 level: high
-description: Detects Mimikatz DC sync security events
 author: Benjamin Delpy, Florian Roth (Nextron Systems), Scott Dermott, Sorina Ionescu
-date: '2018-06-03'
-modified: '2022-04-26'
-tags:
-    - attack.credential-access
-    - attack.s0002
-    - attack.t1003.006
+description: Detects Mimikatz DC sync security events
 references:
     - https://twitter.com/gentilkiwi/status/1003236624925413376
     - https://gist.github.com/gentilkiwi/dcc132457408cf11ad2061340dcb53c2
@@ -18,7 +12,12 @@ references:
 falsepositives:
     - Valid DC Sync that is not covered by the filters; please report
     - Local Domain Admin account used for Azure AD Connect
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.s0002
+    - attack.t1003.006
+date: '2018-06-03'
+modified: '2022-04-26'
 logsource:
     product: windows
     service: security
@@ -48,29 +47,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:34.042929+00:00'
+            mapped_at: '2025-12-04T01:55:32.164889+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:34.042929+00:00'
+            mapped_at: '2025-12-04T01:55:32.164889+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: user_access
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:34.820363+00:00'
+            mapped_at: '2025-12-04T01:55:32.164927+00:00'
         -   source_field: Properties
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:34.820387+00:00'
+            mapped_at: '2025-12-04T01:55:32.164940+00:00'
         -   source_field: AccessMask
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:34.820390+00:00'
+            mapped_at: '2025-12-04T01:55:32.164942+00:00'
         -   source_field: SubjectDomainName
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:34.820393+00:00'
+            mapped_at: '2025-12-04T01:55:32.164944+00:00'
         -   source_field: SubjectUserName
             target_table: user_access
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:44:34.820395+00:00'
+            mapped_at: '2025-12-04T01:55:32.164945+00:00'

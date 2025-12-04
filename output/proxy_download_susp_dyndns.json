@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "name": "Download from Suspicious Dyndns Hosts",
+    "comment": "Detects download of certain file types from hosts with dynamic DNS names (selected list)",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(http_request.url)) in ('exe', 'vbs', 'bat', 'rar', 'ps1', 'doc', 'docm', 'xls', 'xlsm', 'pptm', 'rtf', 'hta', 'dll', 'ws', 'wsf', 'sct', 'zip')) AND (endswith(lower(dst_endpoint.hostname), lower('.hopto.org')) OR endswith(lower(dst_endpoint.hostname), lower('.no-ip.org')) OR endswith(lower(dst_endpoint.hostname), lower('.no-ip.info')) OR endswith(lower(dst_endpoint.hostname), lower('.no-ip.biz')) OR endswith(lower(dst_endpoint.hostname), lower('.no-ip.com')) OR endswith(lower(dst_endpoint.hostname), lower('.noip.com')) OR endswith(lower(dst_endpoint.hostname), lower('.ddns.name')) OR endswith(lower(dst_endpoint.hostname), lower('.myftp.org')) OR endswith(lower(dst_endpoint.hostname), lower('.myftp.biz')) OR endswith(lower(dst_endpoint.hostname), lower('.serveblog.net')) OR endswith(lower(dst_endpoint.hostname), lower('.servebeer.com')) OR endswith(lower(dst_endpoint.hostname), lower('.servemp3.com')) OR endswith(lower(dst_endpoint.hostname), lower('.serveftp.com')) OR endswith(lower(dst_endpoint.hostname), lower('.servequake.com')) OR endswith(lower(dst_endpoint.hostname), lower('.servehalflife.com')) OR endswith(lower(dst_endpoint.hostname), lower('.servehttp.com')) OR endswith(lower(dst_endpoint.hostname), lower('.servegame.com')) OR endswith(lower(dst_endpoint.hostname), lower('.servepics.com')) OR endswith(lower(dst_endpoint.hostname), lower('.myvnc.com')) OR endswith(lower(dst_endpoint.hostname), lower('.ignorelist.com')) OR endswith(lower(dst_endpoint.hostname), lower('.jkub.com')) OR endswith(lower(dst_endpoint.hostname), lower('.dlinkddns.com')) OR endswith(lower(dst_endpoint.hostname), lower('.jumpingcrab.com')) OR endswith(lower(dst_endpoint.hostname), lower('.ddns.info')) OR endswith(lower(dst_endpoint.hostname), lower('.mooo.com')) OR endswith(lower(dst_endpoint.hostname), lower('.dns-dns.com')) OR endswith(lower(dst_endpoint.hostname), lower('.strangled.net')) OR endswith(lower(dst_endpoint.hostname), lower('.adultdns.net')) OR endswith(lower(dst_endpoint.hostname), lower('.craftx.biz')) OR endswith(lower(dst_endpoint.hostname), lower('.ddns01.com')) OR endswith(lower(dst_endpoint.hostname), lower('.dns53.biz')) OR endswith(lower(dst_endpoint.hostname), lower('.dnsapi.info')) OR endswith(lower(dst_endpoint.hostname), lower('.dnsd.info')) OR endswith(lower(dst_endpoint.hostname), lower('.dnsdynamic.com')) OR endswith(lower(dst_endpoint.hostname), lower('.dnsdynamic.net')) OR endswith(lower(dst_endpoint.hostname), lower('.dnsget.org')) OR endswith(lower(dst_endpoint.hostname), lower('.fe100.net')) OR endswith(lower(dst_endpoint.hostname), lower('.flashserv.net')) OR endswith(lower(dst_endpoint.hostname), lower('.ftp21.net')) OR endswith(lower(dst_endpoint.hostname), lower('.http01.com')) OR endswith(lower(dst_endpoint.hostname), lower('.http80.info')) OR endswith(lower(dst_endpoint.hostname), lower('.https443.com')) OR endswith(lower(dst_endpoint.hostname), lower('.imap01.com')) OR endswith(lower(dst_endpoint.hostname), lower('.kadm5.com')) OR endswith(lower(dst_endpoint.hostname), lower('.mysq1.net')) OR endswith(lower(dst_endpoint.hostname), lower('.ns360.info')) OR endswith(lower(dst_endpoint.hostname), lower('.ntdll.net')) OR endswith(lower(dst_endpoint.hostname), lower('.ole32.com')) OR endswith(lower(dst_endpoint.hostname), lower('.proxy8080.com')) OR endswith(lower(dst_endpoint.hostname), lower('.sql01.com')) OR endswith(lower(dst_endpoint.hostname), lower('.ssh01.com')) OR endswith(lower(dst_endpoint.hostname), lower('.ssh22.net')) OR endswith(lower(dst_endpoint.hostname), lower('.tempors.com')) OR endswith(lower(dst_endpoint.hostname), lower('.tftpd.net')) OR endswith(lower(dst_endpoint.hostname), lower('.ttl60.com')) OR endswith(lower(dst_endpoint.hostname), lower('.ttl60.org')) OR endswith(lower(dst_endpoint.hostname), lower('.user32.com')) OR endswith(lower(dst_endpoint.hostname), lower('.voip01.com')) OR endswith(lower(dst_endpoint.hostname), lower('.wow64.net')) OR endswith(lower(dst_endpoint.hostname), lower('.x64.me')) OR endswith(lower(dst_endpoint.hostname), lower('.xns01.com')) OR endswith(lower(dst_endpoint.hostname), lower('.dyndns.org')) OR endswith(lower(dst_endpoint.hostname), lower('.dyndns.info')) OR endswith(lower(dst_endpoint.hostname), lower('.dyndns.tv')) OR endswith(lower(dst_endpoint.hostname), lower('.dyndns-at-home.com')) OR endswith(lower(dst_endpoint.hostname), lower('.dnsomatic.com')) OR endswith(lower(dst_endpoint.hostname), lower('.zapto.org')) OR endswith(lower(dst_endpoint.hostname), lower('.webhop.net')) OR endswith(lower(dst_endpoint.hostname), lower('.25u.com')) OR endswith(lower(dst_endpoint.hostname), lower('.slyip.net'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects download of certain file types from hosts with dynamic DNS names (selected list)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: cs-ip, http_request.url False positive: Software downloads Reference: https://www.alienvault.com/blogs/security-essentials/dynamic-dns-security-and-potential-threats",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1105"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1568"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

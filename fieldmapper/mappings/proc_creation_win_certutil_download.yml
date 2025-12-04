@@ -1,15 +1,11 @@
-id: 19b08b1c-861d-4e75-a1ef-ea0c1baf202b
 title: Suspicious Download Via Certutil.EXE
+id: 19b08b1c-861d-4e75-a1ef-ea0c1baf202b
 status: test
 level: medium
-description: Detects the execution of certutil with certain flags that allow the utility
-    to download files.
 author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community, Nasreddine
     Bencherchali (Nextron Systems)
-date: '2023-02-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1027
+description: Detects the execution of certutil with certain flags that allow the utility
+    to download files.
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
     - https://forensicitguy.github.io/agenttesla-vba-certutil-download/
@@ -18,9 +14,10 @@ references:
     - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''13e6fe51-d478-4c7e-b0f2-6da9b400a829''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+date: '2023-02-15'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +32,9 @@ detection:
     selection_http:
         CommandLine|contains: http
     condition: all of selection_*
+related:
+    -   id: 13e6fe51-d478-4c7e-b0f2-6da9b400a829
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -42,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:33.827487+00:00'
+            mapped_at: '2025-12-04T01:43:41.687097+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:33.827487+00:00'
+            mapped_at: '2025-12-04T01:43:41.687097+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:33.827502+00:00'
+            mapped_at: '2025-12-04T01:43:41.687111+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:33.827504+00:00'
+            mapped_at: '2025-12-04T01:43:41.687113+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:33.827506+00:00'
+            mapped_at: '2025-12-04T01:43:41.687114+00:00'

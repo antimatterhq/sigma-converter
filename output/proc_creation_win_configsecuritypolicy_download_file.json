@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Arbitrary File Download Via ConfigSecurityPolicy.EXE",
+    "comment": "Detects the execution of \"ConfigSecurityPolicy.EXE\", a binary part of Windows Defender used to manage settings in Windows Defender. Users can configure different pilot collections for each of the co-management workloads. It can be abused by attackers in order to upload or download files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('configsecuritypolicy.exe')) AND endswith(lower(process.name), lower('\\\\configsecuritypolicy.exe')) AND lower(process.file.name) = lower('configsecuritypolicy.exe') AND (contains(lower(process.cmd_line), lower('ftp://')) OR contains(lower(process.cmd_line), lower('http://')) OR contains(lower(process.cmd_line), lower('https://'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of \"ConfigSecurityPolicy.EXE\", a binary part of Windows Defender used to manage settings in Windows Defender. Users can configure different pilot collections for each of the co-management workloads. It can be abused by attackers in order to upload or download files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://lolbas-project.github.io/lolbas/Binaries/ConfigSecurityPolicy/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

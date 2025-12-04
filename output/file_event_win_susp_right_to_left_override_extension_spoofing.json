@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential File Extension Spoofing Using Right-to-Left Override",
+    "comment": "Detects suspicious filenames that contain a right-to-left override character and a potentially spoofed file extensions.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND contains(lower(file.path), lower('\\\\u202e')) AND (contains(lower(file.path), lower('fpd..')) OR contains(lower(file.path), lower('nls..')) OR contains(lower(file.path), lower('vsc..')) OR contains(lower(file.path), lower('xcod.')) OR contains(lower(file.path), lower('xslx.'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious filenames that contain a right-to-left override character and a potentially spoofed file extensions.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Filenames that contains scriptures such as arabic or hebrew might make use of this character References: https://redcanary.com/blog/right-to-left-override/, https://www.malwarebytes.com/blog/news/2014/01/the-rtlo-method",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1036",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

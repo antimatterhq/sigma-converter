@@ -1,16 +1,9 @@
-id: 459a2970-bb84-4e6a-a32e-ff0fbd99448d
 title: Azure Key Vault Modified or Deleted
+id: 459a2970-bb84-4e6a-a32e-ff0fbd99448d
 status: test
 level: medium
-description: Identifies when a key vault is modified or deleted.
 author: Austin Songer @austinsonger
-date: '2021-08-16'
-modified: '2022-08-23'
-tags:
-    - attack.impact
-    - attack.credential-access
-    - attack.t1552
-    - attack.t1552.001
+description: Identifies when a key vault is modified or deleted.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
 falsepositives:
@@ -20,7 +13,13 @@ falsepositives:
     - Key Vault modified or deleted from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.credential-access
+    - attack.t1552
+    - attack.t1552.001
+date: '2021-08-16'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -39,13 +38,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:05.543088+00:00'
+            mapped_at: '2025-12-04T01:38:31.253724+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:05.543088+00:00'
+            mapped_at: '2025-12-04T01:38:31.253724+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:05.543108+00:00'
+            mapped_at: '2025-12-04T01:38:31.253735+00:00'

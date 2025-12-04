@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Guest User Invited By Non Approved Inviters",
+    "comment": "Detects when a user that doesn't have permissions to invite a guest user attempts to invite one.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "auditlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(message) = lower('invite external user') AND lower(status_code) = lower('failure'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a user that doesn't have permissions to invite a guest user attempts to invite one.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: A non malicious user is unaware of the proper process Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts#things-to-monitor",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1078",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

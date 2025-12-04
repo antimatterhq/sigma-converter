@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PUA - Nimgrab Execution",
+    "comment": "Detects the usage of nimgrab, a tool bundled with the Nim programming framework and used for downloading files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\nimgrab.exe')) OR contains(lower(process.file.hashes.value), lower('md5=2dd44c3c29d667f5c0ef5f9d7c7ffb8b')) OR contains(lower(process.file.hashes.value), lower('sha256=f266609e91985f0fe3e31c5e8faeeec4ffa5e0322d8b6f15fe69f4c5165b9559')) OR contains(lower(process.file.hashes.value), lower('imphash=c07fddd21d123ea9b3a08eef44aaac45'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage of nimgrab, a tool bundled with the Nim programming framework and used for downloading files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of Nim on a developer systems Reference: https://github.com/redcanaryco/atomic-red-team/blob/28d190330fe44de6ff4767fc400cc10fa7cd6540/atomics/T1105/T1105.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

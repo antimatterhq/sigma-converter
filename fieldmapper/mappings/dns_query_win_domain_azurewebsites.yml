@@ -1,17 +1,13 @@
-id: e043f529-8514-4205-8ab0-7f7d2927b400
 title: DNS Query To AzureWebsites.NET By Non-Browser Process
+id: e043f529-8514-4205-8ab0-7f7d2927b400
 status: experimental
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects a DNS query by a non browser process on the system to "azurewebsites.net".
     The latter was often used by threat actors as a malware hosting and exfiltration
     site.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-06-24'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://www.sentinelone.com/labs/wip26-espionage-threat-actors-abuse-cloud-infrastructure-in-targeted-telco-attacks/
     - https://symantec-enterprise-blogs.security.com/threat-intelligence/harvester-new-apt-attacks-asia
@@ -20,9 +16,10 @@ references:
 falsepositives:
     - Likely with other browser software. Apply additional filters for any other browsers
         you might use.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5c80b618-0dbb-46e6-acbb-03d90bcb6d83''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2024-06-24'
 logsource:
     category: dns_query
     product: windows
@@ -114,6 +111,9 @@ detection:
             - C:\Program Files\Avant Browser\
         Image|endswith: \avant.exe
     condition: selection and not 1 of filter_optional_*
+related:
+    -   id: 5c80b618-0dbb-46e6-acbb-03d90bcb6d83
+        type: derived
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -121,17 +121,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:39.446978+00:00'
+            mapped_at: '2025-12-04T01:51:13.154642+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:39.446978+00:00'
+            mapped_at: '2025-12-04T01:51:13.154642+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:39.446993+00:00'
+            mapped_at: '2025-12-04T01:51:13.154743+00:00'
         -   source_field: Image
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:39.446996+00:00'
+            mapped_at: '2025-12-04T01:51:13.154746+00:00'

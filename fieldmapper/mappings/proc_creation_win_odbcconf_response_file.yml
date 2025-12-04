@@ -1,16 +1,11 @@
-id: 5f03babb-12db-4eec-8c82-7b4cb5580868
 title: Response File Execution Via Odbcconf.EXE
+id: 5f03babb-12db-4eec-8c82-7b4cb5580868
 status: test
 level: medium
-description: Detects execution of "odbcconf" with the "-f" flag in order to load a
-    response file which might contain a malicious action.
 author: Kirill Kiryanov, Beyu Denis, Daniil Yugoslavskiy, oscd.community, Nasreddine
     Bencherchali (Nextron Systems)
-date: '2023-05-22'
-modified: '2024-03-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.008
+description: Detects execution of "odbcconf" with the "-f" flag in order to load a
+    response file which might contain a malicious action.
 references:
     - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
     - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
@@ -21,10 +16,11 @@ falsepositives:
         positive when this function is used legitimately. Investigate the contents
         of the ".rsp" file to determine if it is malicious and apply additional filters
         if necessary.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''2d32dd6f-3196-4093-b9eb-1ad8ab088ca5''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''65d2be45-8600-4042-b4c0-577a1ff8a60e''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.008
+date: '2023-05-22'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +33,11 @@ detection:
     selection_rsp_ext:
         CommandLine|contains: .rsp
     condition: all of selection_*
+related:
+    -   id: 2d32dd6f-3196-4093-b9eb-1ad8ab088ca5
+        type: similar
+    -   id: 65d2be45-8600-4042-b4c0-577a1ff8a60e
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:04.027384+00:00'
+            mapped_at: '2025-12-04T01:41:31.460541+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:04.027384+00:00'
+            mapped_at: '2025-12-04T01:41:31.460541+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:04.027412+00:00'
+            mapped_at: '2025-12-04T01:41:31.460559+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:04.027416+00:00'
+            mapped_at: '2025-12-04T01:41:31.460561+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:04.027419+00:00'
+            mapped_at: '2025-12-04T01:41:31.460562+00:00'

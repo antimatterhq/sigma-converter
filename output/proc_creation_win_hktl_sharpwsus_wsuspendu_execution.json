@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "HackTool - SharpWSUS/WSUSpendu Execution",
+    "comment": "Detects the execution of SharpWSUS or WSUSpendu, utilities that allow for lateral movement through WSUS. Windows Server Update Services (WSUS) is a critical component of Windows systems and is frequently configured in a way that allows an attacker to circumvent internal networking limitations.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' -inject ')) AND (contains(lower(process.cmd_line), lower(' -payloadargs ')) OR contains(lower(process.cmd_line), lower(' -payloadfile '))) OR (contains(lower(process.cmd_line), lower(' approve ')) OR contains(lower(process.cmd_line), lower(' create ')) OR contains(lower(process.cmd_line), lower(' check ')) OR contains(lower(process.cmd_line), lower(' delete '))) AND (contains(lower(process.cmd_line), lower(' /payload:')) OR contains(lower(process.cmd_line), lower(' /payload=')) OR contains(lower(process.cmd_line), lower(' /updateid:')) OR contains(lower(process.cmd_line), lower(' /updateid=')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of SharpWSUS or WSUSpendu, utilities that allow for lateral movement through WSUS. Windows Server Update Services (WSUS) is a critical component of Windows systems and is frequently configured in a way that allows an attacker to circumvent internal networking limitations.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://labs.nettitude.com/blog/introducing-sharpwsus/, https://github.com/nettitude/SharpWSUS, https://web.archive.org/web/20210512154016/https://github.com/AlsidOfficial/WSUSpendu/blob/master/WSUSpendu.ps1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1210"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

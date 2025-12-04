@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Github Push Protection Disabled",
+    "comment": "Detects if the push protection feature is disabled for an organization, enterprise, repositories or custom pattern rules.",
+    "annotations": {
+      "source": "sigma",
+      "product": "github",
+      "service": "audit",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(action)) in ('business_secret_scanning_custom_pattern_push_protection\\.disabled', 'business_secret_scanning_push_protection\\.disable', 'business_secret_scanning_push_protection\\.disabled_for_new_repos', 'org\\.secret_scanning_custom_pattern_push_protection_disabled', 'org\\.secret_scanning_push_protection_disable', 'org\\.secret_scanning_push_protection_new_repos_disable', 'repository_secret_scanning_custom_pattern_push_protection\\.disabled'))"
+      }
+    },
+    "output": {
+      "summary": "Detects if the push protection feature is disabled for an organization, enterprise, repositories or custom pattern rules.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Allowed administrative activities. References: https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/push-protection-for-repositories-and-organizations, https://thehackernews.com/2024/03/github-rolls-out-default-secret.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

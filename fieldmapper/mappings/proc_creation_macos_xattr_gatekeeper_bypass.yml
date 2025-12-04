@@ -1,20 +1,19 @@
-id: f5141b6d-9f42-41c6-a7bf-2a780678b29b
 title: Gatekeeper Bypass via Xattr
+id: f5141b6d-9f42-41c6-a7bf-2a780678b29b
 status: test
 level: low
-description: Detects macOS Gatekeeper bypass via xattr utility
 author: Daniil Yugoslavskiy, oscd.community
-date: '2020-10-19'
-modified: '2024-04-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1553.001
+description: Detects macOS Gatekeeper bypass via xattr utility
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/1fed40dc7e48f16ed44dcdd9c73b9222a70cca85/atomics/T1553.001/T1553.001.md
     - https://www.loobins.io/binaries/xattr/
 falsepositives:
     - Legitimate activities
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1553.001
+date: '2020-10-19'
+modified: '2024-04-18'
 logsource:
     category: process_creation
     product: macos
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:18.282848+00:00'
+            mapped_at: '2025-12-04T01:34:15.259911+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:18.282848+00:00'
+            mapped_at: '2025-12-04T01:34:15.259911+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:18.282869+00:00'
+            mapped_at: '2025-12-04T01:34:15.259929+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:18.282873+00:00'
+            mapped_at: '2025-12-04T01:34:15.259931+00:00'

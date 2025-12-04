@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Recon Information for Export with PowerShell",
+    "comment": "Once established within a system or network, an adversary may use automated techniques for collecting internal data",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((contains(lower(script.script_content.value), lower('get-service ')) OR contains(lower(script.script_content.value), lower('get-childitem ')) OR contains(lower(script.script_content.value), lower('get-process '))) AND contains(lower(script.script_content.value), lower('> $env:temp\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Once established within a system or network, an adversary may use automated techniques for collecting internal data",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1119"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

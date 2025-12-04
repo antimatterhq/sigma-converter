@@ -1,20 +1,19 @@
-id: bbc865e4-7fcd-45a6-8ff1-95ced28ec5b2
 title: NtdllPipe Like Activity Execution
+id: bbc865e4-7fcd-45a6-8ff1-95ced28ec5b2
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects command that type the content of ntdll.dll to a different file
     or a pipe in order to evade AV / EDR detection. As seen being used in the POC
     NtdllPipe
-author: Florian Roth (Nextron Systems)
-date: '2022-03-05'
-modified: '2023-03-07'
-tags:
-    - attack.defense-evasion
 references:
     - https://web.archive.org/web/20220306121156/https://www.x86matthew.com/view_post?id=ntdll_pipe
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-03-05'
+modified: '2023-03-07'
 logsource:
     category: process_creation
     product: windows
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:56.641381+00:00'
+            mapped_at: '2025-12-04T01:47:19.170077+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:56.641381+00:00'
+            mapped_at: '2025-12-04T01:47:19.170077+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:56.641406+00:00'
+            mapped_at: '2025-12-04T01:47:19.170093+00:00'

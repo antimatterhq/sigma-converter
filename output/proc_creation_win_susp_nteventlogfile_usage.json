@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Call To Win32_NTEventlogFile Class",
+    "comment": "Detects usage of the WMI class \"Win32_NTEventlogFile\" in a potentially suspicious way (delete, backup, change permissions, etc.) from a PowerShell script",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('win32_nteventlogfile')) AND (contains(lower(process.cmd_line), lower('.backupeventlog(')) OR contains(lower(process.cmd_line), lower('.changesecuritypermissions(')) OR contains(lower(process.cmd_line), lower('.changesecuritypermissionsex(')) OR contains(lower(process.cmd_line), lower('.cleareventlog(')) OR contains(lower(process.cmd_line), lower('.delete(')) OR contains(lower(process.cmd_line), lower('.deleteex(')) OR contains(lower(process.cmd_line), lower('.rename(')) OR contains(lower(process.cmd_line), lower('.takeownership(')) OR contains(lower(process.cmd_line), lower('.takeownershipex('))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the WMI class \"Win32_NTEventlogFile\" in a potentially suspicious way (delete, backup, change permissions, etc.) from a PowerShell script",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394225(v=vs.85)",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

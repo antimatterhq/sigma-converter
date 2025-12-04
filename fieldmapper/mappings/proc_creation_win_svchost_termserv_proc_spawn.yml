@@ -1,23 +1,22 @@
-id: 1012f107-b8f1-4271-af30-5aed2de89b39
 title: Terminal Service Process Spawn
+id: 1012f107-b8f1-4271-af30-5aed2de89b39
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects a process spawned by the terminal service server process (this
     could be an indicator for an exploitation of CVE-2019-0708)
-author: Florian Roth (Nextron Systems)
-date: '2019-05-22'
-modified: '2023-01-25'
+references:
+    - https://securingtomorrow.mcafee.com/other-blogs/mcafee-labs/rdp-stands-for-really-do-patch-understanding-the-wormable-rdp-vulnerability-cve-2019-0708/
+falsepositives:
+    - Unknown
 tags:
     - attack.initial-access
     - attack.t1190
     - attack.lateral-movement
     - attack.t1210
     - car.2013-07-002
-references:
-    - https://securingtomorrow.mcafee.com/other-blogs/mcafee-labs/rdp-stands-for-really-do-patch-understanding-the-wormable-rdp-vulnerability-cve-2019-0708/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2019-05-22'
+modified: '2023-01-25'
 logsource:
     category: process_creation
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:12.711289+00:00'
+            mapped_at: '2025-12-04T01:46:41.190552+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:12.711289+00:00'
+            mapped_at: '2025-12-04T01:46:41.190552+00:00'
     detection_fields:
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:32:12.711315+00:00'
+            mapped_at: '2025-12-04T01:46:41.190584+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:12.711319+00:00'
+            mapped_at: '2025-12-04T01:46:41.190588+00:00'

@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential LSASS Process Dump Via Procdump",
+    "comment": "Detects suspicious uses of the SysInternals Procdump utility by using a special command line parameter in combination with the lsass.exe process. This way we are also able to catch cases in which the attacker has renamed the procdump executable.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' -ma ')) OR contains(lower(process.cmd_line), lower(' /ma ')) OR contains(lower(process.cmd_line), lower(' \u2013ma ')) OR contains(lower(process.cmd_line), lower(' \u2014ma ')) OR contains(lower(process.cmd_line), lower(' \u2015ma '))) AND contains(lower(process.cmd_line), lower(' ls')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious uses of the SysInternals Procdump utility by using a special command line parameter in combination with the lsass.exe process. This way we are also able to catch cases in which the attacker has renamed the procdump executable.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Unlikely, because no one should dump an lsass process memory 2. Another tool that uses command line flags similar to ProcDump Reference: https://learn.microsoft.com/en-us/sysinternals/downloads/procdump",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

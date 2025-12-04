@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Setuid and Setgid",
+    "comment": "Detects suspicious change of file privileges with chown and chmod commands",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('5') AND contains(lower(process.cmd_line), lower('chown root')) AND (contains(lower(process.cmd_line), lower(' chmod u+s')) OR contains(lower(process.cmd_line), lower(' chmod g+s'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious change of file privileges with chown and chmod commands",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1548.001/T1548.001.md, https://attack.mitre.org/techniques/T1548/001/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1548",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Persistence Via Microsoft Office Startup Folder",
+    "comment": "Detects creation of Microsoft Office files inside of one of the default startup folders in order to achieve persistence.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(file.path), lower('\\\\microsoft\\\\word\\\\startup')) AND contains(lower(file.path), lower('\\\\office')) AND contains(lower(file.path), lower('\\\\program files')) AND contains(lower(file.path), lower('\\\\startup')) AND (endswith(lower(file.path), lower('.doc')) OR endswith(lower(file.path), lower('.docm')) OR endswith(lower(file.path), lower('.docx')) OR endswith(lower(file.path), lower('.dot')) OR endswith(lower(file.path), lower('.dotm')) OR endswith(lower(file.path), lower('.rtf'))) OR contains(lower(file.path), lower('\\\\microsoft\\\\excel\\\\xlstart')) AND contains(lower(file.path), lower('\\\\office')) AND contains(lower(file.path), lower('\\\\program files')) AND contains(lower(file.path), lower('\\\\xlstart')) AND (endswith(lower(file.path), lower('.xls')) OR endswith(lower(file.path), lower('.xlsm')) OR endswith(lower(file.path), lower('.xlsx')) OR endswith(lower(file.path), lower('.xlt')) OR endswith(lower(file.path), lower('.xltm')))) AND NOT (endswith(lower(actor.process.name), lower('\\\\winword.exe')) OR endswith(lower(actor.process.name), lower('\\\\excel.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of Microsoft Office files inside of one of the default startup folders in order to achieve persistence.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Loading a user environment from a backup or a domain controller 2. Synchronization of templates References: https://insight-jp.nttsecurity.com/post/102hojk/operation-restylink-apt-campaign-targeting-japanese-companies, https://learn.microsoft.com/en-us/office/troubleshoot/excel/use-startup-folders",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1137"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

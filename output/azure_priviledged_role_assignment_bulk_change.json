@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Bulk Deletion Changes To Privileged Account Permissions",
+    "comment": "Detects when a user is removed from a privileged role. Bulk changes should be investigated.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "auditlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('6') AND (lower(LOWER(message)) in ('remove eligible member (permanent)', 'remove eligible member (eligible)')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a user is removed from a privileged role. Bulk changes should be investigated.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legtimate administrator actions of removing members from a role Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-identity-management#azure-ad-roles-assignment",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1098"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

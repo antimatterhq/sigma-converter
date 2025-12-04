@@ -1,22 +1,21 @@
-id: e2f17c5d-b02a-442b-9052-6eb89c9fec9c
 title: Screen Capture with Xwd
+id: e2f17c5d-b02a-442b-9052-6eb89c9fec9c
 status: test
 level: low
+author: Pawel Mazur
 description: Detects adversary creating screen capture of a full with xwd. Highly
     recommended using rule on servers, due high usage of screenshot utilities on user
     workstations
-author: Pawel Mazur
-date: '2021-09-13'
-modified: '2022-12-18'
-tags:
-    - attack.collection
-    - attack.t1113
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1113/T1113.md#atomic-test-3---x-windows-capture
     - https://linux.die.net/man/1/xwd
 falsepositives:
     - Legitimate use of screenshot utility
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1113
+date: '2021-09-13'
+modified: '2022-12-18'
 logsource:
     product: linux
     service: auditd
@@ -39,29 +38,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:01.007675+00:00'
+            mapped_at: '2025-12-04T01:35:35.286216+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:01.007675+00:00'
+            mapped_at: '2025-12-04T01:35:35.286216+00:00'
     detection_fields:
         -   source_field: type
             target_table: process_activity
             target_field: action
-            mapped_at: '2025-11-26T02:16:01.007696+00:00'
+            mapped_at: '2025-12-04T01:35:35.286231+00:00'
         -   source_field: a0
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:01.007698+00:00'
+            mapped_at: '2025-12-04T01:35:35.286233+00:00'
         -   source_field: a1
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:01.007700+00:00'
+            mapped_at: '2025-12-04T01:35:35.286234+00:00'
         -   source_field: a2
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:01.007701+00:00'
+            mapped_at: '2025-12-04T01:35:35.286235+00:00'
         -   source_field: a3
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:01.007702+00:00'
+            mapped_at: '2025-12-04T01:35:35.286236+00:00'

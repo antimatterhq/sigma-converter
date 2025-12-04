@@ -1,20 +1,19 @@
-id: 9b64de98-9db3-4033-bd7a-f51430105f00
 title: Windows Terminal Profile Settings Modification By Uncommon Process
+id: 9b64de98-9db3-4033-bd7a-f51430105f00
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation or modification of the Windows Terminal Profile
     settings file "settings.json" by an uncommon process.
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-07-22'
-tags:
-    - attack.persistence
-    - attack.t1547.015
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/74438b0237d141ee9c99747976447dc884cb1a39/atomics/T1547.015/T1547.015.md#atomic-test-1---persistence-by-modifying-windows-terminal-profile
     - https://twitter.com/nas_bench/status/1550836225652686848
 falsepositives:
     - Some false positives may occur with admin scripts that set WT settings.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.015
+date: '2023-07-22'
 logsource:
     category: file_event
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:18.281693+00:00'
+            mapped_at: '2025-12-04T01:52:09.811075+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:18.281693+00:00'
+            mapped_at: '2025-12-04T01:52:09.811075+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:18.281712+00:00'
+            mapped_at: '2025-12-04T01:52:09.811097+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:18.281715+00:00'
+            mapped_at: '2025-12-04T01:52:09.811099+00:00'

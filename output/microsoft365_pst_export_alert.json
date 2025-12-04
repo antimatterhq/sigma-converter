@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PST Export Alert Using eDiscovery Alert",
+    "comment": "Alert on when a user has performed an eDiscovery search or exported a PST file from the search. This PST file usually has sensitive information including email body content",
+    "annotations": {
+      "source": "sigma",
+      "product": "m365",
+      "service": "threat_management",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('securitycompliancecenter') AND lower(metadata.event_code) = lower('ediscovery search started or exported') AND lower(actor.authorizations.decision) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Alert on when a user has performed an eDiscovery search or exported a PST file from the search. This PST file usually has sensitive information including email body content",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: PST export can be done for legitimate purposes but due to the sensitive nature of its content it must be monitored. Reference: https://learn.microsoft.com/en-us/microsoft-365/compliance/alert-policies?view=o365-worldwide",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1114"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,23 +1,20 @@
-id: 7034cbbb-cc55-4dc2-8dad-36c0b942e8f1
 title: Invoke-Obfuscation COMPRESS OBFUSCATION - PowerShell Module
+id: 7034cbbb-cc55-4dc2-8dad-36c0b942e8f1
 status: test
 level: medium
-description: Detects Obfuscated Powershell via COMPRESS OBFUSCATION
 author: Timur Zinniatullin, oscd.community
-date: '2020-10-18'
-modified: '2022-11-29'
+description: Detects Obfuscated Powershell via COMPRESS OBFUSCATION
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''20e5497e-331c-4cd5-8d36-935f6e2a9a07''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-18'
+modified: '2022-11-29'
 logsource:
     category: ps_module
     product: windows
@@ -32,6 +29,9 @@ detection:
             - system.io.streamreader
         Payload|endswith: readtoend
     condition: selection_4103
+related:
+    -   id: 20e5497e-331c-4cd5-8d36-935f6e2a9a07
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

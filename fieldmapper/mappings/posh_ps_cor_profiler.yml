@@ -1,7 +1,8 @@
-id: 23590215-4702-4a70-8805-8dc9e58314a2
 title: Registry-Free Process Scope COR_PROFILER
+id: 23590215-4702-4a70-8805-8dc9e58314a2
 status: test
 level: medium
+author: frack113
 description: 'Adversaries may leverage the COR_PROFILER environment variable to hijack
     the execution flow of programs that load the .NET CLR.
 
@@ -17,16 +18,14 @@ description: 'Adversaries may leverage the COR_PROFILER environment variable to 
     (Citation: Microsoft COR_PROFILER Feb 2013)
 
     '
-author: frack113
-date: '2021-12-30'
-tags:
-    - attack.persistence
-    - attack.t1574.012
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.012/T1574.012.md#atomic-test-3---registry-free-process-scope-cor_profiler
 falsepositives:
     - Legitimate administrative script
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1574.012
+date: '2021-12-30'
 logsource:
     category: ps_script
     product: windows
@@ -45,13 +44,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:33.806294+00:00'
+            mapped_at: '2025-12-04T01:54:42.488446+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:33.806294+00:00'
+            mapped_at: '2025-12-04T01:54:42.488446+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:33.806305+00:00'
+            mapped_at: '2025-12-04T01:54:42.488472+00:00'

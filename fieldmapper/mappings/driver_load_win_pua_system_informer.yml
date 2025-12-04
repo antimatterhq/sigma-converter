@@ -1,23 +1,20 @@
-id: 10cb6535-b31d-4512-9962-513dcbc42cc1
 title: PUA - System Informer Driver Load
+id: 10cb6535-b31d-4512-9962-513dcbc42cc1
 status: test
 level: medium
-description: Detects driver load of the System Informer tool
 author: Florian Roth (Nextron Systems)
-date: '2023-05-08'
-modified: '2024-11-23'
-tags:
-    - attack.privilege-escalation
-    - attack.t1543
+description: Detects driver load of the System Informer tool
 references:
     - https://systeminformer.sourceforge.io/
     - https://github.com/winsiderss/systeminformer
 falsepositives:
     - System Informer is regularly used legitimately by system administrators or developers.
         Apply additional filters accordingly
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''67add051-9ee7-4ad3-93ba-42935615ae8d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1543
+date: '2023-05-08'
+modified: '2024-11-23'
 logsource:
     category: driver_load
     product: windows
@@ -39,6 +36,9 @@ detection:
             - SHA256=E2606F272F7BA054DF16BE464FDA57211EF0D14A0D959F9C8DCB0575DF1186E4
             - SHA256=3A9E1D17BEEB514F1B9B3BACAEE7420285DE5CBDCE89C5319A992C6CBD1DE138
     condition: selection
+related:
+    -   id: 67add051-9ee7-4ad3-93ba-42935615ae8d
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

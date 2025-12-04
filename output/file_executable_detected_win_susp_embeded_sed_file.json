@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Self Extraction Directive File Created",
+    "comment": "Detects the creation of a binary file with the \".sed\" extension. The \".sed\" extension stand for Self Extraction Directive files. These files are used by the \"iexpress.exe\" utility in order to create self extracting packages. Attackers were seen abusing this utility and creating PE files with embedded \".sed\" entries. Usually \".sed\" files are simple ini files and not PE binaries.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_executable_detected",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(file.path), lower('.sed')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a binary file with the \".sed\" extension. The \".sed\" extension stand for Self Extraction Directive files. These files are used by the \"iexpress.exe\" utility in order to create self extracting packages. Attackers were seen abusing this utility and creating PE files with embedded \".sed\" entries. Usually \".sed\" files are simple ini files and not PE binaries.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://strontic.github.io/xcyclopedia/library/iexpress.exe-D594B2A33EFAFD0EABF09E3FDC05FCEA.html, https://en.wikipedia.org/wiki/IExpress, https://www.virustotal.com/gui/file/602f4ae507fa8de57ada079adff25a6c2a899bd25cd092d0af7e62cdb619c93c/behavior",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

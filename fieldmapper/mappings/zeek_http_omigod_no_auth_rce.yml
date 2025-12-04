@@ -1,7 +1,8 @@
-id: ab6b1a39-a9ee-4ab4-b075-e83acf6e346b
 title: OMIGOD HTTP No Authentication RCE
+id: ab6b1a39-a9ee-4ab4-b075-e83acf6e346b
 status: stable
 level: high
+author: Nate Guagenti (neu5ron)
 description: 'Detects the exploitation of OMIGOD (CVE-2021-38647) which allows remote
     execute (RCE) commands as root with just a single unauthenticated HTTP request.
 
@@ -13,19 +14,6 @@ description: 'Detects the exploitation of OMIGOD (CVE-2021-38647) which allows r
     the timeframe of this HTTP request.
 
     '
-author: Nate Guagenti (neu5ron)
-date: '2021-09-20'
-modified: '2019-09-20'
-tags:
-    - attack.privilege-escalation
-    - attack.initial-access
-    - attack.execution
-    - attack.lateral-movement
-    - attack.t1068
-    - attack.t1190
-    - attack.t1203
-    - attack.t1021.006
-    - attack.t1210
 references:
     - https://www.wiz.io/blog/omigod-critical-vulnerabilities-in-omi-azure
     - https://twitter.com/neu5ron/status/1438987292971053057?s=20
@@ -45,7 +33,18 @@ falsepositives:
         of code execution within the HTTP Client (Request) body. An example would
         be vulnerability scanners trying to identify unpatched versions while not
         actually exploiting the vulnerability. See description for investigation tips.
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.initial-access
+    - attack.execution
+    - attack.lateral-movement
+    - attack.t1068
+    - attack.t1190
+    - attack.t1203
+    - attack.t1021.006
+    - attack.t1210
+date: '2021-09-20'
+modified: '2019-09-20'
 logsource:
     product: zeek
     service: http
@@ -69,29 +68,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:14:53.054112+00:00'
+            mapped_at: '2025-12-04T01:35:08.797147+00:00'
         service:
             source_field: service
             source_value: http
-            mapped_at: '2025-11-26T02:14:53.054112+00:00'
+            mapped_at: '2025-12-04T01:35:08.797147+00:00'
     detection_fields:
         -   source_field: status_code
             target_table: http_activity
             target_field: http_response.code
-            mapped_at: '2025-11-26T02:14:54.575073+00:00'
+            mapped_at: '2025-12-04T01:35:08.797163+00:00'
         -   source_field: uri
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:14:54.575082+00:00'
+            mapped_at: '2025-12-04T01:35:08.797165+00:00'
         -   source_field: method
             target_table: http_activity
             target_field: http_request.http_method
-            mapped_at: '2025-11-26T02:14:54.575084+00:00'
+            mapped_at: '2025-12-04T01:35:08.797166+00:00'
         -   source_field: client_header_names
             target_table: http_activity
             target_field: http_request.http_headers.name
-            mapped_at: '2025-11-26T02:14:54.575085+00:00'
+            mapped_at: '2025-12-04T01:35:08.797167+00:00'
         -   source_field: request_body_len
             target_table: http_activity
             target_field: http_request.body_length
-            mapped_at: '2025-11-26T02:14:54.575086+00:00'
+            mapped_at: '2025-12-04T01:35:08.797168+00:00'

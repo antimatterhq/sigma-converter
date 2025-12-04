@@ -1,15 +1,9 @@
-id: aff229ab-f8cd-447b-b215-084d11e79eb0
 title: Remote Schedule Task Lateral Movement via SASec
+id: aff229ab-f8cd-447b-b215-084d11e79eb0
 status: test
 level: high
-description: Detects remote RPC calls to create or execute a scheduled task via SASec
 author: Sagie Dulce, Dekel Paz
-date: '2022-01-01'
-modified: '2022-01-01'
-tags:
-    - attack.lateral-movement
-    - attack.t1053
-    - attack.t1053.002
+description: Detects remote RPC calls to create or execute a scheduled task via SASec
 references:
     - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-tsch/d1058a28-7e02-4948-8b8d-4a347fa64931
     - https://github.com/jsecurity101/MSRPC-to-ATTACK/blob/ddd4608fe8684fcf2fcf9b48c5f0b3c28097f8a3/documents/MS-TSCH.md
@@ -17,7 +11,12 @@ references:
     - https://zeronetworks.com/blog/stopping-lateral-movement-via-the-rpc-firewall/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1053
+    - attack.t1053.002
+date: '2022-01-01'
+modified: '2022-01-01'
 logsource:
     category: application
     product: rpc_firewall
@@ -39,25 +38,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:22.069794+00:00'
+            mapped_at: '2025-12-04T01:39:47.111664+00:00'
         product:
             source_field: product
             source_value: rpc_firewall
-            mapped_at: '2025-11-26T02:23:22.069794+00:00'
+            mapped_at: '2025-12-04T01:39:47.111664+00:00'
     detection_fields:
         -   source_field: EventLog
             target_table: network_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:23:22.069807+00:00'
+            mapped_at: '2025-12-04T01:39:47.111684+00:00'
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:23:22.069808+00:00'
+            mapped_at: '2025-12-04T01:39:47.111686+00:00'
         -   source_field: InterfaceUuid
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:22.069811+00:00'
+            mapped_at: '2025-12-04T01:39:47.111687+00:00'
         -   source_field: OpNum
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:22.069812+00:00'
+            mapped_at: '2025-12-04T01:39:47.111688+00:00'

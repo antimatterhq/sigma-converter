@@ -1,7 +1,8 @@
-id: ca387a8e-1c84-4da3-9993-028b45342d30
 title: PUA - SoftPerfect Netscan Execution
+id: ca387a8e-1c84-4da3-9993-028b45342d30
 status: experimental
 level: medium
+author: '@d4ns4n_ (Wuerth-Phoenix)'
 description: 'Detects usage of SoftPerfect''s "netscan.exe". An application for scanning
     networks.
 
@@ -9,11 +10,6 @@ description: 'Detects usage of SoftPerfect''s "netscan.exe". An application for 
     network architecture of a victim.
 
     '
-author: '@d4ns4n_ (Wuerth-Phoenix)'
-date: '2024-04-25'
-tags:
-    - attack.discovery
-    - attack.t1046
 references:
     - https://www.protect.airbus.com/blog/uncovering-cyber-intruders-netscan/
     - https://secjoes-reports.s3.eu-central-1.amazonaws.com/Sockbot%2Bin%2BGoLand.pdf
@@ -24,7 +20,10 @@ references:
     - https://www.softperfect.com/products/networkscanner/
 falsepositives:
     - Legitimate administrator activity
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1046
+date: '2024-04-25'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:05.169046+00:00'
+            mapped_at: '2025-12-04T01:42:20.770950+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:05.169046+00:00'
+            mapped_at: '2025-12-04T01:42:20.770950+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:05.169089+00:00'
+            mapped_at: '2025-12-04T01:42:20.770969+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:27:05.169094+00:00'
+            mapped_at: '2025-12-04T01:42:20.770971+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:27:05.169097+00:00'
+            mapped_at: '2025-12-04T01:42:20.770972+00:00'

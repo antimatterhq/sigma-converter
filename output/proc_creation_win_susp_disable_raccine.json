@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Raccine Uninstall",
+    "comment": "Detects commands that indicate a Raccine removal from an end system. Raccine is a free ransomware protection tool.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('taskkill ')) AND contains(lower(process.cmd_line), lower('raccinesettings.exe')) OR contains(lower(process.cmd_line), lower('reg.exe')) AND contains(lower(process.cmd_line), lower('delete')) AND contains(lower(process.cmd_line), lower('raccine tray')) OR contains(lower(process.cmd_line), lower('schtasks')) AND contains(lower(process.cmd_line), lower('/delete')) AND contains(lower(process.cmd_line), lower('raccine rules updater'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects commands that indicate a Raccine removal from an end system. Raccine is a free ransomware protection tool.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate deinstallation by administrative staff Reference: https://github.com/Neo23x0/Raccine",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

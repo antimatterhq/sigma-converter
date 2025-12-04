@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Download Via Certutil.EXE",
+    "comment": "Detects the execution of certutil with certain flags that allow the utility to download files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certutil.exe')) AND lower(process.file.name) = lower('certutil.exe') AND (contains(lower(process.cmd_line), lower('urlcache ')) OR contains(lower(process.cmd_line), lower('verifyctl '))) AND contains(lower(process.cmd_line), lower('http')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of certutil with certain flags that allow the utility to download files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil, https://forensicitguy.github.io/agenttesla-vba-certutil-download/, https://news.sophos.com/en-us/2021/04/13/compromised-exchange-server-hosting-cryptojacker-targeting-other-exchange-servers/, https://twitter.com/egre55/status/1087685529016193025, https://lolbas-project.github.io/lolbas/Binaries/Certutil/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,17 +1,10 @@
-id: 4f73421b-5a0b-4bbf-a892-5a7fb99bea66
 title: Mavinject Inject DLL Into Running Process
+id: 4f73421b-5a0b-4bbf-a892-5a7fb99bea66
 status: test
 level: high
+author: frack113, Florian Roth
 description: Detects process injection using the signed Windows tool "Mavinject" via
     the "INJECTRUNNING" flag
-author: frack113, Florian Roth
-date: '2021-07-12'
-modified: '2022-12-05'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055.001
-    - attack.t1218.013
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.004/T1056.004.md
@@ -23,9 +16,13 @@ references:
     - https://github.com/keyboardcrunch/SentinelOne-ATTACK-Queries/blob/6a228d23eefe963ca81f2d52f94b815f61ef5ee0/Tactics/DefenseEvasion.md#t1055-process-injection
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''17eb8e57-9983-420d-ad8a-2c4976c22eb8''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055.001
+    - attack.t1218.013
+date: '2021-07-12'
+modified: '2022-12-05'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +32,9 @@ detection:
     filter:
         ParentImage: C:\Windows\System32\AppVClient.exe
     condition: selection and not filter
+related:
+    -   id: 17eb8e57-9983-420d-ad8a-2c4976c22eb8
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 4
@@ -42,17 +42,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:11.182244+00:00'
+            mapped_at: '2025-12-04T01:49:07.853392+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:11.182244+00:00'
+            mapped_at: '2025-12-04T01:49:07.853392+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:11.182257+00:00'
+            mapped_at: '2025-12-04T01:49:07.853448+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:11.182259+00:00'
+            mapped_at: '2025-12-04T01:49:07.853454+00:00'

@@ -1,20 +1,19 @@
-id: b57ba453-b384-4ab9-9f40-1038086b4e53
 title: VeeamBackup Database Credentials Dump Via Sqlcmd.EXE
+id: b57ba453-b384-4ab9-9f40-1038086b4e53
 status: test
 level: high
-description: Detects dump of credentials in VeeamBackup dbo
 author: frack113
-date: '2021-12-20'
-modified: '2023-02-13'
-tags:
-    - attack.collection
-    - attack.t1005
+description: Detects dump of credentials in VeeamBackup dbo
 references:
     - https://thedfirreport.com/2021/12/13/diavol-ransomware/
     - https://forums.veeam.com/veeam-backup-replication-f2/recover-esxi-password-in-veeam-t34630.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1005
+date: '2021-12-20'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:55.920427+00:00'
+            mapped_at: '2025-12-04T01:50:37.052923+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:55.920427+00:00'
+            mapped_at: '2025-12-04T01:50:37.052923+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:55.920458+00:00'
+            mapped_at: '2025-12-04T01:50:37.052940+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:55.920461+00:00'
+            mapped_at: '2025-12-04T01:50:37.052942+00:00'

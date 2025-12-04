@@ -1,23 +1,19 @@
-id: dddfebae-c46f-439c-af7a-fdb6bde90218
 title: SyncAppvPublishingServer Execution to Bypass Powershell Restriction
+id: dddfebae-c46f-439c-af7a-fdb6bde90218
 status: test
 level: medium
+author: Ensar Şamil, @sblmsrsn, OSCD Community
 description: Detects SyncAppvPublishingServer process execution which usually utilized
     by adversaries to bypass PowerShell execution restrictions.
-author: Ensar Şamil, @sblmsrsn, OSCD Community
-date: '2020-10-05'
-modified: '2022-12-25'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/
 falsepositives:
     - App-V clients
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fde7929d-8beb-4a4c-b922-be9974671667''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''9f7aa113-9da6-4a8d-907c-5f1a4b908299''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-05'
+modified: '2022-12-25'
 logsource:
     category: ps_script
     product: windows
@@ -26,6 +22,11 @@ detection:
     selection:
         ScriptBlockText|contains: SyncAppvPublishingServer.exe
     condition: selection
+related:
+    -   id: fde7929d-8beb-4a4c-b922-be9974671667
+        type: derived
+    -   id: 9f7aa113-9da6-4a8d-907c-5f1a4b908299
+        type: derived
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -33,13 +34,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:38.746695+00:00'
+            mapped_at: '2025-12-04T01:53:57.890314+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:38.746695+00:00'
+            mapped_at: '2025-12-04T01:53:57.890314+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:38.746723+00:00'
+            mapped_at: '2025-12-04T01:53:57.890331+00:00'

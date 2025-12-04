@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "HackTool - BabyShark Agent Default URL Pattern",
+    "comment": "Detects Baby Shark C2 Framework default communication patterns",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.url), lower('momyshark?key=')))"
+      }
+    },
+    "output": {
+      "summary": "Detects Baby Shark C2 Framework default communication patterns",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://nasbench.medium.com/understanding-detecting-c2-frameworks-babyshark-641be4595845",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

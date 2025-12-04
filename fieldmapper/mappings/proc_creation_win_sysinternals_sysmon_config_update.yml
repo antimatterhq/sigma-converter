@@ -1,21 +1,20 @@
-id: 87911521-7098-470b-a459-9a57fc80bdfd
 title: Sysmon Configuration Update
+id: 87911521-7098-470b-a459-9a57fc80bdfd
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects updates to Sysmon's configuration. Attackers might update or
     replace the Sysmon configuration with a bare bone one to avoid monitoring without
     shutting down the service completely
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-03-09'
-modified: '2024-03-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
 falsepositives:
     - Legitimate administrators might use this command to update Sysmon configuration.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2023-03-09'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:34.563112+00:00'
+            mapped_at: '2025-12-04T01:48:35.582177+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:34.563112+00:00'
+            mapped_at: '2025-12-04T01:48:35.582177+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:34.563141+00:00'
+            mapped_at: '2025-12-04T01:48:35.586057+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:34:34.563145+00:00'
+            mapped_at: '2025-12-04T01:48:35.586067+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:34.563147+00:00'
+            mapped_at: '2025-12-04T01:48:35.586687+00:00'

@@ -1,20 +1,19 @@
-id: f7b5b004-dece-46e4-a4a5-f6fd0e1c6947
 title: Privileged Account Creation
+id: f7b5b004-dece-46e4-a4a5-f6fd0e1c6947
 status: test
 level: medium
-description: Detects when a new admin is created.
 author: Mark Morowczynski '@markmorow', Yochana Henderson, '@Yochana-H', Tim Shelton
-date: '2022-08-11'
-modified: '2022-08-16'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1078.004
+description: Detects when a new admin is created.
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts#changes-to-privileged-accounts
 falsepositives:
     - A legitimate new admin account being created
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1078.004
+date: '2022-08-11'
+modified: '2022-08-16'
 logsource:
     product: azure
     service: auditlogs
@@ -32,17 +31,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:12.961159+00:00'
+            mapped_at: '2025-12-04T01:37:39.063978+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:12.961159+00:00'
+            mapped_at: '2025-12-04T01:37:39.063978+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:19:12.961180+00:00'
+            mapped_at: '2025-12-04T01:37:39.064012+00:00'
         -   source_field: Status
             target_table: account_change
             target_field: status_code
-            mapped_at: '2025-11-26T02:19:12.961183+00:00'
+            mapped_at: '2025-12-04T01:37:39.064014+00:00'

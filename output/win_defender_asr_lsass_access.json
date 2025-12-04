@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "LSASS Access Detected via Attack Surface Reduction",
+    "comment": "Detects Access to LSASS Process",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "windefend",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 1121 AND endswith(lower(process.file.path), lower('\\\\lsass.exe')) AND NOT (startswith(lower(process.name), lower('c:\\\\windows\\\\temp\\\\asgard2-agent\\\\')) AND (endswith(lower(process.name), lower('\\\\thor64.exe')) OR endswith(lower(process.name), lower('\\\\thor.exe'))) OR lower(LOWER(process.name)) in ('c:\\\\windows\\\\system32\\\\atiesrxx\\.exe', 'c:\\\\windows\\\\system32\\\\compattelrunner\\.exe', 'c:\\\\windows\\\\system32\\\\msiexec\\.exe', 'c:\\\\windows\\\\system32\\\\nvwmi64\\.exe', 'c:\\\\windows\\\\system32\\\\svchost\\.exe', 'c:\\\\windows\\\\system32\\\\taskmgr\\.exe', 'c:\\\\windows\\\\system32\\\\wbem\\\\wmiprvse\\.exe', 'c:\\\\windows\\\\syswow64\\\\msiexec\\.exe') OR startswith(lower(process.name), lower('c:\\\\windows\\\\system32\\\\driverstore\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\installer\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files (x86)\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Access to LSASS Process",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Google Chrome GoogleUpdate.exe 2. Some Taskmgr.exe related activity Reference: https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

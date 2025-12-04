@@ -1,20 +1,19 @@
-id: 508a9374-ad52-4789-b568-fc358def2c65
 title: Suspicious History File Operations
+id: 508a9374-ad52-4789-b568-fc358def2c65
 status: test
 level: medium
-description: Detects commandline operations on shell history files
 author: Mikhail Larin, oscd.community
-date: '2020-10-17'
-modified: '2021-11-27'
-tags:
-    - attack.credential-access
-    - attack.t1552.003
+description: Detects commandline operations on shell history files
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.003/T1552.003.md
 falsepositives:
     - Legitimate administrative activity
     - Legitimate software, cleaning hist file
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1552.003
+date: '2020-10-17'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: macos
@@ -35,13 +34,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:33.852953+00:00'
+            mapped_at: '2025-12-04T01:34:31.516075+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:33.852953+00:00'
+            mapped_at: '2025-12-04T01:34:31.516075+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:33.852988+00:00'
+            mapped_at: '2025-12-04T01:34:31.516090+00:00'

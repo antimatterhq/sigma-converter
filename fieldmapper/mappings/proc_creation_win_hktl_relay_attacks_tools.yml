@@ -1,15 +1,10 @@
-id: 5589ab4f-a767-433c-961d-c91f3f704db1
 title: Potential SMB Relay Attack Tool Execution
+id: 5589ab4f-a767-433c-961d-c91f3f704db1
 status: test
 level: critical
+author: Florian Roth (Nextron Systems)
 description: Detects different hacktools used for relay attacks on Windows for privilege
     escalation
-author: Florian Roth (Nextron Systems)
-date: '2021-07-24'
-modified: '2023-02-14'
-tags:
-    - attack.execution
-    - attack.t1557.001
 references:
     - https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/
     - https://pentestlab.blog/2017/04/13/hot-potato/
@@ -19,7 +14,11 @@ references:
     - https://www.localpotato.com/
 falsepositives:
     - Legitimate files with these rare hacktool names
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1557.001
+date: '2021-07-24'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -64,17 +63,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:17.705386+00:00'
+            mapped_at: '2025-12-04T01:43:29.574557+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:17.705386+00:00'
+            mapped_at: '2025-12-04T01:43:29.574557+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:17.705398+00:00'
+            mapped_at: '2025-12-04T01:43:29.574590+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:17.705404+00:00'
+            mapped_at: '2025-12-04T01:43:29.574594+00:00'

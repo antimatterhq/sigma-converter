@@ -1,20 +1,19 @@
-id: b22a5b36-2431-493a-8be1-0bae56c28ef3
 title: Hidden User Creation
+id: b22a5b36-2431-493a-8be1-0bae56c28ef3
 status: test
 level: medium
+author: Daniil Yugoslavskiy, oscd.community
 description: Detects creation of a hidden user account on macOS (UserID < 500) or
     with IsHidden option
-author: Daniil Yugoslavskiy, oscd.community
-date: '2020-10-10'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.002
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.002/T1564.002.md
 falsepositives:
     - Legitimate administration activities
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.002
+date: '2020-10-10'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: macos
@@ -41,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:17.464646+00:00'
+            mapped_at: '2025-12-04T01:34:14.728725+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:17.464646+00:00'
+            mapped_at: '2025-12-04T01:34:14.728725+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:17.464660+00:00'
+            mapped_at: '2025-12-04T01:34:14.728740+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:17.464663+00:00'
+            mapped_at: '2025-12-04T01:34:14.728742+00:00'

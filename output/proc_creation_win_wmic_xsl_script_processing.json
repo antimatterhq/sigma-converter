@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "XSL Script Execution Via WMIC.EXE",
+    "comment": "Detects the execution of WMIC with the \"format\" flag to potentially load XSL files. Adversaries abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses. Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wmic.exe')) AND (contains(lower(process.cmd_line), lower('-format')) OR contains(lower(process.cmd_line), lower('/format')) OR contains(lower(process.cmd_line), lower('\u2013format')) OR contains(lower(process.cmd_line), lower('\u2014format')) OR contains(lower(process.cmd_line), lower('\u2015format'))) AND NOT (contains(lower(process.cmd_line), lower('format:list')) OR contains(lower(process.cmd_line), lower('format:htable')) OR contains(lower(process.cmd_line), lower('format:hform')) OR contains(lower(process.cmd_line), lower('format:table')) OR contains(lower(process.cmd_line), lower('format:mof')) OR contains(lower(process.cmd_line), lower('format:value')) OR contains(lower(process.cmd_line), lower('format:rawxml')) OR contains(lower(process.cmd_line), lower('format:xml')) OR contains(lower(process.cmd_line), lower('format:csv'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of WMIC with the \"format\" flag to potentially load XSL files. Adversaries abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses. Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. WMIC.exe FP depend on scripts and administrative methods used in the monitored environment. 2. Static format arguments - https://petri.com/command-line-wmi-part-3 Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1220/T1220.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1220"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

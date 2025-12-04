@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Typical HiveNightmare SAM File Export",
+    "comment": "Detects files written by the different tools that exploit HiveNightmare",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (contains(lower(file.path), lower('\\\\hive_sam_')) OR contains(lower(file.path), lower('\\\\sam-2021-')) OR contains(lower(file.path), lower('\\\\sam-2022-')) OR contains(lower(file.path), lower('\\\\sam-2023-')) OR contains(lower(file.path), lower('\\\\sam-haxx')) OR contains(lower(file.path), lower('\\\\sam.save'))) AND lower(file.path) = lower('c:\\\\windows\\\\temp\\\\sam'))"
+      }
+    },
+    "output": {
+      "summary": "Detects files written by the different tools that exploit HiveNightmare",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Files that accidentally contain these strings References: https://github.com/GossiTheDog/HiveNightmare, https://github.com/FireFart/hivenightmare/, https://github.com/WiredPulse/Invoke-HiveNightmare, https://twitter.com/cube0x0/status/1418920190759378944",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1552",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,13 +1,9 @@
-id: 61171ffc-d79c-4ae5-8e10-9323dba19cd3
 title: Azure VPN Connection Modified or Deleted
+id: 61171ffc-d79c-4ae5-8e10-9323dba19cd3
 status: test
 level: medium
-description: Identifies when a VPN connection is modified or deleted.
 author: Austin Songer @austinsonger
-date: '2021-08-08'
-modified: '2022-08-23'
-tags:
-    - attack.impact
+description: Identifies when a VPN connection is modified or deleted.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
 falsepositives:
@@ -17,7 +13,10 @@ falsepositives:
     - VPN Connection modified or deleted from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-08'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -34,13 +33,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:48.639089+00:00'
+            mapped_at: '2025-12-04T01:38:17.555175+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:20:48.639089+00:00'
+            mapped_at: '2025-12-04T01:38:17.555175+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:20:48.639116+00:00'
+            mapped_at: '2025-12-04T01:38:17.555324+00:00'

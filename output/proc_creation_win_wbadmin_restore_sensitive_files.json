@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Sensitive File Recovery From Backup Via Wbadmin.EXE",
+    "comment": "Detects the dump of highly sensitive files such as \"NTDS.DIT\" and \"SECURITY\" hive. Attackers can leverage the \"wbadmin\" utility in order to dump sensitive files that might contain credential or sensitive information.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wbadmin.exe')) AND lower(process.file.name) = lower('wbadmin.exe') AND contains(lower(process.cmd_line), lower(' recovery')) AND contains(lower(process.cmd_line), lower('recoverytarget')) AND contains(lower(process.cmd_line), lower('itemtype:file')) AND (contains(lower(process.cmd_line), lower('\\\\config\\\\sam')) OR contains(lower(process.cmd_line), lower('\\\\config\\\\security')) OR contains(lower(process.cmd_line), lower('\\\\config\\\\system')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\ntds\\\\ntds.dit'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the dump of highly sensitive files such as \"NTDS.DIT\" and \"SECURITY\" hive. Attackers can leverage the \"wbadmin\" utility in order to dump sensitive files that might contain credential or sensitive information.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/LOLBAS-Project/LOLBAS/blob/2cc01b01132b5c304027a658c698ae09dd6a92bf/yml/OSBinaries/Wbadmin.yml, https://lolbas-project.github.io/lolbas/Binaries/Wbadmin/, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-start-recovery, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-start-backup",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

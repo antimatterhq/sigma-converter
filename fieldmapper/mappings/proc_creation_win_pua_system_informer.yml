@@ -1,12 +1,15 @@
-id: 5722dff1-4bdd-4949-86ab-fbaf707e767a
 title: PUA - System Informer Execution
+id: 5722dff1-4bdd-4949-86ab-fbaf707e767a
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects the execution of System Informer, a task manager tool to view
     and manipulate processes, kernel options and other low level operations
-author: Florian Roth (Nextron Systems)
-date: '2023-05-08'
-modified: '2024-11-23'
+references:
+    - https://github.com/winsiderss/systeminformer
+falsepositives:
+    - System Informer is regularly used legitimately by system administrators or developers.
+        Apply additional filters accordingly
 tags:
     - attack.persistence
     - attack.privilege-escalation
@@ -15,14 +18,8 @@ tags:
     - attack.t1082
     - attack.t1564
     - attack.t1543
-references:
-    - https://github.com/winsiderss/systeminformer
-falsepositives:
-    - System Informer is regularly used legitimately by system administrators or developers.
-        Apply additional filters accordingly
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''811e0002-b13b-4a15-9d00-a613fce66e42''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2023-05-08'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +35,9 @@ detection:
             - SHA256=8EE9D84DE50803545937A63C686822388A3338497CDDB660D5D69CF68B68F287
             - IMPHASH=B68908ADAEB5D662F87F2528AF318F12
     condition: selection
+related:
+    -   id: 811e0002-b13b-4a15-9d00-a613fce66e42
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,29 +45,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:20.086934+00:00'
+            mapped_at: '2025-12-04T01:41:42.371410+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:20.086934+00:00'
+            mapped_at: '2025-12-04T01:41:42.371410+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:20.086988+00:00'
+            mapped_at: '2025-12-04T01:41:42.371425+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:20.086994+00:00'
+            mapped_at: '2025-12-04T01:41:42.371427+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:26:20.086997+00:00'
+            mapped_at: '2025-12-04T01:41:42.371428+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:26:20.087003+00:00'
+            mapped_at: '2025-12-04T01:41:42.371429+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:26:20.087006+00:00'
+            mapped_at: '2025-12-04T01:41:42.371431+00:00'

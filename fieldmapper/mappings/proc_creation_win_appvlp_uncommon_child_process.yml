@@ -1,7 +1,8 @@
-id: 9c7e131a-0f2c-4ae0-9d43-b04f4e266d43
 title: Uncommon Child Process Of Appvlp.EXE
+id: 9c7e131a-0f2c-4ae0-9d43-b04f4e266d43
 status: test
 level: medium
+author: Sreeman
 description: 'Detects uncommon child processes of Appvlp.EXE
 
     Appvlp or the Application Virtualization Utility is included with Microsoft Office.
@@ -13,18 +14,16 @@ description: 'Detects uncommon child processes of Appvlp.EXE
     or to mark a file as a system file.
 
     '
-author: Sreeman
-date: '2020-03-13'
-modified: '2023-11-09'
-tags:
-    - attack.t1218
-    - attack.defense-evasion
-    - attack.execution
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Appvlp/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1218
+    - attack.defense-evasion
+    - attack.execution
+date: '2020-03-13'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -54,17 +53,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:53.991245+00:00'
+            mapped_at: '2025-12-04T01:49:42.328821+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:53.991245+00:00'
+            mapped_at: '2025-12-04T01:49:42.328821+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:53.991275+00:00'
+            mapped_at: '2025-12-04T01:49:42.328936+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:53.991279+00:00'
+            mapped_at: '2025-12-04T01:49:42.328946+00:00'

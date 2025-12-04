@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Interactive PowerShell as SYSTEM",
+    "comment": "Detects the creation of files that indicator an interactive use of PowerShell in the SYSTEM user context",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (lower(LOWER(file.path)) in ('c:\\\\windows\\\\system32\\\\config\\\\systemprofile\\\\appdata\\\\roaming\\\\microsoft\\\\windows\\\\powershell\\\\psreadline\\\\consolehost_history\\.txt', 'c:\\\\windows\\\\system32\\\\config\\\\systemprofile\\\\appdata\\\\local\\\\microsoft\\\\windows\\\\powershell\\\\startupprofiledata-interactive')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of files that indicator an interactive use of PowerShell in the SYSTEM user context",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Administrative activity 2. PowerShell scripts running as SYSTEM user Reference: https://jpcertcc.github.io/ToolAnalysisResultSheet/details/PowerSploit_Invoke-Mimikatz.htm",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

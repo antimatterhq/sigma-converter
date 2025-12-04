@@ -1,7 +1,8 @@
-id: 4a6713f6-3331-11ed-a261-0242ac120002
 title: Taskkill Symantec Endpoint Protection
+id: 4a6713f6-3331-11ed-a261-0242ac120002
 status: test
 level: high
+author: Ilya Krestinichev, Florian Roth (Nextron Systems)
 description: 'Detects one of the possible scenarios for disabling Symantec Endpoint
     Protection.
 
@@ -13,18 +14,16 @@ description: 'Detects one of the possible scenarios for disabling Symantec Endpo
     and thus shutting down the service.
 
     '
-author: Ilya Krestinichev, Florian Roth (Nextron Systems)
-date: '2022-09-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://www.exploit-db.com/exploits/37525
     - https://community.spiceworks.com/topic/2195015-batch-script-to-uninstall-symantec-endpoint-protection
     - https://community.broadcom.com/symantecenterprise/communities/community-home/digestviewer/viewthread?MessageKey=6ce94b67-74e1-4333-b16f-000b7fd874f0&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=digestviewer
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-09-13'
 logsource:
     category: process_creation
     product: windows
@@ -43,13 +42,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:28.371194+00:00'
+            mapped_at: '2025-12-04T01:41:51.707971+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:28.371194+00:00'
+            mapped_at: '2025-12-04T01:41:51.707971+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:28.371219+00:00'
+            mapped_at: '2025-12-04T01:41:51.707991+00:00'

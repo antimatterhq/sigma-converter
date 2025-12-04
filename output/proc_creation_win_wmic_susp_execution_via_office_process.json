@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "Suspicious WMIC Execution Via Office Process",
+    "comment": "Office application called wmic to proxye execution through a LOLBIN process. This is often used to break suspicious parent-child chain (Office app spawns LOLBin).",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\winword.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\excel.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powerpnt.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\mspub.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\visio.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msaccess.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\eqnedt32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\onenote.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wordpad.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wordview.exe'))) AND endswith(lower(process.name), lower('\\\\wbem\\\\wmic.exe')) AND lower(process.file.name) = lower('wmic.exe') AND contains(lower(process.cmd_line), lower('process')) AND contains(lower(process.cmd_line), lower('create')) AND contains(lower(process.cmd_line), lower('call')) AND (contains(lower(process.cmd_line), lower('regsvr32')) OR contains(lower(process.cmd_line), lower('rundll32')) OR contains(lower(process.cmd_line), lower('msiexec')) OR contains(lower(process.cmd_line), lower('mshta')) OR contains(lower(process.cmd_line), lower('verclsid')) OR contains(lower(process.cmd_line), lower('wscript')) OR contains(lower(process.cmd_line), lower('cscript'))))"
+      }
+    },
+    "output": {
+      "summary": "Office application called wmic to proxye execution through a LOLBIN process. This is often used to break suspicious parent-child chain (Office app spawns LOLBin).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/, https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

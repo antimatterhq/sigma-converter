@@ -1,21 +1,20 @@
-id: e4ffe466-6ff8-48d4-94bd-e32d1a6061e2
 title: Nohup Execution
+id: e4ffe466-6ff8-48d4-94bd-e32d1a6061e2
 status: test
 level: medium
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
 description: Detects usage of nohup which could be leveraged by an attacker to keep
     a process running or break out from restricted environments
-author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
-date: '2022-06-06'
-tags:
-    - attack.execution
-    - attack.t1059.004
 references:
     - https://gtfobins.github.io/gtfobins/nohup/
     - https://en.wikipedia.org/wiki/Nohup
     - https://www.computerhope.com/unix/unohup.htm
 falsepositives:
     - Administrators or installed processes that leverage nohup
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.004
+date: '2022-06-06'
 logsource:
     category: process_creation
     product: linux
@@ -30,13 +29,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:14.216839+00:00'
+            mapped_at: '2025-12-04T01:36:23.597337+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:14.216839+00:00'
+            mapped_at: '2025-12-04T01:36:23.597337+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:14.216852+00:00'
+            mapped_at: '2025-12-04T01:36:23.597348+00:00'

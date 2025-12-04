@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Remote Thread Creation In Mstsc.Exe From Suspicious Location",
+    "comment": "Detects remote thread creation in the \"mstsc.exe\" process by a process located in a potentially suspicious location. This technique is often used by attackers in order to hook some APIs used by DLLs loaded by \"mstsc.exe\" during RDP authentications in order to steal credentials.",
+    "annotations": {
+      "source": "sigma",
+      "category": "create_remote_thread",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND endswith(lower(process.file.path), lower('\\\\mstsc.exe')) AND (contains(lower(actor.process.name), lower(':\\\\temp\\\\')) OR contains(lower(actor.process.name), lower(':\\\\users\\\\public\\\\')) OR contains(lower(actor.process.name), lower(':\\\\windows\\\\perflogs\\\\')) OR contains(lower(actor.process.name), lower(':\\\\windows\\\\tasks\\\\')) OR contains(lower(actor.process.name), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(actor.process.name), lower('\\\\appdata\\\\local\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects remote thread creation in the \"mstsc.exe\" process by a process located in a potentially suspicious location. This technique is often used by attackers in order to hook some APIs used by DLLs loaded by \"mstsc.exe\" during RDP authentications in order to steal credentials.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/S12cybersecurity/RDPCredentialStealer/blob/1b8947cdd065a06c1b62e80967d3c7af895fcfed/APIHookInjectorBin/APIHookInjectorBin/Inject.h#L25",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

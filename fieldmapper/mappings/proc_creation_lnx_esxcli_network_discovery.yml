@@ -1,21 +1,20 @@
-id: 33e814e0-1f00-4e43-9c34-31fb7ae2b174
 title: ESXi Network Configuration Discovery Via ESXCLI
+id: 33e814e0-1f00-4e43-9c34-31fb7ae2b174
 status: test
 level: medium
+author: Cedric Maurugeon
 description: Detects execution of the "esxcli" command with the "network" flag in
     order to retrieve information about the network configuration.
-author: Cedric Maurugeon
-date: '2023-09-04'
-tags:
-    - attack.discovery
-    - attack.t1033
-    - attack.t1007
 references:
     - https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/
     - https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_network.html
 falsepositives:
     - Legitimate administration activities
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1033
+    - attack.t1007
+date: '2023-09-04'
 logsource:
     category: process_creation
     product: linux
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:21.953303+00:00'
+            mapped_at: '2025-12-04T01:36:28.729926+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:21.953303+00:00'
+            mapped_at: '2025-12-04T01:36:28.729926+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:21.953319+00:00'
+            mapped_at: '2025-12-04T01:36:28.729938+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:21.953322+00:00'
+            mapped_at: '2025-12-04T01:36:28.729940+00:00'

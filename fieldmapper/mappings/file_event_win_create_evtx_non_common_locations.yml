@@ -1,7 +1,8 @@
-id: 65236ec7-ace0-4f0c-82fd-737b04fd4dcb
 title: EVTX Created In Uncommon Location
+id: 65236ec7-ace0-4f0c-82fd-737b04fd4dcb
 status: experimental
 level: medium
+author: D3F7A5105
 description: 'Detects the creation of new files with the ".evtx" extension in non-common
     or non-standard location.
 
@@ -13,12 +14,6 @@ description: 'Detects the creation of new files with the ".evtx" extension in no
     during troubleshooting.
 
     '
-author: D3F7A5105
-date: '2023-01-02'
-modified: '2024-03-26'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://learn.microsoft.com/en-us/windows/win32/eventlog/eventlog-key
 falsepositives:
@@ -26,7 +21,11 @@ falsepositives:
     - An unknown bug seems to trigger the Windows "svchost" process to drop EVTX files
         in the "C:\Windows\Temp" directory in the form "<log_name">_<uuid>.evtx".
         See https://superuser.com/questions/1371229/low-disk-space-after-filling-up-c-windows-temp-with-evtx-and-txt-files
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2023-01-02'
+modified: '2024-03-26'
 logsource:
     category: file_event
     product: windows
@@ -48,13 +47,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:16.907151+00:00'
+            mapped_at: '2025-12-04T01:52:08.723829+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:16.907151+00:00'
+            mapped_at: '2025-12-04T01:52:08.723829+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:16.907185+00:00'
+            mapped_at: '2025-12-04T01:52:08.723845+00:00'

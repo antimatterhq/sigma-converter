@@ -1,7 +1,8 @@
-id: 811e0002-b13b-4a15-9d00-a613fce66e42
 title: PUA - Process Hacker Execution
+id: 811e0002-b13b-4a15-9d00-a613fce66e42
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: 'Detects the execution of Process Hacker based on binary metadata information
     (Image, Hash, Imphash, etc).
 
@@ -11,9 +12,12 @@ description: 'Detects the execution of Process Hacker based on binary metadata i
     Threat actors abused older vulnerable versions to manipulate system processes.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-10-10'
-modified: '2024-11-23'
+references:
+    - https://processhacker.sourceforge.io/
+    - https://www.crowdstrike.com/blog/falcon-overwatch-report-finds-increase-in-ecrime/
+falsepositives:
+    - While sometimes 'Process Hacker is used by legitimate administrators, the execution
+        of Process Hacker must be investigated and allowed on a case by case basis
 tags:
     - attack.defense-evasion
     - attack.discovery
@@ -22,15 +26,8 @@ tags:
     - attack.t1622
     - attack.t1564
     - attack.t1543
-references:
-    - https://processhacker.sourceforge.io/
-    - https://www.crowdstrike.com/blog/falcon-overwatch-report-finds-increase-in-ecrime/
-falsepositives:
-    - While sometimes 'Process Hacker is used by legitimate administrators, the execution
-        of Process Hacker must be investigated and allowed on a case by case basis
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5722dff1-4bdd-4949-86ab-fbaf707e767a''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2022-10-10'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -53,6 +50,9 @@ detection:
             - IMPHASH=3695333C60DEDECDCAFF1590409AA462
             - IMPHASH=04DE0AD9C37EB7BD52043D2ECAC958DF
     condition: selection
+related:
+    -   id: 5722dff1-4bdd-4949-86ab-fbaf707e767a
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -60,29 +60,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:10.032008+00:00'
+            mapped_at: '2025-12-04T01:49:53.656968+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:10.032008+00:00'
+            mapped_at: '2025-12-04T01:49:53.656968+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:10.032026+00:00'
+            mapped_at: '2025-12-04T01:49:53.656984+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:10.032029+00:00'
+            mapped_at: '2025-12-04T01:49:53.656986+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:36:10.032031+00:00'
+            mapped_at: '2025-12-04T01:49:53.656987+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:36:10.032033+00:00'
+            mapped_at: '2025-12-04T01:49:53.656989+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:36:10.032035+00:00'
+            mapped_at: '2025-12-04T01:49:53.656990+00:00'
