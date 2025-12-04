@@ -1,7 +1,8 @@
-id: 3b2c1059-ae5f-40b6-b5d4-6106d3ac20fe
 title: Hidden Flag Set On File/Directory Via Chflags - MacOS
+id: 3b2c1059-ae5f-40b6-b5d4-6106d3ac20fe
 status: experimental
 level: medium
+author: Omar Khaled (@beacon_exe)
 description: 'Detects the execution of the "chflags" utility with the "hidden" flag,
     in order to hide files on MacOS.
 
@@ -9,14 +10,6 @@ description: 'Detects the execution of the "chflags" utility with the "hidden" f
     default file listing commands and in graphical file browsers.
 
     '
-author: Omar Khaled (@beacon_exe)
-date: '2024-08-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
-    - attack.t1564.004
-    - attack.t1552.001
-    - attack.t1105
 references:
     - https://www.sentinelone.com/labs/apt32-multi-stage-macos-trojan-innovates-on-crimeware-scripting-technique/
     - https://www.welivesecurity.com/2019/04/09/oceanlotus-macos-malware-update/
@@ -24,7 +17,13 @@ references:
     - https://ss64.com/mac/chflags.html
 falsepositives:
     - Legitimate usage of chflags by administrators and users.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.t1564.004
+    - attack.t1552.001
+    - attack.t1105
+date: '2024-08-21'
 logsource:
     category: process_creation
     product: macos
@@ -40,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:27.407228+00:00'
+            mapped_at: '2025-12-04T01:34:23.336773+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:27.407228+00:00'
+            mapped_at: '2025-12-04T01:34:23.336773+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:27.407246+00:00'
+            mapped_at: '2025-12-04T01:34:23.336790+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:27.407249+00:00'
+            mapped_at: '2025-12-04T01:34:23.336792+00:00'

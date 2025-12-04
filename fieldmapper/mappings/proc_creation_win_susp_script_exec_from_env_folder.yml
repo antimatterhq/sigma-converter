@@ -1,22 +1,21 @@
-id: 1228c958-e64e-4e71-92ad-7d429f4138ba
 title: Script Interpreter Execution From Suspicious Folder
+id: 1228c958-e64e-4e71-92ad-7d429f4138ba
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects a suspicious script execution in temporary folders or folders
     accessible by environment variables
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-02-08'
-modified: '2023-06-16'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://www.virustotal.com/gui/file/91ba814a86ddedc7a9d546e26f912c541205b47a853d227756ab1334ade92c3f
     - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-russia-ukraine-military
     - https://learn.microsoft.com/en-us/windows/win32/shell/csidl
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-02-08'
+modified: '2023-06-16'
 logsource:
     category: process_creation
     product: windows
@@ -63,21 +62,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:06.661578+00:00'
+            mapped_at: '2025-12-04T01:44:05.644161+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:06.661578+00:00'
+            mapped_at: '2025-12-04T01:44:05.644161+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:06.661608+00:00'
+            mapped_at: '2025-12-04T01:44:05.644243+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:06.661612+00:00'
+            mapped_at: '2025-12-04T01:44:05.644263+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:06.661615+00:00'
+            mapped_at: '2025-12-04T01:44:05.644268+00:00'

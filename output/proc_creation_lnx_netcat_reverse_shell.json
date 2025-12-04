@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Netcat Reverse Shell Execution",
+    "comment": "Detects execution of netcat with the \"-e\" flag followed by common shells. This could be a sign of a potential reverse shell setup.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/nc')) OR endswith(lower(process.name), lower('/ncat'))) AND (contains(lower(process.cmd_line), lower(' -c ')) OR contains(lower(process.cmd_line), lower(' -e '))) AND (contains(lower(process.cmd_line), lower(' ash')) OR contains(lower(process.cmd_line), lower(' bash')) OR contains(lower(process.cmd_line), lower(' bsh')) OR contains(lower(process.cmd_line), lower(' csh')) OR contains(lower(process.cmd_line), lower(' ksh')) OR contains(lower(process.cmd_line), lower(' pdksh')) OR contains(lower(process.cmd_line), lower(' sh')) OR contains(lower(process.cmd_line), lower(' tcsh')) OR contains(lower(process.cmd_line), lower('/bin/ash')) OR contains(lower(process.cmd_line), lower('/bin/bash')) OR contains(lower(process.cmd_line), lower('/bin/bsh')) OR contains(lower(process.cmd_line), lower('/bin/csh')) OR contains(lower(process.cmd_line), lower('/bin/ksh')) OR contains(lower(process.cmd_line), lower('/bin/pdksh')) OR contains(lower(process.cmd_line), lower('/bin/sh')) OR contains(lower(process.cmd_line), lower('/bin/tcsh')) OR contains(lower(process.cmd_line), lower('/bin/zsh')) OR contains(lower(process.cmd_line), lower('$ifsash')) OR contains(lower(process.cmd_line), lower('$ifsbash')) OR contains(lower(process.cmd_line), lower('$ifsbsh')) OR contains(lower(process.cmd_line), lower('$ifscsh')) OR contains(lower(process.cmd_line), lower('$ifsksh')) OR contains(lower(process.cmd_line), lower('$ifspdksh')) OR contains(lower(process.cmd_line), lower('$ifssh')) OR contains(lower(process.cmd_line), lower('$ifstcsh')) OR contains(lower(process.cmd_line), lower('$ifszsh'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of netcat with the \"-e\" flag followed by common shells. This could be a sign of a potential reverse shell setup.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet, https://www.revshells.com/, https://www.hackingtutorials.org/networking/hacking-netcat-part-2-bind-reverse-shells/, https://www.infosecademy.com/netcat-reverse-shells/, https://man7.org/linux/man-pages/man1/ncat.1.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

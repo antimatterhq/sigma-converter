@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Rclone Config File Creation",
+    "comment": "Detects Rclone config files being created",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(file.path), lower(':\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\.config\\\\rclone\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects Rclone config files being created",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate Rclone usage Reference: https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

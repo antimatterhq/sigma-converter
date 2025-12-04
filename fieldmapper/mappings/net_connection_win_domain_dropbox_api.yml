@@ -1,20 +1,19 @@
-id: 25eabf56-22f0-4915-a1ed-056b8dae0a68
 title: Suspicious Dropbox API Usage
+id: 25eabf56-22f0-4915-a1ed-056b8dae0a68
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects an executable that isn't dropbox but communicates with the Dropbox
     API
-author: Florian Roth (Nextron Systems)
-date: '2022-04-20'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://app.any.run/tasks/7e906adc-9d11-447f-8641-5f40375ecebb
     - https://www.zscaler.com/blogs/security-research/new-espionage-attack-molerats-apt-targeting-users-middle-east
 falsepositives:
     - Legitimate use of the API with a tool that the author wasn't aware of
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-04-20'
 logsource:
     category: network_connection
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:44.756587+00:00'
+            mapped_at: '2025-12-04T01:51:44.720825+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:44.756587+00:00'
+            mapped_at: '2025-12-04T01:51:44.720825+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:44.756599+00:00'
+            mapped_at: '2025-12-04T01:51:44.720845+00:00'
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:44.756601+00:00'
+            mapped_at: '2025-12-04T01:51:44.720848+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:44.756602+00:00'
+            mapped_at: '2025-12-04T01:51:44.720850+00:00'

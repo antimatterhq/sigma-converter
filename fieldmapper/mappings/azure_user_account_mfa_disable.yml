@@ -1,7 +1,8 @@
-id: b18454c8-0be3-41f7-86bc-9c614611b839
 title: Multi Factor Authentication Disabled For User Account
+id: b18454c8-0be3-41f7-86bc-9c614611b839
 status: experimental
 level: medium
+author: Harjot Singh (@cyb3rjy0t)
 description: 'Detects changes to the "StrongAuthenticationRequirement" value, where
     the state is set to "0" or "Disabled".
 
@@ -9,16 +10,14 @@ description: 'Detects changes to the "StrongAuthenticationRequirement" value, wh
     to maintain or achieve access to the account. Also see in SIM Swap attacks.
 
     '
-author: Harjot Singh (@cyb3rjy0t)
-date: '2024-08-21'
-tags:
-    - attack.credential-access
-    - attack.persistence
 references:
     - https://www.sans.org/blog/defending-against-scattered-spider-and-the-com-with-cybercrime-intelligence/
 falsepositives:
     - Legitimate authorized activity.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.persistence
+date: '2024-08-21'
 logsource:
     product: azure
     service: auditlogs
@@ -39,29 +38,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:21.782259+00:00'
+            mapped_at: '2025-12-04T01:37:44.767833+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:21.782259+00:00'
+            mapped_at: '2025-12-04T01:37:44.767833+00:00'
     detection_fields:
         -   source_field: LoggedByService
             target_table: account_change
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:19:23.059165+00:00'
+            mapped_at: '2025-12-04T01:37:44.767848+00:00'
         -   source_field: Category
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:23.059188+00:00'
+            mapped_at: '2025-12-04T01:37:44.767850+00:00'
         -   source_field: OperationName
             target_table: account_change
             target_field: api.operation
-            mapped_at: '2025-11-26T02:19:23.059192+00:00'
+            mapped_at: '2025-12-04T01:37:44.767852+00:00'
         -   source_field: TargetResources.ModifiedProperties.DisplayName
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:23.059196+00:00'
+            mapped_at: '2025-12-04T01:37:44.767853+00:00'
         -   source_field: TargetResources.ModifiedProperties.NewValue
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:23.059199+00:00'
+            mapped_at: '2025-12-04T01:37:44.767855+00:00'

@@ -1,16 +1,11 @@
-id: edf3485d-dac4-4d50-90e4-b0e5813f7e60
 title: Suspicious Network Connection to IP Lookup Service APIs
+id: edf3485d-dac4-4d50-90e4-b0e5813f7e60
 status: experimental
 level: medium
+author: Janantha Marasinghe, Nasreddine Bencherchali (Nextron Systems)
 description: Detects external IP address lookups by non-browser processes via services
     such as "api.ipify.org". This could be indicative of potential post compromise
     internet test activity.
-author: Janantha Marasinghe, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-04-24'
-modified: '2024-03-22'
-tags:
-    - attack.discovery
-    - attack.t1016
 references:
     - https://github.com/rsp/scripts/blob/c8bb272d68164a9836e4f273d8f924927f39b8c6/externalip-benchmark.md
     - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-302a
@@ -18,9 +13,11 @@ references:
     - https://www.trendmicro.com/en_us/research/23/e/managed-xdr-investigation-of-ducktail-in-trend-micro-vision-one.html
 falsepositives:
     - Legitimate use of the external websites for troubleshooting or network monitoring
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ec82e2a5-81ea-4211-a1f8-37a0286df2c2''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1016
+date: '2023-04-24'
+modified: '2024-03-22'
 logsource:
     category: network_connection
     product: windows
@@ -111,24 +108,27 @@ detection:
     filter_optional_whale:
         Image|endswith: \whale.exe
     condition: selection and not 1 of filter_optional_*
+related:
+    -   id: ec82e2a5-81ea-4211-a1f8-37a0286df2c2
+        type: derived
 ocsf_mapping:
     class_name: network_activity
-    activity_id: <UNMAPPED>
+    activity_id: 6
     logsource:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:18.008530+00:00'
+            mapped_at: '2025-12-04T01:51:35.449342+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:18.008530+00:00'
+            mapped_at: '2025-12-04T01:51:35.449342+00:00'
     detection_fields:
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:18.008550+00:00'
+            mapped_at: '2025-12-04T01:51:35.449355+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:18.008554+00:00'
+            mapped_at: '2025-12-04T01:51:35.449357+00:00'

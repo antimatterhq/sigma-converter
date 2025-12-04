@@ -1,15 +1,9 @@
-id: dd857d3e-0c6e-457b-9b48-e82ae7f86bd7
 title: New Module Module Added To IIS Server
+id: dd857d3e-0c6e-457b-9b48-e82ae7f86bd7
 status: experimental
 level: medium
-description: Detects the addition of a new module to an IIS server.
 author: frack113
-date: '2024-10-06'
-tags:
-    - attack.defense-evasion
-    - attack.persistence
-    - attack.t1562.002
-    - attack.t1505.004
+description: Detects the addition of a new module to an IIS server.
 references:
     - https://learn.microsoft.com/en-us/iis/manage/provisioning-and-managing-iis/configure-logging-in-iis
     - https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/
@@ -17,7 +11,12 @@ references:
     - https://learn.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview
 falsepositives:
     - Legitimate administrator activity
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1562.002
+    - attack.t1505.004
+date: '2024-10-06'
 logsource:
     product: windows
     service: iis-configuration
@@ -50,21 +49,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:41.874369+00:00'
+            mapped_at: '2025-12-04T01:56:22.864098+00:00'
         service:
             source_field: service
             source_value: iis-configuration
-            mapped_at: '2025-11-26T02:46:41.874369+00:00'
+            mapped_at: '2025-12-04T01:56:22.864098+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: file_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:42.681730+00:00'
+            mapped_at: '2025-12-04T01:56:22.864111+00:00'
         -   source_field: Configuration
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:42.681754+00:00'
+            mapped_at: '2025-12-04T01:56:22.864113+00:00'
         -   source_field: NewValue
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:42.681781+00:00'
+            mapped_at: '2025-12-04T01:56:22.864114+00:00'

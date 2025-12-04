@@ -1,22 +1,21 @@
-id: 1c480e10-7ee1-46d4-8ed2-85f9789e3ce4
 title: Group Policy Abuse for Privilege Addition
+id: 1c480e10-7ee1-46d4-8ed2-85f9789e3ce4
 status: experimental
 level: medium
+author: Elastic, Josh Nickels, Marius Rothenbücher
 description: 'Detects the first occurrence of a modification to Group Policy Object
     Attributes to add privileges to user accounts or use them to add users as local
     admins.
 
     '
-author: Elastic, Josh Nickels, Marius Rothenbücher
-date: '2024-09-04'
-tags:
-    - attack.privilege-escalation
-    - attack.t1484.001
 references:
     - https://www.elastic.co/guide/en/security/current/group-policy-abuse-for-privilege-addition.html#_setup_275
 falsepositives:
     - Users allowed to perform these modifications (user found in field SubjectUserName)
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1484.001
+date: '2024-09-04'
 logsource:
     product: windows
     service: security
@@ -37,21 +36,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:37.161183+00:00'
+            mapped_at: '2025-12-04T01:55:33.421860+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:37.161183+00:00'
+            mapped_at: '2025-12-04T01:55:33.421860+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: group_management
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:38.780635+00:00'
+            mapped_at: '2025-12-04T01:55:33.421899+00:00'
         -   source_field: AttributeLDAPDisplayName
             target_table: group_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:38.780656+00:00'
+            mapped_at: '2025-12-04T01:55:33.421902+00:00'
         -   source_field: AttributeValue
             target_table: group_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:38.780660+00:00'
+            mapped_at: '2025-12-04T01:55:33.421905+00:00'

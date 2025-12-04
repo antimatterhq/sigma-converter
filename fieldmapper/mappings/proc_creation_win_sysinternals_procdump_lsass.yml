@@ -1,7 +1,8 @@
-id: 5afee48e-67dd-4e03-a783-f74259dcf998
 title: Potential LSASS Process Dump Via Procdump
+id: 5afee48e-67dd-4e03-a783-f74259dcf998
 status: stable
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects suspicious uses of the SysInternals Procdump utility by using
     a special command line parameter in combination with the lsass.exe process.
 
@@ -9,21 +10,19 @@ description: 'Detects suspicious uses of the SysInternals Procdump utility by us
     procdump executable.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2018-10-30'
-modified: '2024-03-13'
+references:
+    - https://learn.microsoft.com/en-us/sysinternals/downloads/procdump
+falsepositives:
+    - Unlikely, because no one should dump an lsass process memory
+    - Another tool that uses command line flags similar to ProcDump
 tags:
     - attack.defense-evasion
     - attack.t1036
     - attack.credential-access
     - attack.t1003.001
     - car.2013-05-009
-references:
-    - https://learn.microsoft.com/en-us/sysinternals/downloads/procdump
-falsepositives:
-    - Unlikely, because no one should dump an lsass process memory
-    - Another tool that uses command line flags similar to ProcDump
-taxonomy: sigma
+date: '2018-10-30'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -40,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:24.497577+00:00'
+            mapped_at: '2025-12-04T01:50:06.002960+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:24.497577+00:00'
+            mapped_at: '2025-12-04T01:50:06.002960+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:24.497602+00:00'
+            mapped_at: '2025-12-04T01:50:06.002988+00:00'

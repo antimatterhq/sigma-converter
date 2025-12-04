@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Python Inline Command Execution",
+    "comment": "Detects execution of python using the \"-c\" flag. This is could be used as a way to launch a reverse shell or execute live python code.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('python.exe') AND (endswith(lower(process.name), lower('python.exe')) OR endswith(lower(process.name), lower('python3.exe')) OR endswith(lower(process.name), lower('python2.exe'))) AND contains(lower(process.cmd_line), lower(' -c')) AND NOT (startswith(lower(process.parent_process.name), lower('c:\\\\program files\\\\python')) AND endswith(lower(process.parent_process.name), lower('\\\\python.exe')) AND contains(lower(process.parent_process.cmd_line), lower('-e -s -m ensurepip -u --default-pip')) OR endswith(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\programs\\\\microsoft vs code\\\\code.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of python using the \"-c\" flag. This is could be used as a way to launch a reverse shell or execute live python code.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Python libraries that use a flag starting with \"-c\". Filter according to your environment References: https://docs.python.org/3/using/cmdline.html#cmdoption-c, https://www.revshells.com/, https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

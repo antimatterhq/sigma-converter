@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Disabled MFA to Bypass Authentication Mechanisms",
+    "comment": "Detection for when multi factor authentication has been disabled, which might indicate a malicious activity to bypass authentication mechanisms.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "activitylogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('azureactivedirectory') AND lower(metadata.event_code) = lower('disable strong authentication.') AND lower(actor.authorizations.decision) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Detection for when multi factor authentication has been disabled, which might indicate a malicious activity to bypass authentication mechanisms.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Authorized modification by administrators Reference: https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-mfa-userstates",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1556"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

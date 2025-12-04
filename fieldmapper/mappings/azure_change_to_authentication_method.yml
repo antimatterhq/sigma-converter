@@ -1,23 +1,22 @@
-id: 4d78a000-ab52-4564-88a5-7ab5242b20c7
 title: Change to Authentication Method
+id: 4d78a000-ab52-4564-88a5-7ab5242b20c7
 status: test
 level: medium
+author: AlertIQ
 description: Change to authentication method could be an indicator of an attacker
     adding an auth method to the account so they can have continued access.
-author: AlertIQ
-date: '2021-10-10'
-modified: '2022-12-25'
+references:
+    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts
+falsepositives:
+    - Unknown
 tags:
     - attack.credential-access
     - attack.t1556
     - attack.persistence
     - attack.defense-evasion
     - attack.t1098
-references:
-    - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2021-10-10'
+modified: '2022-12-25'
 logsource:
     product: azure
     service: auditlogs
@@ -34,21 +33,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:34.364747+00:00'
+            mapped_at: '2025-12-04T01:37:49.376645+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:34.364747+00:00'
+            mapped_at: '2025-12-04T01:37:49.376645+00:00'
     detection_fields:
         -   source_field: LoggedByService
             target_table: authentication
             target_field: service.name
-            mapped_at: '2025-11-26T02:19:35.911848+00:00'
+            mapped_at: '2025-12-04T01:37:49.376660+00:00'
         -   source_field: Category
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:35.911862+00:00'
+            mapped_at: '2025-12-04T01:37:49.376663+00:00'
         -   source_field: OperationName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:35.911864+00:00'
+            mapped_at: '2025-12-04T01:37:49.376664+00:00'

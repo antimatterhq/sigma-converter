@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious File Created Via OneNote Application",
+    "comment": "Detects suspicious files created via the OneNote application. This could indicate a potential malicious \".one\"/\".onepkg\" file was executed as seen being used in malware activity in the wild",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\onenote.exe')) OR endswith(lower(actor.process.name), lower('\\\\onenotem.exe')) OR endswith(lower(actor.process.name), lower('\\\\onenoteim.exe'))) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\onenote\\\\')) AND (endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.chm')) OR endswith(lower(file.path), lower('.cmd')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.hta')) OR endswith(lower(file.path), lower('.htm')) OR endswith(lower(file.path), lower('.html')) OR endswith(lower(file.path), lower('.js')) OR endswith(lower(file.path), lower('.lnk')) OR endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.vbs')) OR endswith(lower(file.path), lower('.wsf'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious files created via the OneNote application. This could indicate a potential malicious \".one\"/\".onepkg\" file was executed as seen being used in malware activity in the wild",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. False positives should be very low with the extensions list cited. Especially if you don't heavily utilize OneNote. 2. Occasional FPs might occur if OneNote is used internally to share different embedded documents References: https://www.bleepingcomputer.com/news/security/hackers-now-use-microsoft-onenote-attachments-to-spread-malware/, https://blog.osarmor.com/319/onenote-attachment-delivers-asyncrat-malware/, https://twitter.com/MaD_c4t/status/1623414582382567424, https://labs.withsecure.com/publications/detecting-onenote-abuse, https://www.trustedsec.com/blog/new-attacks-old-tricks-how-onenote-malware-is-evolving/, https://app.any.run/tasks/17f2d378-6d11-4d6f-8340-954b04f35e83/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

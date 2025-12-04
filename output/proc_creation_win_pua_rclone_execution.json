@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PUA - Rclone Execution",
+    "comment": "Detects execution of RClone utility for exfiltration as used by various ransomwares strains like REvil, Conti, FiveHands, etc",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('--config ')) AND contains(lower(process.cmd_line), lower('--no-check-certificate ')) AND contains(lower(process.cmd_line), lower(' copy ')) OR endswith(lower(process.name), lower('\\\\rclone.exe')) AND lower(device.desc) = lower('rsync for cloud storage') AND (contains(lower(process.cmd_line), lower('pass')) OR contains(lower(process.cmd_line), lower('user')) OR contains(lower(process.cmd_line), lower('copy')) OR contains(lower(process.cmd_line), lower('sync')) OR contains(lower(process.cmd_line), lower('config')) OR contains(lower(process.cmd_line), lower('lsd')) OR contains(lower(process.cmd_line), lower('remote')) OR contains(lower(process.cmd_line), lower('ls')) OR contains(lower(process.cmd_line), lower('mega')) OR contains(lower(process.cmd_line), lower('pcloud')) OR contains(lower(process.cmd_line), lower('ftp')) OR contains(lower(process.cmd_line), lower('ignore-existing')) OR contains(lower(process.cmd_line), lower('auto-confirm')) OR contains(lower(process.cmd_line), lower('transfers')) OR contains(lower(process.cmd_line), lower('multi-thread-streams')) OR contains(lower(process.cmd_line), lower('no-check-certificate ')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of RClone utility for exfiltration as used by various ransomwares strains like REvil, Conti, FiveHands, etc",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line, Details False positive: Unknown References: https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/, https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware, https://us-cert.cisa.gov/ncas/analysis-reports/ar21-126a, https://labs.sentinelone.com/egregor-raas-continues-the-chaos-with-cobalt-strike-and-rclone, https://www.splunk.com/en_us/blog/security/darkside-ransomware-splunk-threat-update-and-detections.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

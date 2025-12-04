@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "JScript Compiler Execution",
+    "comment": "Detects the execution of the \"jsc.exe\" (JScript Compiler). Attacker might abuse this in order to compile JScript files on the fly and bypassing application whitelisting.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\jsc.exe')) AND lower(process.file.name) = lower('jsc.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the \"jsc.exe\" (JScript Compiler). Attacker might abuse this in order to compile JScript files on the fly and bypassing application whitelisting.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use to compile JScript by developers. References: https://lolbas-project.github.io/lolbas/Binaries/Jsc/, https://www.phpied.com/make-your-javascript-a-windows-exe/, https://twitter.com/DissectMalware/status/998797808907046913",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1127"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

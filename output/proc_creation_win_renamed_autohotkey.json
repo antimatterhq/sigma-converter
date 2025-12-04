@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Renamed AutoHotkey.EXE Execution",
+    "comment": "Detects execution of a renamed autohotkey.exe binary based on PE metadata fields",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(metadata.product.name), lower('autohotkey')) AND contains(lower(device.desc), lower('autohotkey')) AND (lower(LOWER(process.file.name)) in ('autohotkey\\.exe', 'autohotkey\\.rc')) AND NOT ((endswith(lower(process.name), lower('\\\\autohotkey.exe')) OR endswith(lower(process.name), lower('\\\\autohotkey32.exe')) OR endswith(lower(process.name), lower('\\\\autohotkey32_uia.exe')) OR endswith(lower(process.name), lower('\\\\autohotkey64.exe')) OR endswith(lower(process.name), lower('\\\\autohotkey64_uia.exe')) OR endswith(lower(process.name), lower('\\\\autohotkeya32.exe')) OR endswith(lower(process.name), lower('\\\\autohotkeya32_uia.exe')) OR endswith(lower(process.name), lower('\\\\autohotkeyu32.exe')) OR endswith(lower(process.name), lower('\\\\autohotkeyu32_uia.exe')) OR endswith(lower(process.name), lower('\\\\autohotkeyu64.exe')) OR endswith(lower(process.name), lower('\\\\autohotkeyu64_uia.exe'))) AND contains(lower(process.name), lower('\\\\autohotkey'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of a renamed autohotkey.exe binary based on PE metadata fields",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.autohotkey.com/download/, https://thedfirreport.com/2023/02/06/collect-exfiltrate-sleep-repeat/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

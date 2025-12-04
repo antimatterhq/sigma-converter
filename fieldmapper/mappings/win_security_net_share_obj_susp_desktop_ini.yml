@@ -1,21 +1,20 @@
-id: 35bc7e28-ee6b-492f-ab04-da58fcf6402e
 title: Windows Network Access Suspicious desktop.ini Action
+id: 35bc7e28-ee6b-492f-ab04-da58fcf6402e
 status: test
 level: medium
+author: Tim Shelton (HAWK.IO)
 description: Detects unusual processes accessing desktop.ini remotely over network
     share, which can be leveraged to alter how Explorer displays a folder's content
     (i.e. renaming files) without changing them on disk.
-author: Tim Shelton (HAWK.IO)
-date: '2021-12-06'
-modified: '2022-01-16'
-tags:
-    - attack.persistence
-    - attack.t1547.009
 references:
     - https://isc.sans.edu/forums/diary/Desktopini+as+a+postexploitation+tool/25912/
 falsepositives:
     - Read only access list authority
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.009
+date: '2021-12-06'
+modified: '2022-01-16'
 logsource:
     product: windows
     service: security
@@ -38,25 +37,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:05.779991+00:00'
+            mapped_at: '2025-12-04T01:55:22.964339+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:05.779991+00:00'
+            mapped_at: '2025-12-04T01:55:22.964339+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: file_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:07.107556+00:00'
+            mapped_at: '2025-12-04T01:55:22.964355+00:00'
         -   source_field: ObjectType
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:07.107570+00:00'
+            mapped_at: '2025-12-04T01:55:22.964358+00:00'
         -   source_field: RelativeTargetName
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:44:07.107573+00:00'
+            mapped_at: '2025-12-04T01:55:22.964359+00:00'
         -   source_field: AccessList
             target_table: file_activity
             target_field: access_mask
-            mapped_at: '2025-11-26T02:44:07.107575+00:00'
+            mapped_at: '2025-12-04T01:55:22.964361+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Rundll32 Invoking Inline VBScript",
+    "comment": "Detects suspicious process related to rundll32 based on command line that invokes inline VBScript as seen being used by UNC2452",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('rundll32.exe')) AND contains(lower(process.cmd_line), lower('execute')) AND contains(lower(process.cmd_line), lower('regread')) AND contains(lower(process.cmd_line), lower('window.close')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious process related to rundll32 based on command line that invokes inline VBScript as seen being used by UNC2452",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

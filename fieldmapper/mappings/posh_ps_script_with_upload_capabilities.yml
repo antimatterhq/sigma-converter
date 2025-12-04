@@ -1,22 +1,21 @@
-id: d2e3f2f6-7e09-4bf2-bc5d-90186809e7fb
 title: PowerShell Script With File Upload Capabilities
+id: d2e3f2f6-7e09-4bf2-bc5d-90186809e7fb
 status: test
 level: low
+author: frack113
 description: Detects PowerShell scripts leveraging the "Invoke-WebRequest" cmdlet
     to send data via either "PUT" or "POST" method.
-author: frack113
-date: '2022-01-07'
-modified: '2023-05-04'
-tags:
-    - attack.exfiltration
-    - attack.t1020
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1020/T1020.md
     - https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.4
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1020
+date: '2022-01-07'
+modified: '2023-05-04'
 logsource:
     category: ps_script
     product: windows
@@ -33,18 +32,18 @@ detection:
     condition: all of selection_*
 ocsf_mapping:
     class_name: script_activity
-    activity_id: 1
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:54.948819+00:00'
+            mapped_at: '2025-12-04T01:54:09.823116+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:54.948819+00:00'
+            mapped_at: '2025-12-04T01:54:09.823116+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:54.948835+00:00'
+            mapped_at: '2025-12-04T01:54:09.823132+00:00'

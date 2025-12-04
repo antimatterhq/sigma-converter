@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "System Disk And Volume Reconnaissance Via Wmic.EXE",
+    "comment": "An adversary might use WMI to discover information about the system, such as the volume name, size, free space, and other disk information. This can be done using the `wmic` command-line utility and has been observed being used by threat actors such as Volt Typhoon.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wmic.exe')) AND lower(process.file.name) = lower('wmic.exe') AND (contains(lower(process.cmd_line), lower('volume')) OR contains(lower(process.cmd_line), lower('path win32_logicaldisk'))))"
+      }
+    },
+    "output": {
+      "summary": "An adversary might use WMI to discover information about the system, such as the volume name, size, free space, and other disk information. This can be done using the `wmic` command-line utility and has been observed being used by threat actors such as Volt Typhoon.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-144a, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wmic",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

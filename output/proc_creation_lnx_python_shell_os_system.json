@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Inline Python Execution - Spawn Shell Via OS System Library",
+    "comment": "Detects execution of inline Python code via the \"-c\" in order to call the \"system\" function from the \"os\" library, and spawn a shell.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/python')) OR endswith(lower(process.name), lower('/python2')) OR endswith(lower(process.name), lower('/python3'))) AND (contains(lower(process.name), lower('/python2.')) OR contains(lower(process.name), lower('/python3.'))) AND contains(lower(process.cmd_line), lower(' -c ')) AND contains(lower(process.cmd_line), lower('os.system(')) AND (contains(lower(process.cmd_line), lower('/bin/bash')) OR contains(lower(process.cmd_line), lower('/bin/dash')) OR contains(lower(process.cmd_line), lower('/bin/fish')) OR contains(lower(process.cmd_line), lower('/bin/sh')) OR contains(lower(process.cmd_line), lower('/bin/zsh'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of inline Python code via the \"-c\" in order to call the \"system\" function from the \"os\" library, and spawn a shell.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://gtfobins.github.io/gtfobins/python/#shell",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

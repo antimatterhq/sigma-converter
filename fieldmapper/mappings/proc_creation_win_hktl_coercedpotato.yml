@@ -1,21 +1,20 @@
-id: e8d34729-86a4-4140-adfd-0a29c2106307
 title: HackTool - CoercedPotato Execution
+id: e8d34729-86a4-4140-adfd-0a29c2106307
 status: experimental
 level: high
-description: Detects the use of CoercedPotato, a tool for privilege escalation
 author: Florian Roth (Nextron Systems)
-date: '2023-10-11'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055
+description: Detects the use of CoercedPotato, a tool for privilege escalation
 references:
     - https://github.com/hackvens/CoercedPotato
     - https://blog.hackvens.fr/articles/CoercedPotato.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055
+date: '2023-10-11'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:48.975416+00:00'
+            mapped_at: '2025-12-04T01:43:05.132617+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:48.975416+00:00'
+            mapped_at: '2025-12-04T01:43:05.132617+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:48.975435+00:00'
+            mapped_at: '2025-12-04T01:43:05.132636+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:48.975437+00:00'
+            mapped_at: '2025-12-04T01:43:05.132638+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:27:48.975438+00:00'
+            mapped_at: '2025-12-04T01:43:05.132639+00:00'

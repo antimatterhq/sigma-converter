@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "LOLBAS Data Exfiltration by DataSvcUtil.exe",
+    "comment": "Detects when a user performs data exfiltration by using DataSvcUtil.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('/in:')) OR contains(lower(process.cmd_line), lower('/out:')) OR contains(lower(process.cmd_line), lower('/uri:'))) AND endswith(lower(process.name), lower('\\\\datasvcutil.exe')) AND lower(process.file.name) = lower('datasvcutil.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a user performs data exfiltration by using DataSvcUtil.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ComputerName, actor.user.name, process.cmd_line, process.parent_process.cmd_line False positives: 1. DataSvcUtil.exe being used may be performed by a system administrator. 2. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 3. DataSvcUtil.exe being executed from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule. References: https://gist.github.com/teixeira0xfffff/837e5bfed0d1b0a29a7cb1e5dbdd9ca6, https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/wcf/wcf-data-service-client-utility-datasvcutil-exe, https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/wcf/generating-the-data-service-client-library-wcf-data-services, https://learn.microsoft.com/en-us/previous-versions/dotnet/framework/data/wcf/how-to-add-a-data-service-reference-wcf-data-services, https://lolbas-project.github.io/lolbas/Binaries/DataSvcUtil/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

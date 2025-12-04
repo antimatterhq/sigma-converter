@@ -1,14 +1,9 @@
-id: 1e53dd56-8d83-4eb4-a43e-b790a05510aa
 title: Always Install Elevated MSI Spawned Cmd And Powershell
+id: 1e53dd56-8d83-4eb4-a43e-b790a05510aa
 status: test
 level: medium
-description: Detects Windows Installer service (msiexec.exe) spawning "cmd" or "powershell"
 author: Teymur Kheirkhabarov (idea), Mangatas Tondang (rule), oscd.community
-date: '2020-10-13'
-modified: '2022-10-20'
-tags:
-    - attack.privilege-escalation
-    - attack.t1548.002
+description: Detects Windows Installer service (msiexec.exe) spawning "cmd" or "powershell"
 references:
     - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-50-638.jpg
 fields:
@@ -16,7 +11,11 @@ fields:
     - ParentImage
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1548.002
+date: '2020-10-13'
+modified: '2022-10-20'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:07.545045+00:00'
+            mapped_at: '2025-12-04T01:48:13.467543+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:07.545045+00:00'
+            mapped_at: '2025-12-04T01:48:13.467543+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:07.545061+00:00'
+            mapped_at: '2025-12-04T01:48:13.467559+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:07.545063+00:00'
+            mapped_at: '2025-12-04T01:48:13.467565+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:34:07.545065+00:00'
+            mapped_at: '2025-12-04T01:48:13.467566+00:00'

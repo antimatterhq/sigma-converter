@@ -1,21 +1,20 @@
-id: 15434e33-5027-4914-88d5-3d4145ec25a9
 title: Potential Product Reconnaissance Via Wmic.EXE
+id: 15434e33-5027-4914-88d5-3d4145ec25a9
 status: test
 level: medium
+author: Nasreddine Bencherchali
 description: Detects the execution of WMIC in order to get a list of firewall and
     antivirus products
-author: Nasreddine Bencherchali
-date: '2023-02-14'
-tags:
-    - attack.execution
-    - attack.t1047
 references:
     - https://thedfirreport.com/2023/03/06/2022-year-in-review/
     - https://www.yeahhub.com/list-installed-programs-version-path-windows/
     - https://learn.microsoft.com/en-us/answers/questions/253555/software-list-inventory-wmic-product
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+date: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -33,21 +32,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:25.436269+00:00'
+            mapped_at: '2025-12-04T01:51:08.127812+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:25.436269+00:00'
+            mapped_at: '2025-12-04T01:51:08.127812+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:25.436283+00:00'
+            mapped_at: '2025-12-04T01:51:08.127827+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:25.436285+00:00'
+            mapped_at: '2025-12-04T01:51:08.127829+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:25.436287+00:00'
+            mapped_at: '2025-12-04T01:51:08.127830+00:00'

@@ -1,23 +1,22 @@
-id: b6b49cd1-34d6-4ead-b1bf-176e9edba9a4
 title: Potential PowerShell Obfuscation Via Reversed Commands
+id: b6b49cd1-34d6-4ead-b1bf-176e9edba9a4
 status: test
 level: high
+author: Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton
 description: Detects the presence of reversed PowerShell commands in the CommandLine.
     This is often used as a method of obfuscation by attackers
-author: Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton
-date: '2020-10-11'
-modified: '2023-05-31'
-tags:
-    - attack.defense-evasion
-    - attack.t1027
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://2019.offzone.moscow/ru/report/hunting-for-powershell-abuses/
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=66
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+date: '2020-10-11'
+modified: '2023-05-31'
 logsource:
     category: process_creation
     product: windows
@@ -68,21 +67,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:20.355943+00:00'
+            mapped_at: '2025-12-04T01:50:01.958676+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:20.355943+00:00'
+            mapped_at: '2025-12-04T01:50:01.958676+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:20.355973+00:00'
+            mapped_at: '2025-12-04T01:50:01.958733+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:20.355977+00:00'
+            mapped_at: '2025-12-04T01:50:01.958735+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:20.355980+00:00'
+            mapped_at: '2025-12-04T01:50:01.958736+00:00'

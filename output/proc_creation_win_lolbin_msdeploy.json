@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Execute Files with Msdeploy.exe",
+    "comment": "Detects file execution using the msdeploy.exe lolbin",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('verb:sync')) AND contains(lower(process.cmd_line), lower('-source:runcommand')) AND contains(lower(process.cmd_line), lower('-dest:runcommand')) AND endswith(lower(process.name), lower('\\\\msdeploy.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects file execution using the msdeploy.exe lolbin",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ComputerName, actor.user.name, process.cmd_line, process.parent_process.cmd_line False positive: System administrator Usage References: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Msdeploy/, https://twitter.com/pabraeken/status/995837734379032576, https://twitter.com/pabraeken/status/999090532839313408",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

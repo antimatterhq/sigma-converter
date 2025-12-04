@@ -1,19 +1,18 @@
-id: 6c6d9280-e6d0-4b9d-80ac-254701b64916
 title: Potential NTLM Coercion Via Certutil.EXE
+id: 6c6d9280-e6d0-4b9d-80ac-254701b64916
 status: test
 level: high
-description: Detects possible NTLM coercion via certutil using the 'syncwithWU' flag
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-01'
-modified: '2023-02-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
+description: Detects possible NTLM coercion via certutil using the 'syncwithWU' flag
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/issues/243
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-09-01'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -33,21 +32,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:36.904291+00:00'
+            mapped_at: '2025-12-04T01:46:08.233296+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:36.904291+00:00'
+            mapped_at: '2025-12-04T01:46:08.233296+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:36.904308+00:00'
+            mapped_at: '2025-12-04T01:46:08.233309+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:36.904310+00:00'
+            mapped_at: '2025-12-04T01:46:08.233311+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:36.904311+00:00'
+            mapped_at: '2025-12-04T01:46:08.233312+00:00'

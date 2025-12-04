@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious TCP Tunnel Via PowerShell Script",
+    "comment": "Detects powershell scripts that creates sockets/listeners which could be indicative of tunneling activity",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('[system.net.httpwebrequest]')) AND contains(lower(script.script_content.value), lower('system.net.sockets.tcplistener')) AND contains(lower(script.script_content.value), lower('accepttcpclient')))"
+      }
+    },
+    "output": {
+      "summary": "Detects powershell scripts that creates sockets/listeners which could be indicative of tunneling activity",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/Arno0x/PowerShellScripts/blob/a6b7d5490fbf0b20f91195838f3a11156724b4f7/proxyTunnel.ps1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1090"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

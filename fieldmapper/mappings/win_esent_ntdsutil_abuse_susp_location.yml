@@ -1,20 +1,19 @@
-id: 94dc4390-6b7c-4784-8ffc-335334404650
 title: Dump Ntds.dit To Suspicious Location
+id: 94dc4390-6b7c-4784-8ffc-335334404650
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potential abuse of ntdsutil to dump ntds.dit database to a suspicious
     location
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-14'
-modified: '2023-10-23'
-tags:
-    - attack.execution
 references:
     - https://twitter.com/mgreen27/status/1558223256704122882
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/jj574207(v=ws.11)
 falsepositives:
     - Legitimate backup operation/creating shadow copies
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2022-08-14'
+modified: '2023-10-23'
 logsource:
     product: windows
     service: application
@@ -40,21 +39,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:57.644795+00:00'
+            mapped_at: '2025-12-04T01:57:33.030969+00:00'
         service:
             source_field: service
             source_value: application
-            mapped_at: '2025-11-26T02:48:57.644795+00:00'
+            mapped_at: '2025-12-04T01:57:33.030969+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:57.644809+00:00'
+            mapped_at: '2025-12-04T01:57:33.030996+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:57.644811+00:00'
+            mapped_at: '2025-12-04T01:57:33.031000+00:00'
         -   source_field: Data
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:57.644813+00:00'
+            mapped_at: '2025-12-04T01:57:33.031003+00:00'

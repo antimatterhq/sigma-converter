@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "name": "Flash Player Update from Suspicious Location",
+    "comment": "Detects a flashplayer update from an unofficial location",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.url), lower('/flash_install.php')) AND endswith(lower(http_request.url), lower('/install_flash_player.exe')) AND NOT endswith(lower(dst_endpoint.hostname), lower('.adobe.com')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a flashplayer update from an unofficial location",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown flash download locations Reference: https://gist.github.com/roycewilliams/a723aaf8a6ac3ba4f817847610935cfb",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1189"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1036",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "SES Identity Has Been Deleted",
+    "comment": "Detects an instance of an SES identity being deleted via the \"DeleteIdentity\" event. This may be an indicator of an adversary removing the account that carried out suspicious or malicious activities",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND lower(metadata.product.name) = lower('ses.amazonaws.com') AND lower(metadata.event_code) = lower('deleteidentity'))"
+      }
+    },
+    "output": {
+      "summary": "Detects an instance of an SES identity being deleted via the \"DeleteIdentity\" event. This may be an indicator of an adversary removing the account that carried out suspicious or malicious activities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://unit42.paloaltonetworks.com/compromised-cloud-compute-credentials/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

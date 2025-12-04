@@ -1,22 +1,21 @@
-id: 9bd012ee-0dff-44d7-84a0-aa698cfd87a3
 title: LSASS Memory Access by Tool With Dump Keyword In Name
+id: 9bd012ee-0dff-44d7-84a0-aa698cfd87a3
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects LSASS process access requests from a source process with the
     "dump" keyword in its image name.
-author: Florian Roth (Nextron Systems)
-date: '2022-02-10'
-modified: '2023-11-29'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
-    - attack.s0002
 references:
     - https://twitter.com/_xpn_/status/1491557187168178176
     - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz
 falsepositives:
     - Rare programs that contain the word dump in their name and access lsass
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0002
+date: '2022-02-10'
+modified: '2023-11-29'
 logsource:
     category: process_access
     product: windows
@@ -54,26 +53,26 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: process_activity
-    activity_id: 3
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:17.796407+00:00'
+            mapped_at: '2025-12-04T01:40:28.026883+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:17.796407+00:00'
+            mapped_at: '2025-12-04T01:40:28.026883+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:17.796444+00:00'
+            mapped_at: '2025-12-04T01:40:28.026895+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:17.796448+00:00'
+            mapped_at: '2025-12-04T01:40:28.026897+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:17.796450+00:00'
+            mapped_at: '2025-12-04T01:40:28.026899+00:00'

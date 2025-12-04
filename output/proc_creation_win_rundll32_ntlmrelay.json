@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious NTLM Authentication on the Printer Spooler Service",
+    "comment": "Detects a privilege elevation attempt by coercing NTLM authentication on the Printer Spooler service",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND contains(lower(process.cmd_line), lower('c:\\\\windows\\\\system32\\\\davclnt.dll,davsetcookie')) AND contains(lower(process.cmd_line), lower('http')) AND (contains(lower(process.cmd_line), lower('spoolss')) OR contains(lower(process.cmd_line), lower('srvsvc')) OR contains(lower(process.cmd_line), lower('/print/pipe/'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a privilege elevation attempt by coercing NTLM authentication on the Printer Spooler service",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/med0x2e/status/1520402518685200384, https://github.com/elastic/detection-rules/blob/dd224fb3f81d0b4bf8593c5f02a029d647ba2b2d/rules/windows/credential_access_relay_ntlm_auth_via_http_spoolss.toml",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1212"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

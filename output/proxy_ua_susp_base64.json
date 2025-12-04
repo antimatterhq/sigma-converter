@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Base64 Encoded User-Agent",
+    "comment": "Detects User Agent strings that end with an equal sign, which can be a sign of base64 encoding.",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(http_request.user_agent), lower('=')))"
+      }
+    },
+    "output": {
+      "summary": "Detects User Agent strings that end with an equal sign, which can be a sign of base64 encoding.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blogs.jpcert.or.jp/en/2022/07/yamabot.html, https://deviceatlas.com/blog/list-of-user-agent-strings#desktop",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

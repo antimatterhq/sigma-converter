@@ -1,18 +1,17 @@
-id: 060d5ad4-3153-47bb-8382-43e5e29eda92
 title: Unsigned Module Loaded by ClickOnce Application
+id: 060d5ad4-3153-47bb-8382-43e5e29eda92
 status: test
 level: medium
-description: Detects unsigned module load by ClickOnce application.
 author: '@SerkinValery'
-date: '2023-06-08'
-tags:
-    - attack.persistence
-    - attack.t1574.002
+description: Detects unsigned module load by ClickOnce application.
 references:
     - https://posts.specterops.io/less-smartscreen-more-caffeine-ab-using-clickonce-for-trusted-code-execution-1446ea8051c5
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1574.002
+date: '2023-06-08'
 logsource:
     category: image_load
     product: windows
@@ -30,21 +29,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: image_load
-            mapped_at: '2025-11-26T02:24:38.086971+00:00'
+            mapped_at: '2025-12-04T01:40:36.925656+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:38.086971+00:00'
+            mapped_at: '2025-12-04T01:40:36.925656+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:24:38.086991+00:00'
+            mapped_at: '2025-12-04T01:40:36.925670+00:00'
         -   source_field: Signed
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:38.086993+00:00'
+            mapped_at: '2025-12-04T01:40:36.925672+00:00'
         -   source_field: SignatureStatus
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:38.086995+00:00'
+            mapped_at: '2025-12-04T01:40:36.925673+00:00'

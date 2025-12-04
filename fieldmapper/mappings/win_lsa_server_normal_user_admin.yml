@@ -1,15 +1,10 @@
-id: 7ac407cc-0f48-4328-aede-de1d2e6fef41
 title: Standard User In High Privileged Group
+id: 7ac407cc-0f48-4328-aede-de1d2e6fef41
 status: test
 level: medium
+author: frack113
 description: Detect standard users login that are part of high privileged groups such
     as the Administrator group
-author: frack113
-date: '2023-01-13'
-modified: '2023-05-05'
-tags:
-    - attack.credential-access
-    - attack.privilege-escalation
 references:
     - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers
     - https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
@@ -18,7 +13,11 @@ falsepositives:
     - Standard domain users who are part of the administrator group. These users shouldn't
         have these right. But in the case where it's necessary. They should be filtered
         out using the "TargetUserName" field
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.privilege-escalation
+date: '2023-01-13'
+modified: '2023-05-05'
 logsource:
     product: windows
     service: lsa-server
@@ -41,26 +40,26 @@ detection:
     condition: selection and not 1 of filter_main_*
 ocsf_mapping:
     class_name: group_management
-    activity_id: 3
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:25.501846+00:00'
+            mapped_at: '2025-12-04T01:56:45.266649+00:00'
         service:
             source_field: service
             source_value: lsa-server
-            mapped_at: '2025-11-26T02:47:25.501846+00:00'
+            mapped_at: '2025-12-04T01:56:45.266649+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: group_management
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:26.296666+00:00'
+            mapped_at: '2025-12-04T01:56:45.266667+00:00'
         -   source_field: TargetUserSid
             target_table: group_management
             target_field: actor.user.uid
-            mapped_at: '2025-11-26T02:47:26.296680+00:00'
+            mapped_at: '2025-12-04T01:56:45.266669+00:00'
         -   source_field: SidList
             target_table: group_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:26.296683+00:00'
+            mapped_at: '2025-12-04T01:56:45.266671+00:00'

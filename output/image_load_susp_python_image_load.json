@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Python Image Load By Non-Python Process",
+    "comment": "Detects the image load of \"Python Core\" by a non-Python process. This might be indicative of a Python script bundled with Py2Exe.",
+    "annotations": {
+      "source": "sigma",
+      "category": "image_load",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(device.desc) = lower('python core') AND NOT (contains(lower(process.name), lower('python')) AND (startswith(lower(process.name), lower('c:\\\\program files\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files (x86)\\\\')) OR startswith(lower(process.name), lower('c:\\\\programdata\\\\anaconda3\\\\')))) AND NOT process.name is null)"
+      }
+    },
+    "output": {
+      "summary": "Detects the image load of \"Python Core\" by a non-Python process. This might be indicative of a Python script bundled with Py2Exe.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate Py2Exe Binaries 2. Known false positive caused with Python Anaconda References: https://www.py2exe.org/, https://unit42.paloaltonetworks.com/unit-42-technical-analysis-seaduke/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

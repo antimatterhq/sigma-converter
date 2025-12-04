@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Modify Group Policy Settings - ScriptBlockLogging",
+    "comment": "Detect malicious GPO modifications can be used to implement many other malicious behaviors.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('\\\\software\\\\policies\\\\microsoft\\\\windows\\\\system')) AND (contains(lower(script.script_content.value), lower('grouppolicyrefreshtimedc')) OR contains(lower(script.script_content.value), lower('grouppolicyrefreshtimeoffsetdc')) OR contains(lower(script.script_content.value), lower('grouppolicyrefreshtime')) OR contains(lower(script.script_content.value), lower('grouppolicyrefreshtimeoffset')) OR contains(lower(script.script_content.value), lower('enablesmartscreen')) OR contains(lower(script.script_content.value), lower('shellsmartscreenlevel'))))"
+      }
+    },
+    "output": {
+      "summary": "Detect malicious GPO modifications can be used to implement many other malicious behaviors.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use Reference: https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1484.001/T1484.001.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1484",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

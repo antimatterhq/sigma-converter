@@ -1,7 +1,8 @@
-id: cc36992a-4671-4f21-a91d-6c2b72a2edf5
 title: Suspicious Eventlog Clearing or Configuration Change Activity
+id: cc36992a-4671-4f21-a91d-6c2b72a2edf5
 status: stable
 level: high
+author: Ecco, Daniil Yugoslavskiy, oscd.community, D3F7A5105
 description: 'Detects the clearing or configuration tampering of EventLog using utilities
     such as "wevtutil", "powershell" and "wmic".
 
@@ -9,14 +10,6 @@ description: 'Detects the clearing or configuration tampering of EventLog using 
     to evade defenses.
 
     '
-author: Ecco, Daniil Yugoslavskiy, oscd.community, D3F7A5105
-date: '2019-09-26'
-modified: '2023-07-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.001
-    - attack.t1562.002
-    - car.2016-04-002
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.001/T1070.001.md
     - https://eqllib.readthedocs.io/en/latest/analytics/5b223758-07d6-4100-9e11-238cfdd0fe97.html
@@ -27,7 +20,13 @@ falsepositives:
     - Admin activity
     - Scripts and administrative tools used in the monitored environment
     - Maintenance activity
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.001
+    - attack.t1562.002
+    - car.2016-04-002
+date: '2019-09-26'
+modified: '2023-07-13'
 logsource:
     category: process_creation
     product: windows
@@ -68,21 +67,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:52.352674+00:00'
+            mapped_at: '2025-12-04T01:50:33.584964+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:52.352674+00:00'
+            mapped_at: '2025-12-04T01:50:33.584964+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:52.352694+00:00'
+            mapped_at: '2025-12-04T01:50:33.584979+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:52.352698+00:00'
+            mapped_at: '2025-12-04T01:50:33.584989+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:52.352700+00:00'
+            mapped_at: '2025-12-04T01:50:33.584992+00:00'

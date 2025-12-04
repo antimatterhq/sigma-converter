@@ -1,22 +1,21 @@
-id: 9f2cc74d-78af-4eb2-bb64-9cd1d292b87b
 title: Microsoft Sync Center Suspicious Network Connections
+id: 9f2cc74d-78af-4eb2-bb64-9cd1d292b87b
 status: test
 level: medium
+author: elhoim
 description: Detects suspicious connections from Microsoft Sync Center to non-private
     IPs.
-author: elhoim
-date: '2022-04-28'
-modified: '2024-03-12'
+references:
+    - https://redcanary.com/blog/intelligence-insights-november-2021/
+falsepositives:
+    - Unknown
 tags:
     - attack.t1055
     - attack.t1218
     - attack.execution
     - attack.defense-evasion
-references:
-    - https://redcanary.com/blog/intelligence-insights-november-2021/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-04-28'
+modified: '2024-03-12'
 logsource:
     category: network_connection
     product: windows
@@ -36,22 +35,22 @@ detection:
     condition: selection and not 1 of filter_main_*
 ocsf_mapping:
     class_name: network_activity
-    activity_id: 1
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:39.648155+00:00'
+            mapped_at: '2025-12-04T01:51:42.810075+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:39.648155+00:00'
+            mapped_at: '2025-12-04T01:51:42.810075+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:39.648172+00:00'
+            mapped_at: '2025-12-04T01:51:42.810093+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:39.648175+00:00'
+            mapped_at: '2025-12-04T01:51:42.810096+00:00'

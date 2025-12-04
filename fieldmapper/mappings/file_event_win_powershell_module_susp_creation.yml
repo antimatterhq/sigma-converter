@@ -1,22 +1,21 @@
-id: e8a52bbd-bced-459f-bd93-64db45ce7657
 title: Potential Suspicious PowerShell Module File Created
+id: e8a52bbd-bced-459f-bd93-64db45ce7657
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation of a new PowerShell module in the first folder of
     the module directory structure "\WindowsPowerShell\Modules\malware\malware.psm1".
     This is somewhat an uncommon practice as legitimate modules often includes a version
     folder.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-09'
-tags:
-    - attack.persistence
 references:
     - Internal Research
     - https://learn.microsoft.com/en-us/powershell/scripting/developer/module/understanding-a-windows-powershell-module?view=powershell-7.3
 falsepositives:
     - False positive rate will vary depending on the environments. Additional filters
         might be required to make this logic usable in production.
-taxonomy: sigma
+tags:
+    - attack.persistence
+date: '2023-05-09'
 logsource:
     category: file_event
     product: windows
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:08.356469+00:00'
+            mapped_at: '2025-12-04T01:52:50.487703+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:08.356469+00:00'
+            mapped_at: '2025-12-04T01:52:50.487703+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:08.356491+00:00'
+            mapped_at: '2025-12-04T01:52:50.487717+00:00'

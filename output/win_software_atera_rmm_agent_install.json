@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Atera Agent Installation",
+    "comment": "Detects successful installation of Atera Remote Monitoring & Management (RMM) agent as recently found to be used by Conti operators",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "application",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 1033 AND lower(metadata.log_provider) = lower('msiinstaller') AND contains(lower(message), lower('ateraagent')))"
+      }
+    },
+    "output": {
+      "summary": "Detects successful installation of Atera Remote Monitoring & Management (RMM) agent as recently found to be used by Conti operators",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate Atera agent installation Reference: https://www.advintel.io/post/secret-backdoor-behind-conti-ransomware-operation-introducing-atera-agent",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1219"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

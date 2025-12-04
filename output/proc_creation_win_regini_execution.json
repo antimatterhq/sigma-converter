@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Registry Modification Via Regini.EXE",
+    "comment": "Detects the execution of regini.exe which can be used to modify registry keys, the changes are imported from one or more text files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\regini.exe')) AND lower(process.file.name) = lower('regini.exe') AND NOT process.cmd_line rlike ':\\[^ \\\\\\\\\\]')"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of regini.exe which can be used to modify registry keys, the changes are imported from one or more text files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.parent_process.name, process.cmd_line False positive: Legitimate modification of keys References: https://lolbas-project.github.io/lolbas/Binaries/Regini/, https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/regini",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1112"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

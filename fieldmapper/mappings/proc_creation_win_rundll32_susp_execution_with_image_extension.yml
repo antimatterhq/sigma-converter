@@ -1,21 +1,18 @@
-id: 4aa6040b-3f28-44e3-a769-9208e5feb5ec
 title: Suspicious Rundll32 Execution With Image Extension
+id: 4aa6040b-3f28-44e3-a769-9208e5feb5ec
 status: test
 level: high
+author: Hieu Tran
 description: Detects the execution of Rundll32.exe with DLL files masquerading as
     image files
-author: Hieu Tran
-date: '2023-03-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
 references:
     - https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''089fc3d2-71e8-4763-a8a5-c97fbb0a403e''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+date: '2023-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -40,6 +37,9 @@ detection:
             - .tif
             - .tiff
     condition: all of selection_*
+related:
+    -   id: 089fc3d2-71e8-4763-a8a5-c97fbb0a403e
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -47,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:05.068950+00:00'
+            mapped_at: '2025-12-04T01:50:48.774427+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:05.068950+00:00'
+            mapped_at: '2025-12-04T01:50:48.774427+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:05.068971+00:00'
+            mapped_at: '2025-12-04T01:50:48.774447+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:05.068974+00:00'
+            mapped_at: '2025-12-04T01:50:48.774449+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:05.068977+00:00'
+            mapped_at: '2025-12-04T01:50:48.774450+00:00'

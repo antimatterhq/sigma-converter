@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Uncommon One Time Only Scheduled Task At 00:00",
+    "comment": "Detects scheduled task creation events that include suspicious actions, and is run once at 00:00",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.name), lower('\\\\schtasks.exe')) AND lower(process.file.name) = lower('schtasks.exe') AND (contains(lower(process.cmd_line), lower('wscript')) OR contains(lower(process.cmd_line), lower('vbscript')) OR contains(lower(process.cmd_line), lower('cscript')) OR contains(lower(process.cmd_line), lower('wmic ')) OR contains(lower(process.cmd_line), lower('wmic.exe')) OR contains(lower(process.cmd_line), lower('regsvr32.exe')) OR contains(lower(process.cmd_line), lower('powershell')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\'))) AND contains(lower(process.cmd_line), lower('once')) AND contains(lower(process.cmd_line), lower('00:00')))"
+      }
+    },
+    "output": {
+      "summary": "Detects scheduled task creation events that include suspicious actions, and is run once at 00:00",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Software installation Reference: https://www.trendmicro.com/vinfo/us/security/news/ransomware-spotlight/ransomware-spotlight-blackbyte",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

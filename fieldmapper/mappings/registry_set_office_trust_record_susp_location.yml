@@ -1,23 +1,20 @@
-id: a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd
 title: Macro Enabled In A Potentially Suspicious Document
+id: a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects registry changes to Office trust records where the path is located
     in a potentially suspicious location
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-06-21'
-modified: '2023-08-17'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
 references:
     - https://twitter.com/inversecos/status/1494174785621819397
     - Internal Research
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''295a59c1-7b79-4b47-a930-df12c15fc9c2''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+date: '2023-06-21'
+modified: '2023-08-17'
 logsource:
     category: registry_set
     product: windows
@@ -33,6 +30,9 @@ detection:
             - file:///D:/
             - file:///E:/
     condition: all of selection_*
+related:
+    -   id: 295a59c1-7b79-4b47-a930-df12c15fc9c2
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

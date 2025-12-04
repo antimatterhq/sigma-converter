@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Suspicious ZipExec Execution",
+    "comment": "ZipExec is a Proof-of-Concept (POC) tool to wrap binary-based tools into a password-protected zip file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('/generic:microsoft_windows_shell_zipfolder:filename=')) AND contains(lower(process.cmd_line), lower('.zip')) AND contains(lower(process.cmd_line), lower('/pass:')) AND contains(lower(process.cmd_line), lower('/user:')) OR contains(lower(process.cmd_line), lower('/delete')) AND contains(lower(process.cmd_line), lower('microsoft_windows_shell_zipfolder:filename=')) AND contains(lower(process.cmd_line), lower('.zip'))))"
+      }
+    },
+    "output": {
+      "summary": "ZipExec is a Proof-of-Concept (POC) tool to wrap binary-based tools into a password-protected zip file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/SBousseaden/status/1451237393017839616, https://github.com/Tylous/ZipExec",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,22 +1,21 @@
-id: 932fb0d8-692b-4b0f-a26e-5643a50fe7d6
 title: Audio Capture via PowerShell
+id: 932fb0d8-692b-4b0f-a26e-5643a50fe7d6
 status: test
 level: medium
-description: Detects audio capture via PowerShell Cmdlet.
 author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community,
     Nasreddine Bencherchali (Nextron Systems)
-date: '2019-10-24'
-modified: '2023-04-06'
-tags:
-    - attack.collection
-    - attack.t1123
+description: Detects audio capture via PowerShell Cmdlet.
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1123/T1123.md
     - https://eqllib.readthedocs.io/en/latest/analytics/ab7a6ef4-0983-4275-a4f1-5c6bd3c31c23.html
     - https://github.com/frgnca/AudioDeviceCmdlets
 falsepositives:
     - Legitimate audio capture by legitimate user.
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1123
+date: '2019-10-24'
+modified: '2023-04-06'
 logsource:
     category: process_creation
     product: windows
@@ -36,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:50.652728+00:00'
+            mapped_at: '2025-12-04T01:44:38.181439+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:50.652728+00:00'
+            mapped_at: '2025-12-04T01:44:38.181439+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:50.652758+00:00'
+            mapped_at: '2025-12-04T01:44:38.181468+00:00'

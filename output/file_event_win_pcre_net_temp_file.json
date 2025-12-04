@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PCRE.NET Package Temp Files",
+    "comment": "Detects processes creating temp files related to PCRE.NET package",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\ba9ea7344a4a5f591d6e5dc32a13494b\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects processes creating temp files related to PCRE.NET package",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/rbmaslen/status/1321859647091970051, https://twitter.com/tifkin_/status/1321916444557365248",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

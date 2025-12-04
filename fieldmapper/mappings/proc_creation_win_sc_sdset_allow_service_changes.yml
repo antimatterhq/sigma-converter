@@ -1,24 +1,21 @@
-id: 6c8fbee5-dee8-49bc-851d-c3142d02aa47
 title: Allow Service Access Using Security Descriptor Tampering Via Sc.EXE
+id: 6c8fbee5-dee8-49bc-851d-c3142d02aa47
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious DACL modifications to allow access to a service from
     a suspicious trustee. This can be used to override access restrictions set by
     previous ACLs.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-28'
-tags:
-    - attack.persistence
-    - attack.t1543.003
 references:
     - https://twitter.com/0gtweet/status/1628720819537936386
     - https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/
     - https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-strings
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a537cfc3-4297-4789-92b5-345bfd845ad0''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1543.003
+date: '2023-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -38,6 +35,9 @@ detection:
             - ;SY
             - ;WD
     condition: all of selection_*
+related:
+    -   id: a537cfc3-4297-4789-92b5-345bfd845ad0
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -45,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:54.765288+00:00'
+            mapped_at: '2025-12-04T01:41:24.411287+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:54.765288+00:00'
+            mapped_at: '2025-12-04T01:41:24.411287+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:54.765302+00:00'
+            mapped_at: '2025-12-04T01:41:24.411306+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:54.765304+00:00'
+            mapped_at: '2025-12-04T01:41:24.411308+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:54.765305+00:00'
+            mapped_at: '2025-12-04T01:41:24.411309+00:00'

@@ -1,23 +1,22 @@
-id: cd1f961e-0b96-436b-b7c6-38da4583ec00
 title: Suspicious Windows Trace ETW Session Tamper Via Logman.EXE
+id: cd1f961e-0b96-436b-b7c6-38da4583ec00
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the execution of "logman" utility in order to disable or delete
     Windows trace sessions
-author: Florian Roth (Nextron Systems)
-date: '2021-02-11'
-modified: '2023-02-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
-    - attack.t1070.001
 references:
     - https://twitter.com/0gtweet/status/1359039665232306183?s=21
     - https://ss64.com/nt/logman.html
 falsepositives:
     - Legitimate deactivation by administrative staff
     - Installer tools that disable services, e.g. before log collection agent installation
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+    - attack.t1070.001
+date: '2021-02-11'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:22.143308+00:00'
+            mapped_at: '2025-12-04T01:47:40.136486+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:22.143308+00:00'
+            mapped_at: '2025-12-04T01:47:40.136486+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:22.143338+00:00'
+            mapped_at: '2025-12-04T01:47:40.136503+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:22.143341+00:00'
+            mapped_at: '2025-12-04T01:47:40.136506+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:22.143343+00:00'
+            mapped_at: '2025-12-04T01:47:40.136508+00:00'

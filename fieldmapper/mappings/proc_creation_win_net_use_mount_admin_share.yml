@@ -1,22 +1,19 @@
-id: 3abd6094-7027-475f-9630-8ab9be7b9725
 title: Windows Admin Share Mount Via Net.EXE
+id: 3abd6094-7027-475f-9630-8ab9be7b9725
 status: test
 level: medium
-description: Detects when an admin share is mounted using net.exe
 author: oscd.community, Teymur Kheirkhabarov @HeirhabarovT, Zach Stanford @svch0st,
     wagga
-date: '2020-10-05'
-modified: '2023-02-21'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
+description: Detects when an admin share is mounted using net.exe
 references:
     - https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view
 falsepositives:
     - Administrators
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f117933c-980c-4f78-b384-e3d838111165''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+date: '2020-10-05'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -33,6 +30,9 @@ detection:
             - ' use '
             - ' \\*\*$'
     condition: all of selection_*
+related:
+    -   id: f117933c-980c-4f78-b384-e3d838111165
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -40,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:58.444196+00:00'
+            mapped_at: '2025-12-04T01:45:35.341379+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:58.444196+00:00'
+            mapped_at: '2025-12-04T01:45:35.341379+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:58.444216+00:00'
+            mapped_at: '2025-12-04T01:45:35.341392+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:58.444218+00:00'
+            mapped_at: '2025-12-04T01:45:35.341400+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:58.444219+00:00'
+            mapped_at: '2025-12-04T01:45:35.341401+00:00'

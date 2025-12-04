@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Use Short Name Path in Command Line",
+    "comment": "Detect use of the Windows 8.3 short name. Which could be used as a method to avoid command-line detection",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('~1\\\\')) OR contains(lower(process.cmd_line), lower('~2\\\\'))) AND NOT ((lower(LOWER(process.parent_process.name)) in ('c:\\\\windows\\\\system32\\\\dism\\.exe', 'c:\\\\windows\\\\system32\\\\cleanmgr\\.exe', 'c:\\\\program files\\\\gpsoftware\\\\directory opus\\\\dopus\\.exe')) AND (endswith(lower(process.parent_process.name), lower('\\\\webex\\\\webexhost.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\thor\\\\thor64.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\veam.backup.shell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\winget.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\everything\\\\everything.exe'))) AND contains(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\temp\\\\winget\\\\')) AND (contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\webex\\\\webex64\\\\meetings\\\\wbxreport.exe')) OR contains(lower(process.cmd_line), lower('c:\\\\program files\\\\git\\\\post-install.bat')) OR contains(lower(process.cmd_line), lower('c:\\\\program files\\\\git\\\\cmd\\\\scalar.exe')))))"
+      }
+    },
+    "output": {
+      "summary": "Detect use of the Windows 8.3 short name. Which could be used as a method to avoid command-line detection",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Applications could use this notation occasionally which might generate some false positives. In that case investigate the parent and child process. References: https://www.acunetix.com/blog/articles/windows-short-8-3-filenames-web-security-problem/, https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc959352(v=technet.10), https://twitter.com/frack113/status/1555830623633375232",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1564",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

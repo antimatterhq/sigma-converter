@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Use of OpenConsole",
+    "comment": "Detects usage of OpenConsole binary as a LOLBIN to launch other binaries to bypass application Whitelisting",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('openconsole.exe') AND endswith(lower(process.name), lower('\\\\openconsole.exe')) AND NOT startswith(lower(process.name), lower('c:\\\\program files\\\\windowsapps\\\\microsoft.windowsterminal')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of OpenConsole binary as a LOLBIN to launch other binaries to bypass application Whitelisting",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use by an administrator Reference: https://twitter.com/nas_bench/status/1537563834478645252",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

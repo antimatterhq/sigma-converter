@@ -1,23 +1,22 @@
-id: 551d9c1f-816c-445b-a7a6-7a3864720d60
 title: Potential Excel.EXE DCOM Lateral Movement Via ActivateMicrosoftApp
+id: 551d9c1f-816c-445b-a7a6-7a3864720d60
 status: test
 level: high
+author: Aaron Stratton
 description: 'Detects suspicious child processes of Excel which could be an indicator
     of lateral movement leveraging the "ActivateMicrosoftApp" Excel DCOM object.
 
     '
-author: Aaron Stratton
-date: '2023-11-13'
-tags:
-    - attack.t1021.003
-    - attack.lateral-movement
 references:
     - https://posts.specterops.io/lateral-movement-abuse-the-power-of-dcom-excel-application-3c016d0d9922
     - https://github.com/grayhatkiller/SharpExShell
     - https://learn.microsoft.com/en-us/office/vba/api/excel.xlmsapplication
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1021.003
+    - attack.lateral-movement
+date: '2023-11-13'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:13.350889+00:00'
+            mapped_at: '2025-12-04T01:45:47.008037+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:13.350889+00:00'
+            mapped_at: '2025-12-04T01:45:47.008037+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:13.350909+00:00'
+            mapped_at: '2025-12-04T01:45:47.008051+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:13.350913+00:00'
+            mapped_at: '2025-12-04T01:45:47.008053+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:13.350915+00:00'
+            mapped_at: '2025-12-04T01:45:47.008054+00:00'

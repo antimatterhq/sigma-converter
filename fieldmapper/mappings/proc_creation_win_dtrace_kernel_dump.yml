@@ -1,20 +1,19 @@
-id: 7124aebe-4cd7-4ccb-8df0-6d6b93c96795
 title: Suspicious Kernel Dump Using Dtrace
+id: 7124aebe-4cd7-4ccb-8df0-6d6b93c96795
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious way to dump the kernel on Windows systems using dtrace.exe,
     which is available on Windows systems since Windows 10 19H1
-author: Florian Roth (Nextron Systems)
-date: '2021-12-28'
-tags:
-    - attack.discovery
-    - attack.t1082
 references:
     - https://twitter.com/0gtweet/status/1474899714290208777?s=12
     - https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/dtrace
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1082
+date: '2021-12-28'
 logsource:
     category: process_creation
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:35.155242+00:00'
+            mapped_at: '2025-12-04T01:48:36.359446+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:35.155242+00:00'
+            mapped_at: '2025-12-04T01:48:36.359446+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:35.155276+00:00'
+            mapped_at: '2025-12-04T01:48:36.359462+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:35.155280+00:00'
+            mapped_at: '2025-12-04T01:48:36.359464+00:00'

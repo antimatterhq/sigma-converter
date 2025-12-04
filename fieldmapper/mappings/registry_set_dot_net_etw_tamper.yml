@@ -1,15 +1,9 @@
-id: bf4fc428-dcc3-4bbd-99fe-2422aeee2544
 title: ETW Logging Disabled In .NET Processes - Sysmon Registry
+id: bf4fc428-dcc3-4bbd-99fe-2422aeee2544
 status: test
 level: high
-description: Potential adversaries stopping ETW providers recording loaded .NET assemblies.
 author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2020-06-05'
-modified: '2023-08-17'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
-    - attack.t1562
+description: Potential adversaries stopping ETW providers recording loaded .NET assemblies.
 references:
     - https://twitter.com/_xpn_/status/1268712093928378368
     - https://social.msdn.microsoft.com/Forums/vstudio/en-US/0878832e-39d7-4eaf-8e16-a729c4c40975/what-can-i-use-e13c0d23ccbc4e12931bd9cc2eee27e4-for?forum=clr
@@ -24,9 +18,12 @@ references:
     - https://i.blackhat.com/EU-21/Wednesday/EU-21-Teodorescu-Veni-No-Vidi-No-Vici-Attacks-On-ETW-Blind-EDRs.pdf
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a4c90ea1-2634-4ca0-adbb-35eae169b6fc''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+    - attack.t1562
+date: '2020-06-05'
+modified: '2023-08-17'
 logsource:
     category: registry_set
     product: windows
@@ -42,6 +39,9 @@ detection:
             - 0
             - DWORD (0x00000000)
     condition: 1 of selection_*
+related:
+    -   id: a4c90ea1-2634-4ca0-adbb-35eae169b6fc
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

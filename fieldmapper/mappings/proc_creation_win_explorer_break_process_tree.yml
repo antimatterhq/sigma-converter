@@ -1,7 +1,9 @@
-id: 949f1ffb-6e85-4f00-ae1e-c3c5b190d605
 title: Explorer Process Tree Break
+id: 949f1ffb-6e85-4f00-ae1e-c3c5b190d605
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
+    @gott_cyber
 description: 'Detects a command line process that uses explorer.exe to launch arbitrary
     commands or binaries,
 
@@ -9,13 +11,6 @@ description: 'Detects a command line process that uses explorer.exe to launch ar
     parent a new instance of explorer spawning from "svchost"
 
     '
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
-    @gott_cyber
-date: '2019-06-29'
-modified: '2024-06-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://twitter.com/CyberRaiju/status/1273597319322058752
     - https://twitter.com/bohops/status/1276357235954909188?s=12
@@ -23,7 +18,11 @@ references:
     - https://securityboulevard.com/2019/09/deobfuscating-ostap-trickbots-34000-line-javascript-downloader/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2019-06-29'
+modified: '2024-06-04'
 logsource:
     category: process_creation
     product: windows
@@ -41,13 +40,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:19.283655+00:00'
+            mapped_at: '2025-12-04T01:40:55.417045+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:19.283655+00:00'
+            mapped_at: '2025-12-04T01:40:55.417045+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:19.283673+00:00'
+            mapped_at: '2025-12-04T01:40:55.417058+00:00'

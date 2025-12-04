@@ -1,20 +1,19 @@
-id: 42d36aa1-3240-4db0-8257-e0118dcdd9cd
 title: Suspicious Hyper-V Cmdlets
+id: 42d36aa1-3240-4db0-8257-e0118dcdd9cd
 status: test
 level: medium
+author: frack113
 description: Adversaries may carry out malicious operations using a virtual instance
     to avoid detection
-author: frack113
-date: '2022-04-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.006
 references:
     - https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.006/T1564.006.md#atomic-test-3---create-and-start-hyper-v-virtual-machine
 falsepositives:
     - Legitimate PowerShell scripts
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.006
+date: '2022-04-09'
 logsource:
     category: ps_script
     product: windows
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:20.106616+00:00'
+            mapped_at: '2025-12-04T01:54:30.614529+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:20.106616+00:00'
+            mapped_at: '2025-12-04T01:54:30.614529+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:20.106647+00:00'
+            mapped_at: '2025-12-04T01:54:30.614544+00:00'

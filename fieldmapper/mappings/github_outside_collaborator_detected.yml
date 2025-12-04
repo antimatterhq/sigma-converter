@@ -1,7 +1,8 @@
-id: eaa9ac35-1730-441f-9587-25767bde99d7
 title: Github Outside Collaborator Detected
+id: eaa9ac35-1730-441f-9587-25767bde99d7
 status: test
 level: medium
+author: Muhammad Faisal (@faisalusuf)
 description: 'Detects when an organization member or an outside collaborator is added
     to or removed from a project board or has their permission level changed or when
     an owner removes an outside collaborator from an organization or when two-factor
@@ -9,21 +10,19 @@ description: 'Detects when an organization member or an outside collaborator is 
     not use 2FA or disables 2FA.
 
     '
-author: Muhammad Faisal (@faisalusuf)
-date: '2023-01-20'
-tags:
-    - attack.persistence
-    - attack.collection
-    - attack.t1098.001
-    - attack.t1098.003
-    - attack.t1213.003
 references:
     - https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#audit-log-actions
     - https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization
 falsepositives:
     - Validate the actor if permitted to access the repo.
     - Validate the Multifactor Authentication changes.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.collection
+    - attack.t1098.001
+    - attack.t1098.003
+    - attack.t1213.003
+date: '2023-01-20'
 logsource:
     product: github
     service: audit
@@ -43,13 +42,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: github
-            mapped_at: '2025-11-26T02:18:11.156146+00:00'
+            mapped_at: '2025-12-04T01:37:02.601553+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:18:11.156146+00:00'
+            mapped_at: '2025-12-04T01:37:02.601553+00:00'
     detection_fields:
         -   source_field: action
             target_table: vulnerability_finding
             target_field: action
-            mapped_at: '2025-11-26T02:18:11.156159+00:00'
+            mapped_at: '2025-12-04T01:37:02.601574+00:00'

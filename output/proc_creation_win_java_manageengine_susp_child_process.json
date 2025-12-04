@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Child Process Of Manage Engine ServiceDesk",
+    "comment": "Detects suspicious child processes of the \"Manage Engine ServiceDesk Plus\" Java web service",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.parent_process.name), lower('\\\\manageengine\\\\servicedesk\\\\')) AND contains(lower(process.parent_process.name), lower('\\\\java.exe')) AND (endswith(lower(process.name), lower('\\\\appvlp.exe')) OR endswith(lower(process.name), lower('\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\bitsadmin.exe')) OR endswith(lower(process.name), lower('\\\\calc.exe')) OR endswith(lower(process.name), lower('\\\\certutil.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\curl.exe')) OR endswith(lower(process.name), lower('\\\\forfiles.exe')) OR endswith(lower(process.name), lower('\\\\mftrace.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe')) OR endswith(lower(process.name), lower('\\\\notepad.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\query.exe')) OR endswith(lower(process.name), lower('\\\\reg.exe')) OR endswith(lower(process.name), lower('\\\\schtasks.exe')) OR endswith(lower(process.name), lower('\\\\scrcons.exe')) OR endswith(lower(process.name), lower('\\\\sh.exe')) OR endswith(lower(process.name), lower('\\\\systeminfo.exe')) OR endswith(lower(process.name), lower('\\\\whoami.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))) AND NOT ((endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe'))) AND contains(lower(process.cmd_line), lower(' stop'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes of the \"Manage Engine ServiceDesk Plus\" Java web service",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate sub processes started by Manage Engine ServiceDesk Pro References: https://www.horizon3.ai/manageengine-cve-2022-47966-technical-deep-dive/, https://github.com/horizon3ai/CVE-2022-47966/blob/3a51c6b72ebbd87392babd955a8fbeaee2090b35/CVE-2022-47966.py, https://blog.viettelcybersecurity.com/saml-show-stopper/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1102"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,18 +1,17 @@
-id: 20384606-a124-4fec-acbb-8bd373728613
 title: Suspicious Network Connection Binary No CommandLine
+id: 20384606-a124-4fec-acbb-8bd373728613
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious network connections made by a well-known Windows binary
     run with no command line parameters
-author: Florian Roth (Nextron Systems)
-date: '2022-07-03'
-tags:
-    - attack.defense-evasion
 references:
     - https://redcanary.com/blog/raspberry-robin/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-07-03'
 logsource:
     category: network_connection
     product: windows
@@ -34,26 +33,26 @@ detection:
     condition: selection and not 1 of filter*
 ocsf_mapping:
     class_name: network_activity
-    activity_id: 1
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:07.670987+00:00'
+            mapped_at: '2025-12-04T01:51:31.859009+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:07.670987+00:00'
+            mapped_at: '2025-12-04T01:51:31.859009+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:10.271036+00:00'
+            mapped_at: '2025-12-04T01:51:31.859025+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:10.271060+00:00'
+            mapped_at: '2025-12-04T01:51:31.859027+00:00'
         -   source_field: CommandLine
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:10.271064+00:00'
+            mapped_at: '2025-12-04T01:51:31.859029+00:00'

@@ -1,22 +1,18 @@
-id: 1b3b01c7-84e9-4072-86e5-fc285a41ff23
 title: Nslookup PowerShell Download Cradle - ProcessCreation
+id: 1b3b01c7-84e9-4072-86e5-fc285a41ff23
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious powershell download cradle using nslookup. This cradle
     uses nslookup to extract payloads from DNS records
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-05'
-modified: '2022-12-19'
-tags:
-    - attack.defense-evasion
 references:
     - https://twitter.com/Alh4zr3d/status/1566489367232651264
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''72671447-4352-4413-bb91-b85569687135''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''999bff6d-dc15-44c9-9f5c-e1051bfc86e1''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-09-05'
+modified: '2022-12-19'
 logsource:
     category: process_creation
     product: windows
@@ -32,6 +28,11 @@ detection:
             - ' -q=txt '
             - ' -querytype=txt '
     condition: all of selection_*
+related:
+    -   id: 72671447-4352-4413-bb91-b85569687135
+        type: obsolete
+    -   id: 999bff6d-dc15-44c9-9f5c-e1051bfc86e1
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -39,25 +40,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:42.942220+00:00'
+            mapped_at: '2025-12-04T01:43:46.559245+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:42.942220+00:00'
+            mapped_at: '2025-12-04T01:43:46.559245+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:42.942242+00:00'
+            mapped_at: '2025-12-04T01:43:46.559264+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:42.942244+00:00'
+            mapped_at: '2025-12-04T01:43:46.559266+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:42.942249+00:00'
+            mapped_at: '2025-12-04T01:43:46.559267+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:42.942251+00:00'
+            mapped_at: '2025-12-04T01:43:46.559268+00:00'

@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Suspicious Download from Office Domain",
+    "comment": "Detects suspicious ways to download files from Microsoft domains that are used to store attachments in Emails or OneNote documents",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\curl.exe')) OR endswith(lower(process.name), lower('\\\\wget.exe'))) AND (contains(lower(process.cmd_line), lower('invoke-webrequest')) OR contains(lower(process.cmd_line), lower('iwr ')) OR contains(lower(process.cmd_line), lower('curl ')) OR contains(lower(process.cmd_line), lower('wget ')) OR contains(lower(process.cmd_line), lower('start-bitstransfer')) OR contains(lower(process.cmd_line), lower('.downloadfile(')) OR contains(lower(process.cmd_line), lower('.downloadstring('))) AND (contains(lower(process.cmd_line), lower('https://attachment.outlook.live.net/owa/')) OR contains(lower(process.cmd_line), lower('https://onenoteonlinesync.onenote.com/onenoteonlinesync/'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious ways to download files from Microsoft domains that are used to store attachments in Emails or OneNote documents",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Scripts or tools that download attachments from these domains (OneNote, Outlook 365) References: https://twitter.com/an0n_r0/status/1474698356635193346?s=12, https://twitter.com/mrd0x/status/1475085452784844803?s=12",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1608"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

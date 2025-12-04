@@ -1,19 +1,18 @@
-id: 08200f85-2678-463e-9c32-88dce2f073d1
 title: MSSQL Add Account To Sysadmin Role
+id: 08200f85-2678-463e-9c32-88dce2f073d1
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects when an attacker tries to backdoor the MSSQL server by adding
     a backdoor account to the sysadmin fixed server role
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-13'
-modified: '2024-06-26'
-tags:
-    - attack.persistence
 references:
     - https://www.netspi.com/blog/technical/network-penetration-testing/sql-server-persistence-part-1-startup-stored-procedures/
 falsepositives:
     - Rare legitimate administrative activity
-taxonomy: sigma
+tags:
+    - attack.persistence
+date: '2022-07-13'
+modified: '2024-06-26'
 logsource:
     product: windows
     service: application
@@ -34,21 +33,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:54.909212+00:00'
+            mapped_at: '2025-12-04T01:57:31.066873+00:00'
         service:
             source_field: service
             source_value: application
-            mapped_at: '2025-11-26T02:48:54.909212+00:00'
+            mapped_at: '2025-12-04T01:57:31.066873+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:54.909240+00:00'
+            mapped_at: '2025-12-04T01:57:31.066893+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:54.909244+00:00'
+            mapped_at: '2025-12-04T01:57:31.066896+00:00'
         -   source_field: Data
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:54.909246+00:00'
+            mapped_at: '2025-12-04T01:57:31.066898+00:00'

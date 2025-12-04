@@ -1,21 +1,18 @@
-id: 3761e026-f259-44e6-8826-719ed8079408
 title: Linux Network Service Scanning - Auditd
+id: 3761e026-f259-44e6-8826-719ed8079408
 status: test
 level: low
-description: Detects enumeration of local or remote network services.
 author: Alejandro Ortuno, oscd.community
-date: '2020-10-21'
-modified: '2023-09-26'
-tags:
-    - attack.discovery
-    - attack.t1046
+description: Detects enumeration of local or remote network services.
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md
 falsepositives:
     - Legitimate administration activities
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3e102cd9-a70d-4a7a-9508-403963092f31''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1046
+date: '2020-10-21'
+modified: '2023-09-26'
 logsource:
     product: linux
     service: auditd
@@ -32,6 +29,9 @@ detection:
             - /nc.openbsd
         key: network_connect_4
     condition: selection
+related:
+    -   id: 3e102cd9-a70d-4a7a-9508-403963092f31
+        type: derived
 ocsf_mapping:
     class_name: network_activity
     activity_id: <UNMAPPED>
@@ -39,21 +39,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:53.026337+00:00'
+            mapped_at: '2025-12-04T01:35:32.609267+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:15:53.026337+00:00'
+            mapped_at: '2025-12-04T01:35:32.609267+00:00'
     detection_fields:
         -   source_field: type
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:56.532333+00:00'
+            mapped_at: '2025-12-04T01:35:32.609291+00:00'
         -   source_field: exe
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:56.532349+00:00'
+            mapped_at: '2025-12-04T01:35:32.609294+00:00'
         -   source_field: key
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:56.532352+00:00'
+            mapped_at: '2025-12-04T01:35:32.609296+00:00'

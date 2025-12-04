@@ -1,19 +1,14 @@
-id: ffa6861c-4461-4f59-8a41-578c39f3f23e
 title: LSASS Dump Keyword In CommandLine
+id: ffa6861c-4461-4f59-8a41-578c39f3f23e
 status: test
 level: high
+author: E.M. Anhaus, Tony Lambert, oscd.community, Nasreddine Bencherchali (Nextron
+    Systems)
 description: 'Detects the presence of the keywords "lsass" and ".dmp" in the commandline,
     which could indicate a potential attempt to dump or create a dump of the lsass
     process.
 
     '
-author: E.M. Anhaus, Tony Lambert, oscd.community, Nasreddine Bencherchali (Nextron
-    Systems)
-date: '2019-10-24'
-modified: '2023-08-29'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://github.com/Hackndo/lsassy
     - https://medium.com/@markmotig/some-ways-to-dump-lsass-exe-c4a75fdc49bf
@@ -23,9 +18,11 @@ references:
     - https://github.com/CCob/MirrorDump
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a5a2d357-1ab8-4675-a967-ef9990a59391''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2019-10-24'
+modified: '2023-08-29'
 logsource:
     category: process_creation
     product: windows
@@ -49,6 +46,9 @@ detection:
             - nanodump
             - .dmp
     condition: selection
+related:
+    -   id: a5a2d357-1ab8-4675-a967-ef9990a59391
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -56,13 +56,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:35.323780+00:00'
+            mapped_at: '2025-12-04T01:50:17.199104+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:35.323780+00:00'
+            mapped_at: '2025-12-04T01:50:17.199104+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:35.323812+00:00'
+            mapped_at: '2025-12-04T01:50:17.199121+00:00'

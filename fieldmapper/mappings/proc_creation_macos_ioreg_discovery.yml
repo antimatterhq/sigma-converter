@@ -1,7 +1,8 @@
-id: 2d5e7a8b-f484-4a24-945d-7f0efd52eab0
 title: System Information Discovery Using Ioreg
+id: 2d5e7a8b-f484-4a24-945d-7f0efd52eab0
 status: test
 level: medium
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
 description: 'Detects the use of "ioreg" which will show I/O Kit registry information.
 
     This process is used for system information discovery.
@@ -10,12 +11,6 @@ description: 'Detects the use of "ioreg" which will show I/O Kit registry inform
     and grep to look for specific strings.
 
     '
-author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2023-12-20'
-modified: '2024-01-02'
-tags:
-    - attack.discovery
-    - attack.t1082
 references:
     - https://www.virustotal.com/gui/file/0373d78db6c3c0f6f6dcc409821bf89e1ad8c165d6f95c5c80ecdce2219627d7/behavior
     - https://www.virustotal.com/gui/file/4ffdc72d1ff1ee8228e31691020fc275afd1baee5a985403a71ca8c7bd36e2e4/behavior
@@ -23,7 +18,11 @@ references:
     - https://www.trendmicro.com/en_ph/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html
 falsepositives:
     - Legitimate administrative activities
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1082
+date: '2023-12-20'
+modified: '2024-01-02'
 logsource:
     category: process_creation
     product: macos
@@ -52,17 +51,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:09.583263+00:00'
+            mapped_at: '2025-12-04T01:34:06.969343+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:09.583263+00:00'
+            mapped_at: '2025-12-04T01:34:06.969343+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:09.583280+00:00'
+            mapped_at: '2025-12-04T01:34:06.969361+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:09.583283+00:00'
+            mapped_at: '2025-12-04T01:34:06.969362+00:00'

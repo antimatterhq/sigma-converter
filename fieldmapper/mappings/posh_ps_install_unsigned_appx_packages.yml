@@ -1,22 +1,19 @@
-id: 975b2262-9a49-439d-92a6-0709cccdf0b2
 title: Unsigned AppX Installation Attempt Using Add-AppxPackage - PsScript
+id: 975b2262-9a49-439d-92a6-0709cccdf0b2
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the "Add-AppxPackage" or it's alias "Add-AppPackage"
     to install unsigned AppX packages
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-31'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
 references:
     - https://learn.microsoft.com/en-us/windows/msix/package/unsigned-package
     - https://twitter.com/WindowsDocs/status/1620078135080325122
 falsepositives:
     - Installation of unsigned packages for testing purposes
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''37651c2a-42cd-4a69-ae0d-22a4349aa04a''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+date: '2023-01-31'
 logsource:
     category: ps_script
     product: windows
@@ -29,6 +26,9 @@ detection:
     selection_flag:
         ScriptBlockText|contains: ' -AllowUnsigned'
     condition: all of selection_*
+related:
+    -   id: 37651c2a-42cd-4a69-ae0d-22a4349aa04a
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -36,13 +36,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:32.140041+00:00'
+            mapped_at: '2025-12-04T01:53:50.093193+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:32.140041+00:00'
+            mapped_at: '2025-12-04T01:53:50.093193+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:32.140063+00:00'
+            mapped_at: '2025-12-04T01:53:50.093210+00:00'

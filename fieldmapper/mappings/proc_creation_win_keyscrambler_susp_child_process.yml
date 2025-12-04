@@ -1,23 +1,20 @@
-id: ca5583e9-8f80-46ac-ab91-7f314d13b984
 title: Potentially Suspicious Child Process of KeyScrambler.exe
+id: ca5583e9-8f80-46ac-ab91-7f314d13b984
 status: experimental
 level: medium
-description: Detects potentially suspicious child processes of KeyScrambler.exe
 author: Swachchhanda Shrawan Poudel
-date: '2024-05-13'
+description: Detects potentially suspicious child processes of KeyScrambler.exe
+references:
+    - https://twitter.com/DTCERT/status/1712785421845790799
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.defense-evasion
     - attack.privilege-escalation
     - attack.t1203
     - attack.t1574.002
-references:
-    - https://twitter.com/DTCERT/status/1712785421845790799
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d2451be2-b582-4e15-8701-4196ac180260''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2024-05-13'
 logsource:
     category: process_creation
     product: windows
@@ -44,6 +41,9 @@ detection:
             - RUNDLL32.EXE
             - wscript.exe
     condition: all of selection_*
+related:
+    -   id: d2451be2-b582-4e15-8701-4196ac180260
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -51,21 +51,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:08.426602+00:00'
+            mapped_at: '2025-12-04T01:41:35.809240+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:08.426602+00:00'
+            mapped_at: '2025-12-04T01:41:35.809240+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:08.426630+00:00'
+            mapped_at: '2025-12-04T01:41:35.809256+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:08.426633+00:00'
+            mapped_at: '2025-12-04T01:41:35.809258+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:08.426636+00:00'
+            mapped_at: '2025-12-04T01:41:35.809259+00:00'

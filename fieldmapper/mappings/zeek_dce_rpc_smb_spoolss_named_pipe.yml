@@ -1,16 +1,11 @@
-id: bae2865c-5565-470d-b505-9496c87d0c30
 title: SMB Spoolss Name Piped Usage
+id: bae2865c-5565-470d-b505-9496c87d0c30
 status: test
 level: medium
+author: OTR (Open Threat Research), @neu5ron
 description: Detects the use of the spoolss named pipe over SMB. This can be used
     to trigger the authentication via NTLM of any machine that has the spoolservice
     enabled.
-author: OTR (Open Threat Research), @neu5ron
-date: '2018-11-28'
-modified: '2022-10-09'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
 references:
     - https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1
     - https://dirkjanm.io/a-different-way-of-abusing-zerologon/
@@ -18,7 +13,11 @@ references:
 falsepositives:
     - Domain Controllers that are sometimes, commonly although should not be, acting
         as printer servers too
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+date: '2018-11-28'
+modified: '2022-10-09'
 logsource:
     product: zeek
     service: smb_files
@@ -34,17 +33,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:08.020812+00:00'
+            mapped_at: '2025-12-04T01:35:13.614176+00:00'
         service:
             source_field: service
             source_value: smb_files
-            mapped_at: '2025-11-26T02:15:08.020812+00:00'
+            mapped_at: '2025-12-04T01:35:13.614176+00:00'
     detection_fields:
         -   source_field: path
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:15:08.730801+00:00'
+            mapped_at: '2025-12-04T01:35:13.614198+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:15:08.730812+00:00'
+            mapped_at: '2025-12-04T01:35:13.614202+00:00'

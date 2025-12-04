@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Mount Execution With Hidepid Parameter",
+    "comment": "Detects execution of the \"mount\" command with \"hidepid\" parameter to make invisible processes to other users from the system",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/mount')) AND contains(lower(process.cmd_line), lower('hidepid=2')) AND contains(lower(process.cmd_line), lower(' -o ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the \"mount\" command with \"hidepid\" parameter to make invisible processes to other users from the system",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blogs.blackberry.com/, https://www.cyberciti.biz/faq/linux-hide-processes-from-other-users/, https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1564"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

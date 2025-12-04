@@ -1,19 +1,18 @@
-id: 7ea78478-a4f9-42a6-9dcd-f861816122bf
 title: Disabled MFA to Bypass Authentication Mechanisms
+id: 7ea78478-a4f9-42a6-9dcd-f861816122bf
 status: test
 level: medium
+author: '@ionsor'
 description: Detection for when multi factor authentication has been disabled, which
     might indicate a malicious activity to bypass authentication mechanisms.
-author: '@ionsor'
-date: '2022-02-08'
-tags:
-    - attack.persistence
-    - attack.t1556
 references:
     - https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-mfa-userstates
 falsepositives:
     - Authorized modification by administrators
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1556
+date: '2022-02-08'
 logsource:
     product: azure
     service: activitylogs
@@ -30,21 +29,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:51.197436+00:00'
+            mapped_at: '2025-12-04T01:38:19.179523+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:20:51.197436+00:00'
+            mapped_at: '2025-12-04T01:38:19.179523+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:20:52.833246+00:00'
+            mapped_at: '2025-12-04T01:38:19.179539+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:20:52.833270+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:38:19.179541+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:20:52.833274+00:00'
+            mapped_at: '2025-12-04T01:38:19.179544+00:00'

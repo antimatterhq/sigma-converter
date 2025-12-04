@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "User Added To Root/Sudoers Group Using Usermod",
+    "comment": "Detects usage of the \"usermod\" binary to add users add users to the root or suoders groups",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/usermod')) AND (contains(lower(process.cmd_line), lower('-ag root')) OR contains(lower(process.cmd_line), lower('-ag sudoers'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the \"usermod\" binary to add users add users to the root or suoders groups",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrator activities References: https://pberba.github.io/security/2021/11/23/linux-threat-hunting-for-persistence-account-creation-manipulation/, https://www.configserverfirewall.com/ubuntu-linux/ubuntu-add-user-to-root-group/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

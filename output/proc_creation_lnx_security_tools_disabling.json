@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Disabling Security Tools",
+    "comment": "Detects disabling security tools",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/service')) AND contains(lower(process.cmd_line), lower('iptables')) AND contains(lower(process.cmd_line), lower('stop')) OR endswith(lower(process.name), lower('/service')) AND contains(lower(process.cmd_line), lower('ip6tables')) AND contains(lower(process.cmd_line), lower('stop')) OR endswith(lower(process.name), lower('/chkconfig')) AND contains(lower(process.cmd_line), lower('iptables')) AND contains(lower(process.cmd_line), lower('stop')) OR endswith(lower(process.name), lower('/chkconfig')) AND contains(lower(process.cmd_line), lower('ip6tables')) AND contains(lower(process.cmd_line), lower('stop')) OR endswith(lower(process.name), lower('/systemctl')) AND contains(lower(process.cmd_line), lower('firewalld')) AND contains(lower(process.cmd_line), lower('stop')) OR endswith(lower(process.name), lower('/systemctl')) AND contains(lower(process.cmd_line), lower('firewalld')) AND contains(lower(process.cmd_line), lower('disable')) OR endswith(lower(process.name), lower('/service')) AND contains(lower(process.cmd_line), lower('cbdaemon')) AND contains(lower(process.cmd_line), lower('stop')) OR endswith(lower(process.name), lower('/chkconfig')) AND contains(lower(process.cmd_line), lower('cbdaemon')) AND contains(lower(process.cmd_line), lower('off')) OR endswith(lower(process.name), lower('/systemctl')) AND contains(lower(process.cmd_line), lower('cbdaemon')) AND contains(lower(process.cmd_line), lower('stop')) OR endswith(lower(process.name), lower('/systemctl')) AND contains(lower(process.cmd_line), lower('cbdaemon')) AND contains(lower(process.cmd_line), lower('disable')) OR endswith(lower(process.name), lower('/setenforce')) AND contains(lower(process.cmd_line), lower('0')) OR endswith(lower(process.name), lower('/systemctl')) AND contains(lower(process.cmd_line), lower('stop')) AND contains(lower(process.cmd_line), lower('falcon-sensor')) OR endswith(lower(process.name), lower('/systemctl')) AND contains(lower(process.cmd_line), lower('disable')) AND contains(lower(process.cmd_line), lower('falcon-sensor'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects disabling security tools",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

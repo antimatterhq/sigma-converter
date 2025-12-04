@@ -1,7 +1,8 @@
-id: 32438676-1dba-4ac7-bf69-b86cba995e05
 title: GCP Access Policy Deleted
+id: 32438676-1dba-4ac7-bf69-b86cba995e05
 status: test
 level: medium
+author: Bryan Lim
 description: 'Detects when an access policy that is applied to a GCP cloud resource
     is deleted.
 
@@ -9,19 +10,17 @@ description: 'Detects when an access policy that is applied to a GCP cloud resou
     resource.
 
     '
-author: Bryan Lim
-date: '2024-01-12'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1098
 references:
     - https://cloud.google.com/access-context-manager/docs/audit-logging
     - https://cloud.google.com/logging/docs/audit/understanding-audit-logs
     - https://cloud.google.com/logging/docs/reference/audit/auditlog/rest/Shared.Types/AuditLog
 falsepositives:
     - Legitimate administrative activities
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1098
+date: '2024-01-12'
 logsource:
     product: gcp
     service: gcp.audit
@@ -42,21 +41,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:27.037695+00:00'
+            mapped_at: '2025-12-04T01:38:46.969881+00:00'
         service:
             source_field: service
             source_value: gcp.audit
-            mapped_at: '2025-11-26T02:21:27.037695+00:00'
+            mapped_at: '2025-12-04T01:38:46.969881+00:00'
     detection_fields:
         -   source_field: data.protoPayload.authorizationInfo.permission
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:28.766538+00:00'
+            mapped_at: '2025-12-04T01:38:46.969898+00:00'
         -   source_field: data.protoPayload.authorizationInfo.granted
             target_table: account_change
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:21:28.766552+00:00'
+            mapped_at: '2025-12-04T01:38:46.969929+00:00'
         -   source_field: data.protoPayload.serviceName
             target_table: account_change
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:28.766555+00:00'
+            mapped_at: '2025-12-04T01:38:46.969931+00:00'

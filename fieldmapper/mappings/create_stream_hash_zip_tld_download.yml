@@ -1,20 +1,19 @@
-id: 0bb4bbeb-fe52-4044-b40c-430a04577ebe
 title: Potentially Suspicious File Download From ZIP TLD
+id: 0bb4bbeb-fe52-4044-b40c-430a04577ebe
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the download of a file with a potentially suspicious extension
     from a .zip top level domain.
-author: Florian Roth (Nextron Systems)
-date: '2023-05-18'
-tags:
-    - attack.defense-evasion
 references:
     - https://twitter.com/cyb3rops/status/1659175181695287297
     - https://fabian-voith.de/2020/06/25/sysmon-v11-1-reads-alternate-data-streams/
 falsepositives:
     - Legitimate file downloads from a websites and web services that uses the ".zip"
         top level domain.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-05-18'
 logsource:
     category: create_stream_hash
     product: windows
@@ -50,17 +49,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_stream_hash
-            mapped_at: '2025-11-26T02:38:57.229975+00:00'
+            mapped_at: '2025-12-04T01:51:52.044045+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:57.229975+00:00'
+            mapped_at: '2025-12-04T01:51:52.044045+00:00'
     detection_fields:
         -   source_field: Contents
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:57.229992+00:00'
+            mapped_at: '2025-12-04T01:51:52.044059+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:38:57.229994+00:00'
+            mapped_at: '2025-12-04T01:51:52.044061+00:00'

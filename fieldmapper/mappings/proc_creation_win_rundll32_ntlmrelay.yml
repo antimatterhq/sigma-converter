@@ -1,22 +1,21 @@
-id: bb76d96b-821c-47cf-944b-7ce377864492
 title: Suspicious NTLM Authentication on the Printer Spooler Service
+id: bb76d96b-821c-47cf-944b-7ce377864492
 status: test
 level: high
+author: Elastic (idea), Tobias Michalski (Nextron Systems)
 description: Detects a privilege elevation attempt by coercing NTLM authentication
     on the Printer Spooler service
-author: Elastic (idea), Tobias Michalski (Nextron Systems)
-date: '2022-05-04'
-modified: '2023-02-09'
-tags:
-    - attack.privilege-escalation
-    - attack.credential-access
-    - attack.t1212
 references:
     - https://twitter.com/med0x2e/status/1520402518685200384
     - https://github.com/elastic/detection-rules/blob/dd224fb3f81d0b4bf8593c5f02a029d647ba2b2d/rules/windows/credential_access_relay_ntlm_auth_via_http_spoolss.toml
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.credential-access
+    - attack.t1212
+date: '2022-05-04'
+modified: '2023-02-09'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:05.361570+00:00'
+            mapped_at: '2025-12-04T01:48:11.454326+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:05.361570+00:00'
+            mapped_at: '2025-12-04T01:48:11.454326+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:05.361596+00:00'
+            mapped_at: '2025-12-04T01:48:11.454344+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:05.361599+00:00'
+            mapped_at: '2025-12-04T01:48:11.454346+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:05.361601+00:00'
+            mapped_at: '2025-12-04T01:48:11.454347+00:00'

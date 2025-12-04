@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Process Memory Dump Via Comsvcs.DLL",
+    "comment": "Detects a process memory dump via \"comsvcs.dll\" using rundll32, covering multiple different techniques (ordinal, minidump function, etc.)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND contains(lower(process.cmd_line), lower('rundll32')) AND contains(lower(process.cmd_line), lower('comsvcs')) AND contains(lower(process.cmd_line), lower('full')) AND (contains(lower(process.cmd_line), lower('#-')) OR contains(lower(process.cmd_line), lower('#+')) OR contains(lower(process.cmd_line), lower('#24')) OR contains(lower(process.cmd_line), lower('24 ')) OR contains(lower(process.cmd_line), lower('minidump'))) OR contains(lower(process.cmd_line), lower('24')) AND contains(lower(process.cmd_line), lower('comsvcs')) AND contains(lower(process.cmd_line), lower('full')) AND (contains(lower(process.cmd_line), lower(' #')) OR contains(lower(process.cmd_line), lower(',#')) OR contains(lower(process.cmd_line), lower(', #')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a process memory dump via \"comsvcs.dll\" using rundll32, covering multiple different techniques (ordinal, minidump function, etc.)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://twitter.com/shantanukhande/status/1229348874298388484, https://twitter.com/pythonresponder/status/1385064506049630211?s=21, https://twitter.com/Hexacorn/status/1224848930795552769, https://modexp.wordpress.com/2019/08/30/minidumpwritedump-via-com-services-dll/, https://twitter.com/SBousseaden/status/1167417096374050817, https://twitter.com/Wietze/status/1542107456507203586, https://github.com/Hackndo/lsassy/blob/14d8f8ae596ecf22b449bfe919829173b8a07635/lsassy/dumpmethod/comsvcs.py",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

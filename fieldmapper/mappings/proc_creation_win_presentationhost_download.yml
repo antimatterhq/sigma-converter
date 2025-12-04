@@ -1,21 +1,20 @@
-id: b124ddf4-778d-418e-907f-6dd3fc0d31cd
 title: Arbitrary File Download Via PresentationHost.EXE
+id: b124ddf4-778d-418e-907f-6dd3fc0d31cd
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of "PresentationHost" which is a utility that runs ".xbap"
     (Browser Applications) files to download arbitrary files
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-19'
-modified: '2023-11-09'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/pull/239/files
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+date: '2022-08-19'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:25.221216+00:00'
+            mapped_at: '2025-12-04T01:42:41.249450+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:25.221216+00:00'
+            mapped_at: '2025-12-04T01:42:41.249450+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:25.221238+00:00'
+            mapped_at: '2025-12-04T01:42:41.249478+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:25.221241+00:00'
+            mapped_at: '2025-12-04T01:42:41.249480+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:25.221243+00:00'
+            mapped_at: '2025-12-04T01:42:41.249481+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Wlrmdr.EXE Uncommon Argument Or Child Process",
+    "comment": "Detects the execution of \"Wlrmdr.exe\" with the \"-u\" command line flag which allows anything passed to it to be an argument of the ShellExecute API, which would allow an attacker to execute arbitrary binaries. This detection also focuses on any uncommon child processes spawned from \"Wlrmdr.exe\" as a supplement for those that posses \"ParentImage\" telemetry.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\wlrmdr.exe')) OR endswith(lower(process.name), lower('\\\\wlrmdr.exe')) AND lower(process.file.name) = lower('wlrmndr.exe') AND (contains(lower(process.cmd_line), lower('-s ')) OR contains(lower(process.cmd_line), lower('/s ')) OR contains(lower(process.cmd_line), lower('\u2013s ')) OR contains(lower(process.cmd_line), lower('\u2014s ')) OR contains(lower(process.cmd_line), lower('\u2015s '))) AND (contains(lower(process.cmd_line), lower('-f ')) OR contains(lower(process.cmd_line), lower('/f ')) OR contains(lower(process.cmd_line), lower('\u2013f ')) OR contains(lower(process.cmd_line), lower('\u2014f ')) OR contains(lower(process.cmd_line), lower('\u2015f '))) AND (contains(lower(process.cmd_line), lower('-t ')) OR contains(lower(process.cmd_line), lower('/t ')) OR contains(lower(process.cmd_line), lower('\u2013t ')) OR contains(lower(process.cmd_line), lower('\u2014t ')) OR contains(lower(process.cmd_line), lower('\u2015t '))) AND (contains(lower(process.cmd_line), lower('-m ')) OR contains(lower(process.cmd_line), lower('/m ')) OR contains(lower(process.cmd_line), lower('\u2013m ')) OR contains(lower(process.cmd_line), lower('\u2014m ')) OR contains(lower(process.cmd_line), lower('\u2015m '))) AND (contains(lower(process.cmd_line), lower('-a ')) OR contains(lower(process.cmd_line), lower('/a ')) OR contains(lower(process.cmd_line), lower('\u2013a ')) OR contains(lower(process.cmd_line), lower('\u2014a ')) OR contains(lower(process.cmd_line), lower('\u2015a '))) AND (contains(lower(process.cmd_line), lower('-u ')) OR contains(lower(process.cmd_line), lower('/u ')) OR contains(lower(process.cmd_line), lower('\u2013u ')) OR contains(lower(process.cmd_line), lower('\u2014u ')) OR contains(lower(process.cmd_line), lower('\u2015u '))) AND NOT (lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\winlogon.exe') OR lower(LOWER(process.parent_process.name)) in ('', '-') OR process.parent_process.name is null)))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of \"Wlrmdr.exe\" with the \"-u\" command line flag which allows anything passed to it to be an argument of the ShellExecute API, which would allow an attacker to execute arbitrary binaries. This detection also focuses on any uncommon child processes spawned from \"Wlrmdr.exe\" as a supplement for those that posses \"ParentImage\" telemetry.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/0gtweet/status/1493963591745220608?s=20&t=xUg9DsZhJy1q9bPTUWgeIQ, https://lolbas-project.github.io/lolbas/Binaries/Wlrmdr/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

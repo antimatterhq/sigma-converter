@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "DSInternals Suspicious PowerShell Cmdlets - ScriptBlock",
+    "comment": "Detects execution and usage of the DSInternals PowerShell module. Which can be used to perform what might be considered as suspicious activity such as dumping DPAPI backup keys or manipulating NTDS.DIT files. The DSInternals PowerShell Module exposes several internal features of Active Directory and Azure Active Directory. These include FIDO2 and NGC key auditing, offline ntds.dit file manipulation, password auditing, DC recovery from IFM backups and password hash calculation.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('add-addbsidhistory')) OR contains(lower(script.script_content.value), lower('add-adngckey')) OR contains(lower(script.script_content.value), lower('add-adreplngckey')) OR contains(lower(script.script_content.value), lower('convertfrom-admanagedpasswordblob')) OR contains(lower(script.script_content.value), lower('convertfrom-gpprefpassword')) OR contains(lower(script.script_content.value), lower('convertfrom-managedpasswordblob')) OR contains(lower(script.script_content.value), lower('convertfrom-unattendxmlpassword')) OR contains(lower(script.script_content.value), lower('convertfrom-unicodepassword')) OR contains(lower(script.script_content.value), lower('convertto-aadhash')) OR contains(lower(script.script_content.value), lower('convertto-gpprefpassword')) OR contains(lower(script.script_content.value), lower('convertto-kerberoskey')) OR contains(lower(script.script_content.value), lower('convertto-lmhash')) OR contains(lower(script.script_content.value), lower('convertto-msopasswordhash')) OR contains(lower(script.script_content.value), lower('convertto-nthash')) OR contains(lower(script.script_content.value), lower('convertto-orgidhash')) OR contains(lower(script.script_content.value), lower('convertto-unicodepassword')) OR contains(lower(script.script_content.value), lower('disable-addbaccount')) OR contains(lower(script.script_content.value), lower('enable-addbaccount')) OR contains(lower(script.script_content.value), lower('get-addbaccount')) OR contains(lower(script.script_content.value), lower('get-addbbackupkey')) OR contains(lower(script.script_content.value), lower('get-addbdomaincontroller')) OR contains(lower(script.script_content.value), lower('get-addbgroupmanagedserviceaccount')) OR contains(lower(script.script_content.value), lower('get-addbkdsrootkey')) OR contains(lower(script.script_content.value), lower('get-addbschemaattribute')) OR contains(lower(script.script_content.value), lower('get-addbserviceaccount')) OR contains(lower(script.script_content.value), lower('get-addefaultpasswordpolicy')) OR contains(lower(script.script_content.value), lower('get-adkeycredential')) OR contains(lower(script.script_content.value), lower('get-adpasswordpolicy')) OR contains(lower(script.script_content.value), lower('get-adreplaccount')) OR contains(lower(script.script_content.value), lower('get-adreplbackupkey')) OR contains(lower(script.script_content.value), lower('get-adreplicationaccount')) OR contains(lower(script.script_content.value), lower('get-adsiaccount')) OR contains(lower(script.script_content.value), lower('get-azureaduserex')) OR contains(lower(script.script_content.value), lower('get-bootkey')) OR contains(lower(script.script_content.value), lower('get-keycredential')) OR contains(lower(script.script_content.value), lower('get-lsabackupkey')) OR contains(lower(script.script_content.value), lower('get-lsapolicy')) OR contains(lower(script.script_content.value), lower('get-sampasswordpolicy')) OR contains(lower(script.script_content.value), lower('get-syskey')) OR contains(lower(script.script_content.value), lower('get-systemkey')) OR contains(lower(script.script_content.value), lower('new-addbrestorefrommediascript')) OR contains(lower(script.script_content.value), lower('new-adkeycredential')) OR contains(lower(script.script_content.value), lower('new-adngckey')) OR contains(lower(script.script_content.value), lower('new-nthashset')) OR contains(lower(script.script_content.value), lower('remove-addbobject')) OR contains(lower(script.script_content.value), lower('save-dpapiblob')) OR contains(lower(script.script_content.value), lower('set-adaccountpasswordhash')) OR contains(lower(script.script_content.value), lower('set-addbaccountpassword')) OR contains(lower(script.script_content.value), lower('set-addbbootkey')) OR contains(lower(script.script_content.value), lower('set-addbdomaincontroller')) OR contains(lower(script.script_content.value), lower('set-addbprimarygroup')) OR contains(lower(script.script_content.value), lower('set-addbsyskey')) OR contains(lower(script.script_content.value), lower('set-azureaduserex')) OR contains(lower(script.script_content.value), lower('set-lsapolicy')) OR contains(lower(script.script_content.value), lower('set-samaccountpasswordhash')) OR contains(lower(script.script_content.value), lower('set-winuserpasswordhash')) OR contains(lower(script.script_content.value), lower('test-addbpasswordquality')) OR contains(lower(script.script_content.value), lower('test-adpasswordquality')) OR contains(lower(script.script_content.value), lower('test-adreplpasswordquality')) OR contains(lower(script.script_content.value), lower('test-passwordquality')) OR contains(lower(script.script_content.value), lower('unlock-addbaccount')) OR contains(lower(script.script_content.value), lower('write-adngckey')) OR contains(lower(script.script_content.value), lower('write-adreplngckey'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution and usage of the DSInternals PowerShell module. Which can be used to perform what might be considered as suspicious activity such as dumping DPAPI backup keys or manipulating NTDS.DIT files. The DSInternals PowerShell Module exposes several internal features of Active Directory and Azure Active Directory. These include FIDO2 and NGC key auditing, offline ntds.dit file manipulation, password auditing, DC recovery from IFM backups and password hash calculation.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of DSInternals for administration or audit purpose. Reference: https://github.com/MichaelGrafnetter/DSInternals/blob/39ee8a69bbdc1cfd12c9afdd7513b4788c4895d4/Src/DSInternals.PowerShell/DSInternals.psd1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

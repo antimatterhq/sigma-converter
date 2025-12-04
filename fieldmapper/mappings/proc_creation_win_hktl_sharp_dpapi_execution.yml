@@ -1,25 +1,24 @@
-id: c7d33b50-f690-4b51-8cfb-0fb912a31e57
 title: HackTool - SharpDPAPI Execution
+id: c7d33b50-f690-4b51-8cfb-0fb912a31e57
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of the SharpDPAPI tool based on CommandLine flags
     and PE metadata.
 
     SharpDPAPI is a C# port of some DPAPI functionality from the Mimikatz project.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-06-26'
+references:
+    - https://github.com/GhostPack/SharpDPAPI
+falsepositives:
+    - Unknown
 tags:
     - attack.privilege-escalation
     - attack.defense-evasion
     - attack.t1134.001
     - attack.t1134.003
-references:
-    - https://github.com/GhostPack/SharpDPAPI
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2024-06-26'
 logsource:
     category: process_creation
     product: windows
@@ -59,21 +58,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:58.368620+00:00'
+            mapped_at: '2025-12-04T01:48:56.178498+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:58.368620+00:00'
+            mapped_at: '2025-12-04T01:48:56.178498+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:58.368634+00:00'
+            mapped_at: '2025-12-04T01:48:56.178521+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:58.368636+00:00'
+            mapped_at: '2025-12-04T01:48:56.178524+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:58.368637+00:00'
+            mapped_at: '2025-12-04T01:48:56.178526+00:00'

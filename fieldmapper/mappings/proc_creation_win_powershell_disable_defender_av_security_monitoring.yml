@@ -1,14 +1,9 @@
-id: a7ee1722-c3c5-aeff-3212-c777e4733217
 title: Disable Windows Defender AV Security Monitoring
+id: a7ee1722-c3c5-aeff-3212-c777e4733217
 status: test
 level: high
-description: Detects attackers attempting to disable Windows Defender using Powershell
 author: ok @securonix invrep-de, oscd.community, frack113
-date: '2020-10-12'
-modified: '2022-11-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
+description: Detects attackers attempting to disable Windows Defender using Powershell
 references:
     - https://research.nccgroup.com/2020/06/23/wastedlocker-a-new-ransomware-variant-developed-by-the-evil-corp-group/
     - https://rvsec0n.wordpress.com/2020/01/24/malwares-that-bypass-windows-defender/
@@ -17,7 +12,11 @@ falsepositives:
     - Minimal, for some older versions of dev tools, such as pycharm, developers were
         known to sometimes disable Windows Defender to improve performance, but this
         generally is not considered a good security practice.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2020-10-12'
+modified: '2022-11-18'
 logsource:
     category: process_creation
     product: windows
@@ -57,21 +56,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:42.879051+00:00'
+            mapped_at: '2025-12-04T01:45:20.211667+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:42.879051+00:00'
+            mapped_at: '2025-12-04T01:45:20.211667+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:42.879076+00:00'
+            mapped_at: '2025-12-04T01:45:20.211683+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:42.879080+00:00'
+            mapped_at: '2025-12-04T01:45:20.211685+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:42.879083+00:00'
+            mapped_at: '2025-12-04T01:45:20.211687+00:00'

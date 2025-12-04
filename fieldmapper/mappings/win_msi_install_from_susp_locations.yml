@@ -1,20 +1,19 @@
-id: c7c8aa1c-5aff-408e-828b-998e3620b341
 title: MSI Installation From Suspicious Locations
+id: c7c8aa1c-5aff-408e-828b-998e3620b341
 status: test
 level: medium
-description: Detects MSI package installation from suspicious locations
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-31'
-modified: '2023-10-23'
-tags:
-    - attack.execution
+description: Detects MSI package installation from suspicious locations
 references:
     - https://www.trendmicro.com/en_us/research/22/h/ransomware-actor-abuses-genshin-impact-anti-cheat-driver-to-kill-antivirus.html
 falsepositives:
     - False positives may occur if you allow installation from folders such as the
         desktop, the public folder or remote shares. A baseline is required before
         production use.
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2022-08-31'
+modified: '2023-10-23'
 logsource:
     product: windows
     service: application
@@ -42,21 +41,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:51.025402+00:00'
+            mapped_at: '2025-12-04T01:57:28.944337+00:00'
         service:
             source_field: service
             source_value: application
-            mapped_at: '2025-11-26T02:48:51.025402+00:00'
+            mapped_at: '2025-12-04T01:57:28.944337+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:51.025424+00:00'
+            mapped_at: '2025-12-04T01:57:28.944359+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:51.025426+00:00'
+            mapped_at: '2025-12-04T01:57:28.944362+00:00'
         -   source_field: Data
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:51.025428+00:00'
+            mapped_at: '2025-12-04T01:57:28.944363+00:00'

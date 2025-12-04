@@ -1,20 +1,19 @@
-id: a05baa88-e922-4001-bc4d-8738135f27de
 title: Process Monitor Driver Creation By Non-Sysinternals Binary
+id: a05baa88-e922-4001-bc4d-8738135f27de
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of the Process Monitor driver by processes other than
     Process Monitor (procmon) itself.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-05'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1068
 references:
     - Internal Research
 falsepositives:
     - Some false positives may occur with legitimate renamed process monitor binaries
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1068
+date: '2023-05-05'
 logsource:
     category: file_event
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:12.543926+00:00'
+            mapped_at: '2025-12-04T01:52:02.838393+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:12.543926+00:00'
+            mapped_at: '2025-12-04T01:52:02.838393+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:12.543948+00:00'
+            mapped_at: '2025-12-04T01:52:02.838408+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:12.543952+00:00'
+            mapped_at: '2025-12-04T01:52:02.838410+00:00'

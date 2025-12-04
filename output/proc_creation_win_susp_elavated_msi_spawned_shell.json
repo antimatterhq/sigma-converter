@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Always Install Elevated MSI Spawned Cmd And Powershell",
+    "comment": "Detects Windows Installer service (msiexec.exe) spawning \"cmd\" or \"powershell\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('cmd\\.exe', 'powershell\\.exe', 'pwsh\\.dll')) AND contains(lower(process.parent_process.name), lower('\\\\windows\\\\installer\\\\')) AND contains(lower(process.parent_process.name), lower('msi')) AND endswith(lower(process.parent_process.name), lower('tmp')))"
+      }
+    },
+    "output": {
+      "summary": "Detects Windows Installer service (msiexec.exe) spawning \"cmd\" or \"powershell\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.name, process.parent_process.name False positive: Unknown Reference: https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-50-638.jpg",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1548",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

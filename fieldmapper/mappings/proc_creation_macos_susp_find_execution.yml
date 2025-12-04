@@ -1,20 +1,17 @@
-id: 85de3a19-b675-4a51-bfc6-b11a5186c971
 title: Potential Discovery Activity Using Find - MacOS
+id: 85de3a19-b675-4a51-bfc6-b11a5186c971
 status: test
 level: medium
-description: Detects usage of "find" binary in a suspicious manner to perform discovery
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-28'
-tags:
-    - attack.discovery
-    - attack.t1083
+description: Detects usage of "find" binary in a suspicious manner to perform discovery
 references:
     - https://github.com/SaiSathvik1/Linux-Privilege-Escalation-Notes
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8344c0e5-5783-47cc-9cf9-a0f7fd03e6cf''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1083
+date: '2022-12-28'
 logsource:
     category: process_creation
     product: macos
@@ -31,6 +28,9 @@ detection:
             - -perm -u=s
             - -perm -g=s
     condition: selection
+related:
+    -   id: 8344c0e5-5783-47cc-9cf9-a0f7fd03e6cf
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:39.274930+00:00'
+            mapped_at: '2025-12-04T01:34:34.174420+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:39.274930+00:00'
+            mapped_at: '2025-12-04T01:34:34.174420+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:39.274944+00:00'
+            mapped_at: '2025-12-04T01:34:34.174437+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:39.274947+00:00'
+            mapped_at: '2025-12-04T01:34:34.174439+00:00'

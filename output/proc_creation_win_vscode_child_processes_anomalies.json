@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Child Process Of VsCode",
+    "comment": "Detects uncommon or suspicious child processes spawning from a VsCode \"code.exe\" process. This could indicate an attempt of persistence via VsCode tasks or terminal profiles.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\code.exe')) AND (endswith(lower(process.name), lower('\\\\calc.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe'))) AND (contains(lower(process.cmd_line), lower('invoke-expressions')) OR contains(lower(process.cmd_line), lower('iex')) OR contains(lower(process.cmd_line), lower('invoke-command')) OR contains(lower(process.cmd_line), lower('icm')) OR contains(lower(process.cmd_line), lower('downloadstring')) OR contains(lower(process.cmd_line), lower('rundll32')) OR contains(lower(process.cmd_line), lower('regsvr32')) OR contains(lower(process.cmd_line), lower('wscript')) OR contains(lower(process.cmd_line), lower('cscript'))) OR contains(lower(process.name), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.name), lower(':\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects uncommon or suspicious child processes spawning from a VsCode \"code.exe\" process. This could indicate an attempt of persistence via VsCode tasks or terminal profiles.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: In development environment where VsCode is used heavily. False positives may occur when developers use task to compile or execute different types of code. Remove or add processes accordingly References: https://twitter.com/nas_bench/status/1618021838407495681, https://twitter.com/nas_bench/status/1618021415852335105",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

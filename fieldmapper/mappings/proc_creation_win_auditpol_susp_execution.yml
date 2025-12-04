@@ -1,7 +1,8 @@
-id: 0a13e132-651d-11eb-ae93-0242ac130002
 title: Audit Policy Tampering Via Auditpol
+id: 0a13e132-651d-11eb-ae93-0242ac130002
 status: test
 level: high
+author: Janantha Marasinghe (https://github.com/blueteam0ps)
 description: 'Threat actors can use auditpol binary to change audit policy configuration
     to impair detection capability.
 
@@ -9,20 +10,16 @@ description: 'Threat actors can use auditpol binary to change audit policy confi
     as well as restoring a custom policy owned by the threat actor.
 
     '
-author: Janantha Marasinghe (https://github.com/blueteam0ps)
-date: '2021-02-02'
-modified: '2023-02-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
 falsepositives:
     - Administrator or administrator scripts might leverage the flags mentioned in
         the detection section. Either way, it should always be monitored
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c6c56ada-612b-42d1-9a29-adad3c5c2c1e''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2021-02-02'
+modified: '2023-02-22'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
             - remove
             - restore
     condition: all of selection_*
+related:
+    -   id: c6c56ada-612b-42d1-9a29-adad3c5c2c1e
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:08.138613+00:00'
+            mapped_at: '2025-12-04T01:42:23.513034+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:08.138613+00:00'
+            mapped_at: '2025-12-04T01:42:23.513034+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:08.138649+00:00'
+            mapped_at: '2025-12-04T01:42:23.513063+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:08.138654+00:00'
+            mapped_at: '2025-12-04T01:42:23.513072+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:08.138657+00:00'
+            mapped_at: '2025-12-04T01:42:23.513074+00:00'

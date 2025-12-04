@@ -1,7 +1,8 @@
-id: de46c52b-0bf8-4936-a327-aace94f94ac6
 title: Process Explorer Driver Creation By Non-Sysinternals Binary
+id: de46c52b-0bf8-4936-a327-aace94f94ac6
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects creation of the Process Explorer drivers by processes other
     than Process Explorer (procexp) itself.
 
@@ -10,12 +11,6 @@ description: 'Detects creation of the Process Explorer drivers by processes othe
     it afterwards.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2023-05-05'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1068
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer
     - https://github.com/Yaxser/Backstab
@@ -23,7 +18,11 @@ references:
     - https://news.sophos.com/en-us/2023/04/19/aukill-edr-killer-malware-abuses-process-explorer-driver/
 falsepositives:
     - Some false positives may occur with legitimate renamed process explorer binaries
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1068
+date: '2023-05-05'
 logsource:
     category: file_event
     product: windows
@@ -38,22 +37,22 @@ detection:
     condition: selection and not 1 of filter_main_*
 ocsf_mapping:
     class_name: file_activity
-    activity_id: 1
+    activity_id: 3
     logsource:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:38.960548+00:00'
+            mapped_at: '2025-12-04T01:53:14.361377+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:38.960548+00:00'
+            mapped_at: '2025-12-04T01:53:14.361377+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:38.960560+00:00'
+            mapped_at: '2025-12-04T01:53:14.361392+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:38.960562+00:00'
+            mapped_at: '2025-12-04T01:53:14.361393+00:00'

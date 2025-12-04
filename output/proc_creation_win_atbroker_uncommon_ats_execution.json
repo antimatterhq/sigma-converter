@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Uncommon  Assistive Technology Applications Execution Via AtBroker.EXE",
+    "comment": "Detects the start of a non built-in assistive technology applications via \"Atbroker.EXE\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\atbroker.exe')) AND lower(process.file.name) = lower('atbroker.exe') AND contains(lower(process.cmd_line), lower('start')) AND NOT (contains(lower(process.cmd_line), lower('animations')) OR contains(lower(process.cmd_line), lower('audiodescription')) OR contains(lower(process.cmd_line), lower('caretbrowsing')) OR contains(lower(process.cmd_line), lower('caretwidth')) OR contains(lower(process.cmd_line), lower('colorfiltering')) OR contains(lower(process.cmd_line), lower('cursorindicator')) OR contains(lower(process.cmd_line), lower('cursorscheme')) OR contains(lower(process.cmd_line), lower('filterkeys')) OR contains(lower(process.cmd_line), lower('focusborderheight')) OR contains(lower(process.cmd_line), lower('focusborderwidth')) OR contains(lower(process.cmd_line), lower('highcontrast')) OR contains(lower(process.cmd_line), lower('keyboardcues')) OR contains(lower(process.cmd_line), lower('keyboardpref')) OR contains(lower(process.cmd_line), lower('livecaptions')) OR contains(lower(process.cmd_line), lower('magnifierpane')) OR contains(lower(process.cmd_line), lower('messageduration')) OR contains(lower(process.cmd_line), lower('minimumhitradius')) OR contains(lower(process.cmd_line), lower('mousekeys')) OR contains(lower(process.cmd_line), lower('narrator')) OR contains(lower(process.cmd_line), lower('osk')) OR contains(lower(process.cmd_line), lower('overlappedcontent')) OR contains(lower(process.cmd_line), lower('showsounds')) OR contains(lower(process.cmd_line), lower('soundsentry')) OR contains(lower(process.cmd_line), lower('speechreco')) OR contains(lower(process.cmd_line), lower('stickykeys')) OR contains(lower(process.cmd_line), lower('togglekeys')) OR contains(lower(process.cmd_line), lower('voiceaccess')) OR contains(lower(process.cmd_line), lower('windowarranging')) OR contains(lower(process.cmd_line), lower('windowtracking')) OR contains(lower(process.cmd_line), lower('windowtrackingtimeout')) OR contains(lower(process.cmd_line), lower('windowtrackingzorder'))) AND NOT contains(lower(process.cmd_line), lower('oracle_javaaccessbridge')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the start of a non built-in assistive technology applications via \"Atbroker.EXE\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate, non-default assistive technology applications execution References: http://www.hexacorn.com/blog/2016/07/22/beyond-good-ol-run-key-part-42/, https://lolbas-project.github.io/lolbas/Binaries/Atbroker/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,15 +1,10 @@
-id: 965e2db9-eddb-4cf6-a986-7a967df651e4
 title: Potential Keylogger Activity
+id: 965e2db9-eddb-4cf6-a986-7a967df651e4
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects PowerShell scripts that contains reference to keystroke capturing
     functions
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-04'
-tags:
-    - attack.collection
-    - attack.credential-access
-    - attack.t1056.001
 references:
     - https://twitter.com/ScumBots/status/1610626724257046529
     - https://www.virustotal.com/gui/file/d4486b63512755316625230e0c9c81655093be93876e0d80732e7eeaf7d83476/content
@@ -17,7 +12,11 @@ references:
     - https://learn.microsoft.com/en-us/dotnet/api/system.windows.input.keyboard.iskeydown?view=windowsdesktop-7.0
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.credential-access
+    - attack.t1056.001
+date: '2023-01-04'
 logsource:
     category: ps_script
     product: windows
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:30.119410+00:00'
+            mapped_at: '2025-12-04T01:53:48.409347+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:30.119410+00:00'
+            mapped_at: '2025-12-04T01:53:48.409347+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:30.119425+00:00'
+            mapped_at: '2025-12-04T01:53:48.409366+00:00'

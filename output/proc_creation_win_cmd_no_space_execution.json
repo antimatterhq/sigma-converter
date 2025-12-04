@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Cmd.EXE Missing Space Characters Execution Anomaly",
+    "comment": "Detects Windows command lines that miss a space before or after the /c flag when running a command using the cmd.exe. This could be a sign of obfuscation of a fat finger problem (typo by the developer).",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('cmd.exe/c')) OR contains(lower(process.cmd_line), lower('\\\\cmd/c')) OR contains(lower(process.cmd_line), lower('\"cmd/c')) OR contains(lower(process.cmd_line), lower('cmd.exe/k')) OR contains(lower(process.cmd_line), lower('\\\\cmd/k')) OR contains(lower(process.cmd_line), lower('\"cmd/k')) OR contains(lower(process.cmd_line), lower('cmd.exe/r')) OR contains(lower(process.cmd_line), lower('\\\\cmd/r')) OR contains(lower(process.cmd_line), lower('\"cmd/r')) OR contains(lower(process.cmd_line), lower('/cwhoami')) OR contains(lower(process.cmd_line), lower('/cpowershell')) OR contains(lower(process.cmd_line), lower('/cschtasks')) OR contains(lower(process.cmd_line), lower('/cbitsadmin')) OR contains(lower(process.cmd_line), lower('/ccertutil')) OR contains(lower(process.cmd_line), lower('/kwhoami')) OR contains(lower(process.cmd_line), lower('/kpowershell')) OR contains(lower(process.cmd_line), lower('/kschtasks')) OR contains(lower(process.cmd_line), lower('/kbitsadmin')) OR contains(lower(process.cmd_line), lower('/kcertutil')) OR contains(lower(process.cmd_line), lower('cmd.exe /c')) OR contains(lower(process.cmd_line), lower('cmd /c')) OR contains(lower(process.cmd_line), lower('cmd.exe /k')) OR contains(lower(process.cmd_line), lower('cmd /k')) OR contains(lower(process.cmd_line), lower('cmd.exe /r')) OR contains(lower(process.cmd_line), lower('cmd /r'))) AND NOT (contains(lower(process.cmd_line), lower('cmd.exe /c ')) OR contains(lower(process.cmd_line), lower('cmd /c ')) OR contains(lower(process.cmd_line), lower('cmd.exe /k ')) OR contains(lower(process.cmd_line), lower('cmd /k ')) OR contains(lower(process.cmd_line), lower('cmd.exe /r ')) OR contains(lower(process.cmd_line), lower('cmd /r ')) OR contains(lower(process.cmd_line), lower('appdata\\\\local\\\\programs\\\\microsoft vs code\\\\resources\\\\app\\\\node_modules')) AND endswith(lower(process.cmd_line), lower('cmd.exe/c .')) AND lower(process.cmd_line) = lower('cmd.exe /c')))"
+      }
+    },
+    "output": {
+      "summary": "Detects Windows command lines that miss a space before or after the /c flag when running a command using the cmd.exe. This could be a sign of obfuscation of a fat finger problem (typo by the developer).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/cyb3rops/status/1562072617552678912, https://ss64.com/nt/cmd.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

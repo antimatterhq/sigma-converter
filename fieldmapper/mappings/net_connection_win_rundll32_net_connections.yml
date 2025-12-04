@@ -1,21 +1,20 @@
-id: cdc8da7d-c303-42f8-b08c-b4ab47230263
 title: Rundll32 Internet Connection
+id: cdc8da7d-c303-42f8-b08c-b4ab47230263
 status: test
 level: medium
-description: Detects a rundll32 that communicates with public IP addresses
 author: Florian Roth (Nextron Systems)
-date: '2017-11-04'
-modified: '2024-03-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
-    - attack.execution
+description: Detects a rundll32 that communicates with public IP addresses
 references:
     - https://www.hybrid-analysis.com/sample/759fb4c0091a78c5ee035715afe3084686a8493f39014aea72dae36869de9ff6?environmentId=100
 falsepositives:
     - Communication to other corporate systems that use IP addresses from public address
         spaces
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+    - attack.execution
+date: '2017-11-04'
+modified: '2024-03-13'
 logsource:
     category: network_connection
     product: windows
@@ -54,37 +53,37 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:41.156035+00:00'
+            mapped_at: '2025-12-04T01:51:43.384248+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:41.156035+00:00'
+            mapped_at: '2025-12-04T01:51:43.384248+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:42.038774+00:00'
+            mapped_at: '2025-12-04T01:51:43.384277+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:42.038802+00:00'
+            mapped_at: '2025-12-04T01:51:43.384281+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:42.038807+00:00'
+            mapped_at: '2025-12-04T01:51:43.384283+00:00'
         -   source_field: CommandLine
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:42.038810+00:00'
+            mapped_at: '2025-12-04T01:51:43.384285+00:00'
         -   source_field: SourceHostname
             target_table: network_activity
             target_field: src_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:42.038814+00:00'
+            mapped_at: '2025-12-04T01:51:43.384287+00:00'
         -   source_field: ParentImage
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:42.038817+00:00'
+            mapped_at: '2025-12-04T01:51:43.384289+00:00'
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:42.038820+00:00'
+            mapped_at: '2025-12-04T01:51:43.384291+00:00'

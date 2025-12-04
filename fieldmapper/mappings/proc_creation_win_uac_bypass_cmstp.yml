@@ -1,17 +1,10 @@
-id: e66779cc-383e-4224-a3a4-267eeb585c40
 title: Bypass UAC via CMSTP
+id: e66779cc-383e-4224-a3a4-267eeb585c40
 status: test
 level: high
+author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
 description: Detect commandline usage of Microsoft Connection Manager Profile Installer
     (cmstp.exe) to install specially formatted local .INF files
-author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
-date: '2019-10-24'
-modified: '2022-08-30'
-tags:
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1548.002
-    - attack.t1218.003
 references:
     - https://eqllib.readthedocs.io/en/latest/analytics/e584f1a1-c303-4885-8a66-21360c90995b.html
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.003/T1218.003.md
@@ -22,7 +15,13 @@ fields:
     - CommandLine
 falsepositives:
     - Legitimate use of cmstp.exe utility by legitimate user
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1548.002
+    - attack.t1218.003
+date: '2019-10-24'
+modified: '2022-08-30'
 logsource:
     category: process_creation
     product: windows
@@ -46,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:21.275456+00:00'
+            mapped_at: '2025-12-04T01:45:04.466141+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:21.275456+00:00'
+            mapped_at: '2025-12-04T01:45:04.466141+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:21.275472+00:00'
+            mapped_at: '2025-12-04T01:45:04.466155+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:21.275474+00:00'
+            mapped_at: '2025-12-04T01:45:04.466157+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:21.275475+00:00'
+            mapped_at: '2025-12-04T01:45:04.466159+00:00'

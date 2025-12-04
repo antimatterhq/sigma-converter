@@ -1,16 +1,9 @@
-id: 80eeab92-0979-4152-942d-96749e11df40
 title: Azure Keyvault Key Modified or Deleted
+id: 80eeab92-0979-4152-942d-96749e11df40
 status: test
 level: medium
-description: Identifies when a Keyvault Key is modified or deleted in Azure.
 author: Austin Songer @austinsonger
-date: '2021-08-16'
-modified: '2022-08-23'
-tags:
-    - attack.impact
-    - attack.credential-access
-    - attack.t1552
-    - attack.t1552.001
+description: Identifies when a Keyvault Key is modified or deleted in Azure.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
 falsepositives:
@@ -19,7 +12,13 @@ falsepositives:
         changes in your environment.
     - Key modified or deleted from unfamiliar users should be investigated. If known
         behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.credential-access
+    - attack.t1552
+    - attack.t1552.001
+date: '2021-08-16'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -43,13 +42,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:59.347494+00:00'
+            mapped_at: '2025-12-04T01:38:24.792073+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:20:59.347494+00:00'
+            mapped_at: '2025-12-04T01:38:24.792073+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:20:59.347511+00:00'
+            mapped_at: '2025-12-04T01:38:24.792090+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Scanner PoC for CVE-2019-0708 RDP RCE Vuln",
+    "comment": "Detects the use of a scanner by zerosum0x0 that discovers targets vulnerable to CVE-2019-0708 RDP RCE aka BlueKeep",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 4625 AND lower(user_result.name) = lower('aaaaaaa'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of a scanner by zerosum0x0 that discovers targets vulnerable to CVE-2019-0708 RDP RCE aka BlueKeep",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://twitter.com/AdamTheAnalyst/status/1134394070045003776, https://web.archive.org/web/20190710034152/https://github.com/zerosum0x0/CVE-2019-0708",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1210"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

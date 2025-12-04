@@ -1,18 +1,17 @@
-id: 5a6e1e16-07de-48d8-8aae-faa766c05e88
 title: Potential Cookies Session Hijacking
+id: 5a6e1e16-07de-48d8-8aae-faa766c05e88
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of "curl.exe" with the "-c" flag in order to save cookie
     data.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-07-27'
-tags:
-    - attack.execution
 references:
     - https://curl.se/docs/manpage.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-07-27'
 logsource:
     category: process_creation
     product: windows
@@ -31,21 +30,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:45.399277+00:00'
+            mapped_at: '2025-12-04T01:41:16.088354+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:45.399277+00:00'
+            mapped_at: '2025-12-04T01:41:16.088354+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:45.399291+00:00'
+            mapped_at: '2025-12-04T01:41:16.088380+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:45.399293+00:00'
+            mapped_at: '2025-12-04T01:41:16.088383+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:45.399295+00:00'
+            mapped_at: '2025-12-04T01:41:16.088385+00:00'

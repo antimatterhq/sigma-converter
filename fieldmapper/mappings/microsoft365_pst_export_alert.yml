@@ -1,24 +1,21 @@
-id: 18b88d08-d73e-4f21-bc25-4b9892a4fdd0
 title: PST Export Alert Using eDiscovery Alert
+id: 18b88d08-d73e-4f21-bc25-4b9892a4fdd0
 status: test
 level: medium
+author: Sorina Ionescu
 description: Alert on when a user has performed an eDiscovery search or exported a
     PST file from the search. This PST file usually has sensitive information including
     email body content
-author: Sorina Ionescu
-date: '2022-02-08'
-modified: '2022-11-17'
-tags:
-    - attack.collection
-    - attack.t1114
 references:
     - https://learn.microsoft.com/en-us/microsoft-365/compliance/alert-policies?view=o365-worldwide
 falsepositives:
     - PST export can be done for legitimate purposes but due to the sensitive nature
         of its content it must be monitored.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6897cd82-6664-11ed-9022-0242ac120002''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1114
+date: '2022-02-08'
+modified: '2022-11-17'
 logsource:
     product: m365
     service: threat_management
@@ -29,6 +26,9 @@ detection:
         eventName: eDiscovery search started or exported
         status: success
     condition: selection
+related:
+    -   id: 6897cd82-6664-11ed-9022-0242ac120002
+        type: similar
 ocsf_mapping:
     class_name: authentication
     activity_id: <UNMAPPED>
@@ -36,21 +36,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:21:49.781465+00:00'
+            mapped_at: '2025-12-04T01:38:57.069845+00:00'
         service:
             source_field: service
             source_value: threat_management
-            mapped_at: '2025-11-26T02:21:49.781465+00:00'
+            mapped_at: '2025-12-04T01:38:57.069845+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:49.781478+00:00'
+            mapped_at: '2025-12-04T01:38:57.069859+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:21:49.781480+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:38:57.069861+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:21:49.781481+00:00'
+            mapped_at: '2025-12-04T01:38:57.069863+00:00'

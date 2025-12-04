@@ -1,7 +1,8 @@
-id: 2e669ed8-742e-4fe5-b3c4-5a59b486c2ee
 title: Activity Performed by Terminated User
+id: 2e669ed8-742e-4fe5-b3c4-5a59b486c2ee
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: 'Detects when a Microsoft Cloud App Security reported for users whose
     account were terminated in Azure AD, but still perform activities in other platforms
     such as AWS or Salesforce.
@@ -10,17 +11,15 @@ description: 'Detects when a Microsoft Cloud App Security reported for users who
     since these accounts are often not terminated when a user leaves the company.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-08-23'
-modified: '2022-10-09'
-tags:
-    - attack.impact
 references:
     - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
     - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-23'
+modified: '2022-10-09'
 logsource:
     product: m365
     service: threat_management
@@ -37,21 +36,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:21:54.071713+00:00'
+            mapped_at: '2025-12-04T01:38:59.186779+00:00'
         service:
             source_field: service
             source_value: threat_management
-            mapped_at: '2025-11-26T02:21:54.071713+00:00'
+            mapped_at: '2025-12-04T01:38:59.186779+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:54.071731+00:00'
+            mapped_at: '2025-12-04T01:38:59.186795+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:21:54.071732+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:38:59.186797+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:21:54.071734+00:00'
+            mapped_at: '2025-12-04T01:38:59.186799+00:00'

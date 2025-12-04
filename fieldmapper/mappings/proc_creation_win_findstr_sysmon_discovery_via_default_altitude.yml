@@ -1,21 +1,20 @@
-id: 37db85d1-b089-490a-a59a-c7b6f984f480
 title: Sysmon Discovery Via Default Driver Altitude Using Findstr.EXE
+id: 37db85d1-b089-490a-a59a-c7b6f984f480
 status: test
 level: high
+author: frack113
 description: Detects usage of "findstr" with the argument "385201". Which could indicate
     potential discovery of an installed Sysinternals Sysmon service using the default
     driver altitude (even if the name is changed).
-author: frack113
-date: '2021-12-16'
-modified: '2023-11-14'
-tags:
-    - attack.discovery
-    - attack.t1518.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md#atomic-test-5---security-software-discovery---sysmon-service
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1518.001
+date: '2021-12-16'
+modified: '2023-11-14'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:16.783825+00:00'
+            mapped_at: '2025-12-04T01:40:53.367684+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:16.783825+00:00'
+            mapped_at: '2025-12-04T01:40:53.367684+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:16.783843+00:00'
+            mapped_at: '2025-12-04T01:40:53.367707+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:16.783845+00:00'
+            mapped_at: '2025-12-04T01:40:53.367709+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:16.783847+00:00'
+            mapped_at: '2025-12-04T01:40:53.367719+00:00'

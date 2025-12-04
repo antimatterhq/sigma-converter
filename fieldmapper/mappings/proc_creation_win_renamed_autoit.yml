@@ -1,7 +1,8 @@
-id: f4264e47-f522-4c38-a420-04525d5b880f
 title: Renamed AutoIt Execution
+id: f4264e47-f522-4c38-a420-04525d5b880f
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects the execution of a renamed AutoIt2.exe or AutoIt3.exe.
 
     AutoIt is a scripting language and automation tool for Windows systems. While
@@ -11,18 +12,16 @@ description: 'Detects the execution of a renamed AutoIt2.exe or AutoIt3.exe.
     spyware, and botnets. A renamed AutoIt executable is particularly suspicious.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2023-06-04'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1027
 references:
     - https://twitter.com/malmoeb/status/1665463817130725378?s=12&t=C0_T_re0wRP_NfKa27Xw9w
     - https://www.autoitscript.com/site/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027
+date: '2023-06-04'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -55,25 +54,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:54.436156+00:00'
+            mapped_at: '2025-12-04T01:44:42.227501+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:54.436156+00:00'
+            mapped_at: '2025-12-04T01:44:42.227501+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:54.436187+00:00'
+            mapped_at: '2025-12-04T01:44:42.227542+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:29:54.436192+00:00'
+            mapped_at: '2025-12-04T01:44:42.227546+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:54.436195+00:00'
+            mapped_at: '2025-12-04T01:44:42.227550+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:54.436198+00:00'
+            mapped_at: '2025-12-04T01:44:42.227553+00:00'

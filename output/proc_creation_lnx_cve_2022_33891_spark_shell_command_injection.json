@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Apache Spark Shell Command Injection - ProcessCreation",
+    "comment": "Detects attempts to exploit an apache spark server via CVE-2014-6287 from a commandline perspective",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\bash')) AND (contains(lower(process.cmd_line), lower('id -gn `')) OR contains(lower(process.cmd_line), lower('id -gn \\''))))"
+      }
+    },
+    "output": {
+      "summary": "Detects attempts to exploit an apache spark server via CVE-2014-6287 from a commandline perspective",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://github.com/W01fh4cker/cve-2022-33891/blob/fd973b56e78bca8822caa3a2e3cf1b5aff5d0950/cve_2022_33891_poc.py, https://sumsec.me/2022/CVE-2022-33891%20Apache%20Spark%20shell%20command%20injection.html, https://github.com/apache/spark/pull/36315/files",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1190"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

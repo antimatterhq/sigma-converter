@@ -1,7 +1,8 @@
-id: 6ad91e31-53df-4826-bd27-0166171c8040
 title: Google Cloud Kubernetes Admission Controller
+id: 6ad91e31-53df-4826-bd27-0166171c8040
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: 'Identifies when an admission controller is executed in GCP Kubernetes.
 
     A Kubernetes Admission controller intercepts, and possibly modifies, requests
@@ -23,21 +24,19 @@ description: 'Identifies when an admission controller is executed in GCP Kuberne
     record secrets, and other sensitive information.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-11-25'
-modified: '2022-12-18'
+references:
+    - https://cloud.google.com/kubernetes-engine/docs
+falsepositives:
+    - Google Cloud Kubernetes Admission Controller may be done by a system administrator.
+    - If known behavior is causing false positives, it can be exempted from the rule.
 tags:
     - attack.persistence
     - attack.t1078
     - attack.credential-access
     - attack.t1552
     - attack.t1552.007
-references:
-    - https://cloud.google.com/kubernetes-engine/docs
-falsepositives:
-    - Google Cloud Kubernetes Admission Controller may be done by a system administrator.
-    - If known behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+date: '2021-11-25'
+modified: '2022-12-18'
 logsource:
     product: gcp
     service: gcp.audit
@@ -59,13 +58,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:25.011832+00:00'
+            mapped_at: '2025-12-04T01:38:45.446891+00:00'
         service:
             source_field: service
             source_value: gcp.audit
-            mapped_at: '2025-11-26T02:21:25.011832+00:00'
+            mapped_at: '2025-12-04T01:38:45.446891+00:00'
     detection_fields:
         -   source_field: gcp.audit.method_name
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:25.011844+00:00'
+            mapped_at: '2025-12-04T01:38:45.446915+00:00'

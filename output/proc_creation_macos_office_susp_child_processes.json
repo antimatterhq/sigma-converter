@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Microsoft Office Child Process - MacOS",
+    "comment": "Detects suspicious child processes spawning from microsoft office suite applications such as word or excel. This could indicates malicious macro execution",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.parent_process.name), lower('microsoft word')) OR contains(lower(process.parent_process.name), lower('microsoft excel')) OR contains(lower(process.parent_process.name), lower('microsoft powerpoint')) OR contains(lower(process.parent_process.name), lower('microsoft onenote'))) AND (endswith(lower(process.name), lower('/bash')) OR endswith(lower(process.name), lower('/curl')) OR endswith(lower(process.name), lower('/dash')) OR endswith(lower(process.name), lower('/fish')) OR endswith(lower(process.name), lower('/osacompile')) OR endswith(lower(process.name), lower('/osascript')) OR endswith(lower(process.name), lower('/sh')) OR endswith(lower(process.name), lower('/zsh')) OR endswith(lower(process.name), lower('/python')) OR endswith(lower(process.name), lower('/python3')) OR endswith(lower(process.name), lower('/wget'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious child processes spawning from microsoft office suite applications such as word or excel. This could indicates malicious macro execution",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://redcanary.com/blog/applescript/, https://objective-see.org/blog/blog_0x4B.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

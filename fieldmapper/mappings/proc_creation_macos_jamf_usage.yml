@@ -1,23 +1,22 @@
-id: be2e3a5c-9cc7-4d02-842a-68e9cb26ec49
 title: JAMF MDM Execution
+id: be2e3a5c-9cc7-4d02-842a-68e9cb26ec49
 status: test
 level: low
+author: Jay Pandit
 description: 'Detects execution of the "jamf" binary to create user accounts and run
     commands. For example, the binary can be abused by attackers on the system in
     order to bypass security controls or remove application control polices.
 
     '
-author: Jay Pandit
-date: '2023-08-22'
-tags:
-    - attack.execution
 references:
     - https://github.com/MythicAgents/typhon/
     - https://www.zoocoup.org/casper/jamf_cheatsheet.pdf
     - https://docs.jamf.com/10.30.0/jamf-pro/administrator-guide/Components_Installed_on_Managed_Computers.html
 falsepositives:
     - Legitimate use of the JAMF CLI tool by IT support and administrators
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-08-22'
 logsource:
     category: process_creation
     product: macos
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:31.245362+00:00'
+            mapped_at: '2025-12-04T01:34:27.863804+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:31.245362+00:00'
+            mapped_at: '2025-12-04T01:34:27.863804+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:31.245397+00:00'
+            mapped_at: '2025-12-04T01:34:27.863817+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:31.245402+00:00'
+            mapped_at: '2025-12-04T01:34:27.863819+00:00'

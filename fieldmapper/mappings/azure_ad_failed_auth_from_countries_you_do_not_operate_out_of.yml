@@ -1,20 +1,19 @@
-id: 28870ae4-6a13-4616-bd1a-235a7fad7458
 title: Failed Authentications From Countries You Do Not Operate Out Of
+id: 28870ae4-6a13-4616-bd1a-235a7fad7458
 status: test
 level: low
-description: Detect failed authentications from countries you do not operate out of.
 author: MikeDuddington, '@dudders1'
-date: '2022-07-28'
+description: Detect failed authentications from countries you do not operate out of.
+references:
+    - https://learn.microsoft.com/en-gb/entra/architecture/security-operations-user-accounts
+falsepositives:
+    - If this was approved by System Administrator.
 tags:
     - attack.initial-access
     - attack.credential-access
     - attack.t1078.004
     - attack.t1110
-references:
-    - https://learn.microsoft.com/en-gb/entra/architecture/security-operations-user-accounts
-falsepositives:
-    - If this was approved by System Administrator.
-taxonomy: sigma
+date: '2022-07-28'
 logsource:
     product: azure
     service: signinlogs
@@ -31,17 +30,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:32.875062+00:00'
+            mapped_at: '2025-12-04T01:38:09.671224+00:00'
         service:
             source_field: service
             source_value: signinlogs
-            mapped_at: '2025-11-26T02:20:32.875062+00:00'
+            mapped_at: '2025-12-04T01:38:09.671224+00:00'
     detection_fields:
         -   source_field: Status
             target_table: authentication
             target_field: status_code
-            mapped_at: '2025-11-26T02:20:33.577713+00:00'
+            mapped_at: '2025-12-04T01:38:09.671241+00:00'
         -   source_field: Location
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:20:33.577726+00:00'
+            mapped_at: '2025-12-04T01:38:09.671243+00:00'

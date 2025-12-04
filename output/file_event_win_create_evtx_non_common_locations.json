@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "EVTX Created In Uncommon Location",
+    "comment": "Detects the creation of new files with the \".evtx\" extension in non-common or non-standard location. This could indicate tampering with default EVTX locations in order to evade security controls or simply exfiltration of event log to search for sensitive information within. Note that backup software and legitimate administrator might perform similar actions during troubleshooting.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(file.path), lower('.evtx')) AND NOT (startswith(lower(file.path), lower('c:\\\\windows\\\\system32\\\\winevt\\\\logs\\\\')) OR startswith(lower(file.path), lower('c:\\\\programdata\\\\microsoft\\\\windows\\\\containers\\\\baseimages\\\\')) AND endswith(lower(file.path), lower('\\\\windows\\\\system32\\\\winevt\\\\logs\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of new files with the \".evtx\" extension in non-common or non-standard location. This could indicate tampering with default EVTX locations in order to evade security controls or simply exfiltration of event log to search for sensitive information within. Note that backup software and legitimate administrator might perform similar actions during troubleshooting.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Administrator or backup activity 2. An unknown bug seems to trigger the Windows \"svchost\" process to drop EVTX files in the \"C:\\Windows\\Temp\" directory in the form \"<log_name\">_<uuid>.evtx\". See https://superuser.com/questions/1371229/low-disk-space-after-filling-up-c-windows-temp-with-evtx-and-txt-files Reference: https://learn.microsoft.com/en-us/windows/win32/eventlog/eventlog-key",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

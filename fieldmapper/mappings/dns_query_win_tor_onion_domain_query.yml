@@ -1,21 +1,18 @@
-id: b55ca2a3-7cff-4dda-8bdd-c7bfa63bf544
 title: DNS Query Tor .Onion Address - Sysmon
+id: b55ca2a3-7cff-4dda-8bdd-c7bfa63bf544
 status: test
 level: high
-description: Detects DNS queries to an ".onion" address related to Tor routing networks
 author: frack113
-date: '2022-02-20'
-modified: '2023-09-18'
-tags:
-    - attack.command-and-control
-    - attack.t1090.003
+description: Detects DNS queries to an ".onion" address related to Tor routing networks
 references:
     - https://www.logpoint.com/en/blog/detecting-tor-use-with-logpoint/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8384bd26-bde6-4da9-8e5d-4174a7a47ca2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090.003
+date: '2022-02-20'
+modified: '2023-09-18'
 logsource:
     category: dns_query
     product: windows
@@ -23,6 +20,9 @@ detection:
     selection:
         QueryName|contains: .onion
     condition: selection
+related:
+    -   id: 8384bd26-bde6-4da9-8e5d-4174a7a47ca2
+        type: similar
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -30,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:46.778032+00:00'
+            mapped_at: '2025-12-04T01:51:20.202656+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:46.778032+00:00'
+            mapped_at: '2025-12-04T01:51:20.202656+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:46.778049+00:00'
+            mapped_at: '2025-12-04T01:51:20.202686+00:00'

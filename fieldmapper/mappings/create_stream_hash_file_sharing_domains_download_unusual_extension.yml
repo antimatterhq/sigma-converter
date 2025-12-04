@@ -1,25 +1,22 @@
-id: ae02ed70-11aa-4a22-b397-c0d0e8f6ea99
 title: Unusual File Download From File Sharing Websites - File Stream
+id: ae02ed70-11aa-4a22-b397-c0d0e8f6ea99
 status: experimental
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects the download of suspicious file type from a well-known file and
     paste sharing domain
-author: Florian Roth (Nextron Systems)
-date: '2022-08-24'
-modified: '2024-10-21'
-tags:
-    - attack.defense-evasion
-    - attack.s0139
-    - attack.t1564.004
 references:
     - https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=90015
     - https://www.cisa.gov/uscert/ncas/alerts/aa22-321a
     - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''52182dfb-afb7-41db-b4bc-5336cb29b464''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.s0139
+    - attack.t1564.004
+date: '2022-08-24'
+modified: '2024-10-21'
 logsource:
     category: create_stream_hash
     product: windows
@@ -63,6 +60,9 @@ detection:
             - .cmd:Zone
             - .ps1:Zone
     condition: all of selection_*
+related:
+    -   id: 52182dfb-afb7-41db-b4bc-5336cb29b464
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: <UNMAPPED>
@@ -70,17 +70,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_stream_hash
-            mapped_at: '2025-11-26T02:38:59.348102+00:00'
+            mapped_at: '2025-12-04T01:51:53.411507+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:59.348102+00:00'
+            mapped_at: '2025-12-04T01:51:53.411507+00:00'
     detection_fields:
         -   source_field: Contents
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:59.348120+00:00'
+            mapped_at: '2025-12-04T01:51:53.411537+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:38:59.348122+00:00'
+            mapped_at: '2025-12-04T01:51:53.411540+00:00'

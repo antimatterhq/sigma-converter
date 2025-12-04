@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "User Added to Local Administrators Group",
+    "comment": "Detects addition of users to the local administrator group via \"Net\" or \"Add-LocalGroupMember\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('localgroup ')) AND contains(lower(process.cmd_line), lower(' /add')) AND contains(lower(process.cmd_line), lower('add-localgroupmember ')) AND contains(lower(process.cmd_line), lower(' -group ')) AND (contains(lower(process.cmd_line), lower(' administrators ')) OR contains(lower(process.cmd_line), lower(' administrateur'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects addition of users to the local administrator group via \"Net\" or \"Add-LocalGroupMember\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrative activity Reference: https://blog.talosintelligence.com/2022/08/recent-cyber-attack.html?m=1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1098"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

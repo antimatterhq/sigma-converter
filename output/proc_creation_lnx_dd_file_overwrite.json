@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "DD File Overwrite",
+    "comment": "Detects potential overwriting and deletion of a file using DD.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(process.name)) in ('/bin/dd', '/usr/bin/dd')) AND contains(lower(process.cmd_line), lower('of=')) AND (contains(lower(process.cmd_line), lower('if=/dev/zero')) OR contains(lower(process.cmd_line), lower('if=/dev/null'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential overwriting and deletion of a file using DD.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Any user deleting files that way. Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md#atomic-test-2---macoslinux---overwrite-file-with-dd",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1485"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,19 +1,18 @@
-id: 883835a7-df45-43e4-bf1d-4268768afda4
 title: Regedit as Trusted Installer
+id: 883835a7-df45-43e4-bf1d-4268768afda4
 status: test
 level: high
-description: Detects a regedit started with TrustedInstaller privileges or by ProcessHacker.exe
 author: Florian Roth (Nextron Systems)
-date: '2021-05-27'
-modified: '2022-10-09'
-tags:
-    - attack.privilege-escalation
-    - attack.t1548
+description: Detects a regedit started with TrustedInstaller privileges or by ProcessHacker.exe
 references:
     - https://twitter.com/1kwpeter/status/1397816101455765504
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+date: '2021-05-27'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:50.719583+00:00'
+            mapped_at: '2025-12-04T01:46:20.148484+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:50.719583+00:00'
+            mapped_at: '2025-12-04T01:46:20.148484+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:50.719595+00:00'
+            mapped_at: '2025-12-04T01:46:20.148500+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:50.719597+00:00'
+            mapped_at: '2025-12-04T01:46:20.148510+00:00'

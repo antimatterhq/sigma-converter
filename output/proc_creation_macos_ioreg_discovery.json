@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "System Information Discovery Using Ioreg",
+    "comment": "Detects the use of \"ioreg\" which will show I/O Kit registry information. This process is used for system information discovery. It has been observed in-the-wild by calling this process directly or using bash and grep to look for specific strings.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/ioreg')) AND contains(lower(process.cmd_line), lower('ioreg')) AND (contains(lower(process.cmd_line), lower('-l')) OR contains(lower(process.cmd_line), lower('-c'))) AND (contains(lower(process.cmd_line), lower('appleahcidiskdriver')) OR contains(lower(process.cmd_line), lower('ioplatformexpertdevice')) OR contains(lower(process.cmd_line), lower('oracle')) OR contains(lower(process.cmd_line), lower('parallels')) OR contains(lower(process.cmd_line), lower('usb vendor name')) OR contains(lower(process.cmd_line), lower('virtualbox')) OR contains(lower(process.cmd_line), lower('vmware'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of \"ioreg\" which will show I/O Kit registry information. This process is used for system information discovery. It has been observed in-the-wild by calling this process directly or using bash and grep to look for specific strings.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrative activities References: https://www.virustotal.com/gui/file/0373d78db6c3c0f6f6dcc409821bf89e1ad8c165d6f95c5c80ecdce2219627d7/behavior, https://www.virustotal.com/gui/file/4ffdc72d1ff1ee8228e31691020fc275afd1baee5a985403a71ca8c7bd36e2e4/behavior, https://www.virustotal.com/gui/file/5907d59ec1303cfb5c0a0f4aaca3efc0830707d86c732ba6b9e842b5730b95dc/behavior, https://www.trendmicro.com/en_ph/research/20/k/new-macos-backdoor-connected-to-oceanlotus-surfaces.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Scripting/CommandLine Process Spawned Regsvr32",
+    "comment": "Detects various command line and scripting engines/processes such as \"PowerShell\", \"Wscript\", \"Cmd\", etc. spawning a \"regsvr32\" instance.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powershell_ise.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wscript.exe'))) AND endswith(lower(process.name), lower('\\\\regsvr32.exe')) AND NOT (lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\cmd.exe') AND endswith(lower(process.cmd_line), lower(' /s c:\\\\windows\\\\system32\\\\rpcproxy\\\\rpcproxy.dll'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects various command line and scripting engines/processes such as \"PowerShell\", \"Wscript\", \"Cmd\", etc. spawning a \"regsvr32\" instance.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate \".bat\", \".hta\", \".ps1\" or \".vbs\" scripts leverage legitimately often. Apply additional filter and exclusions as necessary 2. Some legitimate Windows services References: https://web.archive.org/web/20171001085340/https://subt0x10.blogspot.com/2017/04/bypass-application-whitelisting-script.html, https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "010"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

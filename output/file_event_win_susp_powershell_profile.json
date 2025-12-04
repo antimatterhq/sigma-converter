@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PowerShell Profile Modification",
+    "comment": "Detects the creation or modification of a powershell profile which could indicate suspicious activity as the profile can be used as a mean of persistence",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(file.path), lower('\\\\microsoft.powershell_profile.ps1')) OR endswith(lower(file.path), lower('\\\\powershell\\\\profile.ps1')) OR endswith(lower(file.path), lower('\\\\program files\\\\powershell\\\\7-preview\\\\profile.ps1')) OR endswith(lower(file.path), lower('\\\\program files\\\\powershell\\\\7\\\\profile.ps1')) OR endswith(lower(file.path), lower('\\\\windows\\\\system32\\\\windowspowershell\\\\v1.0\\\\profile.ps1')) OR endswith(lower(file.path), lower('\\\\windowspowershell\\\\profile.ps1'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation or modification of a powershell profile which could indicate suspicious activity as the profile can be used as a mean of persistence",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: System administrator creating Powershell profile manually References: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/, https://persistence-info.github.io/Data/powershellprofile.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1546",
+          "subTechniqueId": "013"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

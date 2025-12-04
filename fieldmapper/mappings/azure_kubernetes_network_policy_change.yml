@@ -1,14 +1,9 @@
-id: 08d6ac24-c927-4469-b3b7-2e422d6e3c43
 title: Azure Kubernetes Network Policy Change
+id: 08d6ac24-c927-4469-b3b7-2e422d6e3c43
 status: test
 level: medium
-description: Identifies when a Azure Kubernetes network policy is modified or deleted.
 author: Austin Songer @austinsonger
-date: '2021-08-07'
-modified: '2022-08-23'
-tags:
-    - attack.impact
-    - attack.credential-access
+description: Identifies when a Azure Kubernetes network policy is modified or deleted.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
     - https://www.microsoft.com/security/blog/2021/03/23/secure-containerized-environments-with-updated-threat-matrix-for-kubernetes/
@@ -22,7 +17,11 @@ falsepositives:
     - Network Policy being modified and deleted from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.credential-access
+date: '2021-08-07'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -41,13 +40,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:59.813083+00:00'
+            mapped_at: '2025-12-04T01:38:25.439598+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:20:59.813083+00:00'
+            mapped_at: '2025-12-04T01:38:25.439598+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:20:59.813105+00:00'
+            mapped_at: '2025-12-04T01:38:25.439614+00:00'

@@ -1,20 +1,19 @@
-id: b236190c-1c61-41e9-84b3-3fe03f6d76b0
 title: Potential Regsvr32 Commandline Flag Anomaly
+id: b236190c-1c61-41e9-84b3-3fe03f6d76b0
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects a potential command line flag anomaly related to "regsvr32" in
     which the "/i" flag is used without the "/n" which should be uncommon.
-author: Florian Roth (Nextron Systems)
-date: '2019-07-13'
-modified: '2024-03-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.010
 references:
     - https://twitter.com/sbousseaden/status/1282441816986484737?s=12
 falsepositives:
     - Administrator typo might cause some false positives
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.010
+date: '2019-07-13'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:47.542540+00:00'
+            mapped_at: '2025-12-04T01:45:25.128622+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:47.542540+00:00'
+            mapped_at: '2025-12-04T01:45:25.128622+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:47.542554+00:00'
+            mapped_at: '2025-12-04T01:45:25.128648+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:47.542555+00:00'
+            mapped_at: '2025-12-04T01:45:25.128650+00:00'

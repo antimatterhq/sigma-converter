@@ -1,21 +1,20 @@
-id: 24e3e58a-646b-4b50-adef-02ef935b9fc8
 title: Hacktool Execution - Imphash
+id: 24e3e58a-646b-4b50-adef-02ef935b9fc8
 status: test
 level: critical
+author: Florian Roth (Nextron Systems)
 description: Detects the execution of different Windows based hacktools via their
     import hash (imphash) even if the files have been renamed
-author: Florian Roth (Nextron Systems)
-date: '2022-03-04'
-modified: '2024-11-23'
-tags:
-    - attack.credential-access
-    - attack.t1588.002
-    - attack.t1003
 references:
     - Internal Research
 falsepositives:
     - Legitimate use of one of these tools
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1588.002
+    - attack.t1003
+date: '2022-03-04'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -118,13 +117,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:09.354059+00:00'
+            mapped_at: '2025-12-04T01:43:21.669546+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:09.354059+00:00'
+            mapped_at: '2025-12-04T01:43:21.669546+00:00'
     detection_fields:
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:28:09.354075+00:00'
+            mapped_at: '2025-12-04T01:43:21.669557+00:00'

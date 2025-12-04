@@ -1,25 +1,22 @@
-id: 117d3d3a-755c-4a61-b23e-9171146d094c
 title: Suspicious Outlook Macro Created
+id: 117d3d3a-755c-4a61-b23e-9171146d094c
 status: test
 level: high
-description: Detects the creation of a macro file for Outlook.
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-08'
-tags:
-    - attack.persistence
-    - attack.command-and-control
-    - attack.t1137
-    - attack.t1008
-    - attack.t1546
+description: Detects the creation of a macro file for Outlook.
 references:
     - https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/
     - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=53
     - https://www.linkedin.com/pulse/outlook-backdoor-using-vba-samir-b-/
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8c31f563-f9a7-450c-bfa8-35f8f32f1f61''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.command-and-control
+    - attack.t1137
+    - attack.t1008
+    - attack.t1546
+date: '2023-02-08'
 logsource:
     category: file_event
     product: windows
@@ -29,6 +26,9 @@ detection:
     filter:
         Image|endswith: \outlook.exe
     condition: selection and not filter
+related:
+    -   id: 8c31f563-f9a7-450c-bfa8-35f8f32f1f61
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -36,17 +36,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:44.359130+00:00'
+            mapped_at: '2025-12-04T01:53:18.923851+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:44.359130+00:00'
+            mapped_at: '2025-12-04T01:53:18.923851+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:44.359163+00:00'
+            mapped_at: '2025-12-04T01:53:18.923865+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:44.359167+00:00'
+            mapped_at: '2025-12-04T01:53:18.923876+00:00'

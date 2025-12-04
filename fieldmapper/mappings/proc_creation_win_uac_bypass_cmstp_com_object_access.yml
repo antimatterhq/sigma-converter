@@ -1,12 +1,17 @@
-id: 4b60e6f2-bf39-47b4-b4ea-398e33cfe253
 title: CMSTP UAC Bypass via COM Object Access
+id: 4b60e6f2-bf39-47b4-b4ea-398e33cfe253
 status: stable
 level: high
+author: Nik Seetharaman, Christian Burkard (Nextron Systems)
 description: Detects UAC Bypass Attempt Using Microsoft Connection Manager Profile
     Installer Autoelevate-capable COM Objects (e.g. UACMe ID of 41, 43, 58 or 65)
-author: Nik Seetharaman, Christian Burkard (Nextron Systems)
-date: '2019-07-31'
-modified: '2024-12-01'
+references:
+    - https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/
+    - https://twitter.com/hFireF0X/status/897640081053364225
+    - https://medium.com/falconforce/falconfriday-detecting-uac-bypasses-0xff16-86c2a9107abf
+    - https://github.com/hfiref0x/UACME
+falsepositives:
+    - Legitimate CMSTP use (unlikely in modern enterprise environments)
 tags:
     - attack.execution
     - attack.defense-evasion
@@ -15,14 +20,8 @@ tags:
     - attack.t1218.003
     - attack.g0069
     - car.2019-04-001
-references:
-    - https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/
-    - https://twitter.com/hFireF0X/status/897640081053364225
-    - https://medium.com/falconforce/falconfriday-detecting-uac-bypasses-0xff16-86c2a9107abf
-    - https://github.com/hfiref0x/UACME
-falsepositives:
-    - Legitimate CMSTP use (unlikely in modern enterprise environments)
-taxonomy: sigma
+date: '2019-07-31'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:40.430091+00:00'
+            mapped_at: '2025-12-04T01:50:21.619785+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:40.430091+00:00'
+            mapped_at: '2025-12-04T01:50:21.619785+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:40.430122+00:00'
+            mapped_at: '2025-12-04T01:50:21.619813+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:36:40.430126+00:00'
+            mapped_at: '2025-12-04T01:50:21.619815+00:00'
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:36:40.430128+00:00'
+            mapped_at: '2025-12-04T01:50:21.619816+00:00'

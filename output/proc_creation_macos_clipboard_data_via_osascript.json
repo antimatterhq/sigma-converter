@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Clipboard Data Collection Via OSAScript",
+    "comment": "Detects possible collection of data from the clipboard via execution of the osascript binary",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('osascript')) AND contains(lower(process.cmd_line), lower(' -e ')) AND contains(lower(process.cmd_line), lower('clipboard')))"
+      }
+    },
+    "output": {
+      "summary": "Detects possible collection of data from the clipboard via execution of the osascript binary",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line False positive: Unlikely Reference: https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1115"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1059",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

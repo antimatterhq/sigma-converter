@@ -1,27 +1,24 @@
-id: e54979bd-c5f9-4d6c-967b-a04b19ac4c74
 title: Uncommon Outbound Kerberos Connection
+id: e54979bd-c5f9-4d6c-967b-a04b19ac4c74
 status: test
 level: medium
+author: Ilyas Ochkov, oscd.community
 description: 'Detects uncommon outbound network activity via Kerberos default port
     indicating possible lateral movement or first stage PrivEsc via delegation.
 
     '
-author: Ilyas Ochkov, oscd.community
-date: '2019-10-24'
-modified: '2024-03-15'
-tags:
-    - attack.credential-access
-    - attack.t1558
-    - attack.lateral-movement
-    - attack.t1550.003
 references:
     - https://github.com/GhostPack/Rubeus
 falsepositives:
     - Web Browsers and third party application might generate similar activity. An
         initial baseline is required.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''eca91c7c-9214-47b9-b4c5-cb1d7e4f2350''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1558
+    - attack.lateral-movement
+    - attack.t1550.003
+date: '2019-10-24'
+modified: '2024-03-15'
 logsource:
     category: network_connection
     product: windows
@@ -42,6 +39,9 @@ detection:
     filter_optional_tomcat:
         Image|endswith: \tomcat\bin\tomcat8.exe
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: eca91c7c-9214-47b9-b4c5-cb1d7e4f2350
+        type: similar
 ocsf_mapping:
     class_name: network_activity
     activity_id: 1
@@ -49,21 +49,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:01.770906+00:00'
+            mapped_at: '2025-12-04T01:51:28.755734+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:01.770906+00:00'
+            mapped_at: '2025-12-04T01:51:28.755734+00:00'
     detection_fields:
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:01.770921+00:00'
+            mapped_at: '2025-12-04T01:51:28.755748+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:01.770923+00:00'
+            mapped_at: '2025-12-04T01:51:28.755749+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:01.770925+00:00'
+            mapped_at: '2025-12-04T01:51:28.755751+00:00'

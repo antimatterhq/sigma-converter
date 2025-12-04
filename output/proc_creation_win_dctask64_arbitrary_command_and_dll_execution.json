@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "ManageEngine Endpoint Central Dctask64.EXE Potential Abuse",
+    "comment": "Detects the execution of \"dctask64.exe\", a signed binary by ZOHO Corporation part of ManageEngine Endpoint Central. This binary can be abused for DLL injection, arbitrary command and process execution.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\dctask64.exe')) AND (contains(lower(process.file.hashes.value), lower('6834b1b94e49701d77ccb3c0895e1afd')) OR contains(lower(process.file.hashes.value), lower('1bb6f93b129f398c7c4a76bb97450bba')) OR contains(lower(process.file.hashes.value), lower('faa2ac19875fade461c8d89dcf2710a3')) OR contains(lower(process.file.hashes.value), lower('f1039ced4b91572ab7847d26032e6bbf'))) AND (contains(lower(process.cmd_line), lower(' executecmd64 ')) OR contains(lower(process.cmd_line), lower(' invokeexe ')) OR contains(lower(process.cmd_line), lower(' injectdll '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of \"dctask64.exe\", a signed binary by ZOHO Corporation part of ManageEngine Endpoint Central. This binary can be abused for DLL injection, arbitrary command and process execution.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/gN3mes1s/status/1222088214581825540, https://twitter.com/gN3mes1s/status/1222095963789111296, https://twitter.com/gN3mes1s/status/1222095371175911424",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

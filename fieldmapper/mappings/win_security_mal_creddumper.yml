@@ -1,13 +1,15 @@
-id: f0d1feba-4344-4ca9-8121-a6c97bd6df52
 title: Credential Dumping Tools Service Execution - Security
+id: f0d1feba-4344-4ca9-8121-a6c97bd6df52
 status: test
 level: high
-description: Detects well-known credential dumping tools execution via service execution
-    events
 author: Florian Roth (Nextron Systems), Teymur Kheirkhabarov, Daniil Yugoslavskiy,
     oscd.community
-date: '2017-03-05'
-modified: '2022-11-29'
+description: Detects well-known credential dumping tools execution via service execution
+    events
+references:
+    - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+falsepositives:
+    - Legitimate Administrator using credential dumping tool for password recovery
 tags:
     - attack.credential-access
     - attack.execution
@@ -18,13 +20,8 @@ tags:
     - attack.t1003.006
     - attack.t1569.002
     - attack.s0005
-references:
-    - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
-falsepositives:
-    - Legitimate Administrator using credential dumping tool for password recovery
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4976aa50-8f41-45c6-8b15-ab3fc10e79ed''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2017-03-05'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -42,6 +39,9 @@ detection:
             - pwdump
             - servpw
     condition: selection
+related:
+    -   id: 4976aa50-8f41-45c6-8b15-ab3fc10e79ed
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -49,17 +49,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:45.735001+00:00'
+            mapped_at: '2025-12-04T01:56:01.326886+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:45.735001+00:00'
+            mapped_at: '2025-12-04T01:56:01.326886+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:45.735028+00:00'
+            mapped_at: '2025-12-04T01:56:01.326901+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:45.735032+00:00'
+            mapped_at: '2025-12-04T01:56:01.326904+00:00'

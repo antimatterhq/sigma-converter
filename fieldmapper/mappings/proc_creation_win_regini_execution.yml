@@ -1,15 +1,10 @@
-id: 5f60740a-f57b-4e76-82a1-15b6ff2cb134
 title: Registry Modification Via Regini.EXE
+id: 5f60740a-f57b-4e76-82a1-15b6ff2cb134
 status: test
 level: low
+author: Eli Salem, Sander Wiebing, oscd.community
 description: Detects the execution of regini.exe which can be used to modify registry
     keys, the changes are imported from one or more text files.
-author: Eli Salem, Sander Wiebing, oscd.community
-date: '2020-10-08'
-modified: '2023-02-08'
-tags:
-    - attack.t1112
-    - attack.defense-evasion
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Regini/
     - https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
@@ -19,9 +14,11 @@ fields:
     - CommandLine
 falsepositives:
     - Legitimate modification of keys
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''77946e79-97f1-45a2-84b4-f37b5c0d8682''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.t1112
+    - attack.defense-evasion
+date: '2020-10-08'
+modified: '2023-02-08'
 logsource:
     category: process_creation
     product: windows
@@ -32,6 +29,9 @@ detection:
     filter:
         CommandLine|re: :[^ \\]
     condition: selection and not filter
+related:
+    -   id: 77946e79-97f1-45a2-84b4-f37b5c0d8682
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -39,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:46.939583+00:00'
+            mapped_at: '2025-12-04T01:43:52.083371+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:46.939583+00:00'
+            mapped_at: '2025-12-04T01:43:52.083371+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:46.939600+00:00'
+            mapped_at: '2025-12-04T01:43:52.083384+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:46.939604+00:00'
+            mapped_at: '2025-12-04T01:43:52.083386+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:46.939606+00:00'
+            mapped_at: '2025-12-04T01:43:52.083387+00:00'

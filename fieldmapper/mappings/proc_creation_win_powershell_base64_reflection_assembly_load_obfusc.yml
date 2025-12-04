@@ -1,17 +1,10 @@
-id: 9c0295ce-d60d-40bd-bd74-84673b7592b1
 title: Suspicious Encoded And Obfuscated Reflection Assembly Load Function Call
+id: 9c0295ce-d60d-40bd-bd74-84673b7592b1
 status: test
 level: high
+author: pH-T (Nextron Systems)
 description: Detects suspicious base64 encoded and obfuscated "LOAD" keyword used
     in .NET "reflection.assembly"
-author: pH-T (Nextron Systems)
-date: '2022-03-01'
-modified: '2023-04-06'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1059.001
-    - attack.t1027
 references:
     - https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/mal_revil.yar
     - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
@@ -20,9 +13,13 @@ fields:
     - CommandLine
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''62b7ccc9-23b4-471e-aa15-6da3663c4d59''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1059.001
+    - attack.t1027
+date: '2022-03-01'
+modified: '2023-04-06'
 logsource:
     category: process_creation
     product: windows
@@ -48,6 +45,9 @@ detection:
             - oAOgAoACcATABvAGEAJwArACcAZAAnACkA
             - 6ADoAKAAnAEwAbwBhACcAKwAnAGQAJwApA
     condition: selection
+related:
+    -   id: 62b7ccc9-23b4-471e-aa15-6da3663c4d59
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -55,13 +55,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:12.669058+00:00'
+            mapped_at: '2025-12-04T01:50:56.097977+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:12.669058+00:00'
+            mapped_at: '2025-12-04T01:50:56.097977+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:12.669072+00:00'
+            mapped_at: '2025-12-04T01:50:56.097993+00:00'

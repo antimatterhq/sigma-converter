@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Control Panel Items",
+    "comment": "Detects the malicious use of a control panel item",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\reg.exe')) AND lower(process.file.name) = lower('reg.exe') AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('currentversion\\\\control panel\\\\cpls')) OR endswith(lower(process.cmd_line), lower('.cpl')) AND NOT (contains(lower(process.cmd_line), lower('\\\\system32\\\\')) OR contains(lower(process.cmd_line), lower('%system%')) OR contains(lower(process.cmd_line), lower('|c:\\\\windows\\\\system32|')) OR contains(lower(process.cmd_line), lower('regsvr32 ')) AND contains(lower(process.cmd_line), lower(' /s ')) AND contains(lower(process.cmd_line), lower('igfxcpl.cpl')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the malicious use of a control panel item",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://ired.team/offensive-security/code-execution/code-execution-through-control-panel-add-ins",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1546"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

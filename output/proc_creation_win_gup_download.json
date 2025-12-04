@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "File Download Using Notepad++ GUP Utility",
+    "comment": "Detects execution of the Notepad++ updater (gup) from a process other than Notepad++ to download files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\gup.exe')) AND lower(process.file.name) = lower('gup.exe') AND contains(lower(process.cmd_line), lower(' -unzipto ')) AND contains(lower(process.cmd_line), lower('http')) AND NOT endswith(lower(process.parent_process.name), lower('\\\\notepad++.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the Notepad++ updater (gup) from a process other than Notepad++ to download files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Other parent processes other than notepad++ using GUP that are not currently identified Reference: https://twitter.com/nas_bench/status/1535322182863179776",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

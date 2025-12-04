@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "DLL Execution via Rasautou.exe",
+    "comment": "Detects using Rasautou.exe for loading arbitrary .DLL specified in -d option and executes the export specified in -p.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\rasautou.exe')) AND lower(process.file.name) = lower('rasdlui.exe') AND contains(lower(process.cmd_line), lower(' -d ')) AND contains(lower(process.cmd_line), lower(' -p ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects using Rasautou.exe for loading arbitrary .DLL specified in -d option and executes the export specified in -p.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://lolbas-project.github.io/lolbas/Binaries/Rasautou/, https://github.com/fireeye/DueDLLigence, https://www.fireeye.com/blog/threat-research/2019/10/staying-hidden-on-the-endpoint-evading-detection-with-shellcode.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

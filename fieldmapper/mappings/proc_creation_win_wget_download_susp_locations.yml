@@ -1,18 +1,17 @@
-id: 40aa399c-7b02-4715-8e5f-73572b493f33
 title: Suspicious File Download From IP Via Wget.EXE - Paths
+id: 40aa399c-7b02-4715-8e5f-73572b493f33
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potentially suspicious file downloads directly from IP addresses
     and stored in suspicious locations using Wget.exe
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-02-23'
-tags:
-    - attack.execution
 references:
     - https://www.gnu.org/software/wget/manual/wget.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2024-02-23'
 logsource:
     category: process_creation
     product: windows
@@ -52,21 +51,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:33.833615+00:00'
+            mapped_at: '2025-12-04T01:50:15.450497+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:33.833615+00:00'
+            mapped_at: '2025-12-04T01:50:15.450497+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:33.833627+00:00'
+            mapped_at: '2025-12-04T01:50:15.450516+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:33.833629+00:00'
+            mapped_at: '2025-12-04T01:50:15.450518+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:33.833630+00:00'
+            mapped_at: '2025-12-04T01:50:15.450520+00:00'

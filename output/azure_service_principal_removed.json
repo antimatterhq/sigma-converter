@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Azure Service Principal Removed",
+    "comment": "Identifies when a service principal was removed in Azure.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "activitylogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('6') AND lower(message) = lower('remove service principal'))"
+      }
+    },
+    "output": {
+      "summary": "Identifies when a service principal was removed in Azure.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Service principal being removed may be performed by a system administrator. 2. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 3. Service principal removed from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule. Reference: https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities#application-proxy",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

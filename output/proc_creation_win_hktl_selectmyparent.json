@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - PPID Spoofing SelectMyParent Tool Execution",
+    "comment": "Detects the use of parent process ID spoofing tools like Didier Stevens tool SelectMyParent",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\selectmyparent.exe')) AND (contains(lower(process.cmd_line), lower('ppid-spoof')) OR contains(lower(process.cmd_line), lower('ppid_spoof')) OR contains(lower(process.cmd_line), lower('spoof-ppid')) OR contains(lower(process.cmd_line), lower('spoof_ppid')) OR contains(lower(process.cmd_line), lower('ppidspoof')) OR contains(lower(process.cmd_line), lower('spoofppid')) OR contains(lower(process.cmd_line), lower('spoofedppid')) OR contains(lower(process.cmd_line), lower(' -spawnto '))) AND (contains(lower(process.file.name), lower('ppid-spoof')) OR contains(lower(process.file.name), lower('ppid_spoof')) OR contains(lower(process.file.name), lower('spoof-ppid')) OR contains(lower(process.file.name), lower('spoof_ppid')) OR contains(lower(process.file.name), lower('ppidspoof')) OR contains(lower(process.file.name), lower('spoofppid')) OR contains(lower(process.file.name), lower('spoofedppid'))) AND lower(device.desc) = lower('selectmyparent') AND (contains(lower(process.file.hashes.value), lower('imphash=04d974875bd225f00902b4cad9af3fbc')) OR contains(lower(process.file.hashes.value), lower('imphash=a782af154c9e743ddf3f3eb2b8f3d16e')) OR contains(lower(process.file.hashes.value), lower('imphash=89059503d7fbf470e68f7e63313da3ad')) OR contains(lower(process.file.hashes.value), lower('imphash=ca28337632625c8281ab8a130b3d6bad'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of parent process ID spoofing tools like Didier Stevens tool SelectMyParent",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://pentestlab.blog/2020/02/24/parent-pid-spoofing/, https://www.picussecurity.com/resource/blog/how-to-detect-parent-pid-ppid-spoofing-attacks, https://www.ired.team/offensive-security/defense-evasion/parent-process-id-ppid-spoofing, https://www.virustotal.com/gui/search/filename%253A*spoof*%2520filename%253A*ppid*/files",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1134",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

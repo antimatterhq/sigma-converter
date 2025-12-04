@@ -1,23 +1,22 @@
-id: 98054878-5eab-434c-85d4-72d4e5a3361b
 title: HackTool - EDRSilencer Execution - Filter Added
+id: 98054878-5eab-434c-85d4-72d4e5a3361b
 status: test
 level: high
+author: Thodoris Polyzos (@SmoothDeploy)
 description: 'Detects execution of EDRSilencer, a tool that abuses the Windows Filtering
     Platform (WFP) to block the outbound traffic of running EDR agents based on specific
     hardcoded filter names.
 
     '
-author: Thodoris Polyzos (@SmoothDeploy)
-date: '2024-01-29'
-modified: '2024-01-30'
-tags:
-    - attack.defense-evasion
-    - attack.t1562
 references:
     - https://github.com/netero1010/EDRSilencer
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562
+date: '2024-01-29'
+modified: '2024-01-30'
 logsource:
     product: windows
     service: security
@@ -37,17 +36,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:01.266855+00:00'
+            mapped_at: '2025-12-04T01:56:07.095488+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:01.266855+00:00'
+            mapped_at: '2025-12-04T01:56:07.095488+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:01.266891+00:00'
+            mapped_at: '2025-12-04T01:56:07.095513+00:00'
         -   source_field: FilterName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:01.266896+00:00'
+            mapped_at: '2025-12-04T01:56:07.095525+00:00'

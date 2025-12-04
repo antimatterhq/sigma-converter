@@ -1,7 +1,8 @@
-id: 2d367498-5112-4ae5-a06a-96e7bc33a211
 title: Suspicious Binary Writes Via AnyDesk
+id: 2d367498-5112-4ae5-a06a-96e7bc33a211
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects AnyDesk writing binary files to disk other than "gcapi.dll".
 
     According to RedCanary research it is highly abnormal for AnyDesk to write executable
@@ -11,16 +12,14 @@ description: 'Detects AnyDesk writing binary files to disk other than "gcapi.dll
     interact with the Google Cloud API. (See reference section for more details)
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-28'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://redcanary.com/blog/misbehaving-rats/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2022-09-28'
 logsource:
     category: file_event
     product: windows
@@ -40,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:27.615322+00:00'
+            mapped_at: '2025-12-04T01:52:20.010922+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:27.615322+00:00'
+            mapped_at: '2025-12-04T01:52:20.010922+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:27.615340+00:00'
+            mapped_at: '2025-12-04T01:52:20.010978+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:27.615342+00:00'
+            mapped_at: '2025-12-04T01:52:20.010983+00:00'

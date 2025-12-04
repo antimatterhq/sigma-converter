@@ -1,26 +1,25 @@
-id: bf361876-6620-407a-812f-bfe11e51e924
 title: Compressed File Extraction Via Tar.EXE
+id: bf361876-6620-407a-812f-bfe11e51e924
 status: test
 level: low
+author: AdmU3
 description: 'Detects execution of "tar.exe" in order to extract compressed file.
 
     Adversaries may abuse various utilities in order to decompress data to avoid detection.
 
     '
-author: AdmU3
-date: '2023-12-19'
-tags:
-    - attack.collection
-    - attack.exfiltration
-    - attack.t1560
-    - attack.t1560.001
 references:
     - https://unit42.paloaltonetworks.com/chromeloader-malware/
     - https://lolbas-project.github.io/lolbas/Binaries/Tar/
     - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/cicada-apt10-japan-espionage
 falsepositives:
     - Likely
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.exfiltration
+    - attack.t1560
+    - attack.t1560.001
+date: '2023-12-19'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:29.247943+00:00'
+            mapped_at: '2025-12-04T01:45:09.595280+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:29.247943+00:00'
+            mapped_at: '2025-12-04T01:45:09.595280+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:29.247962+00:00'
+            mapped_at: '2025-12-04T01:45:09.595308+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:29.247964+00:00'
+            mapped_at: '2025-12-04T01:45:09.595310+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:29.247965+00:00'
+            mapped_at: '2025-12-04T01:45:09.595312+00:00'

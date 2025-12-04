@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "CobaltStrike Service Installations - System",
+    "comment": "Detects known malicious service installs that appear in cases in which a Cobalt Strike beacon elevates privileges or lateral movement",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND (contains(lower(process.file.path), lower('admin$')) AND contains(lower(process.file.path), lower('.exe')) OR contains(lower(process.file.path), lower('%comspec%')) AND contains(lower(process.file.path), lower('start')) AND contains(lower(process.file.path), lower('powershell')) OR contains(lower(process.file.path), lower('powershell -nop -w hidden -encodedcommand')) OR contains(lower(process.file.path), lower('suvyichozxctt2jqzwn0ie5ldc5xzwjjbgllbnqplkrvd25sb2fku3ryaw5nkcdodhrwoi8vmti3ljaumc4xo')) OR contains(lower(process.file.path), lower('lfwcaotmv3lu9iamvjdcbozxquv2viy2xpzw50ks5eb3dubg9hzfn0cmluzygnahr0cdovlzeyny4wljaumt')) OR contains(lower(process.file.path), lower('jrvggke5ldy1pymply3qgtmv0lldlymnsawvudckurg93bmxvywrtdhjpbmcoj2h0dha6ly8xmjcumc4wlje6'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects known malicious service installs that appear in cases in which a Cobalt Strike beacon elevates privileges or lateral movement",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.sans.org/webcasts/119395, https://www.crowdstrike.com/blog/getting-the-bacon-from-cobalt-strike-beacon/, https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1569",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1543",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

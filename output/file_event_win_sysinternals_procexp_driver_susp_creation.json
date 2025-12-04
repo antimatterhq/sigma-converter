@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Process Explorer Driver Creation By Non-Sysinternals Binary",
+    "comment": "Detects creation of the Process Explorer drivers by processes other than Process Explorer (procexp) itself. Hack tools or malware may use the Process Explorer driver to elevate privileges, drops it to disk for a few moments, runs a service using that driver and removes it afterwards.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND contains(lower(file.path), lower('\\\\procexp')) AND endswith(lower(file.path), lower('.sys')) AND NOT (endswith(lower(actor.process.name), lower('\\\\procexp.exe')) OR endswith(lower(actor.process.name), lower('\\\\procexp64.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of the Process Explorer drivers by processes other than Process Explorer (procexp) itself. Hack tools or malware may use the Process Explorer driver to elevate privileges, drops it to disk for a few moments, runs a service using that driver and removes it afterwards.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some false positives may occur with legitimate renamed process explorer binaries References: https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer, https://github.com/Yaxser/Backstab, https://www.elastic.co/security-labs/stopping-vulnerable-driver-attacks, https://news.sophos.com/en-us/2023/04/19/aukill-edr-killer-malware-abuses-process-explorer-driver/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1068"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

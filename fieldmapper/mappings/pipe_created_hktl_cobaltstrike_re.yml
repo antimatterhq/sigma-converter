@@ -1,25 +1,21 @@
-id: 0e7163d4-9e19-4fa7-9be6-000c61aad77a
 title: CobaltStrike Named Pipe Pattern Regex
+id: 0e7163d4-9e19-4fa7-9be6-000c61aad77a
 status: test
 level: critical
+author: Florian Roth (Nextron Systems)
 description: Detects the creation of a named pipe matching a pattern used by CobaltStrike
     Malleable C2 profiles
-author: Florian Roth (Nextron Systems)
-date: '2021-07-30'
-modified: '2022-12-31'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055
 references:
     - https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
     - https://gist.github.com/MHaggis/6c600e524045a6d49c35291a21e10752
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''85adeb13-4fc9-4e68-8a4a-c7cb2c336eb7''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''d5601f8c-b26f-4ab0-9035-69e11a8d4ad2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055
+date: '2021-07-30'
+modified: '2022-12-31'
 logsource:
     category: pipe_created
     product: windows
@@ -54,6 +50,11 @@ detection:
             - \\spoolss_[0-9a-f]{2}
         PipeName|re: \\Winsock2\\CatalogChangeListener-[0-9a-f]{3}-0,
     condition: selection
+related:
+    -   id: 85adeb13-4fc9-4e68-8a4a-c7cb2c336eb7
+        type: similar
+    -   id: d5601f8c-b26f-4ab0-9035-69e11a8d4ad2
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

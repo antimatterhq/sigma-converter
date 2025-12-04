@@ -1,26 +1,25 @@
-id: a238b5d0-ce2d-4414-a676-7a531b3d13d6
 title: ETW Trace Evasion Activity
+id: a238b5d0-ce2d-4414-a676-7a531b3d13d6
 status: test
 level: high
+author: '@neu5ron, Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community'
 description: 'Detects command line activity that tries to clear or disable any ETW
     trace log which could be a sign of logging evasion.
 
     '
-author: '@neu5ron, Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community'
-date: '2019-03-22'
-modified: '2022-06-28'
-tags:
-    - attack.defense-evasion
-    - attack.t1070
-    - attack.t1562.006
-    - car.2016-04-002
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil
     - https://abuse.io/lockergoga.txt
     - https://medium.com/palantir/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070
+    - attack.t1562.006
+    - car.2016-04-002
+date: '2019-03-22'
+modified: '2022-06-28'
 logsource:
     category: process_creation
     product: windows
@@ -62,13 +61,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:00.864173+00:00'
+            mapped_at: '2025-12-04T01:41:29.257210+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:00.864173+00:00'
+            mapped_at: '2025-12-04T01:41:29.257210+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:00.864201+00:00'
+            mapped_at: '2025-12-04T01:41:29.257228+00:00'

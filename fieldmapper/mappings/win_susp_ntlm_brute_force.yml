@@ -1,18 +1,17 @@
-id: 9c8acf1a-cbf9-4db6-b63c-74baabe03e59
 title: NTLM Brute Force
+id: 9c8acf1a-cbf9-4db6-b63c-74baabe03e59
 status: test
 level: medium
-description: Detects common NTLM brute force device names
 author: Jerry Shockley '@jsh0x'
-date: '2022-02-02'
-tags:
-    - attack.credential-access
-    - attack.t1110
+description: Detects common NTLM brute force device names
 references:
     - https://www.varonis.com/blog/investigate-ntlm-brute-force
 falsepositives:
     - Systems with names equal to the spoofed ones used by the brute force tools
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1110
+date: '2022-02-02'
 logsource:
     product: windows
     service: ntlm
@@ -38,17 +37,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:46.140826+00:00'
+            mapped_at: '2025-12-04T01:56:25.101562+00:00'
         service:
             source_field: service
             source_value: ntlm
-            mapped_at: '2025-11-26T02:46:46.140826+00:00'
+            mapped_at: '2025-12-04T01:56:25.101562+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:46.140860+00:00'
+            mapped_at: '2025-12-04T01:56:25.101594+00:00'
         -   source_field: WorkstationName
             target_table: authentication
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:46:46.140864+00:00'
+            mapped_at: '2025-12-04T01:56:25.101599+00:00'

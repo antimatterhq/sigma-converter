@@ -1,22 +1,21 @@
-id: 0ba863e6-def5-4e50-9cea-4dd8c7dc46a4
 title: Control Panel Items
+id: 0ba863e6-def5-4e50-9cea-4dd8c7dc46a4
 status: test
 level: high
-description: Detects the malicious use of a control panel item
 author: Kyaw Min Thein, Furkan Caliskan (@caliskanfurkan_)
-date: '2020-06-22'
-modified: '2023-10-11'
+description: Detects the malicious use of a control panel item
+references:
+    - https://ired.team/offensive-security/code-execution/code-execution-through-control-panel-add-ins
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.defense-evasion
     - attack.t1218.002
     - attack.persistence
     - attack.t1546
-references:
-    - https://ired.team/offensive-security/code-execution/code-execution-through-control-panel-add-ins
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2020-06-22'
+modified: '2023-10-11'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:25.345891+00:00'
+            mapped_at: '2025-12-04T01:45:07.713407+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:25.345891+00:00'
+            mapped_at: '2025-12-04T01:45:07.713407+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:25.345992+00:00'
+            mapped_at: '2025-12-04T01:45:07.713421+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:25.345997+00:00'
+            mapped_at: '2025-12-04T01:45:07.713423+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:25.345999+00:00'
+            mapped_at: '2025-12-04T01:45:07.713424+00:00'

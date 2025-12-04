@@ -1,17 +1,11 @@
-id: 9e716b33-63b2-46da-86a4-bd3c3b9b5dfb
 title: Certificate Exported Via PowerShell
+id: 9e716b33-63b2-46da-86a4-bd3c3b9b5dfb
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects calls to cmdlets that are used to export certificates from the
     local certificate store. Threat actors were seen abusing this to steal private
     keys from compromised machines.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-18'
-tags:
-    - attack.credential-access
-    - attack.execution
-    - attack.t1552.004
-    - attack.t1059.001
 references:
     - https://us-cert.cisa.gov/ncas/analysis-reports/ar21-112a
     - https://learn.microsoft.com/en-us/powershell/module/pki/export-pfxcertificate?view=windowsserver2022-ps
@@ -19,9 +13,12 @@ references:
 falsepositives:
     - Legitimate certificate exports by administrators. Additional filters might be
         required.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''aa7a3fce-bef5-4311-9cc1-5f04bb8c308c''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.execution
+    - attack.t1552.004
+    - attack.t1059.001
+date: '2023-05-18'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +28,9 @@ detection:
             - 'Export-PfxCertificate '
             - 'Export-Certificate '
     condition: selection
+related:
+    -   id: aa7a3fce-bef5-4311-9cc1-5f04bb8c308c
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,13 +38,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:45.134943+00:00'
+            mapped_at: '2025-12-04T01:47:09.727391+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:45.134943+00:00'
+            mapped_at: '2025-12-04T01:47:09.727391+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:45.134956+00:00'
+            mapped_at: '2025-12-04T01:47:09.727409+00:00'

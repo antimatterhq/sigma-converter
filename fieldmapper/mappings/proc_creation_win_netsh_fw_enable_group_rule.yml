@@ -1,21 +1,20 @@
-id: 347906f3-e207-4d18-ae5b-a9403d6bcdef
 title: Netsh Allow Group Policy on Microsoft Defender Firewall
+id: 347906f3-e207-4d18-ae5b-a9403d6bcdef
 status: test
 level: medium
+author: frack113
 description: Adversaries may modify system firewalls in order to bypass controls limiting
     network usage
-author: frack113
-date: '2022-01-09'
-modified: '2023-02-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.004
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md#atomic-test-3---allow-smb-and-rdp-on-microsoft-defender-firewall
     - https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/netsh-advfirewall-firewall-control-firewall-behavior
 falsepositives:
     - Legitimate administration activity
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.004
+date: '2022-01-09'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:50.765892+00:00'
+            mapped_at: '2025-12-04T01:48:03.450880+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:50.765892+00:00'
+            mapped_at: '2025-12-04T01:48:03.450880+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:50.765918+00:00'
+            mapped_at: '2025-12-04T01:48:03.450991+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:50.765922+00:00'
+            mapped_at: '2025-12-04T01:48:03.451002+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:50.765925+00:00'
+            mapped_at: '2025-12-04T01:48:03.451003+00:00'

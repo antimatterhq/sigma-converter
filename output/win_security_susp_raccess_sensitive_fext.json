@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Access to Sensitive File Extensions",
+    "comment": "Detects known sensitive file extensions accessed on a network share",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND metadata.event_code = 5145 AND (endswith(lower(file.path), lower('.bak')) OR endswith(lower(file.path), lower('.dmp')) OR endswith(lower(file.path), lower('.edb')) OR endswith(lower(file.path), lower('.kirbi')) OR endswith(lower(file.path), lower('.msg')) OR endswith(lower(file.path), lower('.nsf')) OR endswith(lower(file.path), lower('.nst')) OR endswith(lower(file.path), lower('.oab')) OR endswith(lower(file.path), lower('.ost')) OR endswith(lower(file.path), lower('.pst')) OR endswith(lower(file.path), lower('.rdp')) OR endswith(lower(file.path), lower('\\\\groups.xml'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects known sensitive file extensions accessed on a network share",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Help Desk operator doing backup or re-imaging end user machine or backup software 2. Users working with these data types or exchanging message files Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1039"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,7 +1,8 @@
-id: 16124c2d-e40b-4fcc-8f2c-5ab7870a2223
 title: AWS EC2 Disable EBS Encryption
+id: 16124c2d-e40b-4fcc-8f2c-5ab7870a2223
 status: stable
 level: medium
+author: Sittikorn S
 description: 'Identifies disabling of default Amazon Elastic Block Store (EBS) encryption
     in the current region.
 
@@ -9,19 +10,17 @@ description: 'Identifies disabling of default Amazon Elastic Block Store (EBS) e
     volumes.
 
     '
-author: Sittikorn S
-date: '2021-06-29'
-modified: '2021-08-20'
-tags:
-    - attack.impact
-    - attack.t1486
-    - attack.t1565
 references:
     - https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DisableEbsEncryptionByDefault.html
 falsepositives:
     - System Administrator Activities
     - DEV, UAT, SAT environment. You should apply this rule with PROD account only.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1486
+    - attack.t1565
+date: '2021-06-29'
+modified: '2021-08-20'
 logsource:
     product: aws
     service: cloudtrail
@@ -37,17 +36,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:33.931341+00:00'
+            mapped_at: '2025-12-04T01:39:17.453538+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:33.931341+00:00'
+            mapped_at: '2025-12-04T01:39:17.453538+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:33.931351+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:17.453567+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:33.931353+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:17.453569+00:00'

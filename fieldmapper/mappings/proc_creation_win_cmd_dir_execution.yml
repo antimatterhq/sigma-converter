@@ -1,23 +1,22 @@
-id: 7c9340a9-e2ee-4e43-94c5-c54ebbea1006
 title: File And SubFolder Enumeration Via Dir Command
+id: 7c9340a9-e2ee-4e43-94c5-c54ebbea1006
 status: test
 level: low
+author: frack113
 description: 'Detects usage of the "dir" command part of Widows CMD with the "/S"
     command line flag in order to enumerate files in a specified directory and all
     subdirectories.
 
     '
-author: frack113
-date: '2021-12-13'
-modified: '2024-04-14'
-tags:
-    - attack.discovery
-    - attack.t1217
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1217/T1217.md
 falsepositives:
     - Likely
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1217
+date: '2021-12-13'
+modified: '2024-04-14'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:24.689242+00:00'
+            mapped_at: '2025-12-04T01:51:07.774820+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:24.689242+00:00'
+            mapped_at: '2025-12-04T01:51:07.774820+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:24.689260+00:00'
+            mapped_at: '2025-12-04T01:51:07.774836+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:24.689262+00:00'
+            mapped_at: '2025-12-04T01:51:07.774838+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:24.689263+00:00'
+            mapped_at: '2025-12-04T01:51:07.774840+00:00'

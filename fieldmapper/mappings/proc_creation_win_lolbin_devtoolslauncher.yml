@@ -1,20 +1,19 @@
-id: cc268ac1-42d9-40fd-9ed3-8c4e1a5b87e6
 title: Devtoolslauncher.exe Executes Specified Binary
+id: cc268ac1-42d9-40fd-9ed3-8c4e1a5b87e6
 status: test
 level: high
-description: The Devtoolslauncher.exe executes other binary
 author: Beyu Denis, oscd.community (rule), @_felamos (idea)
-date: '2019-10-12'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
+description: The Devtoolslauncher.exe executes other binary
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Devtoolslauncher/
     - https://twitter.com/_felamos/status/1179811992841797632
 falsepositives:
     - Legitimate use of devtoolslauncher.exe by legitimate user
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2019-10-12'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:30.226853+00:00'
+            mapped_at: '2025-12-04T01:41:03.274116+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:30.226853+00:00'
+            mapped_at: '2025-12-04T01:41:03.274116+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:30.226876+00:00'
+            mapped_at: '2025-12-04T01:41:03.274139+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:30.226879+00:00'
+            mapped_at: '2025-12-04T01:41:03.274141+00:00'

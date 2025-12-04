@@ -1,25 +1,24 @@
-id: cb39d16b-b3b6-4a7a-8222-1cf24b686ffc
 title: Data Exfiltration with Wget
+id: cb39d16b-b3b6-4a7a-8222-1cf24b686ffc
 status: test
 level: medium
+author: Pawel Mazur
 description: 'Detects attempts to post the file with the usage of wget utility.
 
     The adversary can bypass the permission restriction with the misconfigured sudo
     permission for wget utility which could allow them to read files like /etc/shadow.
 
     '
-author: Pawel Mazur
-date: '2021-11-18'
-modified: '2022-12-25'
-tags:
-    - attack.exfiltration
-    - attack.t1048.003
 references:
     - https://linux.die.net/man/1/wget
     - https://gtfobins.github.io/gtfobins/wget/
 falsepositives:
     - Legitimate usage of wget utility to post a file
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+date: '2021-11-18'
+modified: '2022-12-25'
 logsource:
     product: linux
     service: auditd
@@ -36,21 +35,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:28.135174+00:00'
+            mapped_at: '2025-12-04T01:35:47.230782+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:28.135174+00:00'
+            mapped_at: '2025-12-04T01:35:47.230782+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:28.135191+00:00'
+            mapped_at: '2025-12-04T01:35:47.230817+00:00'
         -   source_field: a0
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:28.135194+00:00'
+            mapped_at: '2025-12-04T01:35:47.230819+00:00'
         -   source_field: a1
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:28.135196+00:00'
+            mapped_at: '2025-12-04T01:35:47.230821+00:00'

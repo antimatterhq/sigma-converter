@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential Homoglyph Attack Using Lookalike Characters",
+    "comment": "Detects the presence of unicode characters which are homoglyphs, or identical in appearance, to ASCII letter characters. This is used as an obfuscation and masquerading techniques. Only \"perfect\" homoglyphs are included; these are characters that are indistinguishable from ASCII characters and thus may make excellent candidates for homoglyph attack characters.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('\u0430')) OR contains(lower(process.cmd_line), lower('\u0432')) OR contains(lower(process.cmd_line), lower('\u0435')) OR contains(lower(process.cmd_line), lower('\u043a')) OR contains(lower(process.cmd_line), lower('\u043c')) OR contains(lower(process.cmd_line), lower('\u043d')) OR contains(lower(process.cmd_line), lower('\u043e')) OR contains(lower(process.cmd_line), lower('\u0440')) OR contains(lower(process.cmd_line), lower('\u0441')) OR contains(lower(process.cmd_line), lower('\u0442')) OR contains(lower(process.cmd_line), lower('\u0445')) OR contains(lower(process.cmd_line), lower('\u0455')) OR contains(lower(process.cmd_line), lower('\u0456')) OR contains(lower(process.cmd_line), lower('\u0458')) OR contains(lower(process.cmd_line), lower('\u04af')) OR contains(lower(process.cmd_line), lower('\u04cf')) OR contains(lower(process.cmd_line), lower('\u050d')) OR contains(lower(process.cmd_line), lower('\u051b')) OR contains(lower(process.cmd_line), lower('\u051d')) OR contains(lower(process.cmd_line), lower('\u03b1')) OR contains(lower(process.cmd_line), lower('\u03b2')) OR contains(lower(process.cmd_line), lower('\u03b5')) OR contains(lower(process.cmd_line), lower('\u03b6')) OR contains(lower(process.cmd_line), lower('\u03b7')) OR contains(lower(process.cmd_line), lower('\u03b9')) OR contains(lower(process.cmd_line), lower('\u03ba')) OR contains(lower(process.cmd_line), lower('\u03bc')) OR contains(lower(process.cmd_line), lower('\u03bd')) OR contains(lower(process.cmd_line), lower('\u03bf')) OR contains(lower(process.cmd_line), lower('\u03c1')) OR contains(lower(process.cmd_line), lower('\u03c4')) OR contains(lower(process.cmd_line), lower('\u03c5')) OR contains(lower(process.cmd_line), lower('\u03c7')) OR contains(lower(process.cmd_line), lower('\u0430')) OR contains(lower(process.cmd_line), lower('\u0435')) OR contains(lower(process.cmd_line), lower('\u043e')) OR contains(lower(process.cmd_line), lower('\u0440')) OR contains(lower(process.cmd_line), lower('\u0441')) OR contains(lower(process.cmd_line), lower('\u0445')) OR contains(lower(process.cmd_line), lower('\u0455')) OR contains(lower(process.cmd_line), lower('\u0456')) OR contains(lower(process.cmd_line), lower('\u04cf')) OR contains(lower(process.cmd_line), lower('\u0458')) OR contains(lower(process.cmd_line), lower('\u04bb')) OR contains(lower(process.cmd_line), lower('\u0501')) OR contains(lower(process.cmd_line), lower('\u051b')) OR contains(lower(process.cmd_line), lower('\u051d')) OR contains(lower(process.cmd_line), lower('\u03bf'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the presence of unicode characters which are homoglyphs, or identical in appearance, to ASCII letter characters. This is used as an obfuscation and masquerading techniques. Only \"perfect\" homoglyphs are included; these are characters that are indistinguishable from ASCII characters and thus may make excellent candidates for homoglyph attack characters.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Commandlines with legitimate Cyrillic text; will likely require tuning (or not be usable) in countries where these alphabets are in use. References: https://redcanary.com/threat-detection-report/threats/socgholish/#threat-socgholish, http://www.irongeek.com/homoglyph-attack-generator.php",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

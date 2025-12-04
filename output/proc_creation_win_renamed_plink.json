@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Renamed Plink Execution",
+    "comment": "Detects the execution of a renamed version of the Plink binary",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('plink') AND contains(lower(process.cmd_line), lower(' -l forward')) AND contains(lower(process.cmd_line), lower(' -p ')) AND contains(lower(process.cmd_line), lower(' -r ')) AND NOT endswith(lower(process.name), lower('\\\\plink.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a renamed version of the Plink binary",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/, https://the.earth.li/~sgtatham/putty/0.58/htmldoc/Chapter7.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Disable Powershell Command History",
+    "comment": "Detects scripts or commands that disabled the Powershell command history by removing psreadline module",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('remove-module')) AND contains(lower(script.script_content.value), lower('psreadline')))"
+      }
+    },
+    "output": {
+      "summary": "Detects scripts or commands that disabled the Powershell command history by removing psreadline module",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate script that disables the command history Reference: https://twitter.com/DissectMalware/status/1062879286749773824",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

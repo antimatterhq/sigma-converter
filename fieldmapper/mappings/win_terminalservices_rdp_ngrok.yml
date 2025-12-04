@@ -1,20 +1,19 @@
-id: 64d51a51-32a6-49f0-9f3d-17e34d640272
 title: Ngrok Usage with Remote Desktop Service
+id: 64d51a51-32a6-49f0-9f3d-17e34d640272
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects cases in which ngrok, a reverse proxy tool, forwards events to
     the local RDP port, which could be a sign of malicious behaviour
-author: Florian Roth (Nextron Systems)
-date: '2022-04-29'
-tags:
-    - attack.command-and-control
-    - attack.t1090
 references:
     - https://twitter.com/tekdefense/status/1519711183162556416?s=12&t=OTsHCBkQOTNs1k3USz65Zg
     - https://ngrok.com/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090
+date: '2022-04-29'
 logsource:
     product: windows
     service: terminalservices-localsessionmanager
@@ -30,17 +29,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:59.352787+00:00'
+            mapped_at: '2025-12-04T01:56:28.221416+00:00'
         service:
             source_field: service
             source_value: terminalservices-localsessionmanager
-            mapped_at: '2025-11-26T02:46:59.352787+00:00'
+            mapped_at: '2025-12-04T01:56:28.221416+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:00.588470+00:00'
+            mapped_at: '2025-12-04T01:56:28.221448+00:00'
         -   source_field: Address
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:00.588482+00:00'
+            mapped_at: '2025-12-04T01:56:28.221452+00:00'

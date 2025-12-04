@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Gpscript Execution",
+    "comment": "Detects the execution of the LOLBIN gpscript, which executes logon or startup scripts configured in Group Policy",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\gpscript.exe')) AND lower(process.file.name) = lower('gpscript.exe') AND (contains(lower(process.cmd_line), lower(' /logon')) OR contains(lower(process.cmd_line), lower(' /startup'))) AND NOT lower(process.parent_process.cmd_line) = lower('c:\\\\windows\\\\system32\\\\svchost.exe -k netsvcs -p -s gpsvc'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the LOLBIN gpscript, which executes logon or startup scripts configured in Group Policy",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate uses of logon scripts distributed via group policy References: https://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/, https://lolbas-project.github.io/lolbas/Binaries/Gpscript/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

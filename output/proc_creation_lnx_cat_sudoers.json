@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Cat Sudoers",
+    "comment": "Detects the execution of a cat /etc/sudoers to list all users that have sudo rights",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/cat')) OR endswith(lower(process.name), lower('grep')) OR endswith(lower(process.name), lower('/head')) OR endswith(lower(process.name), lower('/tail')) OR endswith(lower(process.name), lower('/more'))) AND contains(lower(process.cmd_line), lower(' /etc/sudoers')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a cat /etc/sudoers to list all users that have sudo rights",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://github.com/sleventyeleven/linuxprivchecker/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Reconnaissance",
+          "techniqueId": "T1592",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

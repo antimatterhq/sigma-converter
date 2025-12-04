@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Usage Of Web Request Commands And Cmdlets - ScriptBlock",
+    "comment": "Detects the use of various web request commands with commandline tools and Windows PowerShell cmdlets (including aliases) via PowerShell scriptblock logs",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('[system.net.webrequest]::create')) OR contains(lower(script.script_content.value), lower('curl ')) OR contains(lower(script.script_content.value), lower('invoke-restmethod')) OR contains(lower(script.script_content.value), lower('invoke-webrequest')) OR contains(lower(script.script_content.value), lower('iwr ')) OR contains(lower(script.script_content.value), lower('net.webclient')) OR contains(lower(script.script_content.value), lower('resume-bitstransfer')) OR contains(lower(script.script_content.value), lower('start-bitstransfer')) OR contains(lower(script.script_content.value), lower('wget ')) OR contains(lower(script.script_content.value), lower('winhttp.winhttprequest'))) AND NOT startswith(lower(script.file.path), lower('c:\\\\packages\\\\plugins\\\\microsoft.guestconfiguration.configurationforwindows\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of various web request commands with commandline tools and Windows PowerShell cmdlets (including aliases) via PowerShell scriptblock logs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Use of Get-Command and Get-Help modules to reference Invoke-WebRequest and Start-BitsTransfer. References: https://4sysops.com/archives/use-powershell-to-download-a-file-with-http-https-and-ftp/, https://blog.jourdant.me/post/3-ways-to-download-files-with-powershell",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

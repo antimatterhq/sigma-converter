@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "User Added To Admin Group Via Dscl",
+    "comment": "Detects attempts to create and add an account to the admin group via \"dscl\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/dscl')) AND contains(lower(process.cmd_line), lower(' -append ')) AND contains(lower(process.cmd_line), lower(' /groups/admin ')) AND contains(lower(process.cmd_line), lower(' groupmembership ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects attempts to create and add an account to the admin group via \"dscl\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1078.003/T1078.003.md#atomic-test-2---create-local-account-with-admin-privileges---macos, https://ss64.com/osx/dscl.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1078",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

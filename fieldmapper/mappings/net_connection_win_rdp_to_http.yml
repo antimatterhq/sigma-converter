@@ -1,24 +1,23 @@
-id: b1e5da3b-ca8e-4adf-915c-9921f3d85481
 title: RDP to HTTP or HTTPS Target Ports
+id: b1e5da3b-ca8e-4adf-915c-9921f3d85481
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects svchost hosting RDP termsvcs communicating to target systems
     on TCP port 80 or 443
-author: Florian Roth (Nextron Systems)
-date: '2022-04-29'
-modified: '2022-07-14'
+references:
+    - https://twitter.com/tekdefense/status/1519711183162556416?s=12&t=OTsHCBkQOTNs1k3USz65Zg
+    - https://www.mandiant.com/resources/bypassing-network-restrictions-through-rdp-tunneling
+falsepositives:
+    - Unknown
 tags:
     - attack.command-and-control
     - attack.t1572
     - attack.lateral-movement
     - attack.t1021.001
     - car.2013-07-002
-references:
-    - https://twitter.com/tekdefense/status/1519711183162556416?s=12&t=OTsHCBkQOTNs1k3USz65Zg
-    - https://www.mandiant.com/resources/bypassing-network-restrictions-through-rdp-tunneling
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-04-29'
+modified: '2022-07-14'
 logsource:
     category: network_connection
     product: windows
@@ -33,30 +32,30 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: network_activity
-    activity_id: 1
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:04.704821+00:00'
+            mapped_at: '2025-12-04T01:51:30.775687+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:04.704821+00:00'
+            mapped_at: '2025-12-04T01:51:30.775687+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:04.704881+00:00'
+            mapped_at: '2025-12-04T01:51:30.775712+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:04.704887+00:00'
+            mapped_at: '2025-12-04T01:51:30.775716+00:00'
         -   source_field: SourcePort
             target_table: network_activity
             target_field: src_endpoint.port
-            mapped_at: '2025-11-26T02:38:04.704890+00:00'
+            mapped_at: '2025-12-04T01:51:30.775719+00:00'
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:04.704893+00:00'
+            mapped_at: '2025-12-04T01:51:30.775722+00:00'

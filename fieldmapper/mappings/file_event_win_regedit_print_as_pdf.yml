@@ -1,7 +1,8 @@
-id: 145095eb-e273-443b-83d0-f9b519b7867b
 title: PDF File Created By RegEdit.EXE
+id: 145095eb-e273-443b-83d0-f9b519b7867b
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the creation of a file with the ".pdf" extension by the "RegEdit.exe"
     process.
 
@@ -9,15 +10,13 @@ description: 'Detects the creation of a file with the ".pdf" extension by the "R
     order to potentially extract sensitive information and bypass defenses.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-07-08'
-tags:
-    - attack.defense-evasion
 references:
     - https://sensepost.com/blog/2024/dumping-lsa-secrets-a-story-about-task-decorrelation/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2024-07-08'
 logsource:
     category: file_event
     product: windows
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:39.484403+00:00'
+            mapped_at: '2025-12-04T01:52:31.030755+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:39.484403+00:00'
+            mapped_at: '2025-12-04T01:52:31.030755+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:39.484435+00:00'
+            mapped_at: '2025-12-04T01:52:31.030776+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:39.484439+00:00'
+            mapped_at: '2025-12-04T01:52:31.030778+00:00'

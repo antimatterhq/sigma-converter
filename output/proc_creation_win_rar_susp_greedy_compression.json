@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Greedy Compression Using Rar.EXE",
+    "comment": "Detects RAR usage that creates an archive from a suspicious folder, either a system folder or one of the folders often used by attackers for staging purposes",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\rar.exe')) AND lower(device.desc) = lower('command line rar') OR contains(lower(process.cmd_line), lower('.exe a ')) OR contains(lower(process.cmd_line), lower(' a -m'))) AND contains(lower(process.cmd_line), lower(' -hp')) AND contains(lower(process.cmd_line), lower(' -r ')) AND (lower(process.cmd_line) regexp '.* .:\\\\.*\\..*' OR lower(process.cmd_line) regexp '.* .:\\\\\\*\\..*' OR lower(process.cmd_line) regexp '.* .:\\\\$recycle\\.bin\\\\.*' OR lower(process.cmd_line) regexp '.* .:\\\\perflogs\\\\.*' OR lower(process.cmd_line) regexp '.* .:\\\\temp.*' OR lower(process.cmd_line) regexp '.* .:\\\\users\\\\public\\\\.*' OR lower(process.cmd_line) regexp '.* .:\\\\windows\\\\.*' OR contains(lower(process.cmd_line), lower(' %public%'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects RAR usage that creates an archive from a suspicious folder, either a system folder or one of the folders often used by attackers for staging purposes",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://decoded.avast.io/martinchlumecky/png-steganography",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

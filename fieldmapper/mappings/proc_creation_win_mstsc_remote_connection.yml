@@ -1,7 +1,8 @@
-id: 954f0af7-62dd-418f-b3df-a84bc2c7a774
 title: New Remote Desktop Connection Initiated Via Mstsc.EXE
+id: 954f0af7-62dd-418f-b3df-a84bc2c7a774
 status: test
 level: medium
+author: frack113
 description: 'Detects the usage of "mstsc.exe" with the "/v" flag to initiate a connection
     to a remote server.
 
@@ -9,18 +10,16 @@ description: 'Detects the usage of "mstsc.exe" with the "/v" flag to initiate a 
     Protocol (RDP). The adversary may then perform actions as the logged-on user.
 
     '
-author: frack113
-date: '2022-01-07'
-modified: '2024-06-04'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md#t1021001---remote-desktop-protocol
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mstsc
 falsepositives:
     - WSL (Windows Sub System For Linux)
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.001
+date: '2022-01-07'
+modified: '2024-06-04'
 logsource:
     category: process_creation
     product: windows
@@ -41,25 +40,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:01.340298+00:00'
+            mapped_at: '2025-12-04T01:44:48.800473+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:01.340298+00:00'
+            mapped_at: '2025-12-04T01:44:48.800473+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:01.340313+00:00'
+            mapped_at: '2025-12-04T01:44:48.800487+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:01.340316+00:00'
+            mapped_at: '2025-12-04T01:44:48.800489+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:01.340318+00:00'
+            mapped_at: '2025-12-04T01:44:48.800490+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:01.340320+00:00'
+            mapped_at: '2025-12-04T01:44:48.800492+00:00'

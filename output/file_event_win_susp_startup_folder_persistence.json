@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Startup Folder Persistence",
+    "comment": "Detects when a file with a suspicious extension is created in the startup folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(file.path), lower('\\\\windows\\\\start menu\\\\programs\\\\startup\\\\')) AND (endswith(lower(file.path), lower('.vbs')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.hta')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.jar')) OR endswith(lower(file.path), lower('.msi')) OR endswith(lower(file.path), lower('.scr')) OR endswith(lower(file.path), lower('.cmd'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a file with a suspicious extension is created in the startup folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Rare legitimate usage of some of the extensions mentioned in the rule Reference: https://github.com/last-byte/PersistenceSniper",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1547",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

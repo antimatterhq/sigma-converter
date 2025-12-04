@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Suspicious WSMAN Provider Image Loads",
+    "comment": "Detects signs of potential use of the WSMAN provider from uncommon processes locally and remote execution.",
+    "annotations": {
+      "source": "sigma",
+      "category": "image_load",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (((endswith(lower(module.file.path), lower('\\\\wsmsvc.dll')) OR endswith(lower(module.file.path), lower('\\\\wsmauto.dll')) OR endswith(lower(module.file.path), lower('\\\\microsoft.wsman.management.ni.dll'))) AND (lower(LOWER(process.file.name)) in ('wsmsvc\\.dll', 'wsmanautomation\\.dll', 'microsoft\\.wsman\\.management\\.dll')) OR endswith(lower(process.name), lower('\\\\svchost.exe')) AND lower(process.file.name) = lower('wsmwmipl.dll')) AND NOT (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('c:\\\\windows\\\\system32\\\\sdiagnhost.exe')) OR endswith(lower(process.name), lower('c:\\\\windows\\\\system32\\\\services.exe')) OR contains(lower(process.cmd_line), lower('svchost.exe -k netsvcs -p -s bits')) OR contains(lower(process.cmd_line), lower('svchost.exe -k graphicsperfsvcgroup -s graphicsperfsvc')) OR contains(lower(process.cmd_line), lower('svchost.exe -k networkservice -p -s wecsvc')) OR contains(lower(process.cmd_line), lower('svchost.exe -k netsvcs')) OR (startswith(lower(process.name), lower('c:\\\\windows\\\\microsoft.net\\\\framework64\\\\v')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\microsoft.net\\\\framework\\\\v'))) AND endswith(lower(process.name), lower('\\\\mscorsvw.exe')) OR lower(LOWER(process.name)) in ('c:\\\\windows\\\\system32\\\\configure-smremoting\\.exe', 'c:\\\\windows\\\\system32\\\\servermanager\\.exe') OR startswith(lower(process.name), lower('c:\\\\windows\\\\temp\\\\asgard2-agent\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files\\\\citrix\\\\')) OR endswith(lower(process.name), lower('\\\\powershell_ise.exe')) OR startswith(lower(process.name), lower('c:\\\\$windows.~bt\\\\sources\\\\'))) AND NOT (endswith(lower(process.name), lower('\\\\svchost.exe')) AND process.cmd_line is null))"
+      }
+    },
+    "output": {
+      "summary": "Detects signs of potential use of the WSMAN provider from uncommon processes locally and remote execution.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/chadtilbury/status/1275851297770610688, https://bohops.com/2020/05/12/ws-management-com-another-approach-for-winrm-lateral-movement/, https://learn.microsoft.com/en-us/windows/win32/winrm/windows-remote-management-architecture, https://github.com/bohops/WSMan-WinRM",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1021",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

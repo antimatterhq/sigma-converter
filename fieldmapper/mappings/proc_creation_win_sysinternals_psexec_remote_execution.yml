@@ -1,21 +1,20 @@
-id: ea011323-7045-460b-b2d7-0f7442ea6b38
 title: Potential PsExec Remote Execution
+id: ea011323-7045-460b-b2d7-0f7442ea6b38
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects potential psexec command that initiate execution on a remote
     systems via common commandline flags used by the utility
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-28'
-tags:
-    - attack.resource-development
-    - attack.t1587.001
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
     - https://www.poweradmin.com/paexec/
     - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.resource-development
+    - attack.t1587.001
+date: '2023-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -34,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:16.257508+00:00'
+            mapped_at: '2025-12-04T01:40:52.521378+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:16.257508+00:00'
+            mapped_at: '2025-12-04T01:40:52.521378+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:16.257537+00:00'
+            mapped_at: '2025-12-04T01:40:52.521391+00:00'

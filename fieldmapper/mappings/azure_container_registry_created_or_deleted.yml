@@ -1,13 +1,9 @@
-id: 93e0ef48-37c8-49ed-a02c-038aab23628e
 title: Azure Container Registry Created or Deleted
+id: 93e0ef48-37c8-49ed-a02c-038aab23628e
 status: test
 level: low
-description: Detects when a Container Registry is created or deleted.
 author: Austin Songer @austinsonger
-date: '2021-08-07'
-modified: '2022-08-23'
-tags:
-    - attack.impact
+description: Detects when a Container Registry is created or deleted.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
     - https://www.microsoft.com/security/blog/2021/03/23/secure-containerized-environments-with-updated-threat-matrix-for-kubernetes/
@@ -21,7 +17,10 @@ falsepositives:
     - Container Registry created or deleted from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-07'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -33,18 +32,18 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: entity_management
-    activity_id: 4
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:02.430862+00:00'
+            mapped_at: '2025-12-04T01:38:29.023947+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:02.430862+00:00'
+            mapped_at: '2025-12-04T01:38:29.023947+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:02.430889+00:00'
+            mapped_at: '2025-12-04T01:38:29.023962+00:00'

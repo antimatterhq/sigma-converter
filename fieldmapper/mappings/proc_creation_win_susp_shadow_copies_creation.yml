@@ -1,23 +1,22 @@
-id: b17ea6f7-6e90-447e-a799-e6c0a493d6ce
 title: Shadow Copies Creation Using Operating Systems Utilities
+id: b17ea6f7-6e90-447e-a799-e6c0a493d6ce
 status: test
 level: medium
+author: Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community
 description: Shadow Copies creation using operating systems utilities, possible credential
     access
-author: Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community
-date: '2019-10-22'
-modified: '2022-11-10'
-tags:
-    - attack.credential-access
-    - attack.t1003
-    - attack.t1003.002
-    - attack.t1003.003
 references:
     - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
     - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/tutorial-for-ntds-goodness-vssadmin-wmis-ntdsdit-system/
 falsepositives:
     - Legitimate administrator working with shadow copies, access for backup purposes
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.t1003.002
+    - attack.t1003.003
+date: '2019-10-22'
+modified: '2022-11-10'
 logsource:
     category: process_creation
     product: windows
@@ -45,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:09.490851+00:00'
+            mapped_at: '2025-12-04T01:49:53.159518+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:09.490851+00:00'
+            mapped_at: '2025-12-04T01:49:53.159518+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:09.490866+00:00'
+            mapped_at: '2025-12-04T01:49:53.159535+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:09.490869+00:00'
+            mapped_at: '2025-12-04T01:49:53.159538+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:09.490870+00:00'
+            mapped_at: '2025-12-04T01:49:53.159539+00:00'

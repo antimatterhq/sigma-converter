@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Renamed ProcDump Execution",
+    "comment": "Detects the execution of a renamed ProcDump executable. This often done by attackers or malware in order to evade defensive mechanisms.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(process.file.name) = lower('procdump') OR (contains(lower(process.cmd_line), lower(' -ma ')) OR contains(lower(process.cmd_line), lower(' /ma ')) OR contains(lower(process.cmd_line), lower(' \u2013ma ')) OR contains(lower(process.cmd_line), lower(' \u2014ma ')) OR contains(lower(process.cmd_line), lower(' \u2015ma ')) OR contains(lower(process.cmd_line), lower(' -mp ')) OR contains(lower(process.cmd_line), lower(' /mp ')) OR contains(lower(process.cmd_line), lower(' \u2013mp ')) OR contains(lower(process.cmd_line), lower(' \u2014mp ')) OR contains(lower(process.cmd_line), lower(' \u2015mp '))) AND (contains(lower(process.cmd_line), lower(' -accepteula')) OR contains(lower(process.cmd_line), lower(' /accepteula')) OR contains(lower(process.cmd_line), lower(' \u2013accepteula')) OR contains(lower(process.cmd_line), lower(' \u2014accepteula')) OR contains(lower(process.cmd_line), lower(' \u2015accepteula')))) AND NOT (endswith(lower(process.name), lower('\\\\procdump.exe')) OR endswith(lower(process.name), lower('\\\\procdump64.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a renamed ProcDump executable. This often done by attackers or malware in order to evade defensive mechanisms.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Procdump illegally bundled with legitimate software. 2. Administrators who rename binaries (should be investigated). Reference: https://learn.microsoft.com/en-us/sysinternals/downloads/procdump",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

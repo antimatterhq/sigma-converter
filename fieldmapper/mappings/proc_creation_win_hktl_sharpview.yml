@@ -1,12 +1,16 @@
-id: b2317cfa-4a47-4ead-b3ff-297438c0bc2d
 title: HackTool - SharpView Execution
+id: b2317cfa-4a47-4ead-b3ff-297438c0bc2d
 status: test
 level: high
+author: frack113
 description: Adversaries may look for details about the network configuration and
     settings of systems they access or through information discovery of remote systems
-author: frack113
-date: '2021-12-10'
-modified: '2023-02-14'
+references:
+    - https://github.com/tevora-threat/SharpView/
+    - https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-4---system-discovery-using-sharpview
+falsepositives:
+    - Unknown
 tags:
     - attack.discovery
     - attack.t1049
@@ -14,15 +18,8 @@ tags:
     - attack.t1482
     - attack.t1135
     - attack.t1033
-references:
-    - https://github.com/tevora-threat/SharpView/
-    - https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1
-    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-4---system-discovery-using-sharpview
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''dcd74b95-3f36-4ed9-9598-0490951643aa''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2021-12-10'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -114,6 +111,9 @@ detection:
             - Set-DomainObject
             - Test-AdminAccess
     condition: selection
+related:
+    -   id: dcd74b95-3f36-4ed9-9598-0490951643aa
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -121,21 +121,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:56.845103+00:00'
+            mapped_at: '2025-12-04T01:48:54.385553+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:56.845103+00:00'
+            mapped_at: '2025-12-04T01:48:54.385553+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:56.845118+00:00'
+            mapped_at: '2025-12-04T01:48:54.385571+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:56.845121+00:00'
+            mapped_at: '2025-12-04T01:48:54.385575+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:56.845122+00:00'
+            mapped_at: '2025-12-04T01:48:54.385577+00:00'

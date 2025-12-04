@@ -1,7 +1,8 @@
-id: 0f6da907-5854-4be6-859a-e9958747b0aa
 title: Potential DLL Injection Via AccCheckConsole
+id: 0f6da907-5854-4be6-859a-e9958747b0aa
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: 'Detects the execution "AccCheckConsole" a command-line tool for verifying
     the accessibility implementation of an application''s UI.
 
@@ -13,19 +14,17 @@ description: 'Detects the execution "AccCheckConsole" a command-line tool for ve
     then be loaded in the context of the "AccCheckConsole" utility.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-01-06'
-modified: '2024-08-29'
-tags:
-    - attack.execution
-    - detection.threat-hunting
 references:
     - https://gist.github.com/bohops/2444129419c8acf837aedda5f0e7f340
     - https://twitter.com/bohops/status/1477717351017680899?s=12
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/AccCheckConsole/
 falsepositives:
     - Legitimate use of the UI Accessibility Checker
-taxonomy: sigma
+tags:
+    - attack.execution
+    - detection.threat-hunting
+date: '2022-01-06'
+modified: '2024-08-29'
 logsource:
     category: process_creation
     product: windows
@@ -46,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:09.670845+00:00'
+            mapped_at: '2025-12-04T01:49:05.447180+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:09.670845+00:00'
+            mapped_at: '2025-12-04T01:49:05.447180+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:09.670876+00:00'
+            mapped_at: '2025-12-04T01:49:05.447205+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:09.670880+00:00'
+            mapped_at: '2025-12-04T01:49:05.447217+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:09.670883+00:00'
+            mapped_at: '2025-12-04T01:49:05.447218+00:00'

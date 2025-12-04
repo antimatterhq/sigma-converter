@@ -1,23 +1,20 @@
-id: 30edb182-aa75-42c0-b0a9-e998bb29067c
 title: Potential AMSI Bypass Via .NET Reflection
+id: 30edb182-aa75-42c0-b0a9-e998bb29067c
 status: test
 level: high
+author: Markus Neis, @Kostastsale
 description: Detects Request to "amsiInitFailed" that can be used to disable AMSI
     Scanning
-author: Markus Neis, @Kostastsale
-date: '2018-08-17'
-modified: '2023-02-03'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/
     - https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4f927692-68b5-4267-871b-073c45f4f6fe''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2018-08-17'
+modified: '2023-02-03'
 logsource:
     category: process_creation
     product: windows
@@ -30,6 +27,9 @@ detection:
             - SetValue($null,$true)
             - NonPublic,Static
     condition: selection
+related:
+    -   id: 4f927692-68b5-4267-871b-073c45f4f6fe
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -37,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:01.973986+00:00'
+            mapped_at: '2025-12-04T01:47:23.717609+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:01.973986+00:00'
+            mapped_at: '2025-12-04T01:47:23.717609+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:01.974000+00:00'
+            mapped_at: '2025-12-04T01:47:23.717623+00:00'

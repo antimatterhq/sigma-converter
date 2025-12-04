@@ -1,24 +1,21 @@
-id: 79ce34ca-af29-4d0e-b832-fc1b377020db
 title: Whoami.EXE Execution From Privileged Process
+id: 79ce34ca-af29-4d0e-b832-fc1b377020db
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Teymur Kheirkhabarov
 description: Detects the execution of "whoami.exe" by privileged accounts that are
     often abused by threat actors
-author: Florian Roth (Nextron Systems), Teymur Kheirkhabarov
-date: '2022-01-28'
-modified: '2023-12-04'
-tags:
-    - attack.privilege-escalation
-    - attack.discovery
-    - attack.t1033
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
     - https://web.archive.org/web/20221019044836/https://nsudo.m2team.org/en-us/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''80167ada-7a12-41ed-b8e9-aa47195c66a1''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.discovery
+    - attack.t1033
+date: '2022-01-28'
+modified: '2023-12-04'
 logsource:
     category: process_creation
     product: windows
@@ -32,6 +29,9 @@ detection:
             - AUTORI
             - TrustedInstaller
     condition: all of selection_*
+related:
+    -   id: 80167ada-7a12-41ed-b8e9-aa47195c66a1
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -39,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:13.498597+00:00'
+            mapped_at: '2025-12-04T01:41:39.395017+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:13.498597+00:00'
+            mapped_at: '2025-12-04T01:41:39.395017+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:13.498748+00:00'
+            mapped_at: '2025-12-04T01:41:39.395031+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:13.498757+00:00'
+            mapped_at: '2025-12-04T01:41:39.395034+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:26:13.498760+00:00'
+            mapped_at: '2025-12-04T01:41:39.395035+00:00'

@@ -1,7 +1,8 @@
-id: 99c8be4f-3087-4f9f-9c24-8c7e257b442e
 title: Setup16.EXE Execution With Custom .Lst File
+id: 99c8be4f-3087-4f9f-9c24-8c7e257b442e
 status: experimental
 level: medium
+author: frack113
 description: 'Detects the execution of "Setup16.EXE" and old installation utility
     with a custom ".lst" file.
 
@@ -11,17 +12,15 @@ description: 'Detects the execution of "Setup16.EXE" and old installation utilit
     Attackers and adversaries might leverage this as a living of the land utility.
 
     '
-author: frack113
-date: '2024-12-01'
-tags:
-    - attack.defense-evasion
-    - attack.t1574.005
 references:
     - https://www.hexacorn.com/blog/2024/10/12/the-sweet16-the-oldbin-lolbin-called-setup16-exe/
 falsepositives:
     - On modern Windows system, the "Setup16" utility is practically never used, hence
         false positive should be very rare.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574.005
+date: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:49.895719+00:00'
+            mapped_at: '2025-12-04T01:46:19.618812+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:49.895719+00:00'
+            mapped_at: '2025-12-04T01:46:19.618812+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:49.895739+00:00'
+            mapped_at: '2025-12-04T01:46:19.618827+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:31:49.895741+00:00'
+            mapped_at: '2025-12-04T01:46:19.618829+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:49.895742+00:00'
+            mapped_at: '2025-12-04T01:46:19.618830+00:00'

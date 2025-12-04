@@ -1,21 +1,20 @@
-id: 6a5f68d1-c4b5-46b9-94ee-5324892ea939
 title: Uninstall Sysinternals Sysmon
+id: 6a5f68d1-c4b5-46b9-94ee-5324892ea939
 status: test
 level: high
+author: frack113
 description: Detects the removal of Sysmon, which could be a potential attempt at
     defense evasion
-author: frack113
-date: '2022-01-12'
-modified: '2024-03-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md#atomic-test-11---uninstall-sysmon
 falsepositives:
     - Legitimate administrators might use this command to remove Sysmon for debugging
         purposes
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-01-12'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:18.132891+00:00'
+            mapped_at: '2025-12-04T01:43:30.105395+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:18.132891+00:00'
+            mapped_at: '2025-12-04T01:43:30.105395+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:18.132907+00:00'
+            mapped_at: '2025-12-04T01:43:30.105412+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:28:18.132908+00:00'
+            mapped_at: '2025-12-04T01:43:30.105414+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:18.132910+00:00'
+            mapped_at: '2025-12-04T01:43:30.105416+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Remote Thread Created In Shell Application",
+    "comment": "Detects remote thread creation in command shell applications, such as \"Cmd.EXE\" and \"PowerShell.EXE\". It is a common technique used by malware, such as IcedID, to inject malicious code and execute it within legitimate processes.",
+    "annotations": {
+      "source": "sigma",
+      "category": "create_remote_thread",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND (endswith(lower(process.file.path), lower('\\\\cmd.exe')) OR endswith(lower(process.file.path), lower('\\\\powershell.exe')) OR endswith(lower(process.file.path), lower('\\\\pwsh.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects remote thread creation in command shell applications, such as \"Cmd.EXE\" and \"PowerShell.EXE\". It is a common technique used by malware, such as IcedID, to inject malicious code and execute it within legitimate processes.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://research.splunk.com/endpoint/10399c1e-f51e-11eb-b920-acde48001122/, https://www.binarydefense.com/resources/blog/icedid-gziploader-analysis/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

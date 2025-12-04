@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "WMI Persistence - Script Event Consumer",
+    "comment": "Detects WMI script event consumers",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.name) = lower('c:\\\\windows\\\\system32\\\\wbem\\\\scrcons.exe') AND lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\svchost.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects WMI script event consumers",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate event consumers 2. Dell computers on some versions register an event consumer that is known to cause false positives when brightness is changed by the corresponding keyboard button Reference: https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1546",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

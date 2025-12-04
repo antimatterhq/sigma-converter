@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Rundll32 Activity",
+    "comment": "Detects suspicious execution of rundll32, with specific calls to some DLLs with known LOLBIN functionalities",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('javascript:')) AND contains(lower(process.cmd_line), lower('.registerxll')) AND contains(lower(process.cmd_line), lower('url.dll')) AND contains(lower(process.cmd_line), lower('openurl')) AND contains(lower(process.cmd_line), lower('url.dll')) AND contains(lower(process.cmd_line), lower('openurla')) AND contains(lower(process.cmd_line), lower('url.dll')) AND contains(lower(process.cmd_line), lower('fileprotocolhandler')) AND contains(lower(process.cmd_line), lower('zipfldr.dll')) AND contains(lower(process.cmd_line), lower('routethecall')) AND contains(lower(process.cmd_line), lower('shell32.dll')) AND contains(lower(process.cmd_line), lower('control_rundll')) AND contains(lower(process.cmd_line), lower('shell32.dll')) AND contains(lower(process.cmd_line), lower('shellexec_rundll')) AND contains(lower(process.cmd_line), lower('mshtml.dll')) AND contains(lower(process.cmd_line), lower('printhtml')) AND contains(lower(process.cmd_line), lower('advpack.dll')) AND contains(lower(process.cmd_line), lower('launchinfsection')) AND contains(lower(process.cmd_line), lower('advpack.dll')) AND contains(lower(process.cmd_line), lower('registerocx')) AND contains(lower(process.cmd_line), lower('ieadvpack.dll')) AND contains(lower(process.cmd_line), lower('launchinfsection')) AND contains(lower(process.cmd_line), lower('ieadvpack.dll')) AND contains(lower(process.cmd_line), lower('registerocx')) AND contains(lower(process.cmd_line), lower('ieframe.dll')) AND contains(lower(process.cmd_line), lower('openurl')) AND contains(lower(process.cmd_line), lower('shdocvw.dll')) AND contains(lower(process.cmd_line), lower('openurl')) AND contains(lower(process.cmd_line), lower('syssetup.dll')) AND contains(lower(process.cmd_line), lower('setupinfobjectinstallaction')) AND contains(lower(process.cmd_line), lower('setupapi.dll')) AND contains(lower(process.cmd_line), lower('installhinfsection')) AND contains(lower(process.cmd_line), lower('pcwutl.dll')) AND contains(lower(process.cmd_line), lower('launchapplication')) AND contains(lower(process.cmd_line), lower('dfshim.dll')) AND contains(lower(process.cmd_line), lower('shopenverbapplication')) AND contains(lower(process.cmd_line), lower('dfshim.dll')) AND contains(lower(process.cmd_line), lower('shopenverbshortcut')) AND contains(lower(process.cmd_line), lower('scrobj.dll')) AND contains(lower(process.cmd_line), lower('generatetypelib')) AND contains(lower(process.cmd_line), lower('http')) AND contains(lower(process.cmd_line), lower('shimgvw.dll')) AND contains(lower(process.cmd_line), lower('imageview_fullscreen')) AND contains(lower(process.cmd_line), lower('http')) AND contains(lower(process.cmd_line), lower('comsvcs.dll')) AND contains(lower(process.cmd_line), lower('minidump')) AND NOT (contains(lower(process.cmd_line), lower('shell32.dll,control_rundll desk.cpl,screensaver,@screensaver')) OR lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\control.exe') AND contains(lower(process.parent_process.cmd_line), lower('.cpl')) AND contains(lower(process.cmd_line), lower('shell32.dll')) AND contains(lower(process.cmd_line), lower('control_rundll')) AND contains(lower(process.cmd_line), lower('.cpl')) OR lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\control.exe') AND startswith(lower(process.cmd_line), lower('\"c:\\\\windows\\\\system32\\\\rundll32.exe\" shell32.dll,control_rundll \"c:\\\\windows\\\\system32\\\\')) AND endswith(lower(process.cmd_line), lower('.cpl\",'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious execution of rundll32, with specific calls to some DLLs with known LOLBIN functionalities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives depend on scripts and administrative tools used in the monitored environment References: http://www.hexacorn.com/blog/2017/05/01/running-programs-via-proxy-jumping-on-a-edr-bypass-trampoline/, https://twitter.com/Hexacorn/status/885258886428725250, https://gist.github.com/ryhanson/227229866af52e2d963cf941af135a52, https://twitter.com/nas_bench/status/1433344116071583746, https://twitter.com/eral4m/status/1479106975967240209, https://twitter.com/eral4m/status/1479080793003671557",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

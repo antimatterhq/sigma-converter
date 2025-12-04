@@ -1,19 +1,12 @@
-id: 40b95d31-1afc-469e-8d34-9a3a667d058e
 title: Suspicious Csi.exe Usage
+id: 40b95d31-1afc-469e-8d34-9a3a667d058e
 status: test
 level: medium
+author: Konstantin Grishchenko, oscd.community
 description: Csi.exe is a signed binary from Microsoft that comes with Visual Studio
     and provides C# interactive capabilities. It can be used to run C# code from a
     file passed as a parameter in command line. Early version of this utility provided
     with Microsoft “Roslyn” Community Technology Preview was named 'rcsi.exe'
-author: Konstantin Grishchenko, oscd.community
-date: '2020-10-17'
-modified: '2022-07-11'
-tags:
-    - attack.execution
-    - attack.t1072
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Csi/
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Rcsi/
@@ -26,7 +19,13 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Legitimate usage by software developers
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1072
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-17'
+modified: '2022-07-11'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:27.940117+00:00'
+            mapped_at: '2025-12-04T01:41:50.926650+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:27.940117+00:00'
+            mapped_at: '2025-12-04T01:41:50.926650+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:27.940196+00:00'
+            mapped_at: '2025-12-04T01:41:50.926667+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:27.940206+00:00'
+            mapped_at: '2025-12-04T01:41:50.926670+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:26:27.940209+00:00'
+            mapped_at: '2025-12-04T01:41:50.926672+00:00'

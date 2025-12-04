@@ -1,24 +1,21 @@
-id: ba4cfc11-d0fa-4d94-bf20-7c332c412e76
 title: Potentially Suspicious DLL Registered Via Odbcconf.EXE
+id: ba4cfc11-d0fa-4d94-bf20-7c332c412e76
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of "odbcconf" with the "REGSVR" action where the DLL
     in question doesn't contain a ".dll" extension. Which is often used as a method
     to evade defenses.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.008
 references:
     - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
     - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
     - https://www.trendmicro.com/en_us/research/17/h/backdoor-carrying-emails-set-sights-on-russian-speaking-businesses.html
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9f0a8bf3-a65b-440a-8c1e-5cb1547c8e70''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.008
+date: '2023-05-22'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +28,9 @@ detection:
     filter_main_dll_ext:
         CommandLine|contains: .dll
     condition: all of selection_* and not 1 of filter_main_*
+related:
+    -   id: 9f0a8bf3-a65b-440a-8c1e-5cb1547c8e70
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:29.620724+00:00'
+            mapped_at: '2025-12-04T01:46:01.208863+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:29.620724+00:00'
+            mapped_at: '2025-12-04T01:46:01.208863+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:29.620742+00:00'
+            mapped_at: '2025-12-04T01:46:01.208905+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:29.620745+00:00'
+            mapped_at: '2025-12-04T01:46:01.208907+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:29.620747+00:00'
+            mapped_at: '2025-12-04T01:46:01.208909+00:00'

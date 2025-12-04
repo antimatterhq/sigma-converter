@@ -1,21 +1,20 @@
-id: 54773c5f-f1cc-4703-9126-2f797d96a69d
 title: PUA - Advanced Port Scanner Execution
+id: 54773c5f-f1cc-4703-9126-2f797d96a69d
 status: test
 level: medium
-description: Detects the use of Advanced Port Scanner.
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2021-12-18'
-modified: '2023-02-07'
-tags:
-    - attack.discovery
-    - attack.t1046
-    - attack.t1135
+description: Detects the use of Advanced Port Scanner.
 references:
     - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/Advanced%20Port%20Scanner
 falsepositives:
     - Legitimate administrative use
     - Tools with similar commandline (very rare)
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1046
+    - attack.t1135
+date: '2021-12-18'
+modified: '2023-02-07'
 logsource:
     category: process_creation
     product: windows
@@ -36,25 +35,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:51.815412+00:00'
+            mapped_at: '2025-12-04T01:44:39.566104+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:51.815412+00:00'
+            mapped_at: '2025-12-04T01:44:39.566104+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:51.815441+00:00'
+            mapped_at: '2025-12-04T01:44:39.566118+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:51.815445+00:00'
+            mapped_at: '2025-12-04T01:44:39.566119+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:29:51.815447+00:00'
+            mapped_at: '2025-12-04T01:44:39.566121+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:51.815449+00:00'
+            mapped_at: '2025-12-04T01:44:39.566122+00:00'

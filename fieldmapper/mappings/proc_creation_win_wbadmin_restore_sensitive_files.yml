@@ -1,7 +1,8 @@
-id: 84972c80-251c-4c3a-9079-4f00aad93938
 title: Sensitive File Recovery From Backup Via Wbadmin.EXE
+id: 84972c80-251c-4c3a-9079-4f00aad93938
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), frack113
 description: 'Detects the dump of highly sensitive files such as "NTDS.DIT" and "SECURITY"
     hive.
 
@@ -9,11 +10,6 @@ description: 'Detects the dump of highly sensitive files such as "NTDS.DIT" and 
     that might contain credential or sensitive information.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), frack113
-date: '2024-05-10'
-tags:
-    - attack.credential-access
-    - attack.t1003.003
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/blob/2cc01b01132b5c304027a658c698ae09dd6a92bf/yml/OSBinaries/Wbadmin.yml
     - https://lolbas-project.github.io/lolbas/Binaries/Wbadmin/
@@ -21,9 +17,10 @@ references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-start-backup
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6fe4aa1e-0531-4510-8be2-782154b73b48''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+date: '2024-05-10'
 logsource:
     category: process_creation
     product: windows
@@ -42,6 +39,9 @@ detection:
             - \config\SYSTEM
             - \Windows\NTDS\NTDS.dit
     condition: all of selection_*
+related:
+    -   id: 6fe4aa1e-0531-4510-8be2-782154b73b48
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -49,21 +49,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:01.973987+00:00'
+            mapped_at: '2025-12-04T01:41:30.153449+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:01.973987+00:00'
+            mapped_at: '2025-12-04T01:41:30.153449+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:01.974020+00:00'
+            mapped_at: '2025-12-04T01:41:30.153469+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:01.974024+00:00'
+            mapped_at: '2025-12-04T01:41:30.153471+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:01.974027+00:00'
+            mapped_at: '2025-12-04T01:41:30.153472+00:00'

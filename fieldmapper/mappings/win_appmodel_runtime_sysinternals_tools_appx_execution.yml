@@ -1,21 +1,20 @@
-id: d29a20b2-be4b-4827-81f2-3d8a59eab5fc
 title: Sysinternals Tools AppX Versions Execution
+id: d29a20b2-be4b-4827-81f2-3d8a59eab5fc
 status: test
 level: low
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of Sysinternals tools via an AppX package. Attackers
     could install the Sysinternals Suite to get access to tools such as psexec and
     procdump to avoid detection based on System paths
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-16'
-modified: '2023-09-12'
-tags:
-    - attack.defense-evasion
-    - attack.execution
 references:
     - Internal Research
 falsepositives:
     - Legitimate usage of the applications from the Windows Store
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+date: '2023-01-16'
+modified: '2023-09-12'
 logsource:
     product: windows
     service: appmodel-runtime
@@ -36,17 +35,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:01.219990+00:00'
+            mapped_at: '2025-12-04T01:56:28.936753+00:00'
         service:
             source_field: service
             source_value: appmodel-runtime
-            mapped_at: '2025-11-26T02:47:01.219990+00:00'
+            mapped_at: '2025-12-04T01:56:28.936753+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:01.220015+00:00'
+            mapped_at: '2025-12-04T01:56:28.936768+00:00'
         -   source_field: ImageName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:47:01.220018+00:00'
+            mapped_at: '2025-12-04T01:56:28.936770+00:00'

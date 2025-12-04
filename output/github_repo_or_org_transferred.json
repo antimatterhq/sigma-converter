@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Github Repository/Organization Transferred",
+    "comment": "Detects when a repository or an organization is being transferred to another location.",
+    "annotations": {
+      "source": "sigma",
+      "product": "github",
+      "service": "audit",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(action)) in ('migration\\.create', 'org\\.transfer_outgoing', 'org\\.transfer', 'repo\\.transfer_outgoing'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a repository or an organization is being transferred to another location.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Allowed administrative activities. References: https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository, https://docs.github.com/en/organizations/managing-organization-settings/transferring-organization-ownership, https://docs.github.com/en/migrations, https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise#migration",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1020"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1537"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

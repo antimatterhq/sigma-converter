@@ -1,23 +1,22 @@
-id: b6457d63-d2a2-4e29-859d-4e7affc153d1
 title: Potential Discovery Activity Via Dnscmd.EXE
+id: b6457d63-d2a2-4e29-859d-4e7affc153d1
 status: test
 level: medium
+author: '@gott_cyber'
 description: Detects an attempt to leverage dnscmd.exe to enumerate the DNS zones
     of a domain. DNS zones used to host the DNS records for a particular domain.
-author: '@gott_cyber'
-date: '2022-07-31'
-modified: '2023-02-04'
-tags:
-    - attack.discovery
-    - attack.execution
-    - attack.t1543.003
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/dnscmd
     - https://learn.microsoft.com/en-us/azure/dns/dns-zones-records
     - https://lolbas-project.github.io/lolbas/Binaries/Dnscmd/
 falsepositives:
     - Legitimate administration use
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.execution
+    - attack.t1543.003
+date: '2022-07-31'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -38,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:56.630554+00:00'
+            mapped_at: '2025-12-04T01:42:16.546613+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:56.630554+00:00'
+            mapped_at: '2025-12-04T01:42:16.546613+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:56.630585+00:00'
+            mapped_at: '2025-12-04T01:42:16.546631+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:56.630588+00:00'
+            mapped_at: '2025-12-04T01:42:16.546633+00:00'

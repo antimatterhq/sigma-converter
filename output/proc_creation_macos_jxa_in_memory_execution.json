@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "JXA In-memory Execution Via OSAScript",
+    "comment": "Detects possible malicious execution of JXA in-memory via OSAScript",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('osascript')) AND contains(lower(process.cmd_line), lower(' -e ')) AND contains(lower(process.cmd_line), lower('eval')) AND contains(lower(process.cmd_line), lower('nsdata.datawithcontentsofurl')) AND contains(lower(process.cmd_line), lower(' -l ')) AND contains(lower(process.cmd_line), lower('javascript')) AND contains(lower(process.cmd_line), lower('.js')))"
+      }
+    },
+    "output": {
+      "summary": "Detects possible malicious execution of JXA in-memory via OSAScript",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line False positive: Unknown Reference: https://redcanary.com/blog/applescript/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

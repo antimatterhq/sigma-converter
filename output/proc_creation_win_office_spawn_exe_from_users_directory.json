@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Binary In User Directory Spawned From Office Application",
+    "comment": "Detects an executable in the users directory started from one of the Microsoft Office suite applications (Word, Excel, PowerPoint, Publisher, Visio)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\winword.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\excel.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powerpnt.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\mspub.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\visio.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msaccess.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\eqnedt32.exe'))) AND startswith(lower(process.name), lower('c:\\\\users\\\\')) AND endswith(lower(process.name), lower('.exe')) AND NOT endswith(lower(process.name), lower('\\\\teams.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects an executable in the users directory started from one of the Microsoft Office suite applications (Word, Excel, PowerPoint, Publisher, Visio)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Unknown References: https://blog.morphisec.com/fin7-not-finished-morphisec-spots-new-campaign, https://www.virustotal.com/gui/file/23160972c6ae07f740800fa28e421a81d7c0ca5d5cab95bc082b4a986fbac57",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1204",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

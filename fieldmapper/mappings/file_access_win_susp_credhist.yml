@@ -1,7 +1,8 @@
-id: 7a2a22ea-a203-4cd3-9abf-20eb1c5c6cd2
 title: Access To Windows Credential History File By Uncommon Applications
+id: 7a2a22ea-a203-4cd3-9abf-20eb1c5c6cd2
 status: experimental
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects file access requests to the Windows Credential History File
     by an uncommon application.
 
@@ -9,18 +10,16 @@ description: 'Detects file access requests to the Windows Credential History Fil
     "dpapi::credhist" function
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-17'
-modified: '2024-07-29'
-tags:
-    - attack.credential-access
-    - attack.t1555.004
 references:
     - https://tools.thehacker.recipes/mimikatz/modules/dpapi/credhist
     - https://www.passcape.com/windows_password_recovery_dpapi_credhist
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1555.004
+date: '2022-10-17'
+modified: '2024-07-29'
 logsource:
     category: file_access
     product: windows
@@ -44,17 +43,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_access
-            mapped_at: '2025-11-26T02:41:00.480108+00:00'
+            mapped_at: '2025-12-04T01:53:32.044309+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:00.480108+00:00'
+            mapped_at: '2025-12-04T01:53:32.044309+00:00'
     detection_fields:
         -   source_field: FileName
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:41:00.480128+00:00'
+            mapped_at: '2025-12-04T01:53:32.044335+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:41:00.480132+00:00'
+            mapped_at: '2025-12-04T01:53:32.044338+00:00'

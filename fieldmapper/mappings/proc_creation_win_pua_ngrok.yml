@@ -1,19 +1,14 @@
-id: ee37eb7c-a4e7-4cd5-8fa4-efa27f1c3f31
 title: PUA - Ngrok Execution
+id: ee37eb7c-a4e7-4cd5-8fa4-efa27f1c3f31
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects the use of Ngrok, a utility used for port forwarding and tunneling,
     often used by threat actors to make local protected services publicly available.
 
     Involved domains are bin.equinox.io for download and *.ngrok.io for connections.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2021-05-14'
-modified: '2023-02-21'
-tags:
-    - attack.command-and-control
-    - attack.t1572
 references:
     - https://ngrok.com/docs
     - https://www.fireeye.com/blog/threat-research/2021/05/shining-a-light-on-darkside-ransomware-operations.html
@@ -25,7 +20,11 @@ references:
 falsepositives:
     - Another tool that uses the command line switches of Ngrok
     - Ngrok http 3978 (https://learn.microsoft.com/en-us/azure/bot-service/bot-service-debug-channel-ngrok?view=azure-bot-service-4.0)
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1572
+date: '2021-05-14'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -61,17 +60,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:32.389671+00:00'
+            mapped_at: '2025-12-04T01:42:51.140916+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:32.389671+00:00'
+            mapped_at: '2025-12-04T01:42:51.140916+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:32.389683+00:00'
+            mapped_at: '2025-12-04T01:42:51.140945+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:32.389685+00:00'
+            mapped_at: '2025-12-04T01:42:51.140947+00:00'

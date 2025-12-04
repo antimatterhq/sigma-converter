@@ -1,7 +1,8 @@
-id: 4f1707b1-b50b-45b4-b5a2-3978b5a5d0d6
 title: Potential Homoglyph Attack Using Lookalike Characters in Filename
+id: 4f1707b1-b50b-45b4-b5a2-3978b5a5d0d6
 status: test
 level: medium
+author: Micah Babinski, @micahbabinski
 description: 'Detects the presence of unicode characters which are homoglyphs, or
     identical in appearance, to ASCII letter characters.
 
@@ -12,19 +13,17 @@ description: 'Detects the presence of unicode characters which are homoglyphs, o
     for homoglyph attack characters.
 
     '
-author: Micah Babinski, @micahbabinski
-date: '2023-05-08'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
-    - attack.t1036.003
 references:
     - https://redcanary.com/threat-detection-report/threats/socgholish/#threat-socgholish
     - http://www.irongeek.com/homoglyph-attack-generator.php
 falsepositives:
     - File names with legitimate Cyrillic text. Will likely require tuning (or not
         be usable) in countries where these alphabets are in use.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+    - attack.t1036.003
+date: '2023-05-08'
 logsource:
     category: file_event
     product: windows
@@ -89,13 +88,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:18.862968+00:00'
+            mapped_at: '2025-12-04T01:52:10.248117+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:18.862968+00:00'
+            mapped_at: '2025-12-04T01:52:10.248117+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:18.862992+00:00'
+            mapped_at: '2025-12-04T01:52:10.248145+00:00'

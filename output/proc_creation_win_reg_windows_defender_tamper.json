@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Windows Defender Registry Key Tampering Via Reg.EXE",
+    "comment": "Detects the usage of \"reg.exe\" to tamper with different Windows Defender registry keys in order to disable some important features related to protection and detection",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\reg.exe')) AND lower(process.file.name) = lower('reg.exe') AND (contains(lower(process.cmd_line), lower('software\\\\microsoft\\\\windows defender\\\\')) OR contains(lower(process.cmd_line), lower('software\\\\policies\\\\microsoft\\\\windows defender security center')) OR contains(lower(process.cmd_line), lower('software\\\\policies\\\\microsoft\\\\windows defender\\\\'))) AND (contains(lower(process.cmd_line), lower(' add ')) AND contains(lower(process.cmd_line), lower('d 0')) AND (contains(lower(process.cmd_line), lower('disallowexploitprotectionoverride')) OR contains(lower(process.cmd_line), lower('enablecontrolledfolderaccess')) OR contains(lower(process.cmd_line), lower('mpenablepus')) OR contains(lower(process.cmd_line), lower('puaprotection')) OR contains(lower(process.cmd_line), lower('spynetreporting')) OR contains(lower(process.cmd_line), lower('submitsamplesconsent')) OR contains(lower(process.cmd_line), lower('tamperprotection'))) OR contains(lower(process.cmd_line), lower(' add ')) AND contains(lower(process.cmd_line), lower('d 1')) AND (contains(lower(process.cmd_line), lower('disableantispyware')) OR contains(lower(process.cmd_line), lower('disableantispywarerealtimeprotection')) OR contains(lower(process.cmd_line), lower('disableantivirus')) OR contains(lower(process.cmd_line), lower('disablearchivescanning')) OR contains(lower(process.cmd_line), lower('disablebehaviormonitoring')) OR contains(lower(process.cmd_line), lower('disableblockatfirstseen')) OR contains(lower(process.cmd_line), lower('disableconfig')) OR contains(lower(process.cmd_line), lower('disableenhancednotifications')) OR contains(lower(process.cmd_line), lower('disableintrusionpreventionsystem')) OR contains(lower(process.cmd_line), lower('disableioavprotection')) OR contains(lower(process.cmd_line), lower('disableonaccessprotection')) OR contains(lower(process.cmd_line), lower('disableprivacymode')) OR contains(lower(process.cmd_line), lower('disablerealtimemonitoring')) OR contains(lower(process.cmd_line), lower('disableroutinelytakingaction')) OR contains(lower(process.cmd_line), lower('disablescanonrealtimeenable')) OR contains(lower(process.cmd_line), lower('disablescriptscanning')) OR contains(lower(process.cmd_line), lower('notification_suppress')) OR contains(lower(process.cmd_line), lower('signaturedisableupdateonstartupwithoutengine')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage of \"reg.exe\" to tamper with different Windows Defender registry keys in order to disable some important features related to protection and detection",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Rare legitimate use by administrators to test software (should always be investigated) References: https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell/, https://github.com/swagkarna/Defeat-Defender-V1.2.0, https://www.elevenforum.com/t/video-guide-how-to-completely-disable-microsoft-defender-antivirus.14608/page-2",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

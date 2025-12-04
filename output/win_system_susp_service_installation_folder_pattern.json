@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Service Installation with Suspicious Folder Pattern",
+    "comment": "Detects service installation with suspicious folder patterns",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND process.file.path rlike '^\\[Cc\\]:\\\\\\\\\\[Pp\\]rogram\\[Dd\\]ata\\\\\\\\.\\{1,9\\}\\\\.exe' AND process.file.path rlike '^\\[Cc\\]:\\\\\\\\.\\{1,9\\}\\\\.exe')"
+      }
+    },
+    "output": {
+      "summary": "Detects service installation with suspicious folder patterns",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1543",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

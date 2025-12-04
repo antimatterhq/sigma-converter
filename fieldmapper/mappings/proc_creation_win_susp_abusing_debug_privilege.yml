@@ -1,14 +1,9 @@
-id: d522eca2-2973-4391-a3e0-ef0374321dae
 title: Abused Debug Privilege by Arbitrary Parent Processes
+id: d522eca2-2973-4391-a3e0-ef0374321dae
 status: test
 level: high
-description: Detection of unusual child processes by different system processes
 author: Semanur Guneysu @semanurtg, oscd.community
-date: '2020-10-28'
-modified: '2022-11-11'
-tags:
-    - attack.privilege-escalation
-    - attack.t1548
+description: Detection of unusual child processes by different system processes
 references:
     - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-74-638.jpg
 fields:
@@ -18,7 +13,11 @@ fields:
     - CommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1548
+date: '2020-10-28'
+modified: '2022-11-11'
 logsource:
     category: process_creation
     product: windows
@@ -57,29 +56,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:30.659897+00:00'
+            mapped_at: '2025-12-04T01:50:12.349064+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:30.659897+00:00'
+            mapped_at: '2025-12-04T01:50:12.349064+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:30.659963+00:00'
+            mapped_at: '2025-12-04T01:50:12.349079+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:36:30.659969+00:00'
+            mapped_at: '2025-12-04T01:50:12.349082+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:30.659972+00:00'
+            mapped_at: '2025-12-04T01:50:12.349084+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:30.659983+00:00'
+            mapped_at: '2025-12-04T01:50:12.349085+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:30.659988+00:00'
+            mapped_at: '2025-12-04T01:50:12.349086+00:00'

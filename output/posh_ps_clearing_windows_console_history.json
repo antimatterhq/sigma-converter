@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Clearing Windows Console History",
+    "comment": "Identifies when a user attempts to clear console history. An adversary may clear the command history of a compromised account to conceal the actions undertaken during an intrusion.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('clear-history')) OR (contains(lower(script.script_content.value), lower('remove-item')) OR contains(lower(script.script_content.value), lower('rm'))) AND (contains(lower(script.script_content.value), lower('consolehost_history.txt')) OR contains(lower(script.script_content.value), lower('(get-psreadlineoption).historysavepath'))))"
+      }
+    },
+    "output": {
+      "summary": "Identifies when a user attempts to clear console history. An adversary may clear the command history of a compromised account to conceal the actions undertaken during an intrusion.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://stefanos.cloud/blog/kb/how-to-clear-the-powershell-command-history/, https://www.shellhacks.com/clear-history-powershell/, https://community.sophos.com/sophos-labs/b/blog/posts/powershell-command-history-forensics",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

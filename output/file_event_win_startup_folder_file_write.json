@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Startup Folder File Write",
+    "comment": "A General detection for files being created in the Windows startup directory. This could be an indicator of persistence.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND contains(lower(file.path), lower('\\\\microsoft\\\\windows\\\\start menu\\\\programs\\\\startup')) AND NOT (lower(actor.process.name) = lower('c:\\\\windows\\\\system32\\\\wuauclt.exe') AND startswith(lower(file.path), lower('c:\\\\$windows.~bt\\\\newos\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "A General detection for files being created in the Windows startup directory. This could be an indicator of persistence.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: FP could be caused by legitimate application writing shortcuts for example. This folder should always be inspected to make sure that all the files in there are legitimate References: https://github.com/OTRF/detection-hackathon-apt29/issues/12, https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/5.B.1_611FCA99-97D0-4873-9E51-1C1BA2DBB40D.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1547",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

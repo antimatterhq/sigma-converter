@@ -4,7 +4,7 @@ Tests for fieldmapper.ocsf.converter business logic.
 import json
 import os
 import tempfile
-from unittest.mock import patch, MagicMock, Mock
+from unittest.mock import patch, MagicMock
 import pytest
 from pathlib import Path
 import sys
@@ -13,7 +13,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from fieldmapper.ocsf.converter import load_and_process_rules
-from fieldmapper.ocsf.rules import SigmaRuleOCSFLite, OCSFLite
+from fieldmapper.ocsf.rules import SigmaRuleOCSFLite
 from sigma.rule import SigmaRule, SigmaLogSource
 
 
@@ -56,7 +56,7 @@ class TestLoadAndProcessRules:
         assert result['error'] is None
         assert len(result['rules']) == 10
         assert result['stats']['total'] == 10
-        assert result['stats']['success_count'] == 0  # No mapping performed
+        assert result['stats']['success_count'] == 0 
         assert result['stats']['skipped_count'] == 0
         assert result['stats']['error_count'] == 0
     
@@ -151,9 +151,6 @@ class TestLoadAndProcessRules:
         
         mock_load.assert_called_once_with(filename="specific_rule.yml")
         assert result['success'] is True
-    
-    # Skip schema/mapper tests as they require complex mocking of dynamic imports
-    # These are better tested through integration tests
     
     def test_refresh_cache_deletes_file_properly(self):
         """Test that refresh_cache=True correctly triggers cache file deletion logic."""

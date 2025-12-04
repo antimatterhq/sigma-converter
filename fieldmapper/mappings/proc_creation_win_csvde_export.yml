@@ -1,15 +1,10 @@
-id: e5d36acd-acb4-4c6f-a13f-9eb203d50099
 title: Active Directory Structure Export Via Csvde.EXE
+id: e5d36acd-acb4-4c6f-a13f-9eb203d50099
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of "csvde.exe" in order to export organizational
     Active Directory structure.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-03-14'
-tags:
-    - attack.exfiltration
-    - attack.discovery
-    - attack.t1087.002
 references:
     - https://www.cybereason.com/blog/research/operation-ghostshell-novel-rat-targets-global-aerospace-and-telecoms-firms
     - https://web.archive.org/web/20180725233601/https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
@@ -17,7 +12,11 @@ references:
     - https://redcanary.com/blog/msix-installers/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.discovery
+    - attack.t1087.002
+date: '2023-03-14'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:23.513621+00:00'
+            mapped_at: '2025-12-04T01:41:45.655421+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:23.513621+00:00'
+            mapped_at: '2025-12-04T01:41:45.655421+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:23.513633+00:00'
+            mapped_at: '2025-12-04T01:41:45.655442+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:23.513635+00:00'
+            mapped_at: '2025-12-04T01:41:45.655444+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:23.513636+00:00'
+            mapped_at: '2025-12-04T01:41:45.655446+00:00'

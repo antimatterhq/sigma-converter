@@ -1,21 +1,20 @@
-id: a8322756-015c-42e7-afb1-436e85ed3ff5
 title: DNS TOR Proxies
+id: a8322756-015c-42e7-afb1-436e85ed3ff5
 status: test
 level: medium
-description: Identifies IPs performing DNS lookups associated with common Tor proxies.
 author: Saw Winn Naung , Azure-Sentinel
-date: '2021-08-15'
-modified: '2022-10-09'
-tags:
-    - attack.exfiltration
-    - attack.t1048
+description: Identifies IPs performing DNS lookups associated with common Tor proxies.
 references:
     - https://github.com/Azure/Azure-Sentinel/blob/f99542b94afe0ad2f19a82cc08262e7ac8e1428e/Detections/ASimDNS/imDNS_TorProxies.yaml
 fields:
     - clientip
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1048
+date: '2021-08-15'
+modified: '2022-10-09'
 logsource:
     product: zeek
     service: dns
@@ -62,13 +61,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:06.386396+00:00'
+            mapped_at: '2025-12-04T01:35:13.018012+00:00'
         service:
             source_field: service
             source_value: dns
-            mapped_at: '2025-11-26T02:15:06.386396+00:00'
+            mapped_at: '2025-12-04T01:35:13.018012+00:00'
     detection_fields:
         -   source_field: query
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:15:06.386412+00:00'
+            mapped_at: '2025-12-04T01:35:13.018026+00:00'

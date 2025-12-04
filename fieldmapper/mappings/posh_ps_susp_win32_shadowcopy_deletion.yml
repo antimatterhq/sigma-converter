@@ -1,25 +1,21 @@
-id: c1337eb8-921a-4b59-855b-4ba188ddcc42
 title: Deletion of Volume Shadow Copies via WMI with PowerShell - PS Script
+id: c1337eb8-921a-4b59-855b-4ba188ddcc42
 status: test
 level: high
+author: Tim Rauch
 description: Detects deletion of Windows Volume Shadow Copies with PowerShell code
     and Get-WMIObject. This technique is used by numerous ransomware families such
     as Sodinokibi/REvil
-author: Tim Rauch
-date: '2022-09-20'
-modified: '2022-12-02'
-tags:
-    - attack.impact
-    - attack.t1490
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-5---windows---delete-volume-shadow-copies-via-wmi-with-powershell
     - https://www.elastic.co/guide/en/security/current/volume-shadow-copy-deletion-via-powershell.html
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e17121b4-ef2a-4418-8a59-12fb1631fa9e''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''21ff4ca9-f13a-41ad-b828-0077b2af2e40''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1490
+date: '2022-09-20'
+modified: '2022-12-02'
 logsource:
     category: ps_script
     product: windows
@@ -40,6 +36,11 @@ detection:
             - Remove-CimInstance
             - rcim
     condition: all of selection*
+related:
+    -   id: e17121b4-ef2a-4418-8a59-12fb1631fa9e
+        type: derived
+    -   id: 21ff4ca9-f13a-41ad-b828-0077b2af2e40
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: <UNMAPPED>
@@ -47,13 +48,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:13.048034+00:00'
+            mapped_at: '2025-12-04T01:54:25.366018+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:13.048034+00:00'
+            mapped_at: '2025-12-04T01:54:25.366018+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:13.048047+00:00'
+            mapped_at: '2025-12-04T01:54:25.366044+00:00'

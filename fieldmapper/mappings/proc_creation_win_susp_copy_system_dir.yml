@@ -1,7 +1,9 @@
-id: fff9d2b7-e11c-4a69-93d3-40ef66189767
 title: Suspicious Copy From or To System Directory
+id: fff9d2b7-e11c-4a69-93d3-40ef66189767
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Markus Neis, Tim Shelton (HAWK.IO), Nasreddine
+    Bencherchali (Nextron Systems)
 description: 'Detects a suspicious copy operation that tries to copy a program from
     system (System32, SysWOW64, WinSxS) directories to another on disk.
 
@@ -10,13 +12,6 @@ description: 'Detects a suspicious copy operation that tries to copy a program f
     locations.
 
     '
-author: Florian Roth (Nextron Systems), Markus Neis, Tim Shelton (HAWK.IO), Nasreddine
-    Bencherchali (Nextron Systems)
-date: '2020-07-03'
-modified: '2023-08-29'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.003
 references:
     - https://www.hybrid-analysis.com/sample/8da5b75b6380a41eee3a399c43dfe0d99eeefaa1fd21027a07b1ecaa4cd96fdd?environmentId=120
     - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
@@ -26,9 +21,11 @@ falsepositives:
         (For example an admin scripts like https://www.itexperience.net/sccm-batch-files-and-32-bits-processes-on-64-bits-os/)
     - When cmd.exe and xcopy.exe are called directly
     - When the command contains the keywords but not in the correct order
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''855bc8b5-2ae8-402e-a9ed-b889e6df1900''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.003
+date: '2020-07-03'
+modified: '2023-08-29'
 logsource:
     category: process_creation
     product: windows
@@ -58,6 +55,9 @@ detection:
             - \SysWOW64
             - \WinSxS
     condition: 1 of selection_* and target
+related:
+    -   id: 855bc8b5-2ae8-402e-a9ed-b889e6df1900
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -65,21 +65,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:55.075455+00:00'
+            mapped_at: '2025-12-04T01:45:32.238791+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:55.075455+00:00'
+            mapped_at: '2025-12-04T01:45:32.238791+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:55.075469+00:00'
+            mapped_at: '2025-12-04T01:45:32.238804+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:55.075471+00:00'
+            mapped_at: '2025-12-04T01:45:32.238806+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:55.075472+00:00'
+            mapped_at: '2025-12-04T01:45:32.238807+00:00'

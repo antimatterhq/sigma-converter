@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "BITS Transfer Job Download From Direct IP",
+    "comment": "Detects a BITS transfer job downloading file(s) from a direct IP address.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "bits-client",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM network_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 16403 AND (contains(lower(dst_endpoint.hostname), lower('http://1')) OR contains(lower(dst_endpoint.hostname), lower('http://2')) OR contains(lower(dst_endpoint.hostname), lower('http://3')) OR contains(lower(dst_endpoint.hostname), lower('http://4')) OR contains(lower(dst_endpoint.hostname), lower('http://5')) OR contains(lower(dst_endpoint.hostname), lower('http://6')) OR contains(lower(dst_endpoint.hostname), lower('http://7')) OR contains(lower(dst_endpoint.hostname), lower('http://8')) OR contains(lower(dst_endpoint.hostname), lower('http://9')) OR contains(lower(dst_endpoint.hostname), lower('https://1')) OR contains(lower(dst_endpoint.hostname), lower('https://2')) OR contains(lower(dst_endpoint.hostname), lower('https://3')) OR contains(lower(dst_endpoint.hostname), lower('https://4')) OR contains(lower(dst_endpoint.hostname), lower('https://5')) OR contains(lower(dst_endpoint.hostname), lower('https://6')) OR contains(lower(dst_endpoint.hostname), lower('https://7')) OR contains(lower(dst_endpoint.hostname), lower('https://8')) OR contains(lower(dst_endpoint.hostname), lower('https://9'))) AND NOT (contains(lower(dst_endpoint.hostname), lower('://10.')) OR contains(lower(dst_endpoint.hostname), lower('://192.168.')) OR contains(lower(dst_endpoint.hostname), lower('://172.16.')) OR contains(lower(dst_endpoint.hostname), lower('://172.17.')) OR contains(lower(dst_endpoint.hostname), lower('://172.18.')) OR contains(lower(dst_endpoint.hostname), lower('://172.19.')) OR contains(lower(dst_endpoint.hostname), lower('://172.20.')) OR contains(lower(dst_endpoint.hostname), lower('://172.21.')) OR contains(lower(dst_endpoint.hostname), lower('://172.22.')) OR contains(lower(dst_endpoint.hostname), lower('://172.23.')) OR contains(lower(dst_endpoint.hostname), lower('://172.24.')) OR contains(lower(dst_endpoint.hostname), lower('://172.25.')) OR contains(lower(dst_endpoint.hostname), lower('://172.26.')) OR contains(lower(dst_endpoint.hostname), lower('://172.27.')) OR contains(lower(dst_endpoint.hostname), lower('://172.28.')) OR contains(lower(dst_endpoint.hostname), lower('://172.29.')) OR contains(lower(dst_endpoint.hostname), lower('://172.30.')) OR contains(lower(dst_endpoint.hostname), lower('://172.31.')) OR contains(lower(dst_endpoint.hostname), lower('://127.')) OR contains(lower(dst_endpoint.hostname), lower('://169.254.')) OR contains(lower(dst_endpoint.hostname), lower('https://7-')) OR contains(lower(dst_endpoint.hostname), lower('http://7-'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a BITS transfer job downloading file(s) from a direct IP address.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin, https://isc.sans.edu/diary/22264, https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/, https://blog.talosintelligence.com/breaking-the-silence-recent-truebot-activity/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1197"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

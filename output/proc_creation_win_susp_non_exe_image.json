@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Execution of Suspicious File Type Extension",
+    "comment": "Detects whether the image specified in a process creation event doesn't refer to an \".exe\" (or other known executable extension) file. This can be caused by process ghosting or other unorthodox methods to start a process. This rule might require some initial baselining to align with some third party tooling in the user environment.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND NOT (endswith(lower(process.name), lower('.bin')) OR endswith(lower(process.name), lower('.cgi')) OR endswith(lower(process.name), lower('.com')) OR endswith(lower(process.name), lower('.exe')) OR endswith(lower(process.name), lower('.scr')) OR endswith(lower(process.name), lower('.tmp'))) AND NOT (lower(LOWER(process.name)) in ('system', 'registry', 'memcompression', 'vmmem') OR contains(lower(process.name), lower(':\\\\windows\\\\installer\\\\msi')) OR contains(lower(process.name), lower(':\\\\windows\\\\system32\\\\driverstore\\\\filerepository\\\\')) OR contains(lower(process.name), lower(':\\\\config.msi\\\\')) AND (endswith(lower(process.name), lower('.rbf')) OR endswith(lower(process.name), lower('.rbs'))) OR contains(lower(process.parent_process.name), lower(':\\\\windows\\\\temp\\\\')) AND contains(lower(process.name), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.name), lower(':\\\\$extend\\\\$deleted\\\\')) OR lower(LOWER(process.name)) in ('-', '') OR process.name is null) AND NOT (contains(lower(process.parent_process.name), lower(':\\\\programdata\\\\avira\\\\')) OR contains(lower(process.name), lower('nvidia\\\\nvbackend\\\\')) AND endswith(lower(process.name), lower('.dat')) OR (contains(lower(process.name), lower(':\\\\program files (x86)\\\\winpakpro\\\\')) OR contains(lower(process.name), lower(':\\\\program files\\\\winpakpro\\\\'))) AND endswith(lower(process.name), lower('.ngn')) OR endswith(lower(process.name), lower(':\\\\program files (x86)\\\\myq\\\\server\\\\pcltool.dll')) OR endswith(lower(process.name), lower(':\\\\program files\\\\myq\\\\server\\\\pcltool.dll')) OR contains(lower(process.name), lower('\\\\appdata\\\\local\\\\packages\\\\')) AND contains(lower(process.name), lower('\\\\localstate\\\\rootfs\\\\')) OR endswith(lower(process.name), lower('\\\\lzma_exe')) OR contains(lower(process.name), lower(':\\\\program files\\\\mozilla firefox\\\\')) OR lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\services.exe') AND endswith(lower(process.name), lower('com.docker.service'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects whether the image specified in a process creation event doesn't refer to an \".exe\" (or other known executable extension) file. This can be caused by process ghosting or other unorthodox methods to start a process. This rule might require some initial baselining to align with some third party tooling in the user environment.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://pentestlaboratories.com/2021/12/08/process-ghosting/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

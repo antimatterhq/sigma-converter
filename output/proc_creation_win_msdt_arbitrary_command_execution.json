@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Arbitrary Command Execution Using Msdt.EXE",
+    "comment": "Detects processes leveraging the \"ms-msdt\" handler or the \"msdt.exe\" binary to execute arbitrary commands as seen in the follina (CVE-2022-30190) vulnerability",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\msdt.exe')) AND lower(process.file.name) = lower('msdt.exe') AND (contains(lower(process.cmd_line), lower('it_browseforfile=')) OR contains(lower(process.cmd_line), lower(' pcwdiagnostic')) AND (contains(lower(process.cmd_line), lower(' -af ')) OR contains(lower(process.cmd_line), lower(' /af ')) OR contains(lower(process.cmd_line), lower(' \u2013af ')) OR contains(lower(process.cmd_line), lower(' \u2014af ')) OR contains(lower(process.cmd_line), lower(' \u2015af ')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects processes leveraging the \"ms-msdt\" handler or the \"msdt.exe\" binary to execute arbitrary commands as seen in the follina (CVE-2022-30190) vulnerability",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/nao_sec/status/1530196847679401984, https://app.any.run/tasks/713f05d2-fe78-4b9d-a744-f7c133e3fafb/, https://twitter.com/_JohnHammond/status/1531672601067675648",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

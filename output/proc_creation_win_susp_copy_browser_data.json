@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Browser Data Stealing",
+    "comment": "Adversaries may acquire credentials from web browsers by reading files specific to the target browser. Web browsers commonly save credentials such as website usernames and passwords so that they do not need to be entered manually in the future. Web browsers typically store the credentials in an encrypted format within a credential store.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('copy-item')) OR contains(lower(process.cmd_line), lower('copy ')) OR contains(lower(process.cmd_line), lower('cpi ')) OR contains(lower(process.cmd_line), lower(' cp ')) OR contains(lower(process.cmd_line), lower('move ')) OR contains(lower(process.cmd_line), lower('move-item')) OR contains(lower(process.cmd_line), lower(' mi ')) OR contains(lower(process.cmd_line), lower(' mv '))) AND (endswith(lower(process.name), lower('\\\\xcopy.exe')) OR endswith(lower(process.name), lower('\\\\robocopy.exe'))) AND (lower(LOWER(process.file.name)) in ('xcopy\\.exe', 'robocopy\\.exe')) AND (contains(lower(process.cmd_line), lower('\\\\amigo\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\bravesoftware\\\\brave-browser\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\centbrowser\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\chromium\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\coccoc\\\\browser\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\comodo\\\\dragon\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\elements browser\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\epic privacy browser\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\google\\\\chrome beta\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\google\\\\chrome sxs\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\google\\\\chrome\\\\user data\\\\')) OR contains(lower(process.cmd_line), lower('\\\\kometa\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\maxthon5\\\\users')) OR contains(lower(process.cmd_line), lower('\\\\microsoft\\\\edge\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\mozilla\\\\firefox\\\\profiles')) OR contains(lower(process.cmd_line), lower('\\\\nichrome\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\opera software\\\\opera gx stable\\\\')) OR contains(lower(process.cmd_line), lower('\\\\opera software\\\\opera neon\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\opera software\\\\opera stable\\\\')) OR contains(lower(process.cmd_line), lower('\\\\orbitum\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\qip surf\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\sputnik\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\torch\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\ucozmedia\\\\uran\\\\user data')) OR contains(lower(process.cmd_line), lower('\\\\vivaldi\\\\user data'))))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may acquire credentials from web browsers by reading files specific to the target browser. Web browsers commonly save credentials such as website usernames and passwords so that they do not need to be entered manually in the future. Web browsers typically store the credentials in an encrypted format within a credential store.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.003/T1555.003.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1555",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

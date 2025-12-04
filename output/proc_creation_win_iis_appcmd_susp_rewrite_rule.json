@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious IIS URL GlobalRules Rewrite Via AppCmd",
+    "comment": "Detects usage of \"appcmd\" to create new global URL rewrite rules. This behaviour has been observed being used by threat actors to add new rules so they can access their webshells.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\appcmd.exe')) AND lower(process.file.name) = lower('appcmd.exe') AND contains(lower(process.cmd_line), lower('set')) AND contains(lower(process.cmd_line), lower('config')) AND contains(lower(process.cmd_line), lower('section:system.webserver/rewrite/globalrules')) AND contains(lower(process.cmd_line), lower('commit:')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of \"appcmd\" to create new global URL rewrite rules. This behaviour has been observed being used by threat actors to add new rules so they can access their webshells.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of appcmd to add new URL rewrite rules References: https://twitter.com/malmoeb/status/1616702107242971144, https://learn.microsoft.com/en-us/answers/questions/739120/how-to-add-re-write-global-rule-with-action-type-r",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

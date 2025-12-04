@@ -1,20 +1,19 @@
-id: 8ae51330-899c-4641-8125-e39f2e07da72
 title: DNS TXT Answer with Possible Execution Strings
+id: 8ae51330-899c-4641-8125-e39f2e07da72
 status: test
 level: high
-description: Detects strings used in command execution in DNS TXT Answer
 author: Markus Neis
-date: '2018-08-08'
-modified: '2021-11-27'
-tags:
-    - attack.command-and-control
-    - attack.t1071.004
+description: Detects strings used in command execution in DNS TXT Answer
 references:
     - https://twitter.com/stvemillertime/status/1024707932447854592
     - https://github.com/samratashok/nishang/blob/414ee1104526d7057f9adaeee196d91ae447283e/Backdoors/DNS_TXT_Pwnage.ps1
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+date: '2018-08-08'
+modified: '2021-11-27'
 logsource:
     category: dns
 detection:
@@ -32,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns
-            mapped_at: '2025-11-26T02:15:20.609812+00:00'
+            mapped_at: '2025-12-04T01:35:19.038715+00:00'
     detection_fields:
         -   source_field: record_type
             target_table: dns_activity
             target_field: query.type
-            mapped_at: '2025-11-26T02:15:22.127425+00:00'
+            mapped_at: '2025-12-04T01:35:19.038738+00:00'
         -   source_field: answer
             target_table: dns_activity
             target_field: answers.rdata
-            mapped_at: '2025-11-26T02:15:22.127452+00:00'
+            mapped_at: '2025-12-04T01:35:19.038742+00:00'

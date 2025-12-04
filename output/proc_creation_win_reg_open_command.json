@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Reg Add Open Command",
+    "comment": "Threat actors performed dumping of SAM, SECURITY and SYSTEM registry hives using DelegateExecute key",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('reg')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('hkcu\\\\software\\\\classes\\\\ms-settings\\\\shell\\\\open\\\\command')) AND contains(lower(process.cmd_line), lower('/ve ')) AND contains(lower(process.cmd_line), lower('/d')) OR contains(lower(process.cmd_line), lower('reg')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('hkcu\\\\software\\\\classes\\\\ms-settings\\\\shell\\\\open\\\\command')) AND contains(lower(process.cmd_line), lower('/v')) AND contains(lower(process.cmd_line), lower('delegateexecute')) OR contains(lower(process.cmd_line), lower('reg')) AND contains(lower(process.cmd_line), lower('delete')) AND contains(lower(process.cmd_line), lower('hkcu\\\\software\\\\classes\\\\ms-settings'))))"
+      }
+    },
+    "output": {
+      "summary": "Threat actors performed dumping of SAM, SECURITY and SYSTEM registry hives using DelegateExecute key",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://thedfirreport.com/2021/12/13/diavol-ransomware/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

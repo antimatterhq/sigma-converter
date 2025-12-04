@@ -1,7 +1,9 @@
-id: 9aa5106d-bce3-4b13-86df-3a20f1d5cf0b
 title: Forfiles Command Execution
+id: 9aa5106d-bce3-4b13-86df-3a20f1d5cf0b
 status: test
 level: medium
+author: Tim Rauch, Elastic, E.M. Anhaus (originally from Atomic Blue Detections, Endgame),
+    oscd.community
 description: 'Detects the execution of "forfiles" with the "/c" flag.
 
     While this is an expected behavior of the tool, it can be abused in order to proxy
@@ -10,22 +12,16 @@ description: 'Detects the execution of "forfiles" with the "/c" flag.
     Can be used to bypass application whitelisting.
 
     '
-author: Tim Rauch, Elastic, E.M. Anhaus (originally from Atomic Blue Detections, Endgame),
-    oscd.community
-date: '2022-06-14'
-modified: '2024-03-05'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Forfiles/
     - https://pentestlab.blog/2020/07/06/indirect-command-execution/
 falsepositives:
     - Legitimate use via a batch script or by an administrator.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a85cf4e3-56ee-4e79-adeb-789f8fb209a8''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''fa47597e-90e9-41cd-ab72-c3b74cfb0d02''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-06-14'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +32,11 @@ detection:
     selection_cli:
         CommandLine|contains|windash: ' -c '
     condition: all of selection_*
+related:
+    -   id: a85cf4e3-56ee-4e79-adeb-789f8fb209a8
+        type: obsolete
+    -   id: fa47597e-90e9-41cd-ab72-c3b74cfb0d02
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:06.102862+00:00'
+            mapped_at: '2025-12-04T01:44:53.527482+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:06.102862+00:00'
+            mapped_at: '2025-12-04T01:44:53.527482+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:06.102884+00:00'
+            mapped_at: '2025-12-04T01:44:53.527520+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:06.102887+00:00'
+            mapped_at: '2025-12-04T01:44:53.527525+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:06.102888+00:00'
+            mapped_at: '2025-12-04T01:44:53.527528+00:00'

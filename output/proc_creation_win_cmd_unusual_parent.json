@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Unusual Parent Process For Cmd.EXE",
+    "comment": "Detects suspicious parent process for cmd.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND (endswith(lower(process.parent_process.name), lower('\\\\csrss.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\ctfmon.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\dllhost.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\epad.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\flashplayerupdateservice.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\googleupdate.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\jucheck.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\jusched.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\logonui.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\lsass.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\searchindexer.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\searchprotocolhost.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\sihclient.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\sihost.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\slui.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\spoolsv.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\sppsvc.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\taskhostw.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\unsecapp.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\werfault.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wermgr.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wlanext.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wudfhost.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious parent process for cmd.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.elastic.co/guide/en/security/current/unusual-parent-process-for-cmd.exe.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

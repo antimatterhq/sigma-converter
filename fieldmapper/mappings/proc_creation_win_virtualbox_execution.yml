@@ -1,17 +1,11 @@
-id: bab049ca-7471-4828-9024-38279a4c04da
 title: Detect Virtualbox Driver Installation OR Starting Of VMs
+id: bab049ca-7471-4828-9024-38279a4c04da
 status: test
 level: low
+author: Janantha Marasinghe
 description: Adversaries can carry out malicious operations using a virtual instance
     to avoid detection. This rule is built to detect the registration of the Virtualbox
     driver or start of a Virtualbox VM.
-author: Janantha Marasinghe
-date: '2020-09-26'
-modified: '2022-07-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.006
-    - attack.t1564
 references:
     - https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/
     - https://threatpost.com/maze-ransomware-ragnar-locker-virtual-machine/159350/
@@ -23,7 +17,12 @@ fields:
 falsepositives:
     - This may have false positives on hosts where Virtualbox is legitimately being
         used for operations
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.006
+    - attack.t1564
+date: '2020-09-26'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -45,13 +44,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:56.145801+00:00'
+            mapped_at: '2025-12-04T01:48:07.434597+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:56.145801+00:00'
+            mapped_at: '2025-12-04T01:48:07.434597+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:56.145818+00:00'
+            mapped_at: '2025-12-04T01:48:07.434610+00:00'

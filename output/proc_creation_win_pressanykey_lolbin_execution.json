@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Visual Studio NodejsTools PressAnyKey Arbitrary Binary Execution",
+    "comment": "Detects child processes of Microsoft.NodejsTools.PressAnyKey.exe that can be used to execute any other binary",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\microsoft.nodejstools.pressanykey.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects child processes of Microsoft.NodejsTools.PressAnyKey.exe that can be used to execute any other binary",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use by developers as part of NodeJS development with Visual Studio Tools References: https://twitter.com/mrd0x/status/1463526834918854661, https://gist.github.com/nasbench/a989ce64cefa8081bd50cf6ad8c491b5",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

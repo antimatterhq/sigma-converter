@@ -1,22 +1,19 @@
-id: f7d7ebd5-a016-46e2-9c54-f9932f2d386d
 title: Potential RDP Tunneling Via SSH
+id: f7d7ebd5-a016-46e2-9c54-f9932f2d386d
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Execution of ssh.exe to perform data exfiltration and tunneling through
     RDP
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-12'
-modified: '2023-01-25'
-tags:
-    - attack.command-and-control
-    - attack.t1572
 references:
     - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f38ce0b9-5e97-4b47-a211-7dc8d8b871da''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1572
+date: '2022-10-12'
+modified: '2023-01-25'
 logsource:
     category: process_creation
     product: windows
@@ -25,6 +22,9 @@ detection:
         Image|endswith: \ssh.exe
         CommandLine|contains: :3389
     condition: selection
+related:
+    -   id: f38ce0b9-5e97-4b47-a211-7dc8d8b871da
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -32,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:22.022479+00:00'
+            mapped_at: '2025-12-04T01:41:43.437073+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:22.022479+00:00'
+            mapped_at: '2025-12-04T01:41:43.437073+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:22.022515+00:00'
+            mapped_at: '2025-12-04T01:41:43.437089+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:22.022520+00:00'
+            mapped_at: '2025-12-04T01:41:43.437091+00:00'

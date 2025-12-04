@@ -1,21 +1,20 @@
-id: 3e3ceccd-6c06-48b8-b5ff-ab1d25db8c1d
 title: Hardware Model Reconnaissance Via Wmic.EXE
+id: 3e3ceccd-6c06-48b8-b5ff-ab1d25db8c1d
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects the execution of WMIC with the "csproduct" which is used to obtain
     information such as hardware models and vendor information
-author: Florian Roth (Nextron Systems)
-date: '2023-02-14'
-tags:
-    - attack.execution
-    - attack.t1047
-    - car.2016-03-002
 references:
     - https://jonconwayuk.wordpress.com/2014/01/31/wmic-csproduct-using-wmi-to-identify-make-and-model-of-hardware/
     - https://www.uptycs.com/blog/kuraystealer-a-bandit-using-discord-webhooks
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+    - car.2016-03-002
+date: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -33,21 +32,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:18.879291+00:00'
+            mapped_at: '2025-12-04T01:48:22.886486+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:18.879291+00:00'
+            mapped_at: '2025-12-04T01:48:22.886486+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:18.879332+00:00'
+            mapped_at: '2025-12-04T01:48:22.886505+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:18.879337+00:00'
+            mapped_at: '2025-12-04T01:48:22.886507+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:18.879341+00:00'
+            mapped_at: '2025-12-04T01:48:22.886508+00:00'

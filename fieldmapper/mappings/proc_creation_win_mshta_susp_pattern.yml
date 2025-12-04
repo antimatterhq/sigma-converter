@@ -1,21 +1,20 @@
-id: e32f92d1-523e-49c3-9374-bdb13b46a3ba
 title: Suspicious Mshta.EXE Execution Patterns
+id: e32f92d1-523e-49c3-9374-bdb13b46a3ba
 status: test
 level: high
-description: Detects suspicious mshta process execution patterns
 author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2021-07-17'
-modified: '2023-02-21'
-tags:
-    - attack.execution
-    - attack.t1106
+description: Detects suspicious mshta process execution patterns
 references:
     - https://en.wikipedia.org/wiki/HTML_Application
     - https://www.echotrail.io/insights/search/mshta.exe
     - https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1106
+date: '2021-07-17'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -55,25 +54,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:43.946761+00:00'
+            mapped_at: '2025-12-04T01:45:21.382600+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:43.946761+00:00'
+            mapped_at: '2025-12-04T01:45:21.382600+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:43.946782+00:00'
+            mapped_at: '2025-12-04T01:45:21.382626+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:43.946783+00:00'
+            mapped_at: '2025-12-04T01:45:21.382628+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:43.946785+00:00'
+            mapped_at: '2025-12-04T01:45:21.382629+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:43.946786+00:00'
+            mapped_at: '2025-12-04T01:45:21.382631+00:00'

@@ -1,20 +1,17 @@
-id: c31364f7-8be6-4b77-8483-dd2b5a7b69a3
 title: Import PowerShell Modules From Suspicious Directories - ProcCreation
+id: c31364f7-8be6-4b77-8483-dd2b5a7b69a3
 status: test
 level: medium
-description: Detects powershell scripts that import modules from suspicious directories
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-10'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects powershell scripts that import modules from suspicious directories
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''21f9162c-5f5d-4b01-89a8-b705bd7d10ab''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2023-01-10'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
             - ipmo $Env:Appdata\
             - ipmo C:\Users\Public\
     condition: selection
+related:
+    -   id: 21f9162c-5f5d-4b01-89a8-b705bd7d10ab
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,13 +43,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:01.429879+00:00'
+            mapped_at: '2025-12-04T01:41:29.678500+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:01.429879+00:00'
+            mapped_at: '2025-12-04T01:41:29.678500+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:01.429901+00:00'
+            mapped_at: '2025-12-04T01:41:29.678513+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Service DACL Modification Via Set-Service Cmdlet - PS",
+    "comment": "Detects usage of the \"Set-Service\" powershell cmdlet to configure a new SecurityDescriptor that allows a service to be hidden from other utilities such as \"sc.exe\", \"Get-Service\"...etc. (Works only in powershell 7)",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((contains(lower(script.script_content.value), lower('-securitydescriptorsddl ')) OR contains(lower(script.script_content.value), lower('-sd '))) AND contains(lower(script.script_content.value), lower('set-service ')) AND contains(lower(script.script_content.value), lower('d;;')) AND (contains(lower(script.script_content.value), lower(';;;iu')) OR contains(lower(script.script_content.value), lower(';;;su')) OR contains(lower(script.script_content.value), lower(';;;ba')) OR contains(lower(script.script_content.value), lower(';;;sy')) OR contains(lower(script.script_content.value), lower(';;;wd'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the \"Set-Service\" powershell cmdlet to configure a new SecurityDescriptor that allows a service to be hidden from other utilities such as \"sc.exe\", \"Get-Service\"...etc. (Works only in powershell 7)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Rare intended use of hidden services 2. Rare FP could occur due to the non linearity of the ScriptBlockText log References: https://twitter.com/Alh4zr3d/status/1580925761996828672, https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1574",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Process Execution From A Potentially Suspicious Folder",
+    "comment": "Detects a potentially suspicious execution from an uncommon folder.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.name), lower(':\\\\perflogs\\\\')) OR contains(lower(process.name), lower(':\\\\users\\\\all users\\\\')) OR contains(lower(process.name), lower(':\\\\users\\\\default\\\\')) OR contains(lower(process.name), lower(':\\\\users\\\\networkservice\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\addins\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\debug\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\fonts\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\help\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\ime\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\media\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\repair\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\security\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\system32\\\\tasks\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\tasks\\\\')) OR contains(lower(process.name), lower('$recycle.bin')) OR contains(lower(process.name), lower('\\\\config\\\\systemprofile\\\\')) OR contains(lower(process.name), lower('\\\\intel\\\\logs\\\\')) OR contains(lower(process.name), lower('\\\\rsa\\\\machinekeys\\\\'))) AND NOT (startswith(lower(process.name), lower('c:\\\\users\\\\public\\\\ibm\\\\clientsolutions\\\\start_programs\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\syswow64\\\\config\\\\systemprofile\\\\citrix\\\\updaterbinaries\\\\')) AND endswith(lower(process.name), lower('\\\\citrixreceiverupdater.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a potentially suspicious execution from an uncommon folder.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/mbevilacqua/appcompatprocessor/blob/6c847937c5a836e2ce2fe2b915f213c345a3c389/AppCompatSearch.txt, https://www.secureworks.com/research/bronze-butler-targets-japanese-businesses, https://www.crowdstrike.com/resources/reports/2019-crowdstrike-global-threat-report/, https://github.com/ThreatHuntingProject/ThreatHunting/blob/cb22598bb70651f88e0285abc8d835757d2cb596/hunts/suspicious_process_creation_via_windows_event_logs.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

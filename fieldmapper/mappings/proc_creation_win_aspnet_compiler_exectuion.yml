@@ -1,25 +1,20 @@
-id: a01b8329-5953-4f73-ae2d-aa01e1f35f00
 title: AspNetCompiler Execution
+id: a01b8329-5953-4f73-ae2d-aa01e1f35f00
 status: test
 level: medium
+author: frack113
 description: Detects execution of "aspnet_compiler.exe" which can be abused to compile
     and execute C# code.
-author: frack113
-date: '2021-11-24'
-modified: '2023-08-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Aspnet_Compiler/
     - https://ijustwannared.team/2020/08/01/the-curious-case-of-aspnet_compiler-exe/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9ccba514-7cb6-4c5c-b377-700758f2f120''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''4c7f49ee-2638-43bb-b85b-ce676c30b260''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''9f50fe98-fe5c-4a2d-86c7-fad7f63ed622''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2021-11-24'
+modified: '2023-08-14'
 logsource:
     category: process_creation
     product: windows
@@ -30,6 +25,13 @@ detection:
             - C:\Windows\Microsoft.NET\Framework64\
         Image|endswith: \aspnet_compiler.exe
     condition: selection
+related:
+    -   id: 9ccba514-7cb6-4c5c-b377-700758f2f120
+        type: similar
+    -   id: 4c7f49ee-2638-43bb-b85b-ce676c30b260
+        type: similar
+    -   id: 9f50fe98-fe5c-4a2d-86c7-fad7f63ed622
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -37,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:00.413731+00:00'
+            mapped_at: '2025-12-04T01:48:58.080000+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:00.413731+00:00'
+            mapped_at: '2025-12-04T01:48:58.080000+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:00.413763+00:00'
+            mapped_at: '2025-12-04T01:48:58.080015+00:00'

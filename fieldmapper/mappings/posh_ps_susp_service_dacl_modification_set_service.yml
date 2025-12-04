@@ -1,26 +1,23 @@
-id: 22d80745-6f2c-46da-826b-77adaededd74
 title: Suspicious Service DACL Modification Via Set-Service Cmdlet - PS
+id: 22d80745-6f2c-46da-826b-77adaededd74
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the "Set-Service" powershell cmdlet to configure a new
     SecurityDescriptor that allows a service to be hidden from other utilities such
     as "sc.exe", "Get-Service"...etc. (Works only in powershell 7)
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-24'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1574.011
 references:
     - https://twitter.com/Alh4zr3d/status/1580925761996828672
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2
 falsepositives:
     - Rare intended use of hidden services
     - Rare FP could occur due to the non linearity of the ScriptBlockText log
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a95b9b42-1308-4735-a1af-abb1c5e6f5ac''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.011
+date: '2022-10-24'
 logsource:
     category: ps_script
     product: windows
@@ -41,6 +38,9 @@ detection:
             - ;;;SY
             - ;;;WD
     condition: all of selection_*
+related:
+    -   id: a95b9b42-1308-4735-a1af-abb1c5e6f5ac
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: <UNMAPPED>
@@ -48,13 +48,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:13.013740+00:00'
+            mapped_at: '2025-12-04T01:53:37.850817+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:13.013740+00:00'
+            mapped_at: '2025-12-04T01:53:37.850817+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:13.013758+00:00'
+            mapped_at: '2025-12-04T01:53:37.850833+00:00'

@@ -1,15 +1,9 @@
-id: 1a0d4aba-7668-4365-9ce4-6d79ab088dfd
 title: Ping Hex IP
+id: 1a0d4aba-7668-4365-9ce4-6d79ab088dfd
 status: test
 level: high
-description: Detects a ping command that uses a hex encoded IP address
 author: Florian Roth (Nextron Systems)
-date: '2018-03-23'
-modified: '2022-01-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1140
-    - attack.t1027
+description: Detects a ping command that uses a hex encoded IP address
 references:
     - https://github.com/vysecurity/Aggressor-VYSEC/blob/0d61c80387b9432dab64b8b8a9fb52d20cfef80e/ping.cna
     - https://twitter.com/vysecurity/status/977198418354491392
@@ -17,7 +11,12 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unlikely, because no sane admin pings IP addresses in a hexadecimal form
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1140
+    - attack.t1027
+date: '2018-03-23'
+modified: '2022-01-07'
 logsource:
     category: process_creation
     product: windows
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:17.886232+00:00'
+            mapped_at: '2025-12-04T01:40:54.594166+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:17.886232+00:00'
+            mapped_at: '2025-12-04T01:40:54.594166+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:17.886264+00:00'
+            mapped_at: '2025-12-04T01:40:54.594183+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:17.886267+00:00'
+            mapped_at: '2025-12-04T01:40:54.594185+00:00'

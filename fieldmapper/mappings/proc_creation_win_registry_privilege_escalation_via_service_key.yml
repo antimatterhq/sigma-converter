@@ -1,21 +1,20 @@
-id: 0f9c21f1-6a73-4b0e-9809-cb562cb8d981
 title: Potential Privilege Escalation via Service Permissions Weakness
+id: 0f9c21f1-6a73-4b0e-9809-cb562cb8d981
 status: test
 level: high
+author: Teymur Kheirkhabarov
 description: Detect modification of services configuration (ImagePath, FailureCommand
     and ServiceDLL) in registry by processes with Medium integrity level
-author: Teymur Kheirkhabarov
-date: '2019-10-26'
-modified: '2024-12-01'
-tags:
-    - attack.privilege-escalation
-    - attack.t1574.011
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
     - https://pentestlab.blog/2017/03/31/insecure-registry-permissions/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1574.011
+date: '2019-10-26'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:25.066388+00:00'
+            mapped_at: '2025-12-04T01:43:35.167843+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:25.066388+00:00'
+            mapped_at: '2025-12-04T01:43:35.167843+00:00'
     detection_fields:
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:25.066436+00:00'
+            mapped_at: '2025-12-04T01:43:35.167855+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:25.066441+00:00'
+            mapped_at: '2025-12-04T01:43:35.167857+00:00'

@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "name": "AADInternals PowerShell Cmdlets Execution - ProccessCreation",
+    "comment": "Detects ADDInternals Cmdlet execution. A tool for administering Azure AD and Office 365. Which can be abused by threat actors to attack Azure AD or Office 365.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower('add-aadint')) OR contains(lower(process.cmd_line), lower('convertto-aadint')) OR contains(lower(process.cmd_line), lower('disable-aadint')) OR contains(lower(process.cmd_line), lower('enable-aadint')) OR contains(lower(process.cmd_line), lower('export-aadint')) OR contains(lower(process.cmd_line), lower('get-aadint')) OR contains(lower(process.cmd_line), lower('grant-aadint')) OR contains(lower(process.cmd_line), lower('install-aadint')) OR contains(lower(process.cmd_line), lower('invoke-aadint')) OR contains(lower(process.cmd_line), lower('join-aadint')) OR contains(lower(process.cmd_line), lower('new-aadint')) OR contains(lower(process.cmd_line), lower('open-aadint')) OR contains(lower(process.cmd_line), lower('read-aadint')) OR contains(lower(process.cmd_line), lower('register-aadint')) OR contains(lower(process.cmd_line), lower('remove-aadint')) OR contains(lower(process.cmd_line), lower('restore-aadint')) OR contains(lower(process.cmd_line), lower('search-aadint')) OR contains(lower(process.cmd_line), lower('send-aadint')) OR contains(lower(process.cmd_line), lower('set-aadint')) OR contains(lower(process.cmd_line), lower('start-aadint')) OR contains(lower(process.cmd_line), lower('update-aadint'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects ADDInternals Cmdlet execution. A tool for administering Azure AD and Office 365. Which can be abused by threat actors to attack Azure AD or Office 365.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of the library for administrative activity References: https://o365blog.com/aadinternals/, https://github.com/Gerenios/AADInternals",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Reconnaissance"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Calculator Usage",
+    "comment": "Detects suspicious use of 'calc.exe' with command line parameters or in a suspicious directory, which is likely caused by some PoC or detection evasion.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('\\\\calc.exe ')) OR endswith(lower(process.name), lower('\\\\calc.exe')) AND NOT (contains(lower(process.name), lower(':\\\\windows\\\\system32\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\syswow64\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\winsxs\\\\')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious use of 'calc.exe' with command line parameters or in a suspicious directory, which is likely caused by some PoC or detection evasion.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/ItsReallyNick/status/1094080242686312448",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

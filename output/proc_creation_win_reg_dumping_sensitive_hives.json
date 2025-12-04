@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "name": "Dumping of Sensitive Hives Via Reg.EXE",
+    "comment": "Detects the usage of \"reg.exe\" in order to dump sensitive registry hives. This includes SAM, SYSTEM and SECURITY hives.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\reg.exe')) AND lower(process.file.name) = lower('reg.exe') AND (contains(lower(process.cmd_line), lower(' save ')) OR contains(lower(process.cmd_line), lower(' export ')) OR contains(lower(process.cmd_line), lower(' \u02e2ave ')) OR contains(lower(process.cmd_line), lower(' e\u02e3port '))) AND (contains(lower(process.cmd_line), lower('hklm')) OR contains(lower(process.cmd_line), lower('hk\u02eam')) OR contains(lower(process.cmd_line), lower('hkey_local_machine')) OR contains(lower(process.cmd_line), lower('hkey_\u02eaocal_machine')) OR contains(lower(process.cmd_line), lower('hkey_loca\u02ea_machine')) OR contains(lower(process.cmd_line), lower('hkey_\u02eaoca\u02ea_machine'))) AND (contains(lower(process.cmd_line), lower('\\\\system')) OR contains(lower(process.cmd_line), lower('\\\\sam')) OR contains(lower(process.cmd_line), lower('\\\\security')) OR contains(lower(process.cmd_line), lower('\\\\\u02e2ystem')) OR contains(lower(process.cmd_line), lower('\\\\sy\u02e2tem')) OR contains(lower(process.cmd_line), lower('\\\\\u02e2y\u02e2tem')) OR contains(lower(process.cmd_line), lower('\\\\\u02e2am')) OR contains(lower(process.cmd_line), lower('\\\\\u02e2ecurity'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage of \"reg.exe\" in order to dump sensitive registry hives. This includes SAM, SYSTEM and SECURITY hives.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Dumping hives for legitimate purpouse i.e. backup or forensic investigation References: https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment, https://eqllib.readthedocs.io/en/latest/analytics/aed95fc6-5e3f-49dc-8b35-06508613f979.html, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003/T1003.md, https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-1---registry-dump-of-sam-creds-and-secrets",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "004"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

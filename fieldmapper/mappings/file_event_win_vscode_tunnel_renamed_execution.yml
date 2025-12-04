@@ -1,22 +1,21 @@
-id: d102b8f5-61dc-4e68-bd83-9a3187c67377
 title: Renamed VsCode Code Tunnel Execution - File Indicator
+id: d102b8f5-61dc-4e68-bd83-9a3187c67377
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the creation of a file with the name "code_tunnel.json" which
     indicate execution and usage of VsCode tunneling utility by an "Image" or "Process"
     other than VsCode.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-10-25'
-tags:
-    - attack.command-and-control
 references:
     - https://ipfyx.fr/post/visual-studio-code-tunnel/
     - https://badoption.eu/blog/2023/01/31/code_c2.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+date: '2023-10-25'
 logsource:
     category: file_event
     product: windows
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:43.831113+00:00'
+            mapped_at: '2025-12-04T01:53:18.381714+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:43.831113+00:00'
+            mapped_at: '2025-12-04T01:53:18.381714+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:43.831144+00:00'
+            mapped_at: '2025-12-04T01:53:18.381733+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:43.831148+00:00'
+            mapped_at: '2025-12-04T01:53:18.381735+00:00'

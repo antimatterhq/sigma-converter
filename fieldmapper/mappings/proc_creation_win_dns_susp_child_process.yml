@@ -1,21 +1,20 @@
-id: a4e3d776-f12e-42c2-8510-9e6ed1f43ec3
 title: Unusual Child Process of dns.exe
+id: a4e3d776-f12e-42c2-8510-9e6ed1f43ec3
 status: test
 level: high
+author: Tim Rauch, Elastic (idea)
 description: Detects an unexpected process spawning from dns.exe which may indicate
     activity related to remote code execution or other forms of exploitation as seen
     in CVE-2020-1350 (SigRed)
-author: Tim Rauch, Elastic (idea)
-date: '2022-09-27'
-modified: '2023-02-05'
-tags:
-    - attack.initial-access
-    - attack.t1133
 references:
     - https://www.elastic.co/guide/en/security/current/unusual-child-process-of-dns-exe.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1133
+date: '2022-09-27'
+modified: '2023-02-05'
 logsource:
     category: process_creation
     product: windows
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:10.264335+00:00'
+            mapped_at: '2025-12-04T01:43:22.181045+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:10.264335+00:00'
+            mapped_at: '2025-12-04T01:43:22.181045+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:10.264362+00:00'
+            mapped_at: '2025-12-04T01:43:22.181058+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:10.264366+00:00'
+            mapped_at: '2025-12-04T01:43:22.181059+00:00'

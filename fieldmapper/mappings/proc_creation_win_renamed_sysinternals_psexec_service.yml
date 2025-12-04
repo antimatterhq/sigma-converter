@@ -1,19 +1,18 @@
-id: 51ae86a2-e2e1-4097-ad85-c46cb6851de4
 title: Renamed PsExec Service Execution
+id: 51ae86a2-e2e1-4097-ad85-c46cb6851de4
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious launch of a renamed version of the PSEXESVC service
     with, which is not often used by legitimate administrators
-author: Florian Roth (Nextron Systems)
-date: '2022-07-21'
-tags:
-    - attack.execution
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/psexec
     - https://www.youtube.com/watch?v=ro2QuZTIMBM
 falsepositives:
     - Legitimate administrative tasks
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2022-07-21'
 logsource:
     category: process_creation
     product: windows
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:22.869549+00:00'
+            mapped_at: '2025-12-04T01:49:16.261732+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:22.869549+00:00'
+            mapped_at: '2025-12-04T01:49:16.261732+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:22.869565+00:00'
+            mapped_at: '2025-12-04T01:49:16.261751+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:22.869567+00:00'
+            mapped_at: '2025-12-04T01:49:16.261754+00:00'

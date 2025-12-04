@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Powershell DNSExfiltration",
+    "comment": "DNSExfiltrator allows for transferring (exfiltrate) a file over a DNS request covert channel",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('invoke-dnsexfiltrator')) AND contains(lower(script.script_content.value), lower(' -i ')) AND contains(lower(script.script_content.value), lower(' -d ')) AND contains(lower(script.script_content.value), lower(' -p ')) AND contains(lower(script.script_content.value), lower(' -doh ')) AND contains(lower(script.script_content.value), lower(' -t ')))"
+      }
+    },
+    "output": {
+      "summary": "DNSExfiltrator allows for transferring (exfiltrate) a file over a DNS request covert channel",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate script References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1048/T1048.md#atomic-test-3---dnsexfiltration-doh, https://github.com/Arno0x/DNSExfiltrator",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1048"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

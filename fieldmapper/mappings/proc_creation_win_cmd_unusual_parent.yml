@@ -1,19 +1,18 @@
-id: 4b991083-3d0e-44ce-8fc4-b254025d8d4b
 title: Unusual Parent Process For Cmd.EXE
+id: 4b991083-3d0e-44ce-8fc4-b254025d8d4b
 status: test
 level: medium
-description: Detects suspicious parent process for cmd.exe
 author: Tim Rauch, Elastic (idea)
-date: '2022-09-21'
-modified: '2023-12-05'
-tags:
-    - attack.execution
-    - attack.t1059
+description: Detects suspicious parent process for cmd.exe
 references:
     - https://www.elastic.co/guide/en/security/current/unusual-parent-process-for-cmd.exe.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-09-21'
+modified: '2023-12-05'
 logsource:
     category: process_creation
     product: windows
@@ -53,17 +52,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:09.973332+00:00'
+            mapped_at: '2025-12-04T01:50:53.365118+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:09.973332+00:00'
+            mapped_at: '2025-12-04T01:50:53.365118+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:09.973363+00:00'
+            mapped_at: '2025-12-04T01:50:53.365142+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:37:09.973367+00:00'
+            mapped_at: '2025-12-04T01:50:53.365144+00:00'

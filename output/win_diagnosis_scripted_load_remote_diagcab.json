@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Loading Diagcab Package From Remote Path",
+    "comment": "Detects loading of diagcab packages from a remote path, as seen in DogWalk vulnerability",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "diagnosis-scripted",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 101 AND contains(lower(script.file.path), lower('\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects loading of diagcab packages from a remote path, as seen in DogWalk vulnerability",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate package hosted on a known and authorized remote location References: https://twitter.com/nas_bench/status/1539679555908141061, https://twitter.com/j00sean/status/1537750439701225472",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

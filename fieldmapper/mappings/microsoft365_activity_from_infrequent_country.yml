@@ -1,22 +1,21 @@
-id: 0f2468a2-5055-4212-a368-7321198ee706
 title: Activity from Infrequent Country
+id: 0f2468a2-5055-4212-a368-7321198ee706
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Detects when a Microsoft Cloud App Security reported when an activity
     occurs from a location that wasn't recently or never visited by any user in the
     organization.
-author: Austin Songer @austinsonger
-date: '2021-08-23'
-modified: '2022-10-09'
-tags:
-    - attack.command-and-control
-    - attack.t1573
 references:
     - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
     - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1573
+date: '2021-08-23'
+modified: '2022-10-09'
 logsource:
     product: m365
     service: threat_management
@@ -33,21 +32,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:21:57.924077+00:00'
+            mapped_at: '2025-12-04T01:39:00.625115+00:00'
         service:
             source_field: service
             source_value: threat_management
-            mapped_at: '2025-11-26T02:21:57.924077+00:00'
+            mapped_at: '2025-12-04T01:39:00.625115+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:57.924109+00:00'
+            mapped_at: '2025-12-04T01:39:00.625133+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:21:57.924112+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:00.625143+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:21:57.924115+00:00'
+            mapped_at: '2025-12-04T01:39:00.625144+00:00'

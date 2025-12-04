@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Powershell Create Scheduled Task",
+    "comment": "Adversaries may abuse the Windows Task Scheduler to perform task scheduling for initial or recurring execution of malicious code",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('new-scheduledtaskaction')) OR contains(lower(script.script_content.value), lower('new-scheduledtasktrigger')) OR contains(lower(script.script_content.value), lower('new-scheduledtaskprincipal')) OR contains(lower(script.script_content.value), lower('new-scheduledtasksettingsset')) OR contains(lower(script.script_content.value), lower('new-scheduledtask')) OR contains(lower(script.script_content.value), lower('register-scheduledtask')) OR contains(lower(script.script_content.value), lower('invoke-cimmethod')) AND contains(lower(script.script_content.value), lower('-classname')) AND contains(lower(script.script_content.value), lower('ps_scheduledtask')) AND contains(lower(script.script_content.value), lower('-namespace')) AND contains(lower(script.script_content.value), lower('root\\\\microsoft\\\\windows\\\\taskscheduler')))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may abuse the Windows Task Scheduler to perform task scheduling for initial or recurring execution of malicious code",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.005/T1053.005.md#atomic-test-4---powershell-cmdlet-scheduled-task, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.005/T1053.005.md#atomic-test-6---wmi-invoke-cimmethod-scheduled-task",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

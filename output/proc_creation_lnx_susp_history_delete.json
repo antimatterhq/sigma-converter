@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "History File Deletion",
+    "comment": "Detects events in which a history file gets deleted, e.g. the ~/bash_history to remove traces of malicious activity",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((endswith(lower(process.name), lower('/rm')) OR endswith(lower(process.name), lower('/unlink')) OR endswith(lower(process.name), lower('/shred'))) AND (contains(lower(process.cmd_line), lower('/.bash_history')) OR contains(lower(process.cmd_line), lower('/.zsh_history'))) AND (endswith(lower(process.cmd_line), lower('_history')) OR endswith(lower(process.cmd_line), lower('.history')) OR endswith(lower(process.cmd_line), lower('zhistory'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects events in which a history file gets deleted, e.g. the ~/bash_history to remove traces of malicious activity",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities References: https://github.com/sleventyeleven/linuxprivchecker/, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.003/T1552.003.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1565",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

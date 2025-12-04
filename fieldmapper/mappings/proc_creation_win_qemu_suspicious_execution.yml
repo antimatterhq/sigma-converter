@@ -1,7 +1,8 @@
-id: 5fc297ae-25b6-488a-8f25-cc12ac29b744
 title: Potentially Suspicious Usage Of Qemu
+id: 5fc297ae-25b6-488a-8f25-cc12ac29b744
 status: experimental
 level: medium
+author: Muhammad Faisal (@faisalusuf), Hunter Juhan (@threatHNTR)
 description: 'Detects potentially suspicious execution of the Qemu utility in a Windows
     environment.
 
@@ -9,18 +10,16 @@ description: 'Detects potentially suspicious execution of the Qemu utility in a 
     access as reported by Kaspersky.
 
     '
-author: Muhammad Faisal (@faisalusuf), Hunter Juhan (@threatHNTR)
-date: '2024-06-03'
-tags:
-    - attack.command-and-control
-    - attack.t1090
-    - attack.t1572
 references:
     - https://securelist.com/network-tunneling-with-qemu/111803/
     - https://www.qemu.org/docs/master/system/invocation.html#hxtool-5
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090
+    - attack.t1572
+date: '2024-06-03'
 logsource:
     category: process_creation
     product: windows
@@ -48,13 +47,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:39.681293+00:00'
+            mapped_at: '2025-12-04T01:48:39.969022+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:39.681293+00:00'
+            mapped_at: '2025-12-04T01:48:39.969022+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:39.681317+00:00'
+            mapped_at: '2025-12-04T01:48:39.969059+00:00'

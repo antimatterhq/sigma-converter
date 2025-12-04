@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "New Port Forwarding Rule Added Via Netsh.EXE",
+    "comment": "Detects the execution of netsh commands that configure a new port forwarding (PortProxy) rule",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\netsh.exe')) AND lower(process.file.name) = lower('netsh.exe') AND (contains(lower(process.cmd_line), lower('interface')) AND contains(lower(process.cmd_line), lower('portproxy')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('v4tov4')) OR contains(lower(process.cmd_line), lower('i ')) AND contains(lower(process.cmd_line), lower('p ')) AND contains(lower(process.cmd_line), lower('a ')) AND contains(lower(process.cmd_line), lower('v ')) OR contains(lower(process.cmd_line), lower('connectp')) AND contains(lower(process.cmd_line), lower('listena')) AND contains(lower(process.cmd_line), lower('c='))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of netsh commands that configure a new port forwarding (PortProxy) rule",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate administration activity 2. WSL2 network bridge PowerShell script used for WSL/Kubernetes/Docker (e.g. https://github.com/microsoft/WSL/issues/4150#issuecomment-504209723) References: https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html, https://adepts.of0x.cc/netsh-portproxy-code/, https://www.dfirnotes.net/portproxy_detection/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1090"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

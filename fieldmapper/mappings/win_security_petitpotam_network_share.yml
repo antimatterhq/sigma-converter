@@ -1,20 +1,19 @@
-id: 1ce8c8a3-2723-48ed-8246-906ac91061a6
 title: Possible PetitPotam Coerce Authentication Attempt
+id: 1ce8c8a3-2723-48ed-8246-906ac91061a6
 status: test
 level: high
-description: Detect PetitPotam coerced authentication activity.
 author: Mauricio Velazco, Michael Haag
-date: '2021-09-02'
-modified: '2022-08-11'
-tags:
-    - attack.credential-access
-    - attack.t1187
+description: Detect PetitPotam coerced authentication activity.
 references:
     - https://github.com/topotam/PetitPotam
     - https://github.com/splunk/security_content/blob/0dd6de32de2118b2818550df9e65255f4109a56d/detections/endpoint/petitpotam_network_share_access_request.yml
 falsepositives:
     - Unknown. Feedback welcomed.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1187
+date: '2021-09-02'
+modified: '2022-08-11'
 logsource:
     product: windows
     service: security
@@ -35,25 +34,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:12.192944+00:00'
+            mapped_at: '2025-12-04T01:55:44.393488+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:12.192944+00:00'
+            mapped_at: '2025-12-04T01:55:44.393488+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:13.290256+00:00'
+            mapped_at: '2025-12-04T01:55:44.393505+00:00'
         -   source_field: ShareName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:13.290277+00:00'
+            mapped_at: '2025-12-04T01:55:44.393507+00:00'
         -   source_field: RelativeTargetName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:13.290281+00:00'
+            mapped_at: '2025-12-04T01:55:44.393508+00:00'
         -   source_field: SubjectUserName
             target_table: authentication
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:45:13.290284+00:00'
+            mapped_at: '2025-12-04T01:55:44.393509+00:00'

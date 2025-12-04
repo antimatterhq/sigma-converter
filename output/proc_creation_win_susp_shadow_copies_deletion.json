@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Shadow Copies Deletion Using Operating Systems Utilities",
+    "comment": "Shadow Copies deletion using operating systems utilities",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) OR endswith(lower(process.name), lower('\\\\vssadmin.exe')) OR endswith(lower(process.name), lower('\\\\diskshadow.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll', 'wmic\\.exe', 'vssadmin\\.exe', 'diskshadow\\.exe')) AND contains(lower(process.cmd_line), lower('shadow')) AND contains(lower(process.cmd_line), lower('delete')) OR endswith(lower(process.name), lower('\\\\wbadmin.exe')) AND lower(process.file.name) = lower('wbadmin.exe') AND contains(lower(process.cmd_line), lower('delete')) AND contains(lower(process.cmd_line), lower('catalog')) AND contains(lower(process.cmd_line), lower('quiet')) OR endswith(lower(process.name), lower('\\\\vssadmin.exe')) AND lower(process.file.name) = lower('vssadmin.exe') AND contains(lower(process.cmd_line), lower('resize')) AND contains(lower(process.cmd_line), lower('shadowstorage')) AND (contains(lower(process.cmd_line), lower('unbounded')) OR contains(lower(process.cmd_line), lower('/maxsize=')))))"
+      }
+    },
+    "output": {
+      "summary": "Shadow Copies deletion using operating systems utilities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positives: 1. Legitimate Administrator deletes Shadow Copies using operating systems utilities for legitimate reason 2. LANDesk LDClient Ivanti-PSModule (PS EncodedCommand) References: https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment, https://blog.talosintelligence.com/2017/05/wannacry.html, https://securingtomorrow.mcafee.com/other-blogs/mcafee-labs/new-teslacrypt-ransomware-arrives-via-spam/, https://www.bleepingcomputer.com/news/security/why-everyone-should-disable-vssadmin-exe-now/, https://www.hybrid-analysis.com/sample/ed01ebfbc9eb5bbea545af4d01bf5f1071661840480439c6e5babe8e080e41aa?environmentId=100, https://github.com/Neo23x0/Raccine#the-process, https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/gen_ransomware_command_lines.yar, https://redcanary.com/blog/intelligence-insights-october-2021/, https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1490"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

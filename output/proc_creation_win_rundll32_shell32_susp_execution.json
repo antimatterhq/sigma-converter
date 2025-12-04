@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Shell32 DLL Execution in Suspicious Directory",
+    "comment": "Detects shell32.dll executing a DLL in a suspicious directory",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND contains(lower(process.cmd_line), lower('shell32.dll')) AND contains(lower(process.cmd_line), lower('control_rundll')) AND (contains(lower(process.cmd_line), lower('%appdata%')) OR contains(lower(process.cmd_line), lower('%localappdata%')) OR contains(lower(process.cmd_line), lower('%temp%')) OR contains(lower(process.cmd_line), lower('%tmp%')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\')) OR contains(lower(process.cmd_line), lower('\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\users\\\\public\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects shell32.dll executing a DLL in a suspicious directory",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.group-ib.com/resources/threat-research/red-curl-2.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

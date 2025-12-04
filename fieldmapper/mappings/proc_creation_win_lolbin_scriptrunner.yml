@@ -1,20 +1,19 @@
-id: 64760eef-87f7-4ed3-93fd-655668ea9420
 title: Use of Scriptrunner.exe
+id: 64760eef-87f7-4ed3-93fd-655668ea9420
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: The "ScriptRunner.exe" binary can be abused to proxy execution through
     it and bypass possible whitelisting
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-01'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Scriptrunner/
 falsepositives:
     - Legitimate use when App-v is deployed
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+date: '2022-07-01'
 logsource:
     category: process_creation
     product: windows
@@ -32,21 +31,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:26.316435+00:00'
+            mapped_at: '2025-12-04T01:50:07.831762+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:26.316435+00:00'
+            mapped_at: '2025-12-04T01:50:07.831762+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:26.316449+00:00'
+            mapped_at: '2025-12-04T01:50:07.831778+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:26.316451+00:00'
+            mapped_at: '2025-12-04T01:50:07.831780+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:26.316452+00:00'
+            mapped_at: '2025-12-04T01:50:07.831782+00:00'

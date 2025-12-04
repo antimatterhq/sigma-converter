@@ -1,24 +1,21 @@
-id: d4ca7c59-e9e4-42d8-bf57-91a776efcb87
 title: LOLBIN Execution From Abnormal Drive
+id: d4ca7c59-e9e4-42d8-bf57-91a776efcb87
 status: test
 level: medium
-description: Detects LOLBINs executing from an abnormal or uncommon drive such as
-    a mounted ISO.
 author: Christopher Peacock '@securepeacock', SCYTHE '@scythe_io', Angelo Violetti
     - SEC Consult '@angelo_violetti', Aaron Herman
-date: '2022-01-25'
-modified: '2023-08-29'
-tags:
-    - attack.defense-evasion
+description: Detects LOLBINs executing from an abnormal or uncommon drive such as
+    a mounted ISO.
 references:
     - https://thedfirreport.com/2021/12/13/diavol-ransomware/
     - https://www.scythe.io/library/threat-emulation-qakbot
     - https://sec-consult.com/blog/detail/bumblebee-hunting-with-a-velociraptor/
 falsepositives:
     - Rare false positives could occur on servers with multiple drives.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5b80cf53-3a46-4adc-960b-05ec19348d74''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-01-25'
+modified: '2023-08-29'
 logsource:
     category: process_creation
     product: windows
@@ -51,6 +48,9 @@ detection:
     filter_main_null:
         CurrentDirectory: null
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 5b80cf53-3a46-4adc-960b-05ec19348d74
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -58,21 +58,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:31.322395+00:00'
+            mapped_at: '2025-12-04T01:46:03.772340+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:31.322395+00:00'
+            mapped_at: '2025-12-04T01:46:03.772340+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:31.322416+00:00'
+            mapped_at: '2025-12-04T01:46:03.772354+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:31.322421+00:00'
+            mapped_at: '2025-12-04T01:46:03.772356+00:00'
         -   source_field: CurrentDirectory
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:31:31.322424+00:00'
+            mapped_at: '2025-12-04T01:46:03.772357+00:00'

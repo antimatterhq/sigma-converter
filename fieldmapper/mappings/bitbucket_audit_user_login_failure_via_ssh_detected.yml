@@ -1,24 +1,23 @@
-id: d3f90469-fb05-42ce-b67d-0fded91bbef3
 title: Bitbucket User Login Failure Via SSH
+id: d3f90469-fb05-42ce-b67d-0fded91bbef3
 status: test
 level: medium
+author: Muhammad Faisal (@faisalusuf)
 description: 'Detects SSH user login access failures.
 
     Please note that this rule can be noisy and is recommended to use with correlation
     based on "author.name" field.
 
     '
-author: Muhammad Faisal (@faisalusuf)
-date: '2024-02-25'
-tags:
-    - attack.t1021.004
-    - attack.t1110
 references:
     - https://confluence.atlassian.com/bitbucketserver/view-and-configure-the-audit-log-776640417.html
     - https://confluence.atlassian.com/bitbucketserver/enable-ssh-access-to-git-repositories-776640358.html
 falsepositives:
     - Legitimate user wrong password attempts.
-taxonomy: sigma
+tags:
+    - attack.t1021.004
+    - attack.t1110
+date: '2024-02-25'
 logsource:
     product: bitbucket
     service: audit
@@ -36,17 +35,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: bitbucket
-            mapped_at: '2025-11-26T02:23:12.972493+00:00'
+            mapped_at: '2025-12-04T01:39:40.675619+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:12.972493+00:00'
+            mapped_at: '2025-12-04T01:39:40.675619+00:00'
     detection_fields:
         -   source_field: auditType.category
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:12.972506+00:00'
+            mapped_at: '2025-12-04T01:39:40.675647+00:00'
         -   source_field: auditType.action
             target_table: entity_management
             target_field: action
-            mapped_at: '2025-11-26T02:23:12.972508+00:00'
+            mapped_at: '2025-12-04T01:39:40.675649+00:00'

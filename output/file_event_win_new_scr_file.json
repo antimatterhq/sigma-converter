@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "SCR File Write Event",
+    "comment": "Detects the creation of screensaver files (.scr) outside of system folders. Attackers may execute an application as an \".SCR\" file using \"rundll32.exe desk.cpl,InstallScreenSaver\" for example.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(file.path), lower('.scr')) AND NOT (contains(lower(file.path), lower(':\\\\$windows.~bt\\\\newos\\\\')) OR contains(lower(file.path), lower(':\\\\windows\\\\system32\\\\')) OR contains(lower(file.path), lower(':\\\\windows\\\\syswow64\\\\')) OR contains(lower(file.path), lower(':\\\\windows\\\\winsxs\\\\')) OR contains(lower(file.path), lower(':\\\\wudownloadcache\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of screensaver files (.scr) outside of system folders. Attackers may execute an application as an \".SCR\" file using \"rundll32.exe desk.cpl,InstallScreenSaver\" for example.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: The installation of new screen savers by third party software Reference: https://lolbas-project.github.io/lolbas/Libraries/Desk/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

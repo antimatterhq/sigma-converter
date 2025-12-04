@@ -1,12 +1,16 @@
-id: fca949cc-79ca-446e-8064-01aa7e52ece5
 title: HackTool - PCHunter Execution
+id: fca949cc-79ca-446e-8064-01aa7e52ece5
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali
 description: Detects suspicious use of PCHunter, a tool like Process Hacker to view
     and manipulate processes, kernel options and other low level stuff
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali
-date: '2022-10-10'
-modified: '2024-11-23'
+references:
+    - https://web.archive.org/web/20231210115125/http://www.xuetr.com/
+    - https://www.crowdstrike.com/blog/falcon-overwatch-report-finds-increase-in-ecrime/
+    - https://www.hexacorn.com/blog/2018/04/20/kernel-hacking-tool-you-might-have-never-heard-of-xuetr-pchunter/
+falsepositives:
+    - Unlikely
 tags:
     - attack.execution
     - attack.discovery
@@ -15,13 +19,8 @@ tags:
     - attack.t1012
     - attack.t1083
     - attack.t1007
-references:
-    - https://web.archive.org/web/20231210115125/http://www.xuetr.com/
-    - https://www.crowdstrike.com/blog/falcon-overwatch-report-finds-increase-in-ecrime/
-    - https://www.hexacorn.com/blog/2018/04/20/kernel-hacking-tool-you-might-have-never-heard-of-xuetr-pchunter/
-falsepositives:
-    - Unlikely
-taxonomy: sigma
+date: '2022-10-10'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -51,25 +50,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:36.811095+00:00'
+            mapped_at: '2025-12-04T01:45:14.281708+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:36.811095+00:00'
+            mapped_at: '2025-12-04T01:45:14.281708+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:36.811131+00:00'
+            mapped_at: '2025-12-04T01:45:14.281726+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:36.811136+00:00'
+            mapped_at: '2025-12-04T01:45:14.281728+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:30:36.811139+00:00'
+            mapped_at: '2025-12-04T01:45:14.281730+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:30:36.811141+00:00'
+            mapped_at: '2025-12-04T01:45:14.281731+00:00'

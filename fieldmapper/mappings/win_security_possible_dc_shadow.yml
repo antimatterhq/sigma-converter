@@ -1,23 +1,20 @@
-id: 32e19d25-4aed-4860-a55a-be99cb0bf7ed
 title: Possible DC Shadow Attack
+id: 32e19d25-4aed-4860-a55a-be99cb0bf7ed
 status: test
 level: medium
-description: Detects DCShadow via create new SPN
 author: Ilyas Ochkov, oscd.community, Chakib Gzenayi (@Chak092), Hosni Mribah
-date: '2019-10-25'
-modified: '2022-10-17'
-tags:
-    - attack.credential-access
-    - attack.t1207
+description: Detects DCShadow via create new SPN
 references:
     - https://twitter.com/gentilkiwi/status/1003236624925413376
     - https://gist.github.com/gentilkiwi/dcc132457408cf11ad2061340dcb53c2
     - https://web.archive.org/web/20180203014709/https://blog.alsid.eu/dcshadow-explained-4510f52fc19d?gi=c426ac876c48
 falsepositives:
     - Valid on domain controllers; exclude known DCs
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''611eab06-a145-4dfa-a295-3ccc5c20f59a''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1207
+date: '2019-10-25'
+modified: '2022-10-17'
 logsource:
     product: windows
     service: security
@@ -38,6 +35,9 @@ detection:
         AttributeLDAPDisplayName: servicePrincipalName
         AttributeValue|startswith: GC/
     condition: 1 of selection*
+related:
+    -   id: 611eab06-a145-4dfa-a295-3ccc5c20f59a
+        type: derived
 ocsf_mapping:
     class_name: entity_management
     activity_id: <UNMAPPED>
@@ -45,25 +45,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:11.335381+00:00'
+            mapped_at: '2025-12-04T01:56:11.298103+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:11.335381+00:00'
+            mapped_at: '2025-12-04T01:56:11.298103+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: entity_management
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:12.678665+00:00'
+            mapped_at: '2025-12-04T01:56:11.298121+00:00'
         -   source_field: ServicePrincipalNames
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:12.678686+00:00'
+            mapped_at: '2025-12-04T01:56:11.298122+00:00'
         -   source_field: AttributeLDAPDisplayName
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:12.678690+00:00'
+            mapped_at: '2025-12-04T01:56:11.298124+00:00'
         -   source_field: AttributeValue
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:12.678692+00:00'
+            mapped_at: '2025-12-04T01:56:11.298125+00:00'

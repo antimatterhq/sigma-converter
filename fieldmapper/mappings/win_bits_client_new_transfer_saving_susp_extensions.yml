@@ -1,22 +1,21 @@
-id: b85e5894-9b19-4d86-8c87-a2f3b81f0521
 title: BITS Transfer Job Downloading File Potential Suspicious Extension
+id: b85e5894-9b19-4d86-8c87-a2f3b81f0521
 status: test
 level: medium
+author: frack113
 description: Detects new BITS transfer job saving local files with potential suspicious
     extensions
-author: frack113
-date: '2022-03-01'
-modified: '2023-03-27'
-tags:
-    - attack.defense-evasion
-    - attack.persistence
-    - attack.t1197
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
 falsepositives:
     - While the file extensions in question can be suspicious at times. It's best
         to add filters according to your environment to avoid large amount false positives
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+date: '2022-03-01'
+modified: '2023-03-27'
 logsource:
     product: windows
     service: bits-client
@@ -44,21 +43,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:31.767700+00:00'
+            mapped_at: '2025-12-04T01:56:19.460620+00:00'
         service:
             source_field: service
             source_value: bits-client
-            mapped_at: '2025-11-26T02:46:31.767700+00:00'
+            mapped_at: '2025-12-04T01:56:19.460620+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:32.675857+00:00'
+            mapped_at: '2025-12-04T01:56:19.460639+00:00'
         -   source_field: LocalName
             target_table: scheduled_job_activity
             target_field: job.name
-            mapped_at: '2025-11-26T02:46:32.675882+00:00'
+            mapped_at: '2025-12-04T01:56:19.460641+00:00'
         -   source_field: RemoteName
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:32.675885+00:00'
+            mapped_at: '2025-12-04T01:56:19.460642+00:00'

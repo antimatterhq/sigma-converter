@@ -1,7 +1,8 @@
-id: 164eda96-11b2-430b-85ff-6a265c15bf32
 title: Local Groups Reconnaissance Via Wmic.EXE
+id: 164eda96-11b2-430b-85ff-6a265c15bf32
 status: test
 level: low
+author: frack113
 description: 'Detects the execution of "wmic" with the "group" flag.
 
     Adversaries may attempt to find local system groups and permission settings.
@@ -13,17 +14,15 @@ description: 'Detects the execution of "wmic" with the "group" flag.
     such as the users found within the local administrators group.
 
     '
-author: frack113
-date: '2021-12-12'
-modified: '2023-02-14'
-tags:
-    - attack.discovery
-    - attack.t1069.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.001/T1069.001.md
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1069.001
+date: '2021-12-12'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:22.127498+00:00'
+            mapped_at: '2025-12-04T01:44:18.967296+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:22.127498+00:00'
+            mapped_at: '2025-12-04T01:44:18.967296+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:22.127526+00:00'
+            mapped_at: '2025-12-04T01:44:18.967317+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:22.127530+00:00'
+            mapped_at: '2025-12-04T01:44:18.967319+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:22.127533+00:00'
+            mapped_at: '2025-12-04T01:44:18.967321+00:00'

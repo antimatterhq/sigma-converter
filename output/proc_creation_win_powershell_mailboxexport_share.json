@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell Mailbox Export to Share",
+    "comment": "Detects usage of the powerShell New-MailboxExportRequest Cmdlet to exports a mailbox to a remote or local share, as used in ProxyShell exploitations",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('new-mailboxexportrequest')) AND contains(lower(process.cmd_line), lower(' -mailbox ')) AND contains(lower(process.cmd_line), lower(' -filepath \\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the powerShell New-MailboxExportRequest Cmdlet to exports a mailbox to a remote or local share, as used in ProxyShell exploitations",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Unknown References: https://youtu.be/5mqid-7zp8k?t=2481, https://blog.orange.tw/2021/08/proxylogon-a-new-attack-surface-on-ms-exchange-part-1.html, https://peterjson.medium.com/reproducing-the-proxyshell-pwn2own-exploit-49743a4ea9a1, https://m365internals.com/2022/10/07/hunting-in-on-premises-exchange-server-logs/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,22 +1,21 @@
-id: ae9c6a7c-9521-42a6-915e-5aaa8689d529
 title: CobaltStrike Load by Rundll32
+id: ae9c6a7c-9521-42a6-915e-5aaa8689d529
 status: test
 level: high
+author: Wojciech Lesicki
 description: Rundll32 can be use by Cobalt Strike with StartW function to load DLLs
     from the command line.
-author: Wojciech Lesicki
-date: '2021-06-01'
-modified: '2022-09-16'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
 references:
     - https://www.cobaltstrike.com/help-windows-executable
     - https://redcanary.com/threat-detection-report/
     - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+date: '2021-06-01'
+modified: '2022-09-16'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:05.623868+00:00'
+            mapped_at: '2025-12-04T01:41:32.715126+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:05.623868+00:00'
+            mapped_at: '2025-12-04T01:41:32.715126+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:05.623881+00:00'
+            mapped_at: '2025-12-04T01:41:32.715139+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:05.623883+00:00'
+            mapped_at: '2025-12-04T01:41:32.715141+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:05.623885+00:00'
+            mapped_at: '2025-12-04T01:41:32.715142+00:00'

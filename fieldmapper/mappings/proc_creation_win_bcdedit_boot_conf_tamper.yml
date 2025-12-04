@@ -1,16 +1,11 @@
-id: 1444443e-6757-43e4-9ea4-c8fc705f79a2
 title: Boot Configuration Tampering Via Bcdedit.EXE
+id: 1444443e-6757-43e4-9ea4-c8fc705f79a2
 status: stable
 level: high
+author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
 description: Detects the use of the bcdedit command to tamper with the boot configuration
     data. This technique is often times used by malware or attackers as a destructive
     way before launching ransomware.
-author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
-date: '2019-10-24'
-modified: '2023-02-15'
-tags:
-    - attack.impact
-    - attack.t1490
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md
     - https://eqllib.readthedocs.io/en/latest/analytics/c4732632-9c1d-4980-9fa8-1d98c93f918e.html
@@ -20,7 +15,11 @@ fields:
     - CommandLine
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1490
+date: '2019-10-24'
+modified: '2023-02-15'
 logsource:
     category: process_creation
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:48.994366+00:00'
+            mapped_at: '2025-12-04T01:42:11.566175+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:48.994366+00:00'
+            mapped_at: '2025-12-04T01:42:11.566175+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:48.994399+00:00'
+            mapped_at: '2025-12-04T01:42:11.566325+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:48.994403+00:00'
+            mapped_at: '2025-12-04T01:42:11.566331+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:48.994406+00:00'
+            mapped_at: '2025-12-04T01:42:11.566334+00:00'

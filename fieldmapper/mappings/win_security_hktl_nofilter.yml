@@ -1,17 +1,12 @@
-id: 7b14c76a-c602-4ae6-9717-eff868153fc0
 title: HackTool - NoFilter Execution
+id: 7b14c76a-c602-4ae6-9717-eff868153fc0
 status: test
 level: high
+author: Stamatis Chatzimangou (st0pp3r)
 description: 'Detects execution of NoFilter, a tool for abusing the Windows Filtering
     Platform for privilege escalation via hardcoded policy name indicators
 
     '
-author: Stamatis Chatzimangou (st0pp3r)
-date: '2024-01-05'
-tags:
-    - attack.privilege-escalation
-    - attack.t1134
-    - attack.t1134.001
 references:
     - https://github.com/deepinstinct/NoFilter/blob/121d215ab130c5e8e3ad45a7e7fcd56f4de97b4d/NoFilter/Consts.cpp
     - https://github.com/deepinstinct/NoFilter
@@ -19,7 +14,11 @@ references:
     - https://x.com/_st0pp3r_/status/1742203752361128162?s=20
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1134
+    - attack.t1134.001
+date: '2024-01-05'
 logsource:
     product: windows
     service: security
@@ -40,21 +39,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:59.514979+00:00'
+            mapped_at: '2025-12-04T01:56:06.560247+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:59.514979+00:00'
+            mapped_at: '2025-12-04T01:56:06.560247+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:00.330523+00:00'
+            mapped_at: '2025-12-04T01:56:06.560267+00:00'
         -   source_field: FilterName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:00.330534+00:00'
+            mapped_at: '2025-12-04T01:56:06.560270+00:00'
         -   source_field: ProviderContextName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:00.330536+00:00'
+            mapped_at: '2025-12-04T01:56:06.560273+00:00'

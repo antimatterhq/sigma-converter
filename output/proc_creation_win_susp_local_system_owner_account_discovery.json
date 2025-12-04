@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Local Accounts Discovery",
+    "comment": "Local accounts, System Owner/User discovery using operating systems utilities",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\cmd.exe')) AND contains(lower(process.cmd_line), lower(' /c')) AND contains(lower(process.cmd_line), lower('dir ')) AND contains(lower(process.cmd_line), lower('\\\\users\\\\')) AND NOT contains(lower(process.cmd_line), lower(' rmdir ')) OR (endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe'))) AND contains(lower(process.cmd_line), lower('user')) AND NOT (contains(lower(process.cmd_line), lower('/domain')) OR contains(lower(process.cmd_line), lower('/add')) OR contains(lower(process.cmd_line), lower('/delete')) OR contains(lower(process.cmd_line), lower('/active')) OR contains(lower(process.cmd_line), lower('/expires')) OR contains(lower(process.cmd_line), lower('/passwordreq')) OR contains(lower(process.cmd_line), lower('/scriptpath')) OR contains(lower(process.cmd_line), lower('/times')) OR contains(lower(process.cmd_line), lower('/workstations'))) OR endswith(lower(process.name), lower('\\\\whoami.exe')) OR endswith(lower(process.name), lower('\\\\quser.exe')) OR endswith(lower(process.name), lower('\\\\qwinsta.exe')) OR endswith(lower(process.name), lower('\\\\wmic.exe')) AND contains(lower(process.cmd_line), lower('useraccount')) AND contains(lower(process.cmd_line), lower('get')) OR endswith(lower(process.name), lower('\\\\cmdkey.exe')) AND contains(lower(process.cmd_line), lower(' /l'))))"
+      }
+    },
+    "output": {
+      "summary": "Local accounts, System Owner/User discovery using operating systems utilities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrator or user enumerates local users for legitimate reason Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1033/T1033.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1033"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

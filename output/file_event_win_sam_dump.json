@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential SAM Database Dump",
+    "comment": "Detects the creation of files that look like exports of the local SAM (Security Account Manager)",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(file.path), lower('\\\\temp\\\\sam')) OR endswith(lower(file.path), lower('\\\\sam.sav')) OR endswith(lower(file.path), lower('\\\\intel\\\\sam')) OR endswith(lower(file.path), lower('\\\\sam.hive')) OR endswith(lower(file.path), lower('\\\\perflogs\\\\sam')) OR endswith(lower(file.path), lower('\\\\programdata\\\\sam')) OR endswith(lower(file.path), lower('\\\\users\\\\public\\\\sam')) OR endswith(lower(file.path), lower('\\\\appdata\\\\local\\\\sam')) OR endswith(lower(file.path), lower('\\\\appdata\\\\roaming\\\\sam')) OR endswith(lower(file.path), lower('_shadowsteal.zip')) OR endswith(lower(file.path), lower('\\\\documents\\\\sam.export')) OR endswith(lower(file.path), lower(':\\\\sam'))) AND (contains(lower(file.path), lower('\\\\hive_sam_')) OR contains(lower(file.path), lower('\\\\sam.save')) OR contains(lower(file.path), lower('\\\\sam.export')) OR contains(lower(file.path), lower('\\\\~reg_sam.save')) OR contains(lower(file.path), lower('\\\\sam_backup')) OR contains(lower(file.path), lower('\\\\sam.bck')) OR contains(lower(file.path), lower('\\\\sam.backup'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of files that look like exports of the local SAM (Security Account Manager)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Rare cases of administrative activity References: https://github.com/search?q=CVE-2021-36934, https://web.archive.org/web/20210725081645/https://github.com/cube0x0/CVE-2021-36934, https://www.google.com/search?q=%22reg.exe+save%22+sam, https://github.com/HuskyHacks/ShadowSteal, https://github.com/FireFart/hivenightmare",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Reconnaissance For Cached Credentials Via Cmdkey.EXE",
+    "comment": "Detects usage of cmdkey to look for cached credentials on the system",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmdkey.exe')) AND lower(process.file.name) = lower('cmdkey.exe') AND (contains(lower(process.cmd_line), lower(' -l')) OR contains(lower(process.cmd_line), lower(' /l')) OR contains(lower(process.cmd_line), lower(' \u2013l')) OR contains(lower(process.cmd_line), lower(' \u2014l')) OR contains(lower(process.cmd_line), lower(' \u2015l'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of cmdkey to look for cached credentials on the system",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line, actor.user.name False positive: Legitimate administrative tasks References: https://www.peew.pw/blog/2017/11/26/exploring-cmdkey-an-edge-case-for-privilege-escalation, https://technet.microsoft.com/en-us/library/cc754243(v=ws.11).aspx, https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1003.005/T1003.005.md#atomic-test-1---cached-credential-dump-via-cmdkey",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

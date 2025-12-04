@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "WScript or CScript Dropper - File",
+    "comment": "Detects a file ending in jse, vbe, js, vba, vbs written by cscript.exe or wscript.exe",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(actor.process.name), lower('\\\\wscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\cscript.exe'))) AND (startswith(lower(file.path), lower('c:\\\\users\\\\')) OR startswith(lower(file.path), lower('c:\\\\programdata'))) AND (endswith(lower(file.path), lower('.jse')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.js')) OR endswith(lower(file.path), lower('.vba')) OR endswith(lower(file.path), lower('.vbs'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a file ending in jse, vbe, js, vba, vbs written by cscript.exe or wscript.exe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: actor.process.name, file.path False positive: Unknown Reference: WScript or CScript Dropper (cea72823-df4d-4567-950c-0b579eaf0846)",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

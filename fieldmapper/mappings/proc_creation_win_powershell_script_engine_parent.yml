@@ -1,21 +1,20 @@
-id: 95eadcb2-92e4-4ed1-9031-92547773a6db
 title: Suspicious PowerShell Invocation From Script Engines
+id: 95eadcb2-92e4-4ed1-9031-92547773a6db
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious powershell invocations from interpreters or unusual
     programs
-author: Florian Roth (Nextron Systems)
-date: '2019-01-16'
-modified: '2023-01-05'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://www.securitynewspaper.com/2017/03/20/attackers-leverage-excel-powershell-dns-latest-non-malware-attack/
 falsepositives:
     - Microsoft Operations Manager (MOM)
     - Other scripts
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2019-01-16'
+modified: '2023-01-05'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:04.544473+00:00'
+            mapped_at: '2025-12-04T01:47:25.175729+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:04.544473+00:00'
+            mapped_at: '2025-12-04T01:47:25.175729+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:33:04.544510+00:00'
+            mapped_at: '2025-12-04T01:47:25.175746+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:04.544514+00:00'
+            mapped_at: '2025-12-04T01:47:25.175747+00:00'
         -   source_field: CurrentDirectory
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:33:04.544517+00:00'
+            mapped_at: '2025-12-04T01:47:25.175749+00:00'

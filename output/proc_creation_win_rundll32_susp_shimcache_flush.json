@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "ShimCache Flush",
+    "comment": "Detects actions that clear the local ShimCache and remove forensic evidence",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "stable"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(process.cmd_line), lower('rundll32')) AND contains(lower(process.cmd_line), lower('apphelp.dll')) AND (contains(lower(process.cmd_line), lower('shimflushcache')) OR contains(lower(process.cmd_line), lower('#250'))) OR contains(lower(process.cmd_line), lower('rundll32')) AND contains(lower(process.cmd_line), lower('kernel32.dll')) AND (contains(lower(process.cmd_line), lower('baseflushappcompatcache')) OR contains(lower(process.cmd_line), lower('#46'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects actions that clear the local ShimCache and remove forensic evidence",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.name, process.cmd_line, process.parent_process.cmd_line False positive: Unknown Reference: https://medium.com/@blueteamops/shimcache-flush-89daff28d15e",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1112"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,13 +1,9 @@
-id: 818fee0c-e0ec-4e45-824e-83e4817b0887
 title: Azure Kubernetes Sensitive Role Access
+id: 818fee0c-e0ec-4e45-824e-83e4817b0887
 status: test
 level: medium
-description: Identifies when ClusterRoles/Roles are being modified or deleted.
 author: Austin Songer @austinsonger
-date: '2021-08-07'
-modified: '2022-08-23'
-tags:
-    - attack.impact
+description: Identifies when ClusterRoles/Roles are being modified or deleted.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
     - https://www.microsoft.com/security/blog/2021/03/23/secure-containerized-environments-with-updated-threat-matrix-for-kubernetes/
@@ -21,7 +17,10 @@ falsepositives:
     - ClusterRoles/Roles modification from unfamiliar users should be investigated.
         If known behavior is causing false positives, it can be exempted from the
         rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-07'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -44,13 +43,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:09.561793+00:00'
+            mapped_at: '2025-12-04T01:38:35.213767+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:09.561793+00:00'
+            mapped_at: '2025-12-04T01:38:35.213767+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:09.561899+00:00'
+            mapped_at: '2025-12-04T01:38:35.213780+00:00'

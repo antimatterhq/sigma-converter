@@ -1,21 +1,20 @@
-id: b04934b2-0a68-4845-8a19-bdfed3a68a7a
 title: App Assigned To Azure RBAC/Microsoft Entra Role
+id: b04934b2-0a68-4845-8a19-bdfed3a68a7a
 status: test
 level: medium
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
 description: Detects when an app is assigned Azure AD roles, such as global administrator,
     or Azure RBAC roles, such as subscription owner.
-author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
-date: '2022-07-19'
-modified: '2024-11-04'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1098.003
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#service-principal-assigned-to-a-role
 falsepositives:
     - When the permission is legitimately needed for the app
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1098.003
+date: '2022-07-19'
+modified: '2024-11-04'
 logsource:
     product: azure
     service: auditlogs
@@ -29,22 +28,22 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: account_change
-    activity_id: 7
+    activity_id: <UNMAPPED>
     logsource:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:27.563591+00:00'
+            mapped_at: '2025-12-04T01:37:46.870687+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:27.563591+00:00'
+            mapped_at: '2025-12-04T01:37:46.870687+00:00'
     detection_fields:
         -   source_field: targetResources.type
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:28.325619+00:00'
+            mapped_at: '2025-12-04T01:37:46.870713+00:00'
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:19:28.325629+00:00'
+            mapped_at: '2025-12-04T01:37:46.870716+00:00'

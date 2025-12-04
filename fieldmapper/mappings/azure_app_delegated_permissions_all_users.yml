@@ -1,19 +1,18 @@
-id: a6355fbe-f36f-45d8-8efc-ab42465cbc52
 title: Delegated Permissions Granted For All Users
+id: a6355fbe-f36f-45d8-8efc-ab42465cbc52
 status: test
 level: high
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
 description: Detects when highly privileged delegated permissions are granted on behalf
     of all users
-author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
-date: '2022-07-28'
-tags:
-    - attack.credential-access
-    - attack.t1528
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-granted-highly-privileged-permissions
 falsepositives:
     - When the permission is legitimately needed for the app
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1528
+date: '2022-07-28'
 logsource:
     product: azure
     service: auditlogs
@@ -28,13 +27,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:59.721505+00:00'
+            mapped_at: '2025-12-04T01:38:00.103480+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:59.721505+00:00'
+            mapped_at: '2025-12-04T01:38:00.103480+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:19:59.721537+00:00'
+            mapped_at: '2025-12-04T01:38:00.103494+00:00'

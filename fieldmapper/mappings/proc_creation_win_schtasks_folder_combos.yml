@@ -1,20 +1,19 @@
-id: 8a8379b8-780b-4dbf-b1e9-31c8d112fefb
 title: Schtasks From Suspicious Folders
+id: 8a8379b8-780b-4dbf-b1e9-31c8d112fefb
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects scheduled task creations that have suspicious action command
     and folder combinations
-author: Florian Roth (Nextron Systems)
-date: '2022-04-15'
-modified: '2022-11-18'
-tags:
-    - attack.execution
-    - attack.t1053.005
 references:
     - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/lazarus-dream-job-chemical
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1053.005
+date: '2022-04-15'
+modified: '2022-11-18'
 logsource:
     category: process_creation
     product: windows
@@ -46,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:34.979493+00:00'
+            mapped_at: '2025-12-04T01:45:13.899470+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:34.979493+00:00'
+            mapped_at: '2025-12-04T01:45:13.899470+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:34.979514+00:00'
+            mapped_at: '2025-12-04T01:45:13.899483+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:34.979518+00:00'
+            mapped_at: '2025-12-04T01:45:13.899485+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:34.979520+00:00'
+            mapped_at: '2025-12-04T01:45:13.899486+00:00'

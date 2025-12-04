@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Legitimate Application Dropped Executable",
+    "comment": "Detects programs on a Windows system that should not write executables to disk",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(actor.process.name), lower('\\\\eqnedt32.exe')) OR endswith(lower(actor.process.name), lower('\\\\wordpad.exe')) OR endswith(lower(actor.process.name), lower('\\\\wordview.exe')) OR endswith(lower(actor.process.name), lower('\\\\certutil.exe')) OR endswith(lower(actor.process.name), lower('\\\\certoc.exe')) OR endswith(lower(actor.process.name), lower('\\\\certreq.exe')) OR endswith(lower(actor.process.name), lower('\\\\desktopimgdownldr.exe')) OR endswith(lower(actor.process.name), lower('\\\\esentutl.exe')) OR endswith(lower(actor.process.name), lower('\\\\mshta.exe')) OR endswith(lower(actor.process.name), lower('\\\\acrord32.exe')) OR endswith(lower(actor.process.name), lower('\\\\rdrcef.exe')) OR endswith(lower(actor.process.name), lower('\\\\hh.exe')) OR endswith(lower(actor.process.name), lower('\\\\finger.exe'))) AND (endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.ocx'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects programs on a Windows system that should not write executables to disk",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/Neo23x0/sysmon-config/blob/3f808d9c022c507aae21a9346afba4a59dd533b9/sysmonconfig-export-block.xml#L1326",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

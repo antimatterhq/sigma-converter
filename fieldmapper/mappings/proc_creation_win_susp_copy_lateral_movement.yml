@@ -1,20 +1,11 @@
-id: 855bc8b5-2ae8-402e-a9ed-b889e6df1900
 title: Copy From Or To Admin Share Or Sysvol Folder
+id: 855bc8b5-2ae8-402e-a9ed-b889e6df1900
 status: test
 level: medium
-description: Detects a copy command or a copy utility execution to or from an Admin
-    share or remote
 author: Florian Roth (Nextron Systems), oscd.community, Teymur Kheirkhabarov @HeirhabarovT,
     Zach Stanford @svch0st, Nasreddine Bencherchali
-date: '2019-12-30'
-modified: '2023-11-15'
-tags:
-    - attack.lateral-movement
-    - attack.collection
-    - attack.exfiltration
-    - attack.t1039
-    - attack.t1048
-    - attack.t1021.002
+description: Detects a copy command or a copy utility execution to or from an Admin
+    share or remote
 references:
     - https://twitter.com/SBousseaden/status/1211636381086339073
     - https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view
@@ -22,7 +13,15 @@ references:
     - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
 falsepositives:
     - Administrative scripts
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.collection
+    - attack.exfiltration
+    - attack.t1039
+    - attack.t1048
+    - attack.t1021.002
+date: '2019-12-30'
+modified: '2023-11-15'
 logsource:
     category: process_creation
     product: windows
@@ -69,21 +68,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:32.768906+00:00'
+            mapped_at: '2025-12-04T01:43:40.817970+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:32.768906+00:00'
+            mapped_at: '2025-12-04T01:43:40.817970+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:32.768933+00:00'
+            mapped_at: '2025-12-04T01:43:40.817984+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:32.768936+00:00'
+            mapped_at: '2025-12-04T01:43:40.817986+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:32.768938+00:00'
+            mapped_at: '2025-12-04T01:43:40.817987+00:00'

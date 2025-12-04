@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "GatherNetworkInfo.VBS Reconnaissance Script Output",
+    "comment": "Detects creation of files which are the results of executing the built-in reconnaissance script \"C:\\Windows\\System32\\gatherNetworkInfo.vbs\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND startswith(lower(file.path), lower('c:\\\\windows\\\\system32\\\\config')) AND (endswith(lower(file.path), lower('\\\\hotfixinfo.txt')) OR endswith(lower(file.path), lower('\\\\netiostate.txt')) OR endswith(lower(file.path), lower('\\\\sysportslog.txt')) OR endswith(lower(file.path), lower('\\\\vmswitchlog.evtx'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of files which are the results of executing the built-in reconnaissance script \"C:\\Windows\\System32\\gatherNetworkInfo.vbs\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs, https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

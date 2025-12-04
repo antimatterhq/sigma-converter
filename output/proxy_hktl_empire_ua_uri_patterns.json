@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "HackTool - Empire UserAgent URI Combo",
+    "comment": "Detects user agent and URI paths used by empire agents",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(http_request.user_agent) = lower('mozilla/5.0 (windows nt 6.1; wow64; trident/7.0; rv:11.0) like gecko') AND (lower(LOWER(http_request.url)) in ('/admin/get\\.php', '/news\\.php', '/login/process\\.php')) AND lower(http_request.http_method) = lower('post'))"
+      }
+    },
+    "output": {
+      "summary": "Detects user agent and URI paths used by empire agents",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Valid requests with this exact user agent to server scripts of the defined names Reference: https://github.com/BC-SECURITY/Empire",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

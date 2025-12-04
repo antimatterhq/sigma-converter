@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Reg Add BitLocker",
+    "comment": "Detects suspicious addition to BitLocker related registry keys via the reg.exe utility",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('reg')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('\\\\software\\\\policies\\\\microsoft\\\\fve')) AND contains(lower(process.cmd_line), lower('/v')) AND contains(lower(process.cmd_line), lower('/f')) AND (contains(lower(process.cmd_line), lower('enablebdewithnotpm')) OR contains(lower(process.cmd_line), lower('useadvancedstartup')) OR contains(lower(process.cmd_line), lower('usetpm')) OR contains(lower(process.cmd_line), lower('usetpmkey')) OR contains(lower(process.cmd_line), lower('usetpmkeypin')) OR contains(lower(process.cmd_line), lower('recoverykeymessagesource')) OR contains(lower(process.cmd_line), lower('usetpmpin')) OR contains(lower(process.cmd_line), lower('recoverykeymessage'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious addition to BitLocker related registry keys via the reg.exe utility",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://thedfirreport.com/2021/11/15/exchange-exploit-leads-to-domain-wide-ransomware/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1486"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,20 +1,19 @@
-id: 6a50f16c-3b7b-42d1-b081-0fdd3ba70a73
 title: User Added To Root/Sudoers Group Using Usermod
+id: 6a50f16c-3b7b-42d1-b081-0fdd3ba70a73
 status: test
 level: medium
+author: TuanLe (GTSC)
 description: Detects usage of the "usermod" binary to add users add users to the root
     or suoders groups
-author: TuanLe (GTSC)
-date: '2022-12-21'
-tags:
-    - attack.privilege-escalation
-    - attack.persistence
 references:
     - https://pberba.github.io/security/2021/11/23/linux-threat-hunting-for-persistence-account-creation-manipulation/
     - https://www.configserverfirewall.com/ubuntu-linux/ubuntu-add-user-to-root-group/
 falsepositives:
     - Legitimate administrator activities
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+date: '2022-12-21'
 logsource:
     category: process_creation
     product: linux
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:20.603168+00:00'
+            mapped_at: '2025-12-04T01:36:27.738882+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:20.603168+00:00'
+            mapped_at: '2025-12-04T01:36:27.738882+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:20.603203+00:00'
+            mapped_at: '2025-12-04T01:36:27.738901+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:20.603208+00:00'
+            mapped_at: '2025-12-04T01:36:27.738903+00:00'

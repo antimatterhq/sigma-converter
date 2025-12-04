@@ -1,11 +1,13 @@
-id: 8ccd35a2-1c7c-468b-b568-ac6cdf80eec3
 title: Bitsadmin to Uncommon IP Server Address
+id: 8ccd35a2-1c7c-468b-b568-ac6cdf80eec3
 status: test
 level: high
-description: Detects Bitsadmin connections to IP addresses instead of FQDN names
 author: Florian Roth (Nextron Systems)
-date: '2022-06-10'
-modified: '2022-08-24'
+description: Detects Bitsadmin connections to IP addresses instead of FQDN names
+references:
+    - https://isc.sans.edu/diary/Microsoft+BITS+Used+to+Download+Payloads/21027
+falsepositives:
+    - Unknown
 tags:
     - attack.command-and-control
     - attack.t1071.001
@@ -13,11 +15,8 @@ tags:
     - attack.persistence
     - attack.t1197
     - attack.s0190
-references:
-    - https://isc.sans.edu/diary/Microsoft+BITS+Used+to+Download+Payloads/21027
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-06-10'
+modified: '2022-08-24'
 logsource:
     category: proxy
 detection:
@@ -41,13 +40,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:13:59.282368+00:00'
+            mapped_at: '2025-12-04T01:34:46.693663+00:00'
     detection_fields:
         -   source_field: c-useragent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:13:59.282379+00:00'
+            mapped_at: '2025-12-04T01:34:46.693676+00:00'
         -   source_field: cs-host
             target_table: http_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:13:59.282381+00:00'
+            mapped_at: '2025-12-04T01:34:46.693678+00:00'

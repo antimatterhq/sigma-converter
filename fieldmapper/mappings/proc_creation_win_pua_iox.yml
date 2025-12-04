@@ -1,20 +1,19 @@
-id: d7654f02-e04b-4934-9838-65c46f187ebc
 title: PUA- IOX Tunneling Tool Execution
+id: d7654f02-e04b-4934-9838-65c46f187ebc
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the use of IOX - a tool for port forwarding and intranet proxy
     purposes
-author: Florian Roth (Nextron Systems)
-date: '2022-10-08'
-modified: '2024-11-23'
-tags:
-    - attack.command-and-control
-    - attack.t1090
 references:
     - https://github.com/EddieIvan01/iox
 falsepositives:
     - Legitimate use
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090
+date: '2022-10-08'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:49.628268+00:00'
+            mapped_at: '2025-12-04T01:44:37.354696+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:49.628268+00:00'
+            mapped_at: '2025-12-04T01:44:37.354696+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:49.628293+00:00'
+            mapped_at: '2025-12-04T01:44:37.354717+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:49.628296+00:00'
+            mapped_at: '2025-12-04T01:44:37.354719+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:29:49.628299+00:00'
+            mapped_at: '2025-12-04T01:44:37.354720+00:00'

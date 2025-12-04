@@ -1,21 +1,20 @@
-id: c5c00f49-b3f9-45a6-997e-cfdecc6e1967
 title: Suspicious Schtasks Execution AppData Folder
+id: c5c00f49-b3f9-45a6-997e-cfdecc6e1967
 status: test
 level: high
-description: Detects the creation of a schtask that executes a file from C:\Users\<USER>\AppData\Local
 author: pH-T (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-03-15'
-modified: '2022-07-28'
+description: Detects the creation of a schtask that executes a file from C:\Users\<USER>\AppData\Local
+references:
+    - https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.persistence
     - attack.t1053.005
     - attack.t1059.001
-references:
-    - https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-03-15'
+modified: '2022-07-28'
 logsource:
     category: process_creation
     product: windows
@@ -45,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:30.202005+00:00'
+            mapped_at: '2025-12-04T01:46:02.076387+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:30.202005+00:00'
+            mapped_at: '2025-12-04T01:46:02.076387+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:30.202020+00:00'
+            mapped_at: '2025-12-04T01:46:02.076401+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:30.202021+00:00'
+            mapped_at: '2025-12-04T01:46:02.076402+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:30.202023+00:00'
+            mapped_at: '2025-12-04T01:46:02.076404+00:00'

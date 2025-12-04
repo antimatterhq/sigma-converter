@@ -1,22 +1,19 @@
-id: bedfc8ad-d1c7-4e37-a20e-e2b0dbee759c
 title: HackTool - SharpEvtMute Execution
+id: bedfc8ad-d1c7-4e37-a20e-e2b0dbee759c
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the use of SharpEvtHook, a tool that tampers with the Windows
     event logs
-author: Florian Roth (Nextron Systems)
-date: '2022-09-07'
-modified: '2023-02-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://github.com/bats3c/EvtMute
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''49329257-089d-46e6-af37-4afce4290685''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2022-09-07'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -28,6 +25,9 @@ detection:
             - '--Filter "rule '
             - --Encoded --Filter \"
     condition: selection
+related:
+    -   id: 49329257-089d-46e6-af37-4afce4290685
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -35,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:17.315732+00:00'
+            mapped_at: '2025-12-04T01:49:12.138981+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:17.315732+00:00'
+            mapped_at: '2025-12-04T01:49:12.138981+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:17.315761+00:00'
+            mapped_at: '2025-12-04T01:49:12.138999+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:35:17.315765+00:00'
+            mapped_at: '2025-12-04T01:49:12.139001+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:17.315768+00:00'
+            mapped_at: '2025-12-04T01:49:12.139002+00:00'

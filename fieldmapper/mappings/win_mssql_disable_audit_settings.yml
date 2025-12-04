@@ -1,14 +1,10 @@
-id: 350dfb37-3706-4cdc-9e2e-5e24bc3a46df
 title: MSSQL Disable Audit Settings
+id: 350dfb37-3706-4cdc-9e2e-5e24bc3a46df
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects when an attacker calls the "ALTER SERVER AUDIT" or "DROP SERVER
     AUDIT" transaction in order to delete or disable audit logs on the server
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-13'
-modified: '2024-06-26'
-tags:
-    - attack.defense-evasion
 references:
     - https://www.netspi.com/blog/technical/network-penetration-testing/sql-server-persistence-part-1-startup-stored-procedures/
     - https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-server-audit-transact-sql?view=sql-server-ver16
@@ -16,7 +12,10 @@ references:
 falsepositives:
     - This event should only fire when an administrator is modifying the audit policy.
         Which should be a rare occurrence once it's set up
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-07-13'
+modified: '2024-06-26'
 logsource:
     product: windows
     service: application
@@ -37,21 +36,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:53.429350+00:00'
+            mapped_at: '2025-12-04T01:57:30.558248+00:00'
         service:
             source_field: service
             source_value: application
-            mapped_at: '2025-11-26T02:48:53.429350+00:00'
+            mapped_at: '2025-12-04T01:57:30.558248+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:53.429364+00:00'
+            mapped_at: '2025-12-04T01:57:30.558263+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:53.429366+00:00'
+            mapped_at: '2025-12-04T01:57:30.558265+00:00'
         -   source_field: Data
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:53.429368+00:00'
+            mapped_at: '2025-12-04T01:57:30.558266+00:00'

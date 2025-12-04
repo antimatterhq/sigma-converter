@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "HackTool - LocalPotato Execution",
+    "comment": "Detects the execution of the LocalPotato POC based on basic PE metadata information and default CLI examples",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\localpotato.exe')) OR contains(lower(process.cmd_line), lower('.exe -i c:\\\\')) AND contains(lower(process.cmd_line), lower('-o windows\\\\')) OR contains(lower(process.file.hashes.value), lower('imphash=e1742ee971d6549e8d4d81115f88f1fc')) OR contains(lower(process.file.hashes.value), lower('imphash=dd82066efba94d7556ef582f247c8bb5'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the LocalPotato POC based on basic PE metadata information and default CLI examples",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://www.localpotato.com/localpotato_html/LocalPotato.html, https://github.com/decoder-it/LocalPotato",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

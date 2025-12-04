@@ -1,22 +1,19 @@
-id: 0cf2e1c6-8d10-4273-8059-738778f981ad
 title: Potential WerFault ReflectDebugger Registry Value Abuse
+id: 0cf2e1c6-8d10-4273-8059-738778f981ad
 status: test
 level: high
+author: X__Junior
 description: Detects potential WerFault "ReflectDebugger" registry value abuse for
     persistence.
-author: X__Junior
-date: '2023-05-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.003
 references:
     - https://cocomelonc.github.io/malware/2022/11/02/malware-pers-18.html
     - https://www.hexacorn.com/blog/2018/08/31/beyond-good-ol-run-key-part-85/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.003
+date: '2023-05-18'
 logsource:
     category: registry_set
     product: windows
@@ -25,6 +22,9 @@ detection:
         EventType: SetValue
         TargetObject|endswith: \Microsoft\Windows\Windows Error Reporting\Hangs\ReflectDebugger
     condition: selection
+related:
+    -   id: fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Executable File Creation",
+    "comment": "Detect creation of suspicious executable file names. Some strings look for suspicious file extensions, others look for filenames that exploit unquoted service paths.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(file.path), lower(':\\\\$recycle.bin.exe')) OR endswith(lower(file.path), lower(':\\\\documents and settings.exe')) OR endswith(lower(file.path), lower(':\\\\msocache.exe')) OR endswith(lower(file.path), lower(':\\\\perflogs.exe')) OR endswith(lower(file.path), lower(':\\\\recovery.exe')) OR endswith(lower(file.path), lower('.bat.exe')) OR endswith(lower(file.path), lower('.sys.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detect creation of suspicious executable file names. Some strings look for suspicious file extensions, others look for filenames that exploit unquoted service paths.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://medium.com/@SumitVerma101/windows-privilege-escalation-part-1-unquoted-service-path-c7a011a8d8ae, https://app.any.run/tasks/76c69e2d-01e8-49d9-9aea-fb7cc0c4d3ad/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1564"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

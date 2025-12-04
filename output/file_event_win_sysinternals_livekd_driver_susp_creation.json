@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "LiveKD Driver Creation By Uncommon Process",
+    "comment": "Detects the creation of the LiveKD driver by a process image other than \"livekd.exe\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(file.path) = lower('c:\\\\windows\\\\system32\\\\drivers\\\\livekdd.sys') AND NOT (endswith(lower(actor.process.name), lower('\\\\livekd.exe')) OR endswith(lower(actor.process.name), lower('\\\\livek64.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of the LiveKD driver by a process image other than \"livekd.exe\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrators might rename LiveKD before its usage which could trigger this. Add additional names you use to the filter Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

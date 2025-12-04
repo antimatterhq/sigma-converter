@@ -1,24 +1,23 @@
-id: 03cc0c25-389f-4bf8-b48d-11878079f1ca
 title: Suspicious MSHTA Child Process
+id: 03cc0c25-389f-4bf8-b48d-11878079f1ca
 status: test
 level: high
+author: Michael Haag
 description: Detects a suspicious process spawning from an "mshta.exe" process, which
     could be indicative of a malicious HTA script execution
-author: Michael Haag
-date: '2019-01-16'
-modified: '2023-02-06'
+references:
+    - https://www.trustedsec.com/july-2015/malicious-htas/
+falsepositives:
+    - Printer software / driver installations
+    - HP software
 tags:
     - attack.defense-evasion
     - attack.t1218.005
     - car.2013-02-003
     - car.2013-03-001
     - car.2014-04-003
-references:
-    - https://www.trustedsec.com/july-2015/malicious-htas/
-falsepositives:
-    - Printer software / driver installations
-    - HP software
-taxonomy: sigma
+date: '2019-01-16'
+modified: '2023-02-06'
 logsource:
     category: process_creation
     product: windows
@@ -55,21 +54,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:07.991300+00:00'
+            mapped_at: '2025-12-04T01:49:04.105063+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:07.991300+00:00'
+            mapped_at: '2025-12-04T01:49:04.105063+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:07.991314+00:00'
+            mapped_at: '2025-12-04T01:49:04.105082+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:07.991316+00:00'
+            mapped_at: '2025-12-04T01:49:04.105083+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:07.991317+00:00'
+            mapped_at: '2025-12-04T01:49:04.105085+00:00'

@@ -1,7 +1,8 @@
-id: 85b88e05-dadc-430b-8a9e-53ff1cd30aae
 title: Potentially Suspicious Desktop Background Change Via Registry
+id: 85b88e05-dadc-430b-8a9e-53ff1cd30aae
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), Stephen Lincoln @slincoln-aiq (AttackIQ)
 description: 'Detects registry value settings that would replace the user''s desktop
     background.
 
@@ -9,13 +10,6 @@ description: 'Detects registry value settings that would replace the user''s des
     a ransom note or other image.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Stephen Lincoln @slincoln-aiq (AttackIQ)
-date: '2023-12-21'
-tags:
-    - attack.defense-evasion
-    - attack.impact
-    - attack.t1112
-    - attack.t1491.001
 references:
     - https://www.attackiq.com/2023/09/20/emulating-rhysida/
     - https://research.checkpoint.com/2023/the-rhysida-ransomware-activity-analysis-and-ties-to-vice-society/
@@ -26,9 +20,12 @@ references:
 falsepositives:
     - Administrative scripts that change the desktop background to a company logo
         or other image.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8cbc9475-8d05-4e27-9c32-df960716c701''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.impact
+    - attack.t1112
+    - attack.t1491.001
+date: '2023-12-21'
 logsource:
     category: registry_set
     product: windows
@@ -49,6 +46,9 @@ detection:
     filter_main_svchost:
         Image|endswith: \svchost.exe
     condition: selection_keys and 1 of selection_values_* and not 1 of filter_main_*
+related:
+    -   id: 8cbc9475-8d05-4e27-9c32-df960716c701
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

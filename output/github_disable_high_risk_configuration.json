@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Github High Risk Configuration Disabled",
+    "comment": "Detects when a user disables a critical security feature for an organization.",
+    "annotations": {
+      "source": "sigma",
+      "product": "github",
+      "service": "audit",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(action)) in ('business_advanced_security\\.disabled_for_new_repos', 'business_advanced_security\\.disabled_for_new_user_namespace_repos', 'business_advanced_security\\.disabled', 'business_advanced_security\\.user_namespace_repos_disabled', 'org\\.advanced_security_disabled_for_new_repos', 'org\\.advanced_security_disabled_on_all_repos', 'org\\.advanced_security_policy_selected_member_disabled', 'org\\.disable_oauth_app_restrictions', 'org\\.disable_two_factor_requirement', 'repo\\.advanced_security_disabled'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a user disables a critical security feature for an organization.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Approved administrator/owner activities. References: https://docs.github.com/en/organizations/managing-oauth-access-to-your-organizations-data/disabling-oauth-app-access-restrictions-for-your-organization, https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#dependabot_alerts-category-actions, https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository, https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1556"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

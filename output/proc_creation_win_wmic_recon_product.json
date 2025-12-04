@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Product Reconnaissance Via Wmic.EXE",
+    "comment": "Detects the execution of WMIC in order to get a list of firewall and antivirus products",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wmic.exe')) AND lower(process.file.name) = lower('wmic.exe') AND contains(lower(process.cmd_line), lower('product')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of WMIC in order to get a list of firewall and antivirus products",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://thedfirreport.com/2023/03/06/2022-year-in-review/, https://www.yeahhub.com/list-installed-programs-version-path-windows/, https://learn.microsoft.com/en-us/answers/questions/253555/software-list-inventory-wmic-product",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

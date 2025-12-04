@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Disabling Multi Factor Authentication",
+    "comment": "Detects disabling of Multi Factor Authentication.",
+    "annotations": {
+      "source": "sigma",
+      "product": "m365",
+      "service": "audit",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(action), lower('disable strong authentication.')))"
+      }
+    },
+    "output": {
+      "summary": "Detects disabling of Multi Factor Authentication.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://research.splunk.com/cloud/c783dd98-c703-4252-9e8a-f19d9f5c949e/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1556"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

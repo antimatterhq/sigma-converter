@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Triple Cross eBPF Rootkit Install Commands",
+    "comment": "Detects default install commands of the Triple Cross eBPF rootkit based on the \"deployer.sh\" script",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/sudo')) AND contains(lower(process.cmd_line), lower(' tc ')) AND contains(lower(process.cmd_line), lower(' enp0s3 ')) AND (contains(lower(process.cmd_line), lower(' qdisc ')) OR contains(lower(process.cmd_line), lower(' filter '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects default install commands of the Triple Cross eBPF rootkit based on the \"deployer.sh\" script",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/apps/deployer.sh",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1014"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

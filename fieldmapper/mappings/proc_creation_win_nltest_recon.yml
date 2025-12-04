@@ -1,15 +1,9 @@
-id: 5cc90652-4cbd-4241-aa3b-4b462fa5a248
 title: Potential Recon Activity Via Nltest.EXE
+id: 5cc90652-4cbd-4241-aa3b-4b462fa5a248
 status: test
 level: medium
-description: Detects nltest commands that can be used for information discovery
 author: Craig Young, oscd.community, Georg Lauenstein
-date: '2021-07-24'
-modified: '2023-12-15'
-tags:
-    - attack.discovery
-    - attack.t1016
-    - attack.t1482
+description: Detects nltest commands that can be used for information discovery
 references:
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731935(v=ws.11)
     - https://thedfirreport.com/2021/08/16/trickbot-leads-up-to-fake-1password-installation/
@@ -21,11 +15,12 @@ references:
     - https://github.com/redcanaryco/atomic-red-team/blob/5360c9d9ffa3b25f6495f7a16e267b719eba2c37/atomics/T1482/T1482.md#atomic-test-2---windows---discover-domain-trusts-with-nltest
 falsepositives:
     - Legitimate administration use but user and host must be investigated
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''410ad193-a728-4107-bc79-4419789fcbf8''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''903076ff-f442-475a-b667-4f246bcc203b''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''77815820-246c-47b8-9741-e0def3f57308''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1016
+    - attack.t1482
+date: '2021-07-24'
+modified: '2023-12-15'
 logsource:
     category: process_creation
     product: windows
@@ -47,6 +42,13 @@ detection:
             - parentdomain
             - trusted_domains
     condition: all of selection_*
+related:
+    -   id: 410ad193-a728-4107-bc79-4419789fcbf8
+        type: similar
+    -   id: 903076ff-f442-475a-b667-4f246bcc203b
+        type: similar
+    -   id: 77815820-246c-47b8-9741-e0def3f57308
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -54,21 +56,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:37.463422+00:00'
+            mapped_at: '2025-12-04T01:46:08.872093+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:37.463422+00:00'
+            mapped_at: '2025-12-04T01:46:08.872093+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:37.463440+00:00'
+            mapped_at: '2025-12-04T01:46:08.872107+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:37.463442+00:00'
+            mapped_at: '2025-12-04T01:46:08.872109+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:37.463443+00:00'
+            mapped_at: '2025-12-04T01:46:08.872110+00:00'

@@ -1,21 +1,20 @@
-id: 9c8c7000-3065-44a8-a555-79bcba5d9955
 title: Execute MSDT Via Answer File
+id: 9c8c7000-3065-44a8-a555-79bcba5d9955
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of "msdt.exe" using an answer file which is simulating
     the legitimate way of calling msdt via "pcwrun.exe" (For example from the compatibility
     tab)
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
-    - attack.execution
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Msdt/
 falsepositives:
     - Possible undocumented parents of "msdt" other than "pcwrun"
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.execution
+date: '2022-06-13'
 logsource:
     category: process_creation
     product: windows
@@ -37,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:03.514143+00:00'
+            mapped_at: '2025-12-04T01:44:51.586698+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:03.514143+00:00'
+            mapped_at: '2025-12-04T01:44:51.586698+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:03.514155+00:00'
+            mapped_at: '2025-12-04T01:44:51.586710+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:03.514157+00:00'
+            mapped_at: '2025-12-04T01:44:51.586711+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:03.514159+00:00'
+            mapped_at: '2025-12-04T01:44:51.586713+00:00'

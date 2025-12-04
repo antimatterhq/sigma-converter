@@ -1,26 +1,22 @@
-id: f63b56ee-3f79-4b8a-97fb-5c48007e8573
 title: New DNS ServerLevelPluginDll Installed Via Dnscmd.EXE
+id: f63b56ee-3f79-4b8a-97fb-5c48007e8573
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the installation of a DNS plugin DLL via ServerLevelPluginDll
     parameter in registry, which can be used to execute code in context of the DNS
     server (restart required)
-author: Florian Roth (Nextron Systems)
-date: '2017-05-08'
-modified: '2023-02-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1574.002
-    - attack.t1112
 references:
     - https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83
     - https://blog.3or.de/hunting-dns-server-level-plugin-dll-injection.html
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e61e8a88-59a9-451c-874e-70fcc9740d67''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''cbe51394-cd93-4473-b555-edf0144952d9''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+    - attack.t1112
+date: '2017-05-08'
+modified: '2023-02-05'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +27,11 @@ detection:
             - /config
             - /serverlevelplugindll
     condition: selection
+related:
+    -   id: e61e8a88-59a9-451c-874e-70fcc9740d67
+        type: derived
+    -   id: cbe51394-cd93-4473-b555-edf0144952d9
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:33.716426+00:00'
+            mapped_at: '2025-12-04T01:48:34.256282+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:33.716426+00:00'
+            mapped_at: '2025-12-04T01:48:34.256282+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:33.716439+00:00'
+            mapped_at: '2025-12-04T01:48:34.256295+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:33.716441+00:00'
+            mapped_at: '2025-12-04T01:48:34.256296+00:00'

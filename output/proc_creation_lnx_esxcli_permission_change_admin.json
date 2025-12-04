@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "ESXi Admin Permission Assigned To Account Via ESXCLI",
+    "comment": "Detects execution of the \"esxcli\" command with the \"system\" and \"permission\" flags in order to assign admin permissions to an account.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/esxcli')) AND contains(lower(process.cmd_line), lower('system')) AND contains(lower(process.cmd_line), lower(' permission ')) AND contains(lower(process.cmd_line), lower(' set')) AND contains(lower(process.cmd_line), lower('admin')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the \"esxcli\" command with the \"system\" and \"permission\" flags in order to assign admin permissions to an account.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_system.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

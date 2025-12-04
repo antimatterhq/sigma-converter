@@ -1,14 +1,9 @@
-id: 79f4ede3-402e-41c8-bc3e-ebbf5f162581
 title: HackTool - Empire PowerShell Launch Parameters
+id: 79f4ede3-402e-41c8-bc3e-ebbf5f162581
 status: test
 level: high
-description: Detects suspicious powershell command line parameters used in Empire
 author: Florian Roth (Nextron Systems)
-date: '2019-04-20'
-modified: '2023-02-21'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects suspicious powershell command line parameters used in Empire
 references:
     - https://github.com/EmpireProject/Empire/blob/c2ba61ca8d2031dad0cfc1d5770ba723e8b710db/lib/common/helpers.py#L165
     - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/lib/modules/powershell/persistence/powerbreach/deaduser.py#L191
@@ -16,7 +11,11 @@ references:
     - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/data/module_source/privesc/Invoke-EventVwrBypass.ps1#L64
 falsepositives:
     - Other tools that incidentally use the same command line parameters
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2019-04-20'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -37,13 +36,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:56.777913+00:00'
+            mapped_at: '2025-12-04T01:43:12.988278+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:56.777913+00:00'
+            mapped_at: '2025-12-04T01:43:12.988278+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:56.777932+00:00'
+            mapped_at: '2025-12-04T01:43:12.988294+00:00'

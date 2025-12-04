@@ -1,24 +1,21 @@
-id: fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd
 title: Potential ReflectDebugger Content Execution Via WerFault.EXE
+id: fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd
 status: test
 level: medium
+author: X__Junior (Nextron Systems)
 description: Detects execution of "WerFault.exe" with the "-pr" commandline flag that
     is used to run files stored in the ReflectDebugger key which could be used to
     store the path to the malware in order to masquerade the execution flow
-author: X__Junior (Nextron Systems)
-date: '2023-06-30'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://cocomelonc.github.io/malware/2022/11/02/malware-pers-18.html
     - https://www.hexacorn.com/blog/2018/08/31/beyond-good-ol-run-key-part-85/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0cf2e1c6-8d10-4273-8059-738778f981ad''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1036
+date: '2023-06-30'
 logsource:
     category: process_creation
     product: windows
@@ -29,6 +26,9 @@ detection:
     selection_cli:
         CommandLine|contains: ' -pr '
     condition: all of selection_*
+related:
+    -   id: 0cf2e1c6-8d10-4273-8059-738778f981ad
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -36,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:35.324007+00:00'
+            mapped_at: '2025-12-04T01:42:54.179844+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:35.324007+00:00'
+            mapped_at: '2025-12-04T01:42:54.179844+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:35.324022+00:00'
+            mapped_at: '2025-12-04T01:42:54.179858+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:35.324024+00:00'
+            mapped_at: '2025-12-04T01:42:54.179860+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:35.324026+00:00'
+            mapped_at: '2025-12-04T01:42:54.179861+00:00'

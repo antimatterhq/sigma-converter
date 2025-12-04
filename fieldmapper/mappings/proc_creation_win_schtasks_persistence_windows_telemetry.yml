@@ -1,7 +1,8 @@
-id: f548a603-c9f2-4c89-b511-b089f7e94549
 title: Potential Persistence Via Microsoft Compatibility Appraiser
+id: f548a603-c9f2-4c89-b511-b089f7e94549
 status: test
 level: medium
+author: Sreeman
 description: 'Detects manual execution of the "Microsoft Compatibility Appraiser"
     task via schtasks.
 
@@ -9,19 +10,15 @@ description: 'Detects manual execution of the "Microsoft Compatibility Appraiser
     registry key.
 
     '
-author: Sreeman
-date: '2020-09-29'
-modified: '2023-02-10'
-tags:
-    - attack.persistence
-    - attack.t1053.005
 references:
     - https://www.trustedsec.com/blog/abusing-windows-telemetry-for-persistence/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''73a883d0-0348-4be4-a8d8-51031c2564f8''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1053.005
+date: '2020-09-29'
+modified: '2023-02-10'
 logsource:
     category: process_creation
     product: windows
@@ -34,6 +31,9 @@ detection:
             - 'run '
             - \Application Experience\Microsoft Compatibility Appraiser
     condition: all of selection_*
+related:
+    -   id: 73a883d0-0348-4be4-a8d8-51031c2564f8
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -41,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:06.637588+00:00'
+            mapped_at: '2025-12-04T01:48:12.592724+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:06.637588+00:00'
+            mapped_at: '2025-12-04T01:48:12.592724+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:06.637615+00:00'
+            mapped_at: '2025-12-04T01:48:12.592738+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:06.637618+00:00'
+            mapped_at: '2025-12-04T01:48:12.592740+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:06.637621+00:00'
+            mapped_at: '2025-12-04T01:48:12.592742+00:00'

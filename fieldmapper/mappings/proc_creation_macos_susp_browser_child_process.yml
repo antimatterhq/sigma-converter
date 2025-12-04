@@ -1,23 +1,22 @@
-id: 0250638a-2b28-4541-86fc-ea4c558fa0c6
 title: Suspicious Browser Child Process - MacOS
+id: 0250638a-2b28-4541-86fc-ea4c558fa0c6
 status: test
 level: medium
+author: Sohan G (D4rkCiph3r)
 description: Detects suspicious child processes spawned from browsers. This could
     be a result of a potential web browser exploitation.
-author: Sohan G (D4rkCiph3r)
-date: '2023-04-05'
+references:
+    - https://fr.slideshare.net/codeblue_jp/cb19-recent-apt-attack-on-crypto-exchange-employees-by-heungsoo-kang
+    - https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/execution_initial_access_suspicious_browser_childproc.toml
+falsepositives:
+    - Legitimate browser install, update and recovery scripts
 tags:
     - attack.initial-access
     - attack.execution
     - attack.t1189
     - attack.t1203
     - attack.t1059
-references:
-    - https://fr.slideshare.net/codeblue_jp/cb19-recent-apt-attack-on-crypto-exchange-employees-by-heungsoo-kang
-    - https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/execution_initial_access_suspicious_browser_childproc.toml
-falsepositives:
-    - Legitimate browser install, update and recovery scripts
-taxonomy: sigma
+date: '2023-04-05'
 logsource:
     category: process_creation
     product: macos
@@ -84,21 +83,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:31.842130+00:00'
+            mapped_at: '2025-12-04T01:34:28.278971+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:31.842130+00:00'
+            mapped_at: '2025-12-04T01:34:28.278971+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:13:31.842176+00:00'
+            mapped_at: '2025-12-04T01:34:28.278986+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:31.842181+00:00'
+            mapped_at: '2025-12-04T01:34:28.278988+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:31.842184+00:00'
+            mapped_at: '2025-12-04T01:34:28.278990+00:00'

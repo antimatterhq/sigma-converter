@@ -1,18 +1,17 @@
-id: 33be4333-2c6b-44f4-ae28-102cdbde0a31
 title: Suspicious Msbuild Execution By Uncommon Parent Process
+id: 33be4333-2c6b-44f4-ae28-102cdbde0a31
 status: test
 level: medium
-description: Detects suspicious execution of 'Msbuild.exe' by a uncommon parent process
 author: frack113
-date: '2022-11-17'
-tags:
-    - attack.defense-evasion
+description: Detects suspicious execution of 'Msbuild.exe' by a uncommon parent process
 references:
     - https://app.any.run/tasks/abdf586e-df0c-4d39-89a7-06bf24913401/
     - https://www.echotrail.io/insights/search/msbuild.exe
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-11-17'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:14.274237+00:00'
+            mapped_at: '2025-12-04T01:49:56.524795+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:14.274237+00:00'
+            mapped_at: '2025-12-04T01:49:56.524795+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:14.274268+00:00'
+            mapped_at: '2025-12-04T01:49:56.524822+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:14.274272+00:00'
+            mapped_at: '2025-12-04T01:49:56.524833+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:14.274275+00:00'
+            mapped_at: '2025-12-04T01:49:56.524835+00:00'

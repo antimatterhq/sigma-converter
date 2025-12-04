@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Use of Remote.exe",
+    "comment": "Remote.exe is part of WinDbg in the Windows SDK and can be used for AWL bypass and running remote files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\remote.exe')) AND lower(process.file.name) = lower('remote.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Remote.exe is part of WinDbg in the Windows SDK and can be used for AWL bypass and running remote files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Approved installs of Windows SDK with Debugging Tools for Windows (WinDbg). References: https://blog.thecybersecuritytutor.com/Exeuction-AWL-Bypass-Remote-exe-LOLBin/, https://lolbas-project.github.io/lolbas/OtherMSBinaries/Remote/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1127"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

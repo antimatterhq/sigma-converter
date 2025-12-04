@@ -1,14 +1,10 @@
-id: 95d61234-7f56-465c-6f2d-b562c6fedbc4
 title: Linux Package Uninstall
+id: 95d61234-7f56-465c-6f2d-b562c6fedbc4
 status: test
 level: low
+author: Tuan Le (NCSGroup), Nasreddine Bencherchali (Nextron Systems)
 description: Detects linux package removal using builtin tools such as "yum", "apt",
     "apt-get" or "dpkg".
-author: Tuan Le (NCSGroup), Nasreddine Bencherchali (Nextron Systems)
-date: '2023-03-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1070
 references:
     - https://sysdig.com/blog/mitre-defense-evasion-falco
     - https://www.tutorialspoint.com/how-to-install-a-software-on-linux-using-yum-command
@@ -17,7 +13,10 @@ references:
 falsepositives:
     - Administrator or administrator scripts might delete packages for several reasons
         (debugging, troubleshooting).
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070
+date: '2023-03-09'
 logsource:
     category: process_creation
     product: linux
@@ -50,17 +49,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:31.679311+00:00'
+            mapped_at: '2025-12-04T01:36:37.454200+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:31.679311+00:00'
+            mapped_at: '2025-12-04T01:36:37.454200+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:31.679329+00:00'
+            mapped_at: '2025-12-04T01:36:37.454222+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:31.679331+00:00'
+            mapped_at: '2025-12-04T01:36:37.454224+00:00'

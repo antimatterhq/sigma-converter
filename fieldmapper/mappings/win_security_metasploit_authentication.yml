@@ -1,19 +1,18 @@
-id: 72124974-a68b-4366-b990-d30e0b2a190d
 title: Metasploit SMB Authentication
+id: 72124974-a68b-4366-b990-d30e0b2a190d
 status: test
 level: high
-description: Alerts on Metasploit host's authentications on the domain.
 author: Chakib Gzenayi (@Chak092), Hosni Mribah
-date: '2020-05-06'
-modified: '2024-01-25'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
+description: Alerts on Metasploit host's authentications on the domain.
 references:
     - https://github.com/rapid7/metasploit-framework/blob/1416b5776d963f21b7b5b45d19f3e961201e0aed/lib/rex/proto/smb/client.rb
 falsepositives:
     - Linux hostnames composed of 16 characters.
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+date: '2020-05-06'
+modified: '2024-01-25'
 logsource:
     product: windows
     service: security
@@ -36,29 +35,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:49.616652+00:00'
+            mapped_at: '2025-12-04T01:55:19.934364+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:43:49.616652+00:00'
+            mapped_at: '2025-12-04T01:55:19.934364+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:51.792530+00:00'
+            mapped_at: '2025-12-04T01:55:19.934382+00:00'
         -   source_field: LogonType
             target_table: authentication
             target_field: logon_type
-            mapped_at: '2025-11-26T02:43:51.792547+00:00'
+            mapped_at: '2025-12-04T01:55:19.934384+00:00'
         -   source_field: AuthenticationPackageName
             target_table: authentication
             target_field: auth_protocol
-            mapped_at: '2025-11-26T02:43:51.792550+00:00'
+            mapped_at: '2025-12-04T01:55:19.934385+00:00'
         -   source_field: WorkstationName
             target_table: authentication
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:43:51.792552+00:00'
+            mapped_at: '2025-12-04T01:55:19.934386+00:00'
         -   source_field: Workstation
             target_table: authentication
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:43:51.792554+00:00'
+            mapped_at: '2025-12-04T01:55:19.934388+00:00'

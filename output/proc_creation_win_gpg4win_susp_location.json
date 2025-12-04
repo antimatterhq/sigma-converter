@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "File Encryption/Decryption Via Gpg4win From Suspicious Locations",
+    "comment": "Detects usage of Gpg4win to encrypt/decrypt files located in potentially suspicious locations.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\gpg.exe')) OR endswith(lower(process.name), lower('\\\\gpg2.exe'))) AND lower(metadata.product.name) = lower('gnu privacy guard (gnupg)') AND lower(device.desc) = lower('gnupg\u2019s openpgp tool') AND contains(lower(process.cmd_line), lower('-passphrase')) AND (contains(lower(process.cmd_line), lower(':\\\\perflogs\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\roaming\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of Gpg4win to encrypt/decrypt files located in potentially suspicious locations.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blogs.vmware.com/security/2022/11/batloader-the-evasive-downloader-malware.html, https://news.sophos.com/en-us/2022/01/19/zloader-installs-remote-access-backdoors-and-delivers-cobalt-strike/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

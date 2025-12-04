@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PUA - NSudo Execution",
+    "comment": "Detects the use of NSudo tool for command execution",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\nsudo.exe')) OR endswith(lower(process.name), lower('\\\\nsudolc.exe')) OR endswith(lower(process.name), lower('\\\\nsudolg.exe'))) AND (lower(LOWER(process.file.name)) in ('nsudo\\.exe', 'nsudolc\\.exe', 'nsudolg\\.exe')) AND (contains(lower(process.cmd_line), lower('-u:s ')) OR contains(lower(process.cmd_line), lower('-u:t ')) OR contains(lower(process.cmd_line), lower('-u:e ')) OR contains(lower(process.cmd_line), lower('-p:e ')) OR contains(lower(process.cmd_line), lower('-m:s ')) OR contains(lower(process.cmd_line), lower('-m:h ')) OR contains(lower(process.cmd_line), lower('-u=s ')) OR contains(lower(process.cmd_line), lower('-u=t ')) OR contains(lower(process.cmd_line), lower('-u=e ')) OR contains(lower(process.cmd_line), lower('-p=e ')) OR contains(lower(process.cmd_line), lower('-m=s ')) OR contains(lower(process.cmd_line), lower('-m=h ')) OR contains(lower(process.cmd_line), lower('-showwindowmode:hide'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of NSudo tool for command execution",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use by administrators References: https://web.archive.org/web/20221019044836/https://nsudo.m2team.org/en-us/, https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1569",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

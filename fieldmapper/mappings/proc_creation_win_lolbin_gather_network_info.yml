@@ -1,26 +1,22 @@
-id: 575dce0c-8139-4e30-9295-1ee75969f7fe
 title: Potential Reconnaissance Activity Via GatherNetworkInfo.VBS
+id: 575dce0c-8139-4e30-9295-1ee75969f7fe
 status: test
 level: medium
+author: blueteamer8699
 description: Detects execution of the built-in script located in "C:\Windows\System32\gatherNetworkInfo.vbs".
     Which can be used to gather information about the target machine
-author: blueteamer8699
-date: '2022-01-03'
-modified: '2023-02-08'
-tags:
-    - attack.discovery
-    - attack.execution
-    - attack.t1615
-    - attack.t1059.005
 references:
     - https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs
     - https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government
 falsepositives:
     - Administrative activity
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f92a6f1e-a512-4a15-9735-da09e78d7273''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''07aa184a-870d-413d-893a-157f317f6f58''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.execution
+    - attack.t1615
+    - attack.t1059.005
+date: '2022-01-03'
+modified: '2023-02-08'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +31,11 @@ detection:
     selection_cli:
         CommandLine|contains: gatherNetworkInfo.vbs
     condition: all of selection_*
+related:
+    -   id: f92a6f1e-a512-4a15-9735-da09e78d7273
+        type: similar
+    -   id: 07aa184a-870d-413d-893a-157f317f6f58
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -42,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:14.401660+00:00'
+            mapped_at: '2025-12-04T01:44:59.986432+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:14.401660+00:00'
+            mapped_at: '2025-12-04T01:44:59.986432+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:14.401676+00:00'
+            mapped_at: '2025-12-04T01:44:59.986447+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:14.401679+00:00'
+            mapped_at: '2025-12-04T01:44:59.986449+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:14.401681+00:00'
+            mapped_at: '2025-12-04T01:44:59.986450+00:00'

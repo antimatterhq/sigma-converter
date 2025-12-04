@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Windows Shell/Scripting Application File Write to Suspicious Folder",
+    "comment": "Detects Windows shells and scripting applications that write files to suspicious folders",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND ((endswith(lower(actor.process.name), lower('\\\\bash.exe')) OR endswith(lower(actor.process.name), lower('\\\\cmd.exe')) OR endswith(lower(actor.process.name), lower('\\\\cscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\msbuild.exe')) OR endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe')) OR endswith(lower(actor.process.name), lower('\\\\sh.exe')) OR endswith(lower(actor.process.name), lower('\\\\wscript.exe'))) AND (startswith(lower(file.path), lower('c:\\\\perflogs\\\\')) OR startswith(lower(file.path), lower('c:\\\\users\\\\public\\\\'))) OR (endswith(lower(actor.process.name), lower('\\\\certutil.exe')) OR endswith(lower(actor.process.name), lower('\\\\forfiles.exe')) OR endswith(lower(actor.process.name), lower('\\\\mshta.exe')) OR endswith(lower(actor.process.name), lower('\\\\schtasks.exe')) OR endswith(lower(actor.process.name), lower('\\\\scriptrunner.exe')) OR endswith(lower(actor.process.name), lower('\\\\wmic.exe'))) AND (contains(lower(file.path), lower('c:\\\\perflogs\\\\')) OR contains(lower(file.path), lower('c:\\\\users\\\\public\\\\')) OR contains(lower(file.path), lower('c:\\\\windows\\\\temp\\\\')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Windows shells and scripting applications that write files to suspicious folders",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

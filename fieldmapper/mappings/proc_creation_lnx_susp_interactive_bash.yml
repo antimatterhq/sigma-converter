@@ -1,21 +1,20 @@
-id: ea3ecad2-db86-4a89-ad0b-132a10d2db55
 title: Interactive Bash Suspicious Children
+id: ea3ecad2-db86-4a89-ad0b-132a10d2db55
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious interactive bash as a parent to rather uncommon child
     processes
-author: Florian Roth (Nextron Systems)
-date: '2022-03-14'
+references:
+    - Internal Research
+falsepositives:
+    - Legitimate software that uses these patterns
 tags:
     - attack.execution
     - attack.defense-evasion
     - attack.t1059.004
     - attack.t1036
-references:
-    - Internal Research
-falsepositives:
-    - Legitimate software that uses these patterns
-taxonomy: sigma
+date: '2022-03-14'
 logsource:
     category: process_creation
     product: linux
@@ -42,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:45.974062+00:00'
+            mapped_at: '2025-12-04T01:36:53.475127+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:45.974062+00:00'
+            mapped_at: '2025-12-04T01:36:53.475127+00:00'
     detection_fields:
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:17:45.974083+00:00'
+            mapped_at: '2025-12-04T01:36:53.475146+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:45.974086+00:00'
+            mapped_at: '2025-12-04T01:36:53.475148+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:45.974087+00:00'
+            mapped_at: '2025-12-04T01:36:53.475150+00:00'

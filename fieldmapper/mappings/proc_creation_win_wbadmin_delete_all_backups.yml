@@ -1,7 +1,8 @@
-id: 639c9081-f482-47d3-a0bd-ddee3d4ecd76
 title: All Backups Deleted Via Wbadmin.EXE
+id: 639c9081-f482-47d3-a0bd-ddee3d4ecd76
 status: test
 level: high
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the deletion of all backups or system state backups via "wbadmin.exe".
 
     This technique is used by numerous ransomware families and actors.
@@ -9,12 +10,6 @@ description: 'Detects the deletion of all backups or system state backups via "w
     This may only be successful on server platforms that have Windows Backup enabled.
 
     '
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2021-12-13'
-modified: '2024-05-10'
-tags:
-    - attack.impact
-    - attack.t1490
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-5---windows---delete-volume-shadow-copies-via-wmi-with-powershell
     - https://github.com/albertzsigovits/malware-notes/blob/558898932c1579ff589290092a2c8febefc3a4c9/Ransomware/Lockbit.md
@@ -24,9 +19,11 @@ references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-delete-systemstatebackup
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''89f75308-5b1b-4390-b2d8-d6b2340efaf8''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1490
+date: '2021-12-13'
+modified: '2024-05-10'
 logsource:
     category: process_creation
     product: windows
@@ -40,6 +37,9 @@ detection:
             - backup
         CommandLine|contains: keepVersions:0
     condition: all of selection_*
+related:
+    -   id: 89f75308-5b1b-4390-b2d8-d6b2340efaf8
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -47,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:46.020295+00:00'
+            mapped_at: '2025-12-04T01:43:51.556631+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:46.020295+00:00'
+            mapped_at: '2025-12-04T01:43:51.556631+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:46.020312+00:00'
+            mapped_at: '2025-12-04T01:43:51.556654+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:46.020315+00:00'
+            mapped_at: '2025-12-04T01:43:51.556657+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:46.020317+00:00'
+            mapped_at: '2025-12-04T01:43:51.556658+00:00'

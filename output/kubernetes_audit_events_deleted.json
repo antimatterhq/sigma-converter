@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Kubernetes Events Deleted",
+    "comment": "Detects when events are deleted in Kubernetes. An adversary may delete Kubernetes events in an attempt to evade detection.",
+    "annotations": {
+      "source": "sigma",
+      "category": "application",
+      "product": "kubernetes",
+      "service": "audit",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND lower(api.operation) = lower('delete') AND lower(resources.name) = lower('events'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when events are deleted in Kubernetes. An adversary may delete Kubernetes events in an attempt to evade detection.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Delete%20K8S%20events/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1070"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

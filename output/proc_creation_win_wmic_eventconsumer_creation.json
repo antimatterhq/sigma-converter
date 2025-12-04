@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "New ActiveScriptEventConsumer Created Via Wmic.EXE",
+    "comment": "Detects WMIC executions in which an event consumer gets created. This could be used to establish persistence",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('activescripteventconsumer')) AND contains(lower(process.cmd_line), lower(' create ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects WMIC executions in which an event consumer gets created. This could be used to establish persistence",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Legitimate software creating script event consumers References: https://twitter.com/johnlatwc/status/1408062131321270282?s=12, https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-windows-management-instrumentation.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1546",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

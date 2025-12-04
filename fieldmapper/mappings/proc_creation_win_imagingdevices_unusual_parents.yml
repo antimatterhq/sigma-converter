@@ -1,20 +1,19 @@
-id: f11f2808-adb4-46c0-802a-8660db50fa99
 title: ImagingDevices Unusual Parent/Child Processes
+id: f11f2808-adb4-46c0-802a-8660db50fa99
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects unusual parent or children of the ImagingDevices.exe (Windows
     Contacts) process as seen being used with Bumblebee activity
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-27'
-modified: '2022-12-29'
-tags:
-    - attack.defense-evasion
-    - attack.execution
 references:
     - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+date: '2022-09-27'
+modified: '2022-12-29'
 logsource:
     category: process_creation
     product: windows
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:43.286125+00:00'
+            mapped_at: '2025-12-04T01:41:13.827676+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:43.286125+00:00'
+            mapped_at: '2025-12-04T01:41:13.827676+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:43.286140+00:00'
+            mapped_at: '2025-12-04T01:41:13.827690+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:43.286142+00:00'
+            mapped_at: '2025-12-04T01:41:13.827692+00:00'

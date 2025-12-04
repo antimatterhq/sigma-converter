@@ -1,20 +1,17 @@
-id: acfa2210-0d71-4eeb-b477-afab494d596c
 title: Windows Service Terminated With Error
+id: acfa2210-0d71-4eeb-b477-afab494d596c
 status: test
 level: low
-description: Detects Windows services that got terminated for whatever reason
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-04-14'
-tags:
-    - attack.defense-evasion
+description: Detects Windows services that got terminated for whatever reason
 references:
     - https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/
 falsepositives:
     - False positives could occur since service termination could happen due to multiple
         reasons
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d6b5520d-3934-48b4-928c-2aa3f92d6963''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-04-14'
 logsource:
     product: windows
     service: system
@@ -23,6 +20,9 @@ detection:
         Provider_Name: Service Control Manager
         EventID: 7023
     condition: selection
+related:
+    -   id: d6b5520d-3934-48b4-928c-2aa3f92d6963
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

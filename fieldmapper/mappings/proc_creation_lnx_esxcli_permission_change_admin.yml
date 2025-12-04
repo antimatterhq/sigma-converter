@@ -1,18 +1,17 @@
-id: 9691f58d-92c1-4416-8bf3-2edd753ec9cf
 title: ESXi Admin Permission Assigned To Account Via ESXCLI
+id: 9691f58d-92c1-4416-8bf3-2edd753ec9cf
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of the "esxcli" command with the "system" and "permission"
     flags in order to assign admin permissions to an account.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-09-04'
-tags:
-    - attack.execution
 references:
     - https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_system.html
 falsepositives:
     - Legitimate administration activities
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-09-04'
 logsource:
     category: process_creation
     product: linux
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:53.241945+00:00'
+            mapped_at: '2025-12-04T01:36:09.369945+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:53.241945+00:00'
+            mapped_at: '2025-12-04T01:36:09.369945+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:53.241973+00:00'
+            mapped_at: '2025-12-04T01:36:09.369961+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:53.241977+00:00'
+            mapped_at: '2025-12-04T01:36:09.369963+00:00'

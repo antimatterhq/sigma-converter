@@ -1,21 +1,20 @@
-id: c462f537-a1e3-41a6-b5fc-b2c2cef9bf82
 title: Suspicious PsExec Execution
+id: c462f537-a1e3-41a6-b5fc-b2c2cef9bf82
 status: test
 level: high
+author: Samir Bousseaden
 description: detects execution of psexec or paexec with renamed service name, this
     rule helps to filter out the noise if psexec is used for legit purposes or if
     attacker uses a different psexec client other than sysinternal one
-author: Samir Bousseaden
-date: '2019-04-03'
-modified: '2022-08-11'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
 references:
     - https://web.archive.org/web/20230329171218/https://blog.menasec.net/2019/02/threat-hunting-3-detecting-psexec.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+date: '2019-04-03'
+modified: '2022-08-11'
 logsource:
     product: windows
     service: security
@@ -39,21 +38,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:33.289580+00:00'
+            mapped_at: '2025-12-04T01:55:54.277510+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:33.289580+00:00'
+            mapped_at: '2025-12-04T01:55:54.277510+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:33.289598+00:00'
+            mapped_at: '2025-12-04T01:55:54.277522+00:00'
         -   source_field: ShareName
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:33.289601+00:00'
+            mapped_at: '2025-12-04T01:55:54.277621+00:00'
         -   source_field: RelativeTargetName
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:33.289604+00:00'
+            mapped_at: '2025-12-04T01:55:54.277622+00:00'

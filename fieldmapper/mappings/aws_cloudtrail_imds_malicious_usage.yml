@@ -1,20 +1,14 @@
-id: 352a918a-34d8-4882-8470-44830c507aa3
 title: Malicious Usage Of IMDS Credentials Outside Of AWS Infrastructure
+id: 352a918a-34d8-4882-8470-44830c507aa3
 status: experimental
 level: high
+author: jamesc-grafana
 description: 'Detects when an instance identity has taken an action that isn''t inside
     SSM.
 
     This can indicate that a compromised EC2 instance is being used as a pivot point.
 
     '
-author: jamesc-grafana
-date: '2024-07-11'
-tags:
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1078
-    - attack.t1078.002
 references:
     - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-identity-roles.html
     - https://ermetic.com/blog/aws/aws-ec2-imds-what-you-need-to-know/
@@ -22,7 +16,12 @@ references:
 falsepositives:
     - A team has configured an EC2 instance to use instance profiles that grant the
         option for the EC2 instance to talk to other AWS Services
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1078
+    - attack.t1078.002
+date: '2024-07-11'
 logsource:
     product: aws
     service: cloudtrail
@@ -41,25 +40,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:22.022873+00:00'
+            mapped_at: '2025-12-04T01:39:10.680009+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:22.022873+00:00'
+            mapped_at: '2025-12-04T01:39:10.680009+00:00'
     detection_fields:
         -   source_field: userIdentity.arn
             target_table: user_access
             target_field: actor.user.uid
-            mapped_at: '2025-11-26T02:22:22.993294+00:00'
+            mapped_at: '2025-12-04T01:39:10.680023+00:00'
         -   source_field: eventSource
             target_table: user_access
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:22:22.993304+00:00'
+            mapped_at: '2025-12-04T01:39:10.680025+00:00'
         -   source_field: eventName
             target_table: user_access
             target_field: api.operation
-            mapped_at: '2025-11-26T02:22:22.993306+00:00'
+            mapped_at: '2025-12-04T01:39:10.680026+00:00'
         -   source_field: sourceIPAddress
             target_table: user_access
             target_field: src_endpoint.ip
-            mapped_at: '2025-11-26T02:22:22.993307+00:00'
+            mapped_at: '2025-12-04T01:39:10.680027+00:00'

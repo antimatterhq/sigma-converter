@@ -1,22 +1,19 @@
-id: 504d63cb-0dba-4d02-8531-e72981aace2c
 title: Suspicious X509Enrollment - Ps Script
+id: 504d63cb-0dba-4d02-8531-e72981aace2c
 status: test
 level: medium
-description: Detect use of X509Enrollment
 author: frack113
-date: '2022-12-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1553.004
+description: Detect use of X509Enrollment
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=42
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=41
     - https://learn.microsoft.com/en-us/dotnet/api/microsoft.hpc.scheduler.store.cx509enrollmentwebclassfactoryclass?view=hpc-sdk-5.1.6115
 falsepositives:
     - Legitimate administrative script
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''114de787-4eb2-48cc-abdb-c0b449f93ea4''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1553.004
+date: '2022-12-23'
 logsource:
     category: ps_script
     product: windows
@@ -27,6 +24,9 @@ detection:
             - X509Enrollment.CBinaryConverter
             - 884e2002-217d-11da-b2a4-000e7bbb2b09
     condition: selection
+related:
+    -   id: 114de787-4eb2-48cc-abdb-c0b449f93ea4
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: <UNMAPPED>
@@ -34,13 +34,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:49.815824+00:00'
+            mapped_at: '2025-12-04T01:54:05.010507+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:49.815824+00:00'
+            mapped_at: '2025-12-04T01:54:05.010507+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:49.815835+00:00'
+            mapped_at: '2025-12-04T01:54:05.010566+00:00'

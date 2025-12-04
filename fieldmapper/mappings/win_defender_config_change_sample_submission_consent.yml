@@ -1,24 +1,19 @@
-id: 91903aba-1088-42ee-b680-d6d94fe002b0
 title: Windows Defender Submit Sample Feature Disabled
+id: 91903aba-1088-42ee-b680-d6d94fe002b0
 status: stable
 level: low
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects disabling of the "Automatic Sample Submission" feature of Windows
     Defender.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-06'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus?view=o365-worldwide
     - https://bidouillesecurity.com/disable-windows-defender-in-powershell/#DisableAntiSpyware
 falsepositives:
     - Administrator activity (must be investigated)
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1321dc4e-a1fe-481d-a016-52c45f0c8b4f''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''a3ab73f1-bd46-4319-8f06-4b20d0617886''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''801bd44f-ceed-4eb6-887c-11544633c0aa''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-12-06'
 logsource:
     product: windows
     service: windefend
@@ -27,6 +22,13 @@ detection:
         EventID: 5007
         NewValue|contains: \Real-Time Protection\SubmitSamplesConsent = 0x0
     condition: selection
+related:
+    -   id: 1321dc4e-a1fe-481d-a016-52c45f0c8b4f
+        type: similar
+    -   id: a3ab73f1-bd46-4319-8f06-4b20d0617886
+        type: similar
+    -   id: 801bd44f-ceed-4eb6-887c-11544633c0aa
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -34,17 +36,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:14.277827+00:00'
+            mapped_at: '2025-12-04T01:56:32.662711+00:00'
         service:
             source_field: service
             source_value: windefend
-            mapped_at: '2025-11-26T02:47:14.277827+00:00'
+            mapped_at: '2025-12-04T01:56:32.662711+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:14.277849+00:00'
+            mapped_at: '2025-12-04T01:56:32.662740+00:00'
         -   source_field: NewValue
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:14.277851+00:00'
+            mapped_at: '2025-12-04T01:56:32.662744+00:00'

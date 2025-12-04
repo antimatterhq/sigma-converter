@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Loaded Module Enumeration Via Tasklist.EXE",
+    "comment": "Detects the enumeration of a specific DLL or EXE being used by a binary via \"tasklist.exe\". This is often used by attackers in order to find the specific process identifier (PID) that is using the DLL in question. In order to dump the process memory or perform other nefarious actions.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\tasklist.exe')) AND lower(process.file.name) = lower('tasklist.exe') AND (contains(lower(process.cmd_line), lower('-m')) OR contains(lower(process.cmd_line), lower('/m')) OR contains(lower(process.cmd_line), lower('\u2013m')) OR contains(lower(process.cmd_line), lower('\u2014m')) OR contains(lower(process.cmd_line), lower('\u2015m'))) AND contains(lower(process.cmd_line), lower('rdpcorets.dll')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the enumeration of a specific DLL or EXE being used by a binary via \"tasklist.exe\". This is often used by attackers in order to find the specific process identifier (PID) that is using the DLL in question. In order to dump the process memory or perform other nefarious actions.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/, https://pentestlab.blog/tag/svchost/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

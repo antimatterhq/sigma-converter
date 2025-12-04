@@ -1,7 +1,8 @@
-id: 1d2ab8ac-1a01-423b-9c39-001510eae8e8
 title: Azure AD Health Service Agents Registry Keys Access
+id: 1d2ab8ac-1a01-423b-9c39-001510eae8e8
 status: test
 level: medium
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
 description: 'This detection uses Windows security events to detect suspicious access
     attempts to the registry key values and sub-keys of Azure AD Health service agents
     (e.g AD FS).
@@ -15,18 +16,16 @@ description: 'This detection uses Windows security events to detect suspicious a
     Make sure you set the SACL to propagate to its sub-keys.
 
     '
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
-date: '2021-08-26'
-modified: '2022-10-09'
-tags:
-    - attack.discovery
-    - attack.t1012
 references:
     - https://o365blog.com/post/hybridhealthagent/
     - https://github.com/OTRF/Set-AuditRule/blob/c3dec5443414231714d850565d364ca73475ade5/rules/registry/aad_connect_health_service_agent.yml
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1012
+date: '2021-08-26'
+modified: '2022-10-09'
 logsource:
     product: windows
     service: security
@@ -52,25 +51,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:58.480971+00:00'
+            mapped_at: '2025-12-04T01:56:05.988336+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:58.480971+00:00'
+            mapped_at: '2025-12-04T01:56:05.988336+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:58.481000+00:00'
+            mapped_at: '2025-12-04T01:56:05.988351+00:00'
         -   source_field: ObjectType
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:58.481004+00:00'
+            mapped_at: '2025-12-04T01:56:05.988381+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:58.481007+00:00'
+            mapped_at: '2025-12-04T01:56:05.988395+00:00'
         -   source_field: ProcessName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:45:58.481009+00:00'
+            mapped_at: '2025-12-04T01:56:05.988397+00:00'

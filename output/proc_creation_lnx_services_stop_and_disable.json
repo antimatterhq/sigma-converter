@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Disable Or Stop Services",
+    "comment": "Detects the usage of utilities such as 'systemctl', 'service'...etc to stop or disable tools and services",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/service')) OR endswith(lower(process.name), lower('/systemctl')) OR endswith(lower(process.name), lower('/chkconfig'))) AND (contains(lower(process.cmd_line), lower('stop')) OR contains(lower(process.cmd_line), lower('disable'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage of utilities such as 'systemctl', 'service'...etc to stop or disable tools and services",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activities Reference: https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,22 +1,21 @@
-id: e32d4572-9826-4738-b651-95fa63747e8a
 title: Base64 Encoded PowerShell Command Detected
+id: e32d4572-9826-4738-b651-95fa63747e8a
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects usage of the "FromBase64String" function in the commandline which
     is used to decode a base64 encoded string
-author: Florian Roth (Nextron Systems)
-date: '2020-01-29'
-modified: '2023-01-26'
+references:
+    - https://gist.github.com/Neo23x0/6af876ee72b51676c82a2db8d2cd3639
+falsepositives:
+    - Administrative script libraries
 tags:
     - attack.t1027
     - attack.defense-evasion
     - attack.t1140
     - attack.t1059.001
-references:
-    - https://gist.github.com/Neo23x0/6af876ee72b51676c82a2db8d2cd3639
-falsepositives:
-    - Administrative script libraries
-taxonomy: sigma
+date: '2020-01-29'
+modified: '2023-01-26'
 logsource:
     category: process_creation
     product: windows
@@ -31,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:56.597549+00:00'
+            mapped_at: '2025-12-04T01:45:33.922458+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:56.597549+00:00'
+            mapped_at: '2025-12-04T01:45:33.922458+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:56.597564+00:00'
+            mapped_at: '2025-12-04T01:45:33.922476+00:00'

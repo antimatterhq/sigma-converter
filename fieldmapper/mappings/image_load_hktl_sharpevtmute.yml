@@ -1,22 +1,19 @@
-id: 49329257-089d-46e6-af37-4afce4290685
 title: HackTool - SharpEvtMute DLL Load
+id: 49329257-089d-46e6-af37-4afce4290685
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the load of EvtMuteHook.dll, a key component of SharpEvtHook,
     a tool that tampers with the Windows event logs
-author: Florian Roth (Nextron Systems)
-date: '2022-09-07'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://github.com/bats3c/EvtMute
 falsepositives:
     - Other DLLs with the same Imphash
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''bedfc8ad-d1c7-4e37-a20e-e2b0dbee759c''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2022-09-07'
+modified: '2024-11-23'
 logsource:
     category: image_load
     product: windows
@@ -24,6 +21,9 @@ detection:
     selection:
         Hashes|contains: IMPHASH=330768A4F172E10ACB6287B87289D83B
     condition: selection
+related:
+    -   id: bedfc8ad-d1c7-4e37-a20e-e2b0dbee759c
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -31,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: image_load
-            mapped_at: '2025-11-26T02:24:28.758824+00:00'
+            mapped_at: '2025-12-04T01:40:33.310535+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:28.758824+00:00'
+            mapped_at: '2025-12-04T01:40:33.310535+00:00'
     detection_fields:
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:24:29.574213+00:00'
+            mapped_at: '2025-12-04T01:40:33.310564+00:00'

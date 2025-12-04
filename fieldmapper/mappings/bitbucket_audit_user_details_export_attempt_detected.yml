@@ -1,10 +1,14 @@
-id: 5259cbf2-0a75-48bf-b57a-c54d6fabaef3
 title: Bitbucket User Details Export Attempt Detected
+id: 5259cbf2-0a75-48bf-b57a-c54d6fabaef3
 status: test
 level: medium
-description: Detects user data export activity.
 author: Muhammad Faisal (@faisalusuf)
-date: '2024-02-25'
+description: Detects user data export activity.
+references:
+    - https://confluence.atlassian.com/bitbucketserver/audit-log-events-776640423.html
+    - https://support.atlassian.com/security-and-access-policies/docs/export-user-accounts
+falsepositives:
+    - Legitimate user activity.
 tags:
     - attack.collection
     - attack.reconnaissance
@@ -12,12 +16,7 @@ tags:
     - attack.t1213
     - attack.t1082
     - attack.t1591.004
-references:
-    - https://confluence.atlassian.com/bitbucketserver/audit-log-events-776640423.html
-    - https://support.atlassian.com/security-and-access-policies/docs/export-user-accounts
-falsepositives:
-    - Legitimate user activity.
-taxonomy: sigma
+date: '2024-02-25'
 logsource:
     product: bitbucket
     service: audit
@@ -38,17 +37,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: bitbucket
-            mapped_at: '2025-11-26T02:23:08.630186+00:00'
+            mapped_at: '2025-12-04T01:39:35.336412+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:08.630186+00:00'
+            mapped_at: '2025-12-04T01:39:35.336412+00:00'
     detection_fields:
         -   source_field: auditType.category
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:08.630205+00:00'
+            mapped_at: '2025-12-04T01:39:35.336426+00:00'
         -   source_field: auditType.action
             target_table: entity_management
             target_field: action
-            mapped_at: '2025-11-26T02:23:08.630208+00:00'
+            mapped_at: '2025-12-04T01:39:35.336428+00:00'

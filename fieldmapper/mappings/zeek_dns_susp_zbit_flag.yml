@@ -1,7 +1,8 @@
-id: ede05abc-2c9e-4624-9944-9ff17fdc0bf5
 title: Suspicious DNS Z Flag Bit Set
+id: ede05abc-2c9e-4624-9944-9ff17fdc0bf5
 status: test
 level: medium
+author: '@neu5ron, SOC Prime Team, Corelight'
 description: 'The DNS Z flag is bit within the DNS protocol header that is, per the
     IETF design, meant to be used reserved (unused).
 
@@ -19,13 +20,6 @@ description: 'The DNS Z flag is bit within the DNS protocol header that is, per 
     which can be found here: https://www3.corelight.com/corelights-introductory-guide-to-threat-hunting-with-zeek-bro-logs''
 
     '
-author: '@neu5ron, SOC Prime Team, Corelight'
-date: '2021-05-04'
-modified: '2022-11-29'
-tags:
-    - attack.t1095
-    - attack.t1571
-    - attack.command-and-control
 references:
     - https://twitter.com/neu5ron/status/1346245602502443009
     - https://tdm.socprime.com/tdm/info/eLbyj4JjI15v#sigma
@@ -36,7 +30,12 @@ falsepositives:
         DNSSec domains and then exclude them.
     - If you work in a Public Sector then it may be good to exclude things like endswith
         ".edu", ".gov" and or ".mil"
-taxonomy: sigma
+tags:
+    - attack.t1095
+    - attack.t1571
+    - attack.command-and-control
+date: '2021-05-04'
+modified: '2022-11-29'
 logsource:
     product: zeek
     service: dns
@@ -76,29 +75,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:14:46.957294+00:00'
+            mapped_at: '2025-12-04T01:35:05.911571+00:00'
         service:
             source_field: service
             source_value: dns
-            mapped_at: '2025-11-26T02:14:46.957294+00:00'
+            mapped_at: '2025-12-04T01:35:05.911571+00:00'
     detection_fields:
         -   source_field: Z
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:14:48.415220+00:00'
+            mapped_at: '2025-12-04T01:35:05.911594+00:00'
         -   source_field: query
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:14:48.415229+00:00'
+            mapped_at: '2025-12-04T01:35:05.911596+00:00'
         -   source_field: qtype_name
             target_table: dns_activity
             target_field: query.type
-            mapped_at: '2025-11-26T02:14:48.415231+00:00'
+            mapped_at: '2025-12-04T01:35:05.911597+00:00'
         -   source_field: answers
             target_table: dns_activity
             target_field: answers.rdata
-            mapped_at: '2025-11-26T02:14:48.415232+00:00'
+            mapped_at: '2025-12-04T01:35:05.911598+00:00'
         -   source_field: id.resp_p
             target_table: dns_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:14:48.415233+00:00'
+            mapped_at: '2025-12-04T01:35:05.911600+00:00'

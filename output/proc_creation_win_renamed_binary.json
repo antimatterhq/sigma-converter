@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Defense Evasion Via Binary Rename",
+    "comment": "Detects the execution of a renamed binary often used by attackers or malware leveraging new Sysmon OriginalFileName datapoint.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(process.file.name)) in ('cmd\\.exe', 'conhost\\.exe', '7z\\.exe', 'winrar\\.exe', 'wevtutil\\.exe', 'net\\.exe', 'net1\\.exe', 'netsh\\.exe', 'installutil\\.exe')) AND NOT (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\conhost.exe')) OR endswith(lower(process.name), lower('\\\\7z.exe')) OR endswith(lower(process.name), lower('\\\\winrar.exe')) OR endswith(lower(process.name), lower('\\\\wevtutil.exe')) OR endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe')) OR endswith(lower(process.name), lower('\\\\netsh.exe')) OR endswith(lower(process.name), lower('\\\\installutil.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a renamed binary often used by attackers or malware leveraging new Sysmon OriginalFileName datapoint.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Custom applications use renamed binaries adding slight change to binary name. Typically this is easy to spot and add to whitelist References: https://mgreen27.github.io/posts/2019/05/12/BinaryRename.html, https://mgreen27.github.io/posts/2019/05/29/BinaryRename2.html, https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1036.003/T1036.003.md#atomic-test-1---masquerading-as-windows-lsass-process",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

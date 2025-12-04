@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "NtdllPipe Like Activity Execution",
+    "comment": "Detects command that type the content of ntdll.dll to a different file or a pipe in order to evade AV / EDR detection. As seen being used in the POC NtdllPipe",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('type %windir%\\\\system32\\\\ntdll.dll')) OR contains(lower(process.cmd_line), lower('type %systemroot%\\\\system32\\\\ntdll.dll')) OR contains(lower(process.cmd_line), lower('type c:\\\\windows\\\\system32\\\\ntdll.dll')) OR contains(lower(process.cmd_line), lower('\\\\ntdll.dll > \\\\.\\\\pipe\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects command that type the content of ntdll.dll to a different file or a pipe in order to evade AV / EDR detection. As seen being used in the POC NtdllPipe",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://web.archive.org/web/20220306121156/https://www.x86matthew.com/view_post?id=ntdll_pipe",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

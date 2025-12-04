@@ -1,7 +1,8 @@
-id: b61e87c0-50db-4b2e-8986-6a2be94b33b0
 title: Directory Service Restore Mode(DSRM) Registry Value Tampering
+id: b61e87c0-50db-4b2e-8986-6a2be94b33b0
 status: experimental
 level: high
+author: Nischal Khadgi
 description: 'Detects changes to "DsrmAdminLogonBehavior" registry value.
 
     During a Domain Controller (DC) promotion, administrators create a Directory Services
@@ -23,20 +24,16 @@ description: 'Detects changes to "DsrmAdminLogonBehavior" registry value.
     can always be used.
 
     '
-author: Nischal Khadgi
-date: '2024-07-11'
-tags:
-    - attack.persistence
-    - attack.t1556
 references:
     - https://adsecurity.org/?p=1785
     - https://www.sentinelone.com/blog/detecting-dsrm-account-misconfigurations/
     - https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/dsrm-credentials
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''53ad8e36-f573-46bf-97e4-15ba5bf4bb51''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1556
+date: '2024-07-11'
 logsource:
     category: registry_set
     product: windows
@@ -46,6 +43,9 @@ detection:
     filter_main_default_value:
         Details: DWORD (0x00000000)
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 53ad8e36-f573-46bf-97e4-15ba5bf4bb51
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

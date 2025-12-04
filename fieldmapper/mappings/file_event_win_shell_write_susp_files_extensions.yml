@@ -1,21 +1,18 @@
-id: b8fd0e93-ff58-4cbd-8f48-1c114e342e62
 title: Windows Binaries Write Suspicious Extensions
+id: b8fd0e93-ff58-4cbd-8f48-1c114e342e62
 status: test
 level: high
-description: Detects Windows executables that write files with suspicious extensions
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-12'
-modified: '2024-04-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
+description: Detects Windows executables that write files with suspicious extensions
 references:
     - Internal Research
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1277f594-a7d1-4f28-a2d3-73af5cbeab43''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2022-08-12'
+modified: '2024-04-15'
 logsource:
     category: file_event
     product: windows
@@ -68,6 +65,9 @@ detection:
             - .ps1
             - .bat
     condition: 1 of selection_* and not 1 of filter_main_*
+related:
+    -   id: 1277f594-a7d1-4f28-a2d3-73af5cbeab43
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 3
@@ -75,17 +75,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:42.928103+00:00'
+            mapped_at: '2025-12-04T01:53:17.353198+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:42.928103+00:00'
+            mapped_at: '2025-12-04T01:53:17.353198+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:42.928119+00:00'
+            mapped_at: '2025-12-04T01:53:17.353210+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:42.928120+00:00'
+            mapped_at: '2025-12-04T01:53:17.353212+00:00'

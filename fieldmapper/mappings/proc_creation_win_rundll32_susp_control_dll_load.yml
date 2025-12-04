@@ -1,15 +1,10 @@
-id: d7eb979b-c2b5-4a6f-a3a7-c87ce6763819
 title: Suspicious Control Panel DLL Load
+id: d7eb979b-c2b5-4a6f-a3a7-c87ce6763819
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious Rundll32 execution from control.exe as used by Equation
     Group and Exploit Kits
-author: Florian Roth (Nextron Systems)
-date: '2017-04-15'
-modified: '2023-02-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
 references:
     - https://twitter.com/rikvduijn/status/853251879320662017
     - https://twitter.com/felixw3000/status/853354851128025088
@@ -18,7 +13,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+date: '2017-04-15'
+modified: '2023-02-09'
 logsource:
     category: process_creation
     product: windows
@@ -38,25 +37,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:42.747280+00:00'
+            mapped_at: '2025-12-04T01:48:42.368049+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:42.747280+00:00'
+            mapped_at: '2025-12-04T01:48:42.368049+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:34:42.747293+00:00'
+            mapped_at: '2025-12-04T01:48:42.368067+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:42.747294+00:00'
+            mapped_at: '2025-12-04T01:48:42.368070+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:42.747296+00:00'
+            mapped_at: '2025-12-04T01:48:42.368072+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:42.747297+00:00'
+            mapped_at: '2025-12-04T01:48:42.368074+00:00'

@@ -1,23 +1,20 @@
-id: f1b3a22a-45e6-4004-afb5-4291f9c21166
 title: Suspicious PsExec Execution - Zeek
+id: f1b3a22a-45e6-4004-afb5-4291f9c21166
 status: test
 level: high
+author: Samir Bousseaden, @neu5ron, Tim Shelton
 description: detects execution of psexec or paexec with renamed service name, this
     rule helps to filter out the noise if psexec is used for legit purposes or if
     attacker uses a different psexec client other than sysinternal one
-author: Samir Bousseaden, @neu5ron, Tim Shelton
-date: '2020-04-02'
-modified: '2022-12-27'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
 references:
     - https://web.archive.org/web/20230329171218/https://blog.menasec.net/2019/02/threat-hunting-3-detecting-psexec.html
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c462f537-a1e3-41a6-b5fc-b2c2cef9bf82''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+date: '2020-04-02'
+modified: '2022-12-27'
 logsource:
     product: zeek
     service: smb_files
@@ -33,6 +30,9 @@ detection:
     filter:
         name|startswith: PSEXESVC
     condition: selection and not filter
+related:
+    -   id: c462f537-a1e3-41a6-b5fc-b2c2cef9bf82
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: <UNMAPPED>
@@ -40,17 +40,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:14.985688+00:00'
+            mapped_at: '2025-12-04T01:35:16.421506+00:00'
         service:
             source_field: service
             source_value: smb_files
-            mapped_at: '2025-11-26T02:15:14.985688+00:00'
+            mapped_at: '2025-12-04T01:35:16.421506+00:00'
     detection_fields:
         -   source_field: path
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:15:14.985703+00:00'
+            mapped_at: '2025-12-04T01:35:16.421521+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:15:14.985706+00:00'
+            mapped_at: '2025-12-04T01:35:16.421522+00:00'

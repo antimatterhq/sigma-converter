@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Imports Registry Key From a File",
+    "comment": "Detects the import of the specified file to the registry with regedit.exe.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\regedit.exe')) AND lower(process.file.name) = lower('regedit.exe') AND (contains(lower(process.cmd_line), lower(' /i ')) OR contains(lower(process.cmd_line), lower(' /s ')) OR contains(lower(process.cmd_line), lower('.reg'))) AND NOT ((contains(lower(process.cmd_line), lower(' -e ')) OR contains(lower(process.cmd_line), lower(' /e ')) OR contains(lower(process.cmd_line), lower(' \u2013e ')) OR contains(lower(process.cmd_line), lower(' \u2014e ')) OR contains(lower(process.cmd_line), lower(' \u2015e ')) OR contains(lower(process.cmd_line), lower(' -a ')) OR contains(lower(process.cmd_line), lower(' /a ')) OR contains(lower(process.cmd_line), lower(' \u2013a ')) OR contains(lower(process.cmd_line), lower(' \u2014a ')) OR contains(lower(process.cmd_line), lower(' \u2015a ')) OR contains(lower(process.cmd_line), lower(' -c ')) OR contains(lower(process.cmd_line), lower(' /c ')) OR contains(lower(process.cmd_line), lower(' \u2013c ')) OR contains(lower(process.cmd_line), lower(' \u2014c ')) OR contains(lower(process.cmd_line), lower(' \u2015c '))) AND process.cmd_line rlike ':\\[^ \\\\\\\\\\]'))"
+      }
+    },
+    "output": {
+      "summary": "Detects the import of the specified file to the registry with regedit.exe.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.parent_process.name, process.cmd_line False positives: 1. Legitimate import of keys 2. Evernote References: https://lolbas-project.github.io/lolbas/Binaries/Regedit/, https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1112"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

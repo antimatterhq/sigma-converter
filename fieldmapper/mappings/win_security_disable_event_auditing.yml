@@ -1,7 +1,8 @@
-id: 69aeb277-f15f-4d2d-b32a-55e883609563
 title: Windows Event Auditing Disabled
+id: 69aeb277-f15f-4d2d-b32a-55e883609563
 status: test
 level: low
+author: '@neu5ron, Nasreddine Bencherchali (Nextron Systems)'
 description: 'Detects scenarios where system auditing (i.e.: Windows event log auditing)
     is disabled.
 
@@ -17,19 +18,15 @@ description: 'Detects scenarios where system auditing (i.e.: Windows event log a
     to perform these modifications in Active Directory anyways.
 
     '
-author: '@neu5ron, Nasreddine Bencherchali (Nextron Systems)'
-date: '2017-11-19'
-modified: '2023-11-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://docs.google.com/presentation/d/1dkrldTTlN3La-OjWtkWJBb4hVk6vfsSMBFBERs6R8zA/edit
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ab4561b1-6c7e-48a7-ad08-087cfb9ce8f1''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2017-11-19'
+modified: '2023-11-15'
 logsource:
     product: windows
     service: security
@@ -58,6 +55,9 @@ detection:
             - '{0CCE9240-69AE-11D9-BED3-505054503030}'
             - '{0CCE9242-69AE-11D9-BED3-505054503030}'
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: ab4561b1-6c7e-48a7-ad08-087cfb9ce8f1
+        type: derived
 ocsf_mapping:
     class_name: entity_management
     activity_id: 9
@@ -65,21 +65,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:46.301304+00:00'
+            mapped_at: '2025-12-04T01:55:36.168289+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:46.301304+00:00'
+            mapped_at: '2025-12-04T01:55:36.168289+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: entity_management
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:47.589653+00:00'
+            mapped_at: '2025-12-04T01:55:36.168306+00:00'
         -   source_field: AuditPolicyChanges
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:47.589672+00:00'
+            mapped_at: '2025-12-04T01:55:36.168308+00:00'
         -   source_field: SubcategoryGuid
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:47.589676+00:00'
+            mapped_at: '2025-12-04T01:55:36.168309+00:00'

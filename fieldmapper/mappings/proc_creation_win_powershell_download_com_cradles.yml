@@ -1,22 +1,19 @@
-id: 02b64f1b-3f33-4e67-aede-ef3b0a5a8fcf
 title: Potential COM Objects Download Cradles Usage - Process Creation
+id: 02b64f1b-3f33-4e67-aede-ef3b0a5a8fcf
 status: test
 level: medium
+author: frack113
 description: Detects usage of COM objects that can be abused to download files in
     PowerShell by CLSID
-author: frack113
-date: '2022-12-25'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://learn.microsoft.com/en-us/dotnet/api/system.type.gettypefromclsid?view=net-7.0
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=57
 falsepositives:
     - Legitimate use of the library
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3c7d1587-3b13-439f-9941-7d14313dbdfe''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-12-25'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
             - 000209FF-0000-0000-C000-000000000046
             - 00024500-0000-0000-C000-000000000046
     condition: all of selection_*
+related:
+    -   id: 3c7d1587-3b13-439f-9941-7d14313dbdfe
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,13 +43,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:09.218866+00:00'
+            mapped_at: '2025-12-04T01:46:37.882755+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:09.218866+00:00'
+            mapped_at: '2025-12-04T01:46:37.882755+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:09.218881+00:00'
+            mapped_at: '2025-12-04T01:46:37.882768+00:00'

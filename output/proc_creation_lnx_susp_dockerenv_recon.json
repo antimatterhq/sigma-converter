@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Docker Container Discovery Via Dockerenv Listing",
+    "comment": "Detects listing or file reading of \".dockerenv\" which can be a sing of potential container discovery",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/cat')) OR endswith(lower(process.name), lower('/dir')) OR endswith(lower(process.name), lower('/find')) OR endswith(lower(process.name), lower('/ls')) OR endswith(lower(process.name), lower('/stat')) OR endswith(lower(process.name), lower('/test')) OR endswith(lower(process.name), lower('grep'))) AND endswith(lower(process.cmd_line), lower('.dockerenv')))"
+      }
+    },
+    "output": {
+      "summary": "Detects listing or file reading of \".dockerenv\" which can be a sing of potential container discovery",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate system administrator usage of these commands 2. Some container tools or deployments may use these techniques natively to determine how they proceed with execution, and will need to be filtered References: https://blog.skyplabs.net/posts/container-detection/, https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1082"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

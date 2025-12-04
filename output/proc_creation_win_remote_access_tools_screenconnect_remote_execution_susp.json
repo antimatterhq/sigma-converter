@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Remote Access Tool - ScreenConnect Potential Suspicious Remote Command Execution",
+    "comment": "Detects potentially suspicious child processes launched via the ScreenConnect client service.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.parent_process.cmd_line), lower(':\\\\windows\\\\temp\\\\screenconnect\\\\')) AND contains(lower(process.parent_process.cmd_line), lower('run.cmd')) AND (endswith(lower(process.name), lower('\\\\bitsadmin.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\curl.exe')) OR endswith(lower(process.name), lower('\\\\dllhost.exe')) OR endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\nltest.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\wevtutil.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially suspicious child processes launched via the ScreenConnect client service.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: If the script being executed make use of any of the utilities mentioned in the detection then they should filtered out or allowed. References: https://www.mandiant.com/resources/telegram-malware-iranian-espionage, https://docs.connectwise.com/ConnectWise_Control_Documentation/Get_started/Host_client/View_menu/Backstage_mode, https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708, https://www.trendmicro.com/en_us/research/24/b/threat-actor-groups-including-black-basta-are-exploiting-recent-.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1219"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

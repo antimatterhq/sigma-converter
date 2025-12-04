@@ -1,21 +1,20 @@
-id: 192a0330-c20b-4356-90b6-7b7049ae0b87
 title: Successful Overpass the Hash Attempt
+id: 192a0330-c20b-4356-90b6-7b7049ae0b87
 status: test
 level: high
+author: Roberto Rodriguez (source), Dominik Schaudel (rule)
 description: Detects successful logon with logon type 9 (NewCredentials) which matches
     the Overpass the Hash behavior of e.g Mimikatz's sekurlsa::pth module.
-author: Roberto Rodriguez (source), Dominik Schaudel (rule)
-date: '2018-02-12'
-modified: '2021-11-27'
-tags:
-    - attack.lateral-movement
-    - attack.s0002
-    - attack.t1550.002
 references:
     - https://web.archive.org/web/20220419045003/https://cyberwardog.blogspot.com/2017/04/chronicles-of-threat-hunter-hunting-for.html
 falsepositives:
     - Runas command-line tool using /netonly parameter
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.s0002
+    - attack.t1550.002
+date: '2018-02-12'
+modified: '2021-11-27'
 logsource:
     product: windows
     service: security
@@ -33,25 +32,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:49.709157+00:00'
+            mapped_at: '2025-12-04T01:56:53.307415+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:47:49.709157+00:00'
+            mapped_at: '2025-12-04T01:56:53.307415+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:49.709194+00:00'
+            mapped_at: '2025-12-04T01:56:53.307446+00:00'
         -   source_field: LogonType
             target_table: authentication
             target_field: logon_type
-            mapped_at: '2025-11-26T02:47:49.709199+00:00'
+            mapped_at: '2025-12-04T01:56:53.307449+00:00'
         -   source_field: LogonProcessName
             target_table: authentication
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:47:49.709203+00:00'
+            mapped_at: '2025-12-04T01:56:53.307451+00:00'
         -   source_field: AuthenticationPackageName
             target_table: authentication
             target_field: auth_protocol
-            mapped_at: '2025-11-26T02:47:49.709206+00:00'
+            mapped_at: '2025-12-04T01:56:53.307454+00:00'

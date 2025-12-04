@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "name": "Renamed BrowserCore.EXE Execution",
+    "comment": "Detects process creation with a renamed BrowserCore.exe (used to extract Azure tokens)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('browsercore.exe') AND NOT endswith(lower(process.name), lower('\\\\browsercore.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects process creation with a renamed BrowserCore.exe (used to extract Azure tokens)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/mariuszbit/status/1531631015139102720",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1528"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

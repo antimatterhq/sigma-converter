@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "name": "Hack Tool User Agent",
+    "comment": "Detects suspicious user agent strings user by hack tools in proxy logs",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.user_agent), lower('(hydra)')) OR contains(lower(http_request.user_agent), lower(' arachni/')) OR contains(lower(http_request.user_agent), lower(' bfac ')) OR contains(lower(http_request.user_agent), lower(' brutus ')) OR contains(lower(http_request.user_agent), lower(' cgichk ')) OR contains(lower(http_request.user_agent), lower('core-project/1.0')) OR contains(lower(http_request.user_agent), lower(' crimscanner/')) OR contains(lower(http_request.user_agent), lower('datacha0s')) OR contains(lower(http_request.user_agent), lower('dirbuster')) OR contains(lower(http_request.user_agent), lower('domino hunter')) OR contains(lower(http_request.user_agent), lower('dotdotpwn')) OR contains(lower(http_request.user_agent), lower('fhscan core')) OR contains(lower(http_request.user_agent), lower('floodgate')) OR contains(lower(http_request.user_agent), lower('get-minimal')) OR contains(lower(http_request.user_agent), lower('gootkit auto-rooter scanner')) OR contains(lower(http_request.user_agent), lower('grendel-scan')) OR contains(lower(http_request.user_agent), lower(' inspath ')) OR contains(lower(http_request.user_agent), lower('internet ninja')) OR contains(lower(http_request.user_agent), lower('jaascois')) OR contains(lower(http_request.user_agent), lower(' zmeu ')) OR contains(lower(http_request.user_agent), lower('masscan')) OR contains(lower(http_request.user_agent), lower(' metis ')) OR contains(lower(http_request.user_agent), lower('morfeus fucking scanner')) OR contains(lower(http_request.user_agent), lower('n-stealth')) OR contains(lower(http_request.user_agent), lower('nsauditor')) OR contains(lower(http_request.user_agent), lower('pmafind')) OR contains(lower(http_request.user_agent), lower('security scan')) OR contains(lower(http_request.user_agent), lower('springenwerk')) OR contains(lower(http_request.user_agent), lower('teh forest lobster')) OR contains(lower(http_request.user_agent), lower('toata dragostea')) OR contains(lower(http_request.user_agent), lower(' vega/')) OR contains(lower(http_request.user_agent), lower('voideye')) OR contains(lower(http_request.user_agent), lower('webshag')) OR contains(lower(http_request.user_agent), lower('webvulnscan')) OR contains(lower(http_request.user_agent), lower(' whcc/')) OR contains(lower(http_request.user_agent), lower(' havij')) OR contains(lower(http_request.user_agent), lower('absinthe')) OR contains(lower(http_request.user_agent), lower('bsqlbf')) OR contains(lower(http_request.user_agent), lower('mysqloit')) OR contains(lower(http_request.user_agent), lower('pangolin')) OR contains(lower(http_request.user_agent), lower('sql power injector')) OR contains(lower(http_request.user_agent), lower('sqlmap')) OR contains(lower(http_request.user_agent), lower('sqlninja')) OR contains(lower(http_request.user_agent), lower('uil2pn')) OR contains(lower(http_request.user_agent), lower('ruler')) OR contains(lower(http_request.user_agent), lower('mozilla/5.0 (windows; u; windows nt 5.1; pt-pt; rv:1.9.1.2) gecko/20090729 firefox/3.5.2 (.net clr 3.5.30729)')))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious user agent strings user by hack tools in proxy logs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ClientIP, http_request.url, http_request.user_agent False positive: Unknown References: https://github.com/fastly/waf_testbed/blob/8bfc406551f3045e418cbaad7596cff8da331dfc/templates/default/scanners-user-agents.data.erb, http://rules.emergingthreats.net/open/snort-2.9.0/rules/emerging-user_agents.rules",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1190"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1110"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

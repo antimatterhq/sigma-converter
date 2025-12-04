@@ -1,14 +1,10 @@
-id: 6d580420-ff3f-4e0e-b6b0-41b90c787e28
 title: SharpHound Recon Sessions
+id: 6d580420-ff3f-4e0e-b6b0-41b90c787e28
 status: test
 level: high
+author: Sagie Dulce, Dekel Paz
 description: Detects remote RPC calls useb by SharpHound to map remote connections
     and local group membership.
-author: Sagie Dulce, Dekel Paz
-date: '2022-01-01'
-modified: '2022-01-01'
-tags:
-    - attack.t1033
 references:
     - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-srvs/02b1f559-fda2-4ba3-94c2-806eb2777183
     - https://github.com/jsecurity101/MSRPC-to-ATTACK/blob/ddd4608fe8684fcf2fcf9b48c5f0b3c28097f8a3/documents/MS-SRVS.md
@@ -16,7 +12,10 @@ references:
     - https://zeronetworks.com/blog/stopping-lateral-movement-via-the-rpc-firewall/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1033
+date: '2022-01-01'
+modified: '2022-01-01'
 logsource:
     category: application
     product: rpc_firewall
@@ -36,25 +35,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:21.076043+00:00'
+            mapped_at: '2025-12-04T01:39:45.795872+00:00'
         product:
             source_field: product
             source_value: rpc_firewall
-            mapped_at: '2025-11-26T02:23:21.076043+00:00'
+            mapped_at: '2025-12-04T01:39:45.795872+00:00'
     detection_fields:
         -   source_field: EventLog
             target_table: network_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:23:21.076062+00:00'
+            mapped_at: '2025-12-04T01:39:45.795992+00:00'
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:23:21.076064+00:00'
+            mapped_at: '2025-12-04T01:39:45.795998+00:00'
         -   source_field: InterfaceUuid
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:21.076065+00:00'
+            mapped_at: '2025-12-04T01:39:45.796000+00:00'
         -   source_field: OpNum
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:21.076066+00:00'
+            mapped_at: '2025-12-04T01:39:45.796002+00:00'

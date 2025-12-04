@@ -1,7 +1,8 @@
-id: b29a93fb-087c-4b5b-a84d-ee3309e69d08
 title: Manipulation of User Computer or Group Security Principals Across AD
+id: b29a93fb-087c-4b5b-a84d-ee3309e69d08
 status: test
 level: medium
+author: frack113
 description: 'Adversaries may create a domain account to maintain access to victim
     systems.
 
@@ -10,17 +11,15 @@ description: 'Adversaries may create a domain account to maintain access to vict
     domain..
 
     '
-author: frack113
-date: '2021-12-28'
-tags:
-    - attack.persistence
-    - attack.t1136.002
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1136.002/T1136.002.md#atomic-test-3---create-a-new-domain-account-using-powershell
     - https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement?view=net-8.0
 falsepositives:
     - Legitimate administrative script
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1136.002
+date: '2021-12-28'
 logsource:
     category: ps_script
     product: windows
@@ -36,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:28.971558+00:00'
+            mapped_at: '2025-12-04T01:54:38.151071+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:28.971558+00:00'
+            mapped_at: '2025-12-04T01:54:38.151071+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:28.971569+00:00'
+            mapped_at: '2025-12-04T01:54:38.151642+00:00'

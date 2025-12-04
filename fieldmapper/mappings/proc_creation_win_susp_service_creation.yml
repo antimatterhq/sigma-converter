@@ -1,24 +1,21 @@
-id: 17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8
 title: Suspicious New Service Creation
+id: 17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of a new service via "sc" command or the powershell
     "new-service" cmdlet with suspicious binary paths
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-14'
-modified: '2022-11-18'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1543.003
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.003/T1543.003.md
     - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7fe71fc9-de3b-432a-8d57-8c809efc10ab''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1543.003
+date: '2022-07-14'
+modified: '2022-11-18'
 logsource:
     category: process_creation
     product: windows
@@ -52,6 +49,9 @@ detection:
             - C:\Windows\TEMP\
             - \AppData\Local\Temp
     condition: 1 of selection* and susp_binpath
+related:
+    -   id: 7fe71fc9-de3b-432a-8d57-8c809efc10ab
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -59,17 +59,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:40.282704+00:00'
+            mapped_at: '2025-12-04T01:46:11.433385+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:40.282704+00:00'
+            mapped_at: '2025-12-04T01:46:11.433385+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:40.282718+00:00'
+            mapped_at: '2025-12-04T01:46:11.433423+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:40.282720+00:00'
+            mapped_at: '2025-12-04T01:46:11.433425+00:00'

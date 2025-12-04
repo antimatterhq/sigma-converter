@@ -1,17 +1,13 @@
-id: d27ab432-2199-483f-a297-03633c05bae6
 title: OS Architecture Discovery Via Grep
+id: d27ab432-2199-483f-a297-03633c05bae6
 status: test
 level: low
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
 description: 'Detects the use of grep to identify information about the operating
     system architecture. Often combined beforehand with the execution of "uname" or
     "cat /proc/cpuinfo"
 
     '
-author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2023-06-02'
-tags:
-    - attack.discovery
-    - attack.t1082
 references:
     - https://blogs.jpcert.or.jp/en/2023/05/gobrat.html
     - https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/
@@ -19,7 +15,10 @@ references:
     - https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1082
+date: '2023-06-02'
 logsource:
     category: process_creation
     product: linux
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:05.276327+00:00'
+            mapped_at: '2025-12-04T01:36:17.773718+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:05.276327+00:00'
+            mapped_at: '2025-12-04T01:36:17.773718+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:05.276351+00:00'
+            mapped_at: '2025-12-04T01:36:17.773732+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:05.276354+00:00'
+            mapped_at: '2025-12-04T01:36:17.773735+00:00'

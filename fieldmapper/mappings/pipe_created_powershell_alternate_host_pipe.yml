@@ -1,23 +1,20 @@
-id: 58cb02d5-78ce-4692-b3e1-dce850aae41a
 title: Alternate PowerShell Hosts Pipe
+id: 58cb02d5-78ce-4692-b3e1-dce850aae41a
 status: test
 level: medium
+author: Roberto Rodriguez @Cyb3rWard0g, Tim Shelton
 description: Detects alternate PowerShell hosts potentially bypassing detections looking
     for powershell.exe
-author: Roberto Rodriguez @Cyb3rWard0g, Tim Shelton
-date: '2019-09-12'
-modified: '2024-10-07'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://threathunterplaybook.com/hunts/windows/190610-PwshAlternateHosts/notebook.html
     - https://threathunterplaybook.com/hunts/windows/190410-LocalPwshExecution/notebook.html
 falsepositives:
     - Programs using PowerShell directly without invocation of a dedicated interpreter.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ac7102b4-9e1e-4802-9b4f-17c5524c015c''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2019-09-12'
+modified: '2024-10-07'
 logsource:
     category: pipe_created
     product: windows
@@ -60,6 +57,9 @@ detection:
     filter_main_null:
         Image: null
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: ac7102b4-9e1e-4802-9b4f-17c5524c015c
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -67,17 +67,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: pipe_created
-            mapped_at: '2025-11-26T02:23:53.894679+00:00'
+            mapped_at: '2025-12-04T01:40:06.128291+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:23:53.894679+00:00'
+            mapped_at: '2025-12-04T01:40:06.128291+00:00'
     detection_fields:
         -   source_field: PipeName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:53.894692+00:00'
+            mapped_at: '2025-12-04T01:40:06.128304+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:23:53.894694+00:00'
+            mapped_at: '2025-12-04T01:40:06.128312+00:00'

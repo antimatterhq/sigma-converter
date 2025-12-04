@@ -1,7 +1,8 @@
-id: b52e84a3-029e-4529-b09b-71d19dd27e94
 title: Remote Access Tool - AnyDesk Execution
+id: b52e84a3-029e-4529-b09b-71d19dd27e94
 status: test
 level: medium
+author: frack113
 description: 'An adversary may use legitimate desktop support and remote access software,
     such as Team Viewer, Go2Assist, LogMein, AmmyyAdmin, etc, to establish an interactive
     command and control channel to target systems within networks.
@@ -14,19 +15,15 @@ description: 'An adversary may use legitimate desktop support and remote access 
     Living off the Land)
 
     '
-author: frack113
-date: '2022-02-11'
-modified: '2023-03-05'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1219/T1219.md#atomic-test-2---anydesk-files-detected-test-on-windows
 falsepositives:
     - Legitimate use
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''065b00ca-5d5c-4557-ac95-64a6d0b64d86''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2022-02-11'
+modified: '2023-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
         Product: AnyDesk
         Company: AnyDesk Software GmbH
     condition: selection
+related:
+    -   id: 065b00ca-5d5c-4557-ac95-64a6d0b64d86
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,25 +44,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:57.362972+00:00'
+            mapped_at: '2025-12-04T01:47:20.236708+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:57.362972+00:00'
+            mapped_at: '2025-12-04T01:47:20.236708+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:57.362988+00:00'
+            mapped_at: '2025-12-04T01:47:20.236723+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:32:57.362991+00:00'
+            mapped_at: '2025-12-04T01:47:20.236725+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:32:57.362993+00:00'
+            mapped_at: '2025-12-04T01:47:20.236726+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:32:57.362994+00:00'
+            mapped_at: '2025-12-04T01:47:20.236727+00:00'

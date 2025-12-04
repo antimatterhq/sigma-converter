@@ -1,19 +1,18 @@
-id: 0b7163dc-7eee-4960-af17-c0cd517f92da
 title: Service Started/Stopped Via Wmic.EXE
+id: 0b7163dc-7eee-4960-af17-c0cd517f92da
 status: test
 level: medium
-description: Detects usage of wmic to start or stop a service
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-20'
-modified: '2023-02-14'
-tags:
-    - attack.execution
-    - attack.t1047
+description: Detects usage of wmic to start or stop a service
 references:
     - https://sushant747.gitbooks.io/total-oscp-guide/content/privilege_escalation_windows.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+date: '2022-06-20'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:28.939117+00:00'
+            mapped_at: '2025-12-04T01:46:55.156516+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:28.939117+00:00'
+            mapped_at: '2025-12-04T01:46:55.156516+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:28.939147+00:00'
+            mapped_at: '2025-12-04T01:46:55.156542+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:28.939151+00:00'
+            mapped_at: '2025-12-04T01:46:55.156545+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:28.939154+00:00'
+            mapped_at: '2025-12-04T01:46:55.156547+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "ADS Zone.Identifier Deleted By Uncommon Application",
+    "comment": "Detects the deletion of the \"Zone.Identifier\" ADS by an uncommon process. Attackers can leverage this in order to bypass security restrictions that make use of the ADS such as Microsoft Office apps.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_delete",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND endswith(lower(file.path), lower(':zone.identifier')) AND NOT (lower(LOWER(actor.process.name)) in ('c:\\\\program files\\\\powershell\\\\7-preview\\\\pwsh\\.exe', 'c:\\\\program files\\\\powershell\\\\7\\\\pwsh\\.exe', 'c:\\\\windows\\\\explorer\\.exe', 'c:\\\\windows\\\\system32\\\\windowspowershell\\\\v1\\.0\\\\powershell\\.exe', 'c:\\\\windows\\\\syswow64\\\\explorer\\.exe', 'c:\\\\windows\\\\syswow64\\\\windowspowershell\\\\v1\\.0\\\\powershell\\.exe')) AND NOT (lower(LOWER(actor.process.name)) in ('c:\\\\program files (x86)\\\\google\\\\chrome\\\\application\\\\chrome\\.exe', 'c:\\\\program files\\\\google\\\\chrome\\\\application\\\\chrome\\.exe') OR lower(LOWER(actor.process.name)) in ('c:\\\\program files (x86)\\\\mozilla firefox\\\\firefox\\.exe', 'c:\\\\program files\\\\mozilla firefox\\\\firefox\\.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the deletion of the \"Zone.Identifier\" ADS by an uncommon process. Attackers can leverage this in order to bypass security restrictions that make use of the ADS such as Microsoft Office apps.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Other third party applications not listed. References: https://securityliterate.com/how-malware-abuses-the-zone-identifier-to-circumvent-detection-and-analysis/, Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

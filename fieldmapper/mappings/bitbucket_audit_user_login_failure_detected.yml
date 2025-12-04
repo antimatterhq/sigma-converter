@@ -1,25 +1,24 @@
-id: 70ed1d26-0050-4b38-a599-92c53d57d45a
 title: Bitbucket User Login Failure
+id: 70ed1d26-0050-4b38-a599-92c53d57d45a
 status: test
 level: medium
+author: Muhammad Faisal (@faisalusuf)
 description: 'Detects user authentication failure events.
 
     Please note that this rule can be noisy and it is recommended to use with correlation
     based on "author.name" field.
 
     '
-author: Muhammad Faisal (@faisalusuf)
-date: '2024-02-25'
+references:
+    - https://confluence.atlassian.com/bitbucketserver/audit-log-events-776640423.html
+falsepositives:
+    - Legitimate user wrong password attempts.
 tags:
     - attack.defense-evasion
     - attack.credential-access
     - attack.t1078.004
     - attack.t1110
-references:
-    - https://confluence.atlassian.com/bitbucketserver/audit-log-events-776640423.html
-falsepositives:
-    - Legitimate user wrong password attempts.
-taxonomy: sigma
+date: '2024-02-25'
 logsource:
     product: bitbucket
     service: audit
@@ -37,17 +36,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: bitbucket
-            mapped_at: '2025-11-26T02:23:11.283965+00:00'
+            mapped_at: '2025-12-04T01:39:38.602407+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:11.283965+00:00'
+            mapped_at: '2025-12-04T01:39:38.602407+00:00'
     detection_fields:
         -   source_field: auditType.category
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:11.283994+00:00'
+            mapped_at: '2025-12-04T01:39:38.604984+00:00'
         -   source_field: auditType.action
             target_table: entity_management
             target_field: action
-            mapped_at: '2025-11-26T02:23:11.283998+00:00'
+            mapped_at: '2025-12-04T01:39:38.605007+00:00'

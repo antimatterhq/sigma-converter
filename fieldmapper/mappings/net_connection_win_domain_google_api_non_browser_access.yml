@@ -1,17 +1,12 @@
-id: 7e9cf7b6-e827-11ed-a05b-0242ac120003
 title: Suspicious Non-Browser Network Communication With Google API
+id: 7e9cf7b6-e827-11ed-a05b-0242ac120003
 status: experimental
 level: medium
+author: Gavin Knapp
 description: 'Detects a non-browser process interacting with the Google API which
     could indicate the use of a covert C2 such as Google Sheet C2 (GC2-sheet)
 
     '
-author: Gavin Knapp
-date: '2023-05-01'
-modified: '2024-07-16'
-tags:
-    - attack.command-and-control
-    - attack.t1102
 references:
     - https://github.com/looCiprian/GC2-sheet
     - https://youtu.be/n2dFlSaBBKo
@@ -22,7 +17,11 @@ falsepositives:
     - Legitimate applications communicating with the "googleapis.com" endpoints that
         are not already in the exclusion list. This is environmental dependent and
         requires further testing and tuning.
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1102
+date: '2023-05-01'
+modified: '2024-07-16'
 logsource:
     category: network_connection
     product: windows
@@ -86,22 +85,22 @@ detection:
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
 ocsf_mapping:
     class_name: network_activity
-    activity_id: 6
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:26.611703+00:00'
+            mapped_at: '2025-12-04T01:51:35.996833+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:26.611703+00:00'
+            mapped_at: '2025-12-04T01:51:35.996833+00:00'
     detection_fields:
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:26.611739+00:00'
+            mapped_at: '2025-12-04T01:51:35.996849+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:26.611741+00:00'
+            mapped_at: '2025-12-04T01:51:35.996850+00:00'

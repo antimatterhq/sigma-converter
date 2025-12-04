@@ -1,21 +1,20 @@
-id: 961e0abb-1b1e-4c84-a453-aafe56ad0d34
 title: Execution via stordiag.exe
+id: 961e0abb-1b1e-4c84-a453-aafe56ad0d34
 status: test
 level: high
+author: Austin Songer (@austinsonger)
 description: Detects the use of stordiag.exe to execute schtasks.exe systeminfo.exe
     and fltmc.exe
-author: Austin Songer (@austinsonger)
-date: '2021-10-21'
-modified: '2022-12-25'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://strontic.github.io/xcyclopedia/library/stordiag.exe-1F08FC87C373673944F6A7E8B18CD845.html
     - https://twitter.com/eral4m/status/1451112385041911809
 falsepositives:
     - Legitimate usage of stordiag.exe.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2021-10-21'
+modified: '2022-12-25'
 logsource:
     category: process_creation
     product: windows
@@ -38,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:40.816534+00:00'
+            mapped_at: '2025-12-04T01:42:59.177736+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:40.816534+00:00'
+            mapped_at: '2025-12-04T01:42:59.177736+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:40.816557+00:00'
+            mapped_at: '2025-12-04T01:42:59.177750+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:40.816560+00:00'
+            mapped_at: '2025-12-04T01:42:59.177752+00:00'

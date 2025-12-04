@@ -1,21 +1,20 @@
-id: cbb9e3d1-2386-4e59-912e-62f1484f7a89
 title: Conhost Spawned By Uncommon Parent Process
+id: cbb9e3d1-2386-4e59-912e-62f1484f7a89
 status: test
 level: medium
+author: Tim Rauch, Elastic (idea)
 description: Detects when the Console Window Host (conhost.exe) process is spawned
     by an uncommon parent process, which could be indicative of potential code injection
     activity.
-author: Tim Rauch, Elastic (idea)
-date: '2022-09-28'
-modified: '2023-03-29'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://www.elastic.co/guide/en/security/current/conhost-spawned-by-suspicious-parent-process.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2022-09-28'
+modified: '2023-03-29'
 logsource:
     category: process_creation
     product: windows
@@ -58,21 +57,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:27.930222+00:00'
+            mapped_at: '2025-12-04T01:40:59.907745+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:27.930222+00:00'
+            mapped_at: '2025-12-04T01:40:59.907745+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:27.930234+00:00'
+            mapped_at: '2025-12-04T01:40:59.907758+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:27.930236+00:00'
+            mapped_at: '2025-12-04T01:40:59.907760+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:25:27.930237+00:00'
+            mapped_at: '2025-12-04T01:40:59.907761+00:00'

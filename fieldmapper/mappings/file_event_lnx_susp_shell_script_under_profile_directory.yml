@@ -1,12 +1,9 @@
-id: 13f08f54-e705-4498-91fd-cce9d9cee9f1
 title: Potentially Suspicious Shell Script Creation in Profile Folder
+id: 13f08f54-e705-4498-91fd-cce9d9cee9f1
 status: test
 level: low
-description: Detects the creation of shell scripts under the "profile.d" path.
 author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2023-06-02'
-tags:
-    - attack.persistence
+description: Detects the creation of shell scripts under the "profile.d" path.
 references:
     - https://blogs.jpcert.or.jp/en/2023/05/gobrat.html
     - https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/
@@ -18,7 +15,9 @@ falsepositives:
         filenames you "trust" or by correlating it with other events.
     - Regular file creation during system update or software installation by the package
         manager
-taxonomy: sigma
+tags:
+    - attack.persistence
+date: '2023-06-02'
 logsource:
     category: file_event
     product: linux
@@ -36,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:15:27.788065+00:00'
+            mapped_at: '2025-12-04T01:35:23.313109+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:27.788065+00:00'
+            mapped_at: '2025-12-04T01:35:23.313109+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:15:27.788094+00:00'
+            mapped_at: '2025-12-04T01:35:23.313143+00:00'

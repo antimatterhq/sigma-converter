@@ -1,26 +1,23 @@
-id: b66474aa-bd92-4333-a16c-298155b120df
 title: Potential Persistence Via Powershell Search Order Hijacking - Task
+id: b66474aa-bd92-4333-a16c-298155b120df
 status: test
 level: high
+author: pH-T (Nextron Systems), Florian Roth (Nextron Systems)
 description: Detects suspicious powershell execution via a schedule task where the
     command ends with an suspicious flags to hide the powershell instance instead
     of executeing scripts or commands. This could be a sign of persistence via PowerShell
     "Get-Variable" technique as seen being used in Colibri Loader
-author: pH-T (Nextron Systems), Florian Roth (Nextron Systems)
-date: '2022-04-08'
-modified: '2023-02-03'
+references:
+    - https://blog.malwarebytes.com/threat-intelligence/2022/04/colibri-loader-combines-task-scheduler-and-powershell-in-clever-persistence-technique/
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.persistence
     - attack.t1053.005
     - attack.t1059.001
-references:
-    - https://blog.malwarebytes.com/threat-intelligence/2022/04/colibri-loader-combines-task-scheduler-and-powershell-in-clever-persistence-technique/
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6e8811ee-90ba-441e-8486-5653e68b2299''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2022-04-08'
+modified: '2023-02-03'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
             - ' -ep bypass'
             - ' -noni'
     condition: selection
+related:
+    -   id: 6e8811ee-90ba-441e-8486-5653e68b2299
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:42.040433+00:00'
+            mapped_at: '2025-12-04T01:45:19.457954+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:42.040433+00:00'
+            mapped_at: '2025-12-04T01:45:19.457954+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:42.040460+00:00'
+            mapped_at: '2025-12-04T01:45:19.458022+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:30:42.040464+00:00'
+            mapped_at: '2025-12-04T01:45:19.458026+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:42.040467+00:00'
+            mapped_at: '2025-12-04T01:45:19.458028+00:00'

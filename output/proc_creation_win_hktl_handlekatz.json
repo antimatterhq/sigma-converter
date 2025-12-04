@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - HandleKatz LSASS Dumper Execution",
+    "comment": "Detects the use of HandleKatz, a tool that demonstrates the usage of cloned handles to Lsass in order to create an obfuscated memory dump of the same",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\loader.exe')) AND contains(lower(process.cmd_line), lower('--pid:')) OR contains(lower(process.file.hashes.value), lower('imphash=38d9e015591bbfd4929e0d0f47fa0055')) OR contains(lower(process.file.hashes.value), lower('imphash=0e2216679ca6e1094d63322e3412d650')) OR contains(lower(process.cmd_line), lower('--pid:')) AND contains(lower(process.cmd_line), lower('--outfile:')) AND (contains(lower(process.cmd_line), lower('.dmp')) OR contains(lower(process.cmd_line), lower('lsass')) OR contains(lower(process.cmd_line), lower('.obf')) OR contains(lower(process.cmd_line), lower('dump')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of HandleKatz, a tool that demonstrates the usage of cloned handles to Lsass in order to create an obfuscated memory dump of the same",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/codewhitesec/HandleKatz",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

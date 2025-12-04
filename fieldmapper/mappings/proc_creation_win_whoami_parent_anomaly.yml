@@ -1,15 +1,9 @@
-id: 8de1cbe8-d6f5-496d-8237-5f44a721c7a0
 title: Whoami.EXE Execution Anomaly
+id: 8de1cbe8-d6f5-496d-8237-5f44a721c7a0
 status: test
 level: medium
-description: Detects the execution of whoami.exe with suspicious parent processes.
 author: Florian Roth (Nextron Systems)
-date: '2021-08-12'
-modified: '2023-12-04'
-tags:
-    - attack.discovery
-    - attack.t1033
-    - car.2016-03-001
+description: Detects the execution of whoami.exe with suspicious parent processes.
 references:
     - https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/
     - https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/
@@ -18,7 +12,12 @@ falsepositives:
     - Admin activity
     - Scripts and administrative tools used in the monitored environment
     - Monitoring activity
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1033
+    - car.2016-03-001
+date: '2021-08-12'
+modified: '2023-12-04'
 logsource:
     category: process_creation
     product: windows
@@ -46,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:22.945151+00:00'
+            mapped_at: '2025-12-04T01:41:45.138409+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:22.945151+00:00'
+            mapped_at: '2025-12-04T01:41:45.138409+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:22.945165+00:00'
+            mapped_at: '2025-12-04T01:41:45.138448+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:22.945168+00:00'
+            mapped_at: '2025-12-04T01:41:45.138452+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:22.945169+00:00'
+            mapped_at: '2025-12-04T01:41:45.138456+00:00'

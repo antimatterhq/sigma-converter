@@ -1,7 +1,8 @@
-id: 84b1706c-932a-44c4-ae28-892b28a25b94
 title: OneNote.EXE Execution of Malicious Embedded Scripts
+id: 84b1706c-932a-44c4-ae28-892b28a25b94
 status: test
 level: high
+author: '@kostastsale'
 description: 'Detects the execution of malicious OneNote documents that contain embedded
     scripts.
 
@@ -10,16 +11,14 @@ description: 'Detects the execution of malicious OneNote documents that contain 
     directories.
 
     '
-author: '@kostastsale'
-date: '2023-02-02'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.001
 references:
     - https://bazaar.abuse.ch/browse/tag/one/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.001
+date: '2023-02-02'
 logsource:
     category: process_creation
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:35.893620+00:00'
+            mapped_at: '2025-12-04T01:43:43.037387+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:35.893620+00:00'
+            mapped_at: '2025-12-04T01:43:43.037387+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:35.893653+00:00'
+            mapped_at: '2025-12-04T01:43:43.037407+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:35.893660+00:00'
+            mapped_at: '2025-12-04T01:43:43.037409+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:35.893664+00:00'
+            mapped_at: '2025-12-04T01:43:43.037410+00:00'

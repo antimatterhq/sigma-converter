@@ -1,27 +1,23 @@
-id: 85adeb13-4fc9-4e68-8a4a-c7cb2c336eb7
 title: CobaltStrike Named Pipe Patterns
+id: 85adeb13-4fc9-4e68-8a4a-c7cb2c336eb7
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Christian Burkard (Nextron Systems)
 description: Detects the creation of a named pipe with a pattern found in CobaltStrike
     malleable C2 profiles
-author: Florian Roth (Nextron Systems), Christian Burkard (Nextron Systems)
-date: '2021-07-30'
-modified: '2024-01-26'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055
-    - stp.1k
 references:
     - https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
     - https://gist.github.com/MHaggis/6c600e524045a6d49c35291a21e10752
 falsepositives:
     - Chrome instances using the exact same pipe name "mojo.xxx"
     - Websense Endpoint using the pipe name "DserNamePipe(R|W)\d{1,5}"
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0e7163d4-9e19-4fa7-9be6-000c61aad77a''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''d5601f8c-b26f-4ab0-9035-69e11a8d4ad2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055
+    - stp.1k
+date: '2021-07-30'
+modified: '2024-01-26'
 logsource:
     category: pipe_created
     product: windows
@@ -80,6 +76,11 @@ detection:
             - \DserNamePipeW
     condition: 1 of selection_malleable_profile_* and not 1 of filter_main_* and not
         1 of filter_optional_*
+related:
+    -   id: 0e7163d4-9e19-4fa7-9be6-000c61aad77a
+        type: similar
+    -   id: d5601f8c-b26f-4ab0-9035-69e11a8d4ad2
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -87,17 +88,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: pipe_created
-            mapped_at: '2025-11-26T02:23:54.949359+00:00'
+            mapped_at: '2025-12-04T01:40:06.631689+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:23:54.949359+00:00'
+            mapped_at: '2025-12-04T01:40:06.631689+00:00'
     detection_fields:
         -   source_field: PipeName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:54.949378+00:00'
+            mapped_at: '2025-12-04T01:40:06.631702+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:23:54.949381+00:00'
+            mapped_at: '2025-12-04T01:40:06.631704+00:00'

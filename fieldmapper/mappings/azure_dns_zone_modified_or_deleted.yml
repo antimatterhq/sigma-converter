@@ -1,14 +1,9 @@
-id: af6925b0-8826-47f1-9324-337507a0babd
 title: Azure DNS Zone Modified or Deleted
+id: af6925b0-8826-47f1-9324-337507a0babd
 status: test
 level: medium
-description: Identifies when DNS zone is modified or deleted.
 author: Austin Songer @austinsonger
-date: '2021-08-08'
-modified: '2022-08-23'
-tags:
-    - attack.impact
-    - attack.t1565.001
+description: Identifies when DNS zone is modified or deleted.
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
 falsepositives:
@@ -17,7 +12,11 @@ falsepositives:
         in your environment.
     - DNS zone modification from unfamiliar users should be investigated. If known
         behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1565.001
+date: '2021-08-08'
+modified: '2022-08-23'
 logsource:
     product: azure
     service: activitylogs
@@ -30,18 +29,18 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: entity_management
-    activity_id: 4
+    activity_id: 3
     logsource:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:07.754192+00:00'
+            mapped_at: '2025-12-04T01:38:33.329868+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:07.754192+00:00'
+            mapped_at: '2025-12-04T01:38:33.329868+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:07.754209+00:00'
+            mapped_at: '2025-12-04T01:38:33.329887+00:00'

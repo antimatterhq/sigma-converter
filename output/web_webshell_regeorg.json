@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Webshell ReGeorg Detection Via Web Logs",
+    "comment": "Certain strings in the uri_query field when combined with null referer and null user agent can indicate activity associated with the webshell ReGeorg.",
+    "annotations": {
+      "source": "sigma",
+      "category": "webserver",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((contains(lower(http_request.args), lower('cmd=read')) OR contains(lower(http_request.args), lower('connect&target')) OR contains(lower(http_request.args), lower('cmd=connect')) OR contains(lower(http_request.args), lower('cmd=disconnect')) OR contains(lower(http_request.args), lower('cmd=forward'))) AND http_request.referrer is null AND http_request.user_agent is null AND lower(http_request.http_method) = lower('post'))"
+      }
+    },
+    "output": {
+      "summary": "Certain strings in the uri_query field when combined with null referer and null user agent can indicate activity associated with the webshell ReGeorg.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: http_request.args, http_request.referrer, http_request.http_method, cs-User-Agent False positive: Web applications that use the same URL parameters as ReGeorg References: https://community.rsa.com/community/products/netwitness/blog/2019/02/19/web-shells-and-netwitness-part-3, https://github.com/sensepost/reGeorg",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

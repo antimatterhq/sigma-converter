@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Azure Device No Longer Managed or Compliant",
+    "comment": "Identifies when a device in azure is no longer managed or compliant",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "activitylogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM account_change WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(message)) in ('device no longer compliant', 'device no longer managed'))"
+      }
+    },
+    "output": {
+      "summary": "Identifies when a device in azure is no longer managed or compliant",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrator may have forgotten to review the device. Reference: https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities#core-directory",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -6,6 +6,7 @@ Implements a two-step mapping strategy with intelligent caching.
 """
 
 import json
+import sys
 from typing import Dict, List, Optional, Union
 from pathlib import Path
 
@@ -49,7 +50,7 @@ class OpenAIMapper:
     
     def __init__(self, schema: OCSFLiteSchema, cache: MappingCache, 
                  api_key: str, model: str = "gpt-4o-2024-08-06",
-                 mitre_data_file: str = "fieldmapper/ocsf_data/mitre_attack_data.json",
+                 mitre_data_file: str = "fieldmapper/mitre_attack_data.json",
                  debug_prompts: bool = False,
                  skip_cache_reads: bool = False):
         """
@@ -90,10 +91,13 @@ class OpenAIMapper:
         
         # Check cache (unless skip flag is set)
         if not self.skip_cache_reads:
-            print(f"Checking cache for {cache_key}")
+            print(f"Checking cache for {cache_key}....", end="")
             cached = self.cache.get_logsource_mapping(cache_key)
             if cached:
+                print("hit.")
                 return cached.get("event_class")
+            else:
+                print("miss.")
         else:
             print(f"Skipping cache check for {cache_key}")
         
@@ -881,9 +885,9 @@ RULES:
             return data
         except FileNotFoundError:
             print(f"⚠️  MITRE data not found: {filepath}")
-            print(f"   Run: python fieldmapper/ocsf_data/bin/mitre.py")
-            return {}
+            print(f"   Run: python fieldmapper/bin/mitre.py")
+            sys.exit(1)
         except json.JSONDecodeError as e:
             print(f"⚠️  Invalid JSON in MITRE data file: {e}")
-            return {}
+            sys.exit(1)
 

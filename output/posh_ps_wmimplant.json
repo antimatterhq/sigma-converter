@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "WMImplant Hack Tool",
+    "comment": "Detects parameters used by WMImplant",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('wmimplant')) OR contains(lower(script.script_content.value), lower(' change_user ')) OR contains(lower(script.script_content.value), lower(' gen_cli ')) OR contains(lower(script.script_content.value), lower(' command_exec ')) OR contains(lower(script.script_content.value), lower(' disable_wdigest ')) OR contains(lower(script.script_content.value), lower(' disable_winrm ')) OR contains(lower(script.script_content.value), lower(' enable_wdigest ')) OR contains(lower(script.script_content.value), lower(' enable_winrm ')) OR contains(lower(script.script_content.value), lower(' registry_mod ')) OR contains(lower(script.script_content.value), lower(' remote_posh ')) OR contains(lower(script.script_content.value), lower(' sched_job ')) OR contains(lower(script.script_content.value), lower(' service_mod ')) OR contains(lower(script.script_content.value), lower(' process_kill ')) OR contains(lower(script.script_content.value), lower(' active_users ')) OR contains(lower(script.script_content.value), lower(' basic_info ')) OR contains(lower(script.script_content.value), lower(' power_off ')) OR contains(lower(script.script_content.value), lower(' vacant_system ')) OR contains(lower(script.script_content.value), lower(' logon_events '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects parameters used by WMImplant",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrative scripts that use the same keywords. Reference: https://github.com/FortyNorthSecurity/WMImplant",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

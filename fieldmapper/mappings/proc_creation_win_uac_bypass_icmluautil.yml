@@ -1,20 +1,19 @@
-id: 49f2f17b-b4c8-4172-a68b-d5bf95d05130
 title: UAC Bypass via ICMLuaUtil
+id: 49f2f17b-b4c8-4172-a68b-d5bf95d05130
 status: test
 level: high
-description: Detects the pattern of UAC Bypass using ICMLuaUtil Elevated COM interface
 author: Florian Roth (Nextron Systems), Elastic (idea)
-date: '2022-09-13'
-modified: '2022-09-27'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1548.002
+description: Detects the pattern of UAC Bypass using ICMLuaUtil Elevated COM interface
 references:
     - https://www.elastic.co/guide/en/security/current/uac-bypass-via-icmluautil-elevated-com-interface.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+date: '2022-09-13'
+modified: '2022-09-27'
 logsource:
     category: process_creation
     product: windows
@@ -35,25 +34,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:55.675704+00:00'
+            mapped_at: '2025-12-04T01:46:25.278795+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:55.675704+00:00'
+            mapped_at: '2025-12-04T01:46:25.278795+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:55.675736+00:00'
+            mapped_at: '2025-12-04T01:46:25.278815+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:31:55.675740+00:00'
+            mapped_at: '2025-12-04T01:46:25.278824+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:55.675742+00:00'
+            mapped_at: '2025-12-04T01:46:25.278825+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:55.675745+00:00'
+            mapped_at: '2025-12-04T01:46:25.278826+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Scheduled Task Executed Uncommon LOLBIN",
+    "comment": "Detects the execution of Scheduled Tasks where the program being run is located in a suspicious location or where it is an unusual program to be run from a Scheduled Task",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "taskscheduler",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 129 AND (endswith(lower(job.file.path), lower('\\\\calc.exe')) OR endswith(lower(job.file.path), lower('\\\\cscript.exe')) OR endswith(lower(job.file.path), lower('\\\\mshta.exe')) OR endswith(lower(job.file.path), lower('\\\\mspaint.exe')) OR endswith(lower(job.file.path), lower('\\\\notepad.exe')) OR endswith(lower(job.file.path), lower('\\\\regsvr32.exe')) OR endswith(lower(job.file.path), lower('\\\\wscript.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of Scheduled Tasks where the program being run is located in a suspicious location or where it is an unusual program to be run from a Scheduled Task",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives may occur with some of the selected binaries if you have tasks using them (which could be very common in your environment). Exclude all the specific trusted tasks before using this rule Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

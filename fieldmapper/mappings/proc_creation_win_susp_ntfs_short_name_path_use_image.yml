@@ -1,15 +1,10 @@
-id: a96970af-f126-420d-90e1-d37bf25e50e1
 title: Use Short Name Path in Image
+id: a96970af-f126-420d-90e1-d37bf25e50e1
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali
 description: Detect use of the Windows 8.3 short name. Which could be used as a method
     to avoid Image detection
-author: frack113, Nasreddine Bencherchali
-date: '2022-08-07'
-modified: '2023-03-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.004
 references:
     - https://www.acunetix.com/blog/articles/windows-short-8-3-filenames-web-security-problem/
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc959352(v=technet.10)
@@ -17,9 +12,11 @@ references:
 falsepositives:
     - Applications could use this notation occasionally which might generate some
         false positives. In that case Investigate the parent and child process.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''349d891d-fef0-4fe4-bc53-eee623a15969''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.004
+date: '2022-08-07'
+modified: '2023-03-21'
 logsource:
     category: process_creation
     product: windows
@@ -46,6 +43,9 @@ detection:
             - ~1\unzip.exe
             - ~1\7zG.exe
     condition: selection and not 1 of filter*
+related:
+    -   id: 349d891d-fef0-4fe4-bc53-eee623a15969
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -53,29 +53,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:00.215550+00:00'
+            mapped_at: '2025-12-04T01:43:14.886605+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:00.215550+00:00'
+            mapped_at: '2025-12-04T01:43:14.886605+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:00.215585+00:00'
+            mapped_at: '2025-12-04T01:43:14.886627+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:00.215588+00:00'
+            mapped_at: '2025-12-04T01:43:14.886691+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:28:00.215589+00:00'
+            mapped_at: '2025-12-04T01:43:14.886701+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:28:00.215591+00:00'
+            mapped_at: '2025-12-04T01:43:14.886704+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:00.215593+00:00'
+            mapped_at: '2025-12-04T01:43:14.886708+00:00'

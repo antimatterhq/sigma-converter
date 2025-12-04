@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "AWS EC2 VM Export Failure",
+    "comment": "An attempt to export an AWS EC2 instance has been detected. A VM Export might indicate an attempt to extract information from an instance.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM datastore_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(api.operation) = lower('createinstanceexporttask') AND lower(metadata.product.name) = lower('ec2.amazonaws.com') AND NOT (startswith(lower(api.response.message), lower('')) OR startswith(lower(api.response.code), lower('')) OR contains(lower(api.response.data), lower('failure'))))"
+      }
+    },
+    "output": {
+      "summary": "An attempt to export an AWS EC2 instance has been detected. A VM Export might indicate an attempt to extract information from an instance.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "Reference: https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1537"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

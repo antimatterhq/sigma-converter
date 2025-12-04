@@ -1,7 +1,8 @@
-id: a746c9b8-a2fb-4ee5-a428-92bee9e99060
 title: SQL Client Tools PowerShell Session Detection
+id: a746c9b8-a2fb-4ee5-a428-92bee9e99060
 status: test
 level: medium
+author: Agro (@agro_sev) oscd.communitly
 description: 'This rule detects execution of a PowerShell code through the sqltoolsps.exe
     utility, which is included in the standard set of utilities supplied with the
     Microsoft SQL Server Management studio.
@@ -10,21 +11,19 @@ description: 'This rule detects execution of a PowerShell code through the sqlto
     mechanisms based on the analysis of these logs.
 
     '
-author: Agro (@agro_sev) oscd.communitly
-date: '2020-10-13'
-modified: '2022-02-25'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/blob/8283d8d91552213ded165fd36deb6cb9534cb443/yml/OtherMSBinaries/Sqltoolsps.yml
     - https://twitter.com/pabraeken/status/993298228840992768
 falsepositives:
     - Direct PS command execution through SQLToolsPS.exe is uncommon, childprocess
         sqltoolsps.exe spawned by smss.exe is a legitimate action.
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1127
+date: '2020-10-13'
+modified: '2022-02-25'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:02.707237+00:00'
+            mapped_at: '2025-12-04T01:42:19.105250+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:02.707237+00:00'
+            mapped_at: '2025-12-04T01:42:19.105250+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:02.707274+00:00'
+            mapped_at: '2025-12-04T01:42:19.105263+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:02.707278+00:00'
+            mapped_at: '2025-12-04T01:42:19.105265+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:02.707281+00:00'
+            mapped_at: '2025-12-04T01:42:19.105266+00:00'

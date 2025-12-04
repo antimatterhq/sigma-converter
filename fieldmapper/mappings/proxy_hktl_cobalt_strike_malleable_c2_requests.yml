@@ -1,15 +1,10 @@
-id: f3f21ce1-cdef-4bfc-8328-ed2e826f5fac
 title: HackTool - CobaltStrike Malleable Profile Patterns - Proxy
+id: f3f21ce1-cdef-4bfc-8328-ed2e826f5fac
 status: test
 level: high
+author: Markus Neis, Florian Roth (Nextron Systems)
 description: Detects cobalt strike malleable profiles patterns (URI, User-Agents,
     Methods).
-author: Markus Neis, Florian Roth (Nextron Systems)
-date: '2024-02-15'
-tags:
-    - attack.defense-evasion
-    - attack.command-and-control
-    - attack.t1071.001
 references:
     - https://github.com/rsmudge/Malleable-C2-Profiles/blob/26323784672913923d20c5a638c6ca79459e8529/normal/amazon.profile
     - https://www.hybrid-analysis.com/sample/ee5eca8648e45e2fea9dac0d920ef1a1792d8690c41ee7f20343de1927cc88b9?environmentId=100
@@ -18,12 +13,11 @@ references:
     - https://github.com/rsmudge/Malleable-C2-Profiles/blob/26323784672913923d20c5a638c6ca79459e8529/normal/onedrive_getonly.profile
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''953b895e-5cc9-454b-b183-7f3db555452e''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''41b42a36-f62c-4c34-bd40-8cb804a34ad8''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''37325383-740a-403d-b1a2-b2b4ab7992e7''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''c9b33401-cc6a-4cf6-83bb-57ddcb2407fc''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.command-and-control
+    - attack.t1071.001
+date: '2024-02-15'
 logsource:
     category: proxy
 detection:
@@ -59,6 +53,15 @@ detection:
         c-uri|startswith: http
         c-uri|contains: ://onedrive.live.com/
     condition: 1 of selection_* and not 1 of filter_main_*
+related:
+    -   id: 953b895e-5cc9-454b-b183-7f3db555452e
+        type: obsolete
+    -   id: 41b42a36-f62c-4c34-bd40-8cb804a34ad8
+        type: obsolete
+    -   id: 37325383-740a-403d-b1a2-b2b4ab7992e7
+        type: obsolete
+    -   id: c9b33401-cc6a-4cf6-83bb-57ddcb2407fc
+        type: obsolete
 ocsf_mapping:
     class_name: http_activity
     activity_id: <UNMAPPED>
@@ -66,25 +69,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:16.274655+00:00'
+            mapped_at: '2025-12-04T01:34:56.146999+00:00'
     detection_fields:
         -   source_field: c-useragent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:14:17.063975+00:00'
+            mapped_at: '2025-12-04T01:34:56.147018+00:00'
         -   source_field: cs-method
             target_table: http_activity
             target_field: http_request.http_method
-            mapped_at: '2025-11-26T02:14:17.063998+00:00'
+            mapped_at: '2025-12-04T01:34:56.147020+00:00'
         -   source_field: c-uri
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:14:17.064003+00:00'
+            mapped_at: '2025-12-04T01:34:56.147022+00:00'
         -   source_field: cs-host
             target_table: http_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:14:17.064007+00:00'
+            mapped_at: '2025-12-04T01:34:56.147024+00:00'
         -   source_field: cs-cookie
             target_table: http_activity
             target_field: http_cookies.value
-            mapped_at: '2025-11-26T02:14:17.064011+00:00'
+            mapped_at: '2025-12-04T01:34:56.147025+00:00'

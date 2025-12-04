@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Nslookup PowerShell Download Cradle - ProcessCreation",
+    "comment": "Detects suspicious powershell download cradle using nslookup. This cradle uses nslookup to extract payloads from DNS records",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.name), lower('\\\\nslookup.exe')) AND lower(process.file.name) = lower('\\\\nslookup.exe') AND (endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe'))) AND (contains(lower(process.cmd_line), lower(' -q=txt ')) OR contains(lower(process.cmd_line), lower(' -querytype=txt '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious powershell download cradle using nslookup. This cradle uses nslookup to extract payloads from DNS records",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/Alh4zr3d/status/1566489367232651264",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

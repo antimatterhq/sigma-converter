@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Indirect Command Execution From Script File Via Bash.EXE",
+    "comment": "Detects execution of Microsoft bash launcher without any flags to execute the content of a bash script directly. This can be used to potentially bypass defenses and execute Linux or Windows-based binaries directly via bash.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower(':\\\\windows\\\\system32\\\\bash.exe')) OR endswith(lower(process.name), lower(':\\\\windows\\\\syswow64\\\\bash.exe'))) AND lower(process.file.name) = lower('bash.exe') AND NOT (contains(lower(process.cmd_line), lower('bash.exe -')) OR contains(lower(process.cmd_line), lower('bash -')) OR process.cmd_line is null OR lower(process.cmd_line) = lower('') OR lower(LOWER(process.cmd_line)) in ('bash\\.exe', 'bash')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of Microsoft bash launcher without any flags to execute the content of a bash script directly. This can be used to potentially bypass defenses and execute Linux or Windows-based binaries directly via bash.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://lolbas-project.github.io/lolbas/Binaries/Bash/, https://linux.die.net/man/1/bash, Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

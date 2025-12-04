@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Adplus.EXE Abuse",
+    "comment": "Detects execution of \"AdPlus.exe\", a binary that is part of the Windows SDK that can be used as a LOLBIN in order to dump process memory and execute arbitrary commands.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\adplus.exe')) AND lower(process.file.name) = lower('adplus.exe') AND (contains(lower(process.cmd_line), lower(' -hang ')) OR contains(lower(process.cmd_line), lower(' -pn ')) OR contains(lower(process.cmd_line), lower(' -pmn ')) OR contains(lower(process.cmd_line), lower(' -p ')) OR contains(lower(process.cmd_line), lower(' -po ')) OR contains(lower(process.cmd_line), lower(' -c ')) OR contains(lower(process.cmd_line), lower(' -sc '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"AdPlus.exe\", a binary that is part of the Windows SDK that can be used as a LOLBIN in order to dump process memory and execute arbitrary commands.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of Adplus for debugging purposes References: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Adplus/, https://twitter.com/nas_bench/status/1534916659676422152, https://twitter.com/nas_bench/status/1534915321856917506",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

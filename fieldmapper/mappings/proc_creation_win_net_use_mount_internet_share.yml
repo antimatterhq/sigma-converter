@@ -1,20 +1,19 @@
-id: 7e6237fe-3ddb-438f-9381-9bf9de5af8d0
 title: Windows Internet Hosted WebDav Share Mount Via Net.EXE
+id: 7e6237fe-3ddb-438f-9381-9bf9de5af8d0
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects when an internet hosted webdav share is mounted using the "net.exe"
     utility
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-21'
-modified: '2023-07-25'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
 references:
     - https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+date: '2023-02-21'
+modified: '2023-07-25'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:40.610632+00:00'
+            mapped_at: '2025-12-04T01:41:11.829890+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:40.610632+00:00'
+            mapped_at: '2025-12-04T01:41:11.829890+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:40.610665+00:00'
+            mapped_at: '2025-12-04T01:41:11.829904+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:40.610669+00:00'
+            mapped_at: '2025-12-04T01:41:11.829906+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:40.610672+00:00'
+            mapped_at: '2025-12-04T01:41:11.829907+00:00'

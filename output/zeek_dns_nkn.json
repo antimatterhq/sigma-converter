@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "New Kind of Network (NKN) Detection",
+    "comment": "NKN is a networking service using blockchain technology to support a decentralized network of peers. While there are legitimate uses for it, it can also be used as a C2 channel. This rule looks for a DNS request to the ma>",
+    "annotations": {
+      "source": "sigma",
+      "product": "zeek",
+      "service": "dns",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(query.hostname), lower('seed')) AND contains(lower(query.hostname), lower('.nkn.org')))"
+      }
+    },
+    "output": {
+      "summary": "NKN is a networking service using blockchain technology to support a decentralized network of peers. While there are legitimate uses for it, it can also be used as a C2 channel. This rule looks for a DNS request to the ma>",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: id.orig_h, id.resp_h, answers.rdata False positive: Unknown References: https://github.com/nknorg/nkn-sdk-go, https://unit42.paloaltonetworks.com/manageengine-godzilla-nglite-kdcsponge/, https://github.com/Maka8ka/NGLite",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

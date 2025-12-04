@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Windows Binaries Write Suspicious Extensions",
+    "comment": "Detects Windows executables that write files with suspicious extensions",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND ((endswith(lower(actor.process.name), lower('\\\\csrss.exe')) OR endswith(lower(actor.process.name), lower('\\\\lsass.exe')) OR endswith(lower(actor.process.name), lower('\\\\runtimebroker.exe')) OR endswith(lower(actor.process.name), lower('\\\\sihost.exe')) OR endswith(lower(actor.process.name), lower('\\\\smss.exe')) OR endswith(lower(actor.process.name), lower('\\\\wininit.exe')) OR endswith(lower(actor.process.name), lower('\\\\winlogon.exe'))) AND (endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.hta')) OR endswith(lower(file.path), lower('.iso')) OR endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.txt')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.vbs'))) OR (endswith(lower(actor.process.name), lower('\\\\dllhost.exe')) OR endswith(lower(actor.process.name), lower('\\\\rundll32.exe')) OR endswith(lower(actor.process.name), lower('\\\\svchost.exe'))) AND (endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.hta')) OR endswith(lower(file.path), lower('.iso')) OR endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.vbs')))) AND NOT (lower(actor.process.name) = lower('c:\\\\windows\\\\system32\\\\dllhost.exe') AND contains(lower(file.path), lower(':\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\__psscriptpolicytest_')) AND endswith(lower(file.path), lower('.ps1')) OR lower(actor.process.name) = lower('c:\\\\windows\\\\system32\\\\svchost.exe') AND contains(lower(file.path), lower('c:\\\\windows\\\\system32\\\\grouppolicy\\\\datastore\\\\')) AND contains(lower(file.path), lower('\\\\sysvol\\\\')) AND contains(lower(file.path), lower('\\\\policies\\\\')) AND contains(lower(file.path), lower('\\\\machine\\\\scripts\\\\startup\\\\')) AND (endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.bat')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Windows executables that write files with suspicious extensions",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

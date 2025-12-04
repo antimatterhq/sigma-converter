@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Unsigned Binary Loaded From Suspicious Location",
+    "comment": "Detects Code Integrity (CI) engine blocking processes from loading unsigned DLLs residing in suspicious locations",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security-mitigations",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(metadata.event_code)) in (11, 12)) AND (contains(lower(process.name), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower('\\\\perflogs\\\\')) OR contains(lower(process.name), lower('\\\\desktop\\\\')) OR contains(lower(process.name), lower('\\\\downloads\\\\')) OR contains(lower(process.name), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.name), lower('c:\\\\windows\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Code Integrity (CI) engine blocking processes from loading unsigned DLLs residing in suspicious locations",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/nasbench/EVTX-ETW-Resources/blob/45fd5be71a51aa518b1b36d4e1f36af498084e27/ETWEventsList/CSV/Windows11/21H2/W11_21H2_Pro_20220719_22000.795/Providers/Microsoft-Windows-Security-Mitigations.csv",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1574",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

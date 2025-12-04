@@ -1,22 +1,21 @@
-id: e3393cba-31f0-4207-831e-aef90ab17a8c
 title: SAML Token Issuer Anomaly
+id: e3393cba-31f0-4207-831e-aef90ab17a8c
 status: test
 level: high
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
 description: Indicates the SAML token issuer for the associated SAML token is potentially
     compromised. The claims included in the token are unusual or match known attacker
     patterns
-author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
-date: '2023-09-03'
-tags:
-    - attack.t1606
-    - attack.credential-access
 references:
     - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#token-issuer-anomaly
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
 falsepositives:
     - We recommend investigating the sessions flagged by this detection in the context
         of other sign-ins from the user.
-taxonomy: sigma
+tags:
+    - attack.t1606
+    - attack.credential-access
+date: '2023-09-03'
 logsource:
     product: azure
     service: riskdetection
@@ -31,13 +30,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:18:57.543958+00:00'
+            mapped_at: '2025-12-04T01:37:26.610849+00:00'
         service:
             source_field: service
             source_value: riskdetection
-            mapped_at: '2025-11-26T02:18:57.543958+00:00'
+            mapped_at: '2025-12-04T01:37:26.610849+00:00'
     detection_fields:
         -   source_field: riskEventType
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:18:57.543990+00:00'
+            mapped_at: '2025-12-04T01:37:26.610871+00:00'

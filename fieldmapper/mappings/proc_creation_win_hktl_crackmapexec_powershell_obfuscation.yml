@@ -1,17 +1,10 @@
-id: 6f8b3439-a203-45dc-a88b-abf57ea15ccf
 title: HackTool - CrackMapExec PowerShell Obfuscation
+id: 6f8b3439-a203-45dc-a88b-abf57ea15ccf
 status: test
 level: high
+author: Thomas Patzke
 description: The CrachMapExec pentesting framework implements a PowerShell obfuscation
     with some static strings detected by this rule.
-author: Thomas Patzke
-date: '2020-05-22'
-modified: '2023-02-21'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.defense-evasion
-    - attack.t1027.005
 references:
     - https://github.com/byt3bl33d3r/CrackMapExec
     - https://github.com/byt3bl33d3r/CrackMapExec/blob/0a49f75347b625e81ee6aa8c33d3970b5515ea9e/cme/helpers/powershell.py#L242
@@ -21,7 +14,13 @@ fields:
     - CommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1027.005
+date: '2020-05-22'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -49,21 +48,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:05.518391+00:00'
+            mapped_at: '2025-12-04T01:42:21.159870+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:05.518391+00:00'
+            mapped_at: '2025-12-04T01:42:21.159870+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:05.518407+00:00'
+            mapped_at: '2025-12-04T01:42:21.159889+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:05.518409+00:00'
+            mapped_at: '2025-12-04T01:42:21.159891+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:05.518411+00:00'
+            mapped_at: '2025-12-04T01:42:21.159892+00:00'

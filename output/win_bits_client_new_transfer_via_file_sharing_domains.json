@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "BITS Transfer Job Download From File Sharing Domains",
+    "comment": "Detects BITS transfer job downloading files from a file sharing domain.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "bits-client",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM network_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (metadata.event_code = 16403 AND (contains(lower(dst_endpoint.hostname), lower('.githubusercontent.com')) OR contains(lower(dst_endpoint.hostname), lower('anonfiles.com')) OR contains(lower(dst_endpoint.hostname), lower('cdn.discordapp.com')) OR contains(lower(dst_endpoint.hostname), lower('ddns.net')) OR contains(lower(dst_endpoint.hostname), lower('dl.dropboxusercontent.com')) OR contains(lower(dst_endpoint.hostname), lower('ghostbin.co')) OR contains(lower(dst_endpoint.hostname), lower('glitch.me')) OR contains(lower(dst_endpoint.hostname), lower('gofile.io')) OR contains(lower(dst_endpoint.hostname), lower('hastebin.com')) OR contains(lower(dst_endpoint.hostname), lower('mediafire.com')) OR contains(lower(dst_endpoint.hostname), lower('mega.nz')) OR contains(lower(dst_endpoint.hostname), lower('onrender.com')) OR contains(lower(dst_endpoint.hostname), lower('pages.dev')) OR contains(lower(dst_endpoint.hostname), lower('paste.ee')) OR contains(lower(dst_endpoint.hostname), lower('pastebin.com')) OR contains(lower(dst_endpoint.hostname), lower('pastebin.pl')) OR contains(lower(dst_endpoint.hostname), lower('pastetext.net')) OR contains(lower(dst_endpoint.hostname), lower('pixeldrain.com')) OR contains(lower(dst_endpoint.hostname), lower('privatlab.com')) OR contains(lower(dst_endpoint.hostname), lower('privatlab.net')) OR contains(lower(dst_endpoint.hostname), lower('send.exploit.in')) OR contains(lower(dst_endpoint.hostname), lower('sendspace.com')) OR contains(lower(dst_endpoint.hostname), lower('storage.googleapis.com')) OR contains(lower(dst_endpoint.hostname), lower('storjshare.io')) OR contains(lower(dst_endpoint.hostname), lower('supabase.co')) OR contains(lower(dst_endpoint.hostname), lower('temp.sh')) OR contains(lower(dst_endpoint.hostname), lower('transfer.sh')) OR contains(lower(dst_endpoint.hostname), lower('trycloudflare.com')) OR contains(lower(dst_endpoint.hostname), lower('ufile.io')) OR contains(lower(dst_endpoint.hostname), lower('w3spaces.com')) OR contains(lower(dst_endpoint.hostname), lower('workers.dev'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects BITS transfer job downloading files from a file sharing domain.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md, https://twitter.com/malmoeb/status/1535142803075960832, https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker, https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1197"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

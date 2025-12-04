@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Process Deletion of Its Own Executable",
+    "comment": "Detects the deletion of a process's executable by itself. This is usually not possible without workarounds and may be used by malware to hide its traces.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_delete",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND LOWER(file.path) = LOWER(actor.process.name))"
+      }
+    },
+    "output": {
+      "summary": "Detects the deletion of a process's executable by itself. This is usually not possible without workarounds and may be used by malware to hide its traces.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some false positives are to be expected from uninstallers. Reference: https://github.com/joaoviictorti/RustRedOps/tree/ce04369a246006d399e8c61d9fe0e6b34f988a49/Self_Deletion",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell Download - Powershell Script",
+    "comment": "Detects suspicious PowerShell download command",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('system.net.webclient')) AND (contains(lower(script.script_content.value), lower('.downloadfile(')) OR contains(lower(script.script_content.value), lower('.downloadfileasync(')) OR contains(lower(script.script_content.value), lower('.downloadstring(')) OR contains(lower(script.script_content.value), lower('.downloadstringasync('))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious PowerShell download command",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: PowerShell scripts that download content from the Internet References: https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadstring?view=net-8.0, https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadfile?view=net-8.0",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

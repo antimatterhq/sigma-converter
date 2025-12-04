@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "UAC Bypass Using EventVwr",
+    "comment": "Detects the pattern of a UAC bypass using Windows Event Viewer",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(file.path), lower('\\\\microsoft\\\\event viewer\\\\recentviews')) OR endswith(lower(file.path), lower('\\\\microsoft\\\\eventv~1\\\\recentviews'))) AND NOT (startswith(lower(actor.process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\windows\\\\syswow64\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the pattern of a UAC bypass using Windows Event Viewer",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/orange_8361/status/1518970259868626944?s=20&t=RFXqZjtA7tWM3HxqEH78Aw, https://twitter.com/splinter_code/status/1519075134296006662?s=12&t=DLUXH86WtcmG_AZ5gY3C6g, https://lolbas-project.github.io/lolbas/Binaries/Eventvwr/#execute",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

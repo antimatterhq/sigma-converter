@@ -1,22 +1,21 @@
-id: 90fb5e62-ca1f-4e22-b42e-cc521874c938
 title: Suspicious Shells Spawn by Java Utility Keytool
+id: 90fb5e62-ca1f-4e22-b42e-cc521874c938
 status: test
 level: high
+author: Andreas Hunkeler (@Karneades)
 description: Detects suspicious shell spawn from Java utility keytool process (e.g.
     adselfservice plus exploitation)
-author: Andreas Hunkeler (@Karneades)
-date: '2021-12-22'
-modified: '2023-01-21'
-tags:
-    - attack.initial-access
-    - attack.persistence
-    - attack.privilege-escalation
 references:
     - https://redcanary.com/blog/intelligence-insights-december-2021
     - https://www.synacktiv.com/en/publications/how-to-exploit-cve-2021-40539-on-manageengine-adselfservice-plus.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.persistence
+    - attack.privilege-escalation
+date: '2021-12-22'
+modified: '2023-01-21'
 logsource:
     category: process_creation
     product: windows
@@ -56,17 +55,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:59.268801+00:00'
+            mapped_at: '2025-12-04T01:47:22.057604+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:59.268801+00:00'
+            mapped_at: '2025-12-04T01:47:22.057604+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:59.268823+00:00'
+            mapped_at: '2025-12-04T01:47:22.057623+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:59.268826+00:00'
+            mapped_at: '2025-12-04T01:47:22.057625+00:00'

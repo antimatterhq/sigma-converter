@@ -1,20 +1,17 @@
-id: d55b793d-f847-4eea-b59a-5ab09908ac90
 title: Suspicious Child Process Of Veeam Dabatase
+id: d55b793d-f847-4eea-b59a-5ab09908ac90
 status: test
 level: critical
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious child processes of the Veeam service process. This
     could indicate potential RCE or SQL Injection.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-04'
+references:
+    - https://labs.withsecure.com/publications/fin7-target-veeam-servers
 tags:
     - attack.initial-access
     - attack.persistence
     - attack.privilege-escalation
-references:
-    - https://labs.withsecure.com/publications/fin7-target-veeam-servers
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''869b9ca7-9ea2-4a5a-8325-e80e62f75445''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2023-05-04'
 logsource:
     category: process_creation
     product: windows
@@ -51,6 +48,9 @@ detection:
             - \tasklist.exe
             - \whoami.exe
     condition: selection_parent and 1 of selection_child_*
+related:
+    -   id: 869b9ca7-9ea2-4a5a-8325-e80e62f75445
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -58,25 +58,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:18.168187+00:00'
+            mapped_at: '2025-12-04T01:45:50.520335+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:18.168187+00:00'
+            mapped_at: '2025-12-04T01:45:50.520335+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:18.168208+00:00'
+            mapped_at: '2025-12-04T01:45:50.520351+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:31:18.168211+00:00'
+            mapped_at: '2025-12-04T01:45:50.520353+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:18.168212+00:00'
+            mapped_at: '2025-12-04T01:45:50.520355+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:18.168214+00:00'
+            mapped_at: '2025-12-04T01:45:50.520356+00:00'

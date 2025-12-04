@@ -1,14 +1,10 @@
-id: c977cb50-3dff-4a9f-b873-9290f56132f1
 title: Uncommon AppX Package Locations
+id: c977cb50-3dff-4a9f-b873-9290f56132f1
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects an appx package added the pipeline of the "to be processed" packages
     which is located in uncommon locations
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-11'
-modified: '2024-12-25'
-tags:
-    - attack.defense-evasion
 references:
     - Internal Research
     - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
@@ -16,7 +12,10 @@ references:
     - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-01-11'
+modified: '2024-12-25'
 logsource:
     product: windows
     service: appxdeployment-server
@@ -46,17 +45,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:22.182904+00:00'
+            mapped_at: '2025-12-04T01:56:43.631013+00:00'
         service:
             source_field: service
             source_value: appxdeployment-server
-            mapped_at: '2025-11-26T02:47:22.182904+00:00'
+            mapped_at: '2025-12-04T01:56:43.631013+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:22.182933+00:00'
+            mapped_at: '2025-12-04T01:56:43.631043+00:00'
         -   source_field: Path
             target_table: scheduled_job_activity
             target_field: job.file.path
-            mapped_at: '2025-11-26T02:47:22.182937+00:00'
+            mapped_at: '2025-12-04T01:56:43.631046+00:00'

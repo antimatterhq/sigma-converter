@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious IIS Module Registration",
+    "comment": "Detects a suspicious IIS module registration as described in Microsoft threat report on IIS backdoors",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\w3wp.exe')) AND (contains(lower(process.cmd_line), lower('appcmd.exe add module')) OR contains(lower(process.cmd_line), lower(' system.enterpriseservices.internal.publish')) AND endswith(lower(process.name), lower('\\\\powershell.exe')) OR contains(lower(process.cmd_line), lower('gacutil')) AND contains(lower(process.cmd_line), lower(' /i'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious IIS module registration as described in Microsoft threat report on IIS backdoors",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrative activity Reference: https://www.microsoft.com/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

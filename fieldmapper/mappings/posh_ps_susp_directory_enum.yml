@@ -1,20 +1,19 @@
-id: 162e69a7-7981-4344-84a9-0f1c9a217a52
 title: Powershell Directory Enumeration
+id: 162e69a7-7981-4344-84a9-0f1c9a217a52
 status: test
 level: medium
+author: frack113
 description: Detects technique used by MAZE ransomware to enumerate directories using
     Powershell
-author: frack113
-date: '2022-03-17'
-tags:
-    - attack.discovery
-    - attack.t1083
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1083/T1083.md
     - https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents
 falsepositives:
     - Legitimate PowerShell scripts
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1083
+date: '2022-03-17'
 logsource:
     category: ps_script
     product: windows
@@ -32,18 +31,18 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: script_activity
-    activity_id: 1
+    activity_id: <UNMAPPED>
     logsource:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:43.659638+00:00'
+            mapped_at: '2025-12-04T01:54:00.058143+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:43.659638+00:00'
+            mapped_at: '2025-12-04T01:54:00.058143+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:43.659664+00:00'
+            mapped_at: '2025-12-04T01:54:00.058231+00:00'

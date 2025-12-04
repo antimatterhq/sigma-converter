@@ -1,15 +1,9 @@
-id: b2ddd389-f676-4ac4-845a-e00781a48e5f
 title: Using SettingSyncHost.exe as LOLBin
+id: b2ddd389-f676-4ac4-845a-e00781a48e5f
 status: test
 level: high
-description: Detects using SettingSyncHost.exe to run hijacked binary
 author: Anton Kutepov, oscd.community
-date: '2020-02-05'
-modified: '2021-11-27'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1574.008
+description: Detects using SettingSyncHost.exe to run hijacked binary
 references:
     - https://www.hexacorn.com/blog/2020/02/02/settingsynchost-exe-as-a-lolbin
 fields:
@@ -17,7 +11,12 @@ fields:
     - Image
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1574.008
+date: '2020-02-05'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:52.796423+00:00'
+            mapped_at: '2025-12-04T01:41:22.557612+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:52.796423+00:00'
+            mapped_at: '2025-12-04T01:41:22.557612+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:52.796439+00:00'
+            mapped_at: '2025-12-04T01:41:22.557629+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:25:52.796442+00:00'
+            mapped_at: '2025-12-04T01:41:22.557631+00:00'

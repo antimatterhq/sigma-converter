@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Suspicious Encoded And Obfuscated Reflection Assembly Load Function Call",
+    "comment": "Detects suspicious base64 encoded and obfuscated \"LOAD\" keyword used in .NET \"reflection.assembly\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('oga6acgaigbmaciakwaiag8ayqbkaciakq')) OR contains(lower(process.cmd_line), lower('oaogaoaciataaiacsaigbvageazaaiacka')) OR contains(lower(process.cmd_line), lower('6adoakaaiaewaigaraciabwbhagqaigapa')) OR contains(lower(process.cmd_line), lower('oga6acgaigbmag8aigaraciayqbkaciakq')) OR contains(lower(process.cmd_line), lower('oaogaoaciatabvaciakwaiageazaaiacka')) OR contains(lower(process.cmd_line), lower('6adoakaaiaewabwaiacsaigbhagqaigapa')) OR contains(lower(process.cmd_line), lower('oga6acgaigbmag8ayqaiacsaigbkaciakq')) OR contains(lower(process.cmd_line), lower('oaogaoaciatabvageaigaraciazaaiacka')) OR contains(lower(process.cmd_line), lower('6adoakaaiaewabwbhaciakwaiagqaigapa')) OR contains(lower(process.cmd_line), lower('oga6acgajwbmaccakwanag8ayqbkaccakq')) OR contains(lower(process.cmd_line), lower('oaogaoaccataanacsajwbvageazaanacka')) OR contains(lower(process.cmd_line), lower('6adoakaanaewajwaraccabwbhagqajwapa')) OR contains(lower(process.cmd_line), lower('oga6acgajwbmag8ajwaraccayqbkaccakq')) OR contains(lower(process.cmd_line), lower('oaogaoaccatabvaccakwanageazaanacka')) OR contains(lower(process.cmd_line), lower('6adoakaanaewabwanacsajwbhagqajwapa')) OR contains(lower(process.cmd_line), lower('oga6acgajwbmag8ayqanacsajwbkaccakq')) OR contains(lower(process.cmd_line), lower('oaogaoaccatabvageajwaraccazaanacka')) OR contains(lower(process.cmd_line), lower('6adoakaanaewabwbhaccakwanagqajwapa'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious base64 encoded and obfuscated \"LOAD\" keyword used in .NET \"reflection.assembly\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line False positive: Unlikely References: https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/mal_revil.yar, https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/, https://learn.microsoft.com/en-us/dotnet/api/system.appdomain.load?view=net-7.0",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

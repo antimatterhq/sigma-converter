@@ -1,22 +1,21 @@
-id: 3a734d25-df5c-4b99-8034-af1ddb5883a4
 title: Suspicious Scheduled Task Creation
+id: 3a734d25-df5c-4b99-8034-af1ddb5883a4
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious scheduled task creation events. Based on attributes
     such as paths, commands line flags, etc.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-05'
-modified: '2022-12-07'
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4698
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.privilege-escalation
     - attack.persistence
     - attack.t1053.005
-references:
-    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4698
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-12-05'
+modified: '2022-12-07'
 logsource:
     product: windows
     service: security
@@ -70,17 +69,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:30.164481+00:00'
+            mapped_at: '2025-12-04T01:55:30.116249+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:30.164481+00:00'
+            mapped_at: '2025-12-04T01:55:30.116249+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:31.038114+00:00'
+            mapped_at: '2025-12-04T01:55:30.116267+00:00'
         -   source_field: TaskContent
             target_table: scheduled_job_activity
             target_field: job.cmd_line
-            mapped_at: '2025-11-26T02:44:31.038140+00:00'
+            mapped_at: '2025-12-04T01:55:30.116270+00:00'

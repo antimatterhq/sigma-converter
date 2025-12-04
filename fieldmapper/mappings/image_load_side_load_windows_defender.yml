@@ -1,22 +1,19 @@
-id: 418dc89a-9808-4b87-b1d7-e5ae0cb6effc
 title: Potential Mpclient.DLL Sideloading
+id: 418dc89a-9808-4b87-b1d7-e5ae0cb6effc
 status: test
 level: high
+author: Bhabesh Raj
 description: Detects potential sideloading of "mpclient.dll" by Windows Defender processes
     ("MpCmdRun" and "NisSrv") from their non-default directory.
-author: Bhabesh Raj
-date: '2022-08-02'
-modified: '2023-08-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1574.002
 references:
     - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7002aa10-b8d4-47ae-b5ba-51ab07e228b9''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+date: '2022-08-02'
+modified: '2023-08-04'
 logsource:
     category: image_load
     product: windows
@@ -34,6 +31,9 @@ detection:
             - C:\ProgramData\Microsoft\Windows Defender\Platform\
             - C:\Windows\WinSxS\
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 7002aa10-b8d4-47ae-b5ba-51ab07e228b9
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

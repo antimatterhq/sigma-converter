@@ -1,21 +1,20 @@
-id: cafeeba3-01da-4ab4-b6c4-a31b1d9730c7
 title: PrintBrm ZIP Creation of Extraction
+id: cafeeba3-01da-4ab4-b6c4-a31b1d9730c7
 status: test
 level: high
+author: frack113
 description: Detects the execution of the LOLBIN PrintBrm.exe, which can be used to
     create or extract ZIP files. PrintBrm.exe should not be run on a normal workstation.
-author: frack113
-date: '2022-05-02'
+references:
+    - https://lolbas-project.github.io/lolbas/Binaries/PrintBrm/
+falsepositives:
+    - Unknown
 tags:
     - attack.command-and-control
     - attack.t1105
     - attack.defense-evasion
     - attack.t1564.004
-references:
-    - https://lolbas-project.github.io/lolbas/Binaries/PrintBrm/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-05-02'
 logsource:
     category: process_creation
     product: windows
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:33.214406+00:00'
+            mapped_at: '2025-12-04T01:43:41.302943+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:33.214406+00:00'
+            mapped_at: '2025-12-04T01:43:41.302943+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:33.214426+00:00'
+            mapped_at: '2025-12-04T01:43:41.302955+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:33.214428+00:00'
+            mapped_at: '2025-12-04T01:43:41.302957+00:00'

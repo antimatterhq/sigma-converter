@@ -1,23 +1,22 @@
-id: b243b280-65fe-48df-ba07-6ddea7646427
 title: Discovery of a System Time
+id: b243b280-65fe-48df-ba07-6ddea7646427
 status: test
 level: low
+author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
 description: Identifies use of various commands to query a systems time. This technique
     may be used before executing a scheduled task or to discover the time zone of
     a target system.
-author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
-date: '2019-10-24'
-modified: '2022-06-28'
-tags:
-    - attack.discovery
-    - attack.t1124
 references:
     - https://eqllib.readthedocs.io/en/latest/analytics/fcdb99c2-ac3c-4bde-b664-4b336329bed2.html
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1124/T1124.md
 falsepositives:
     - Legitimate use of the system utilities to discover system time for legitimate
         reason
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1124
+date: '2019-10-24'
+modified: '2022-06-28'
 logsource:
     category: process_creation
     product: windows
@@ -38,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:13.911943+00:00'
+            mapped_at: '2025-12-04T01:43:25.495866+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:13.911943+00:00'
+            mapped_at: '2025-12-04T01:43:25.495866+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:13.911974+00:00'
+            mapped_at: '2025-12-04T01:43:25.495882+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:13.911977+00:00'
+            mapped_at: '2025-12-04T01:43:25.495884+00:00'

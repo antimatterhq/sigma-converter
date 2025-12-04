@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "PowerShell Base64 Encoded Invoke Keyword",
+    "comment": "Detects UTF-8 and UTF-16 Base64 encoded powershell 'Invoke-' calls",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND contains(lower(process.cmd_line), lower(' -e')) AND (contains(lower(process.cmd_line), lower('sqbuahyabwbragualq')) OR contains(lower(process.cmd_line), lower('kabgb2ag8aawblac0a')) OR contains(lower(process.cmd_line), lower('jag4adgbvagsazqata')) OR contains(lower(process.cmd_line), lower('sw52b2tll')) OR contains(lower(process.cmd_line), lower('ludm9rzs')) OR contains(lower(process.cmd_line), lower('jbnzva2ut'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects UTF-8 and UTF-16 Base64 encoded powershell 'Invoke-' calls",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

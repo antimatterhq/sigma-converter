@@ -1,21 +1,20 @@
-id: 7a01183d-71a2-46ad-ad5c-acd989ac1793
 title: UAC Bypass Abusing Winsat Path Parsing - Process
+id: 7a01183d-71a2-46ad-ad5c-acd989ac1793
 status: test
 level: high
+author: Christian Burkard (Nextron Systems)
 description: Detects the pattern of UAC Bypass using a path parsing issue in winsat.exe
     (UACMe 52)
-author: Christian Burkard (Nextron Systems)
-date: '2021-08-30'
-modified: '2024-12-01'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1548.002
 references:
     - https://github.com/hfiref0x/UACME
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+date: '2021-08-30'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:55.940696+00:00'
+            mapped_at: '2025-12-04T01:42:16.121753+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:55.940696+00:00'
+            mapped_at: '2025-12-04T01:42:16.121753+00:00'
     detection_fields:
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:26:55.940728+00:00'
+            mapped_at: '2025-12-04T01:42:16.121767+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:55.940731+00:00'
+            mapped_at: '2025-12-04T01:42:16.121769+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:26:55.940735+00:00'
+            mapped_at: '2025-12-04T01:42:16.121770+00:00'

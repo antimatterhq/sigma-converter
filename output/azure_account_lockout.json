@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Account Lockout",
+    "comment": "Identifies user account which has been locked because the user tried to sign in too many times with an incorrect user ID or password.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "signinlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (status_id = 50053)"
+      }
+    },
+    "output": {
+      "summary": "Identifies user account which has been locked because the user tried to sign in too many times with an incorrect user ID or password.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1110"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

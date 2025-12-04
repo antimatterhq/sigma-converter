@@ -1,21 +1,20 @@
-id: 6e897651-f157-4d8f-aaeb-df8151488385
 title: PowerShell Web Download
+id: 6e897651-f157-4d8f-aaeb-df8151488385
 status: test
 level: medium
-description: Detects suspicious ways to download files or content using PowerShell
 author: Florian Roth (Nextron Systems)
-date: '2022-03-24'
-modified: '2023-01-05'
+description: Detects suspicious ways to download files or content using PowerShell
+references:
+    - https://github.com/VirtualAlllocEx/Payload-Download-Cradles/blob/88e8eca34464a547c90d9140d70e9866dcbc6a12/Download-Cradles.cmd
+falsepositives:
+    - Scripts or tools that download files
 tags:
     - attack.command-and-control
     - attack.execution
     - attack.t1059.001
     - attack.t1105
-references:
-    - https://github.com/VirtualAlllocEx/Payload-Download-Cradles/blob/88e8eca34464a547c90d9140d70e9866dcbc6a12/Download-Cradles.cmd
-falsepositives:
-    - Scripts or tools that download files
-taxonomy: sigma
+date: '2022-03-24'
+modified: '2023-01-05'
 logsource:
     category: process_creation
     product: windows
@@ -34,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:54.482652+00:00'
+            mapped_at: '2025-12-04T01:48:51.899968+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:54.482652+00:00'
+            mapped_at: '2025-12-04T01:48:51.899968+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:54.482679+00:00'
+            mapped_at: '2025-12-04T01:48:51.899984+00:00'

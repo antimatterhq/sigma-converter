@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Access To Potentially Sensitive Sysvol Files By Uncommon Applications",
+    "comment": "Detects file access requests to potentially sensitive files hosted on the Windows Sysvol share.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_access",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND startswith(lower(file.name), lower('\\\\')) AND contains(lower(file.name), lower('\\\\sysvol\\\\')) AND contains(lower(file.name), lower('\\\\policies\\\\')) AND (endswith(lower(file.name), lower('audit.csv')) OR endswith(lower(file.name), lower('files.xml')) OR endswith(lower(file.name), lower('gpttmpl.inf')) OR endswith(lower(file.name), lower('groups.xml')) OR endswith(lower(file.name), lower('registry.pol')) OR endswith(lower(file.name), lower('registry.xml')) OR endswith(lower(file.name), lower('scheduledtasks.xml')) OR endswith(lower(file.name), lower('scripts.ini')) OR endswith(lower(file.name), lower('services.xml'))) AND NOT (startswith(lower(actor.process.name), lower('c:\\\\program files (x86)\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\program files\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(actor.process.name), lower('c:\\\\windows\\\\syswow64\\\\')) OR lower(actor.process.name) = lower('c:\\\\windows\\\\explorer.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects file access requests to potentially sensitive files hosted on the Windows Sysvol share.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/vletoux/pingcastle",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1552",
+          "subTechniqueId": "006"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

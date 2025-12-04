@@ -1,15 +1,10 @@
-id: e218595b-bbe7-4ee5-8a96-f32a24ad3468
 title: Suspicious Curl.EXE Download
+id: e218595b-bbe7-4ee5-8a96-f32a24ad3468
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects a suspicious curl process start on Windows and outputs the requested
     document to a local file
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2020-07-03'
-modified: '2023-02-21'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://twitter.com/max_mal_/status/1542461200797163522
     - https://web.archive.org/web/20200128160046/https://twitter.com/reegun21/status/1222093798009790464
@@ -18,10 +13,11 @@ references:
     - https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1105/T1105.md#atomic-test-18---curl-download-file
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''bbeaed61-1990-4773-bf57-b81dbad7db2d''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''9a517fca-4ba3-4629-9278-a68694697b81''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2020-07-03'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -62,6 +58,11 @@ detection:
             - gfw-httpget-
             - AppData
     condition: selection_curl and 1 of selection_susp_* and not 1 of filter_optional_*
+related:
+    -   id: bbeaed61-1990-4773-bf57-b81dbad7db2d
+        type: derived
+    -   id: 9a517fca-4ba3-4629-9278-a68694697b81
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -69,25 +70,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:17.399957+00:00'
+            mapped_at: '2025-12-04T01:47:35.539245+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:17.399957+00:00'
+            mapped_at: '2025-12-04T01:47:35.539245+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:17.400000+00:00'
+            mapped_at: '2025-12-04T01:47:35.539260+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:33:17.400006+00:00'
+            mapped_at: '2025-12-04T01:47:35.539262+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:17.400009+00:00'
+            mapped_at: '2025-12-04T01:47:35.539263+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:33:17.400013+00:00'
+            mapped_at: '2025-12-04T01:47:35.539264+00:00'

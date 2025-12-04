@@ -1,7 +1,8 @@
-id: b7b19cb6-9b32-4fc4-a108-73f19acfe262
 title: Suspicious VBoxDrvInst.exe Parameters
+id: b7b19cb6-9b32-4fc4-a108-73f19acfe262
 status: test
 level: medium
+author: Konstantin Grishchenko, oscd.community
 description: 'Detect VBoxDrvInst.exe run with parameters allowing processing INF file.
 
     This allows to create values in the registry and install drivers.
@@ -10,12 +11,6 @@ description: 'Detect VBoxDrvInst.exe run with parameters allowing processing INF
     of Run or RunOnce registry keys
 
     '
-author: Konstantin Grishchenko, oscd.community
-date: '2020-10-06'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/blob/4db780e0f0b2e2bb8cb1fa13e09196da9b9f1834/yml/LOLUtilz/OtherBinaries/VBoxDrvInst.yml
     - https://twitter.com/pabraeken/status/993497996179492864
@@ -27,7 +22,11 @@ fields:
 falsepositives:
     - Legitimate use of VBoxDrvInst.exe utility by VirtualBox Guest Additions installation
         process
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+date: '2020-10-06'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -45,17 +44,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:58.368957+00:00'
+            mapped_at: '2025-12-04T01:49:45.212190+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:58.368957+00:00'
+            mapped_at: '2025-12-04T01:49:45.212190+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:58.368995+00:00'
+            mapped_at: '2025-12-04T01:49:45.212204+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:58.368998+00:00'
+            mapped_at: '2025-12-04T01:49:45.212209+00:00'

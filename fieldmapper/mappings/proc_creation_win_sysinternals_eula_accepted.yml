@@ -1,23 +1,20 @@
-id: 7cccd811-7ae9-4ebe-9afd-cb5c406b824b
 title: Potential Execution of Sysinternals Tools
+id: 7cccd811-7ae9-4ebe-9afd-cb5c406b824b
 status: test
 level: low
+author: Markus Neis
 description: Detects command lines that contain the 'accepteula' flag which could
     be a sign of execution of one of the Sysinternals tools
-author: Markus Neis
-date: '2017-08-28'
-modified: '2024-03-13'
-tags:
-    - attack.resource-development
-    - attack.t1588.002
 references:
     - https://twitter.com/Moti_B/status/1008587936735035392
 falsepositives:
     - Legitimate use of SysInternals tools
     - Programs that use the same command line flag
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''25ffa65d-76d8-4da5-a832-3f2b0136e133''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.resource-development
+    - attack.t1588.002
+date: '2017-08-28'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -25,6 +22,9 @@ detection:
     selection:
         CommandLine|contains|windash: ' -accepteula'
     condition: selection
+related:
+    -   id: 25ffa65d-76d8-4da5-a832-3f2b0136e133
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -32,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:34.066253+00:00'
+            mapped_at: '2025-12-04T01:47:49.005899+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:34.066253+00:00'
+            mapped_at: '2025-12-04T01:47:49.005899+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:34.066264+00:00'
+            mapped_at: '2025-12-04T01:47:49.005912+00:00'

@@ -1,23 +1,20 @@
-id: 652c098d-dc11-4ba6-8566-c20e89042f2b
 title: User Added To Admin Group Via Sysadminctl
+id: 652c098d-dc11-4ba6-8566-c20e89042f2b
 status: test
 level: medium
+author: Sohan G (D4rkCiph3r)
 description: Detects attempts to create and add an account to the admin group via
     "sysadminctl"
-author: Sohan G (D4rkCiph3r)
-date: '2023-03-19'
-tags:
-    - attack.initial-access
-    - attack.privilege-escalation
-    - attack.t1078.003
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1078.003/T1078.003.md#atomic-test-3---create-local-account-with-admin-privileges-using-sysadminctl-utility---macos
     - https://ss64.com/osx/sysadminctl.html
 falsepositives:
     - Legitimate administration activities
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0c1ffcf9-efa9-436e-ab68-23a9496ebf5b''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.privilege-escalation
+    - attack.t1078.003
+date: '2023-03-19'
 logsource:
     category: process_creation
     product: macos
@@ -28,6 +25,9 @@ detection:
             - ' -addUser '
             - ' -admin '
     condition: selection
+related:
+    -   id: 0c1ffcf9-efa9-436e-ab68-23a9496ebf5b
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -35,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:24.441062+00:00'
+            mapped_at: '2025-12-04T01:34:19.026491+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:24.441062+00:00'
+            mapped_at: '2025-12-04T01:34:19.026491+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:24.441075+00:00'
+            mapped_at: '2025-12-04T01:34:19.026516+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:24.441077+00:00'
+            mapped_at: '2025-12-04T01:34:19.026519+00:00'

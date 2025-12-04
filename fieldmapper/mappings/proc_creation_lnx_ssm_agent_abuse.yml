@@ -1,22 +1,21 @@
-id: f9b3edc5-3322-4fc7-8aa3-245d646cc4b7
 title: Potential Linux Amazon SSM Agent Hijacking
+id: f9b3edc5-3322-4fc7-8aa3-245d646cc4b7
 status: test
 level: medium
+author: Muhammad Faisal
 description: Detects potential Amazon SSM agent hijack attempts as outlined in the
     Mitiga research report.
-author: Muhammad Faisal
-date: '2023-08-03'
-tags:
-    - attack.command-and-control
-    - attack.persistence
-    - attack.t1219
 references:
     - https://www.mitiga.io/blog/mitiga-security-advisory-abusing-the-ssm-agent-as-a-remote-access-trojan
     - https://www.bleepingcomputer.com/news/security/amazons-aws-ssm-agent-can-be-used-as-post-exploitation-rat-malware/
     - https://www.helpnetsecurity.com/2023/08/02/aws-instances-attackers-access/
 falsepositives:
     - Legitimate activity of system administrators
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.persistence
+    - attack.t1219
+date: '2023-08-03'
 logsource:
     category: process_creation
     product: linux
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:35.424650+00:00'
+            mapped_at: '2025-12-04T01:35:52.537973+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:35.424650+00:00'
+            mapped_at: '2025-12-04T01:35:52.537973+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:35.424665+00:00'
+            mapped_at: '2025-12-04T01:35:52.537990+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:35.424667+00:00'
+            mapped_at: '2025-12-04T01:35:52.537992+00:00'

@@ -1,23 +1,22 @@
-id: 5f699bc5-5446-4a4a-a0b7-5ef2885a3eb4
 title: RDP Over Reverse SSH Tunnel
+id: 5f699bc5-5446-4a4a-a0b7-5ef2885a3eb4
 status: test
 level: high
+author: Samir Bousseaden
 description: Detects svchost hosting RDP termsvcs communicating with the loopback
     address and on TCP port 3389
-author: Samir Bousseaden
-date: '2019-02-16'
-modified: '2024-03-12'
+references:
+    - https://twitter.com/cyb3rops/status/1096842275437625346
+falsepositives:
+    - Unknown
 tags:
     - attack.command-and-control
     - attack.t1572
     - attack.lateral-movement
     - attack.t1021.001
     - car.2013-07-002
-references:
-    - https://twitter.com/cyb3rops/status/1096842275437625346
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2019-02-16'
+modified: '2024-03-12'
 logsource:
     category: network_connection
     product: windows
@@ -38,25 +37,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:49.739535+00:00'
+            mapped_at: '2025-12-04T01:51:47.997456+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:49.739535+00:00'
+            mapped_at: '2025-12-04T01:51:47.997456+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:49.739556+00:00'
+            mapped_at: '2025-12-04T01:51:47.997474+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:49.739560+00:00'
+            mapped_at: '2025-12-04T01:51:47.997476+00:00'
         -   source_field: SourcePort
             target_table: network_activity
             target_field: src_endpoint.port
-            mapped_at: '2025-11-26T02:38:49.739562+00:00'
+            mapped_at: '2025-12-04T01:51:47.997477+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:49.739564+00:00'
+            mapped_at: '2025-12-04T01:51:47.997478+00:00'

@@ -1,14 +1,9 @@
-id: 646bc99f-6682-4b47-a73a-17b1b64c9d34
 title: Execute Files with Msdeploy.exe
+id: 646bc99f-6682-4b47-a73a-17b1b64c9d34
 status: test
 level: medium
-description: Detects file execution using the msdeploy.exe lolbin
 author: Beyu Denis, oscd.community
-date: '2020-10-18'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
+description: Detects file execution using the msdeploy.exe lolbin
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Msdeploy/
     - https://twitter.com/pabraeken/status/995837734379032576
@@ -20,7 +15,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - System administrator Usage
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-18'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:14.996623+00:00'
+            mapped_at: '2025-12-04T01:50:59.505502+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:14.996623+00:00'
+            mapped_at: '2025-12-04T01:50:59.505502+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:14.996649+00:00'
+            mapped_at: '2025-12-04T01:50:59.505515+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:14.996653+00:00'
+            mapped_at: '2025-12-04T01:50:59.505517+00:00'

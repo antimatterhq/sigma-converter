@@ -1,7 +1,8 @@
-id: ed74fe75-7594-4b4b-ae38-e38e3fd2eb23
 title: Outbound RDP Connections Over Non-Standard Tools
+id: ed74fe75-7594-4b4b-ae38-e38e3fd2eb23
 status: test
 level: high
+author: Markus Neis
 description: 'Detects Non-Standard tools initiating a connection over port 3389 indicating
     possible lateral movement.
 
@@ -9,18 +10,16 @@ description: 'Detects Non-Standard tools initiating a connection over port 3389 
     RDP tooling that you might use.
 
     '
-author: Markus Neis
-date: '2019-05-15'
-modified: '2024-02-09'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.001
-    - car.2013-07-002
 references:
     - https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2019-0708
 falsepositives:
     - Third party RDP tools
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.001
+    - car.2013-07-002
+date: '2019-05-15'
+modified: '2024-02-09'
 logsource:
     category: network_connection
     product: windows
@@ -89,29 +88,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:37:59.881999+00:00'
+            mapped_at: '2025-12-04T01:51:28.373733+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:59.881999+00:00'
+            mapped_at: '2025-12-04T01:51:28.373733+00:00'
     detection_fields:
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:00.783357+00:00'
+            mapped_at: '2025-12-04T01:51:28.373789+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:00.783370+00:00'
+            mapped_at: '2025-12-04T01:51:28.373796+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:00.783374+00:00'
+            mapped_at: '2025-12-04T01:51:28.373797+00:00'
         -   source_field: SourcePort
             target_table: network_activity
             target_field: src_endpoint.port
-            mapped_at: '2025-11-26T02:38:00.783377+00:00'
+            mapped_at: '2025-12-04T01:51:28.373799+00:00'
         -   source_field: Protocol
             target_table: network_activity
             target_field: connection_info.protocol_name
-            mapped_at: '2025-11-26T02:38:00.783380+00:00'
+            mapped_at: '2025-12-04T01:51:28.373800+00:00'

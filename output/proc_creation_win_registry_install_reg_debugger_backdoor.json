@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Debugger Registration Cmdline",
+    "comment": "Detects the registration of a debugger for a program that is available in the logon screen (sticky key backdoor).",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('\\\\currentversion\\\\image file execution options\\\\')) AND (contains(lower(process.cmd_line), lower('sethc.exe')) OR contains(lower(process.cmd_line), lower('utilman.exe')) OR contains(lower(process.cmd_line), lower('osk.exe')) OR contains(lower(process.cmd_line), lower('magnify.exe')) OR contains(lower(process.cmd_line), lower('narrator.exe')) OR contains(lower(process.cmd_line), lower('displayswitch.exe')) OR contains(lower(process.cmd_line), lower('atbroker.exe')) OR contains(lower(process.cmd_line), lower('helppane.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the registration of a debugger for a program that is available in the logon screen (sticky key backdoor).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blogs.technet.microsoft.com/jonathantrull/2016/10/03/detecting-sticky-key-backdoors/, https://bazaar.abuse.ch/sample/6f3aa9362d72e806490a8abce245331030d1ab5ac77e400dd475748236a6cc81/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1546",
+          "subTechniqueId": "008"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

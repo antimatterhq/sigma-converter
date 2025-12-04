@@ -1,24 +1,21 @@
-id: 99b97608-3e21-4bfe-8217-2a127c396a0e
 title: Remote Thread Creation Via PowerShell In Uncommon Target
+id: 99b97608-3e21-4bfe-8217-2a127c396a0e
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects the creation of a remote thread from a Powershell process in
     an uncommon target process
-author: Florian Roth (Nextron Systems)
-date: '2018-06-25'
-modified: '2023-11-10'
+references:
+    - https://www.fireeye.com/blog/threat-research/2018/06/bring-your-own-land-novel-red-teaming-technique.html
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.execution
     - attack.t1218.011
     - attack.t1059.001
-references:
-    - https://www.fireeye.com/blog/threat-research/2018/06/bring-your-own-land-novel-red-teaming-technique.html
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''eeb2e3dc-c1f4-40dd-9bd5-149ee465ad50''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2018-06-25'
+modified: '2023-11-10'
 logsource:
     category: create_remote_thread
     product: windows
@@ -31,6 +28,9 @@ detection:
             - \rundll32.exe
             - \regsvr32.exe
     condition: selection
+related:
+    -   id: eeb2e3dc-c1f4-40dd-9bd5-149ee465ad50
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 4
@@ -38,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_remote_thread
-            mapped_at: '2025-11-26T02:25:00.692512+00:00'
+            mapped_at: '2025-12-04T01:40:44.969512+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:00.692512+00:00'
+            mapped_at: '2025-12-04T01:40:44.969512+00:00'
     detection_fields:
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:25:00.692541+00:00'
+            mapped_at: '2025-12-04T01:40:44.969536+00:00'
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:25:00.692545+00:00'
+            mapped_at: '2025-12-04T01:40:44.969540+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Script Interpreter Execution From Suspicious Folder",
+    "comment": "Detects a suspicious script execution in temporary folders or folders accessible by environment variables",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR contains(lower(process.cmd_line), lower(' -ep bypass ')) OR contains(lower(process.cmd_line), lower(' -executionpolicy bypass ')) OR contains(lower(process.cmd_line), lower(' -w hidden ')) OR contains(lower(process.cmd_line), lower('/e:javascript ')) OR contains(lower(process.cmd_line), lower('/e:jscript ')) OR contains(lower(process.cmd_line), lower('/e:vbscript ')) OR lower(LOWER(process.file.name)) in ('cscript\\.exe', 'mshta\\.exe', 'wscript\\.exe')) AND (contains(lower(process.cmd_line), lower(':\\\\perflogs\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\roaming\\\\temp')) OR contains(lower(process.cmd_line), lower('\\\\temporary internet')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\temp')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\favorites\\\\')) AND contains(lower(process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\favourites\\\\')) AND contains(lower(process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\contacts\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious script execution in temporary folders or folders accessible by environment variables",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.virustotal.com/gui/file/91ba814a86ddedc7a9d546e26f912c541205b47a853d227756ab1334ade92c3f, https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-russia-ukraine-military, https://learn.microsoft.com/en-us/windows/win32/shell/csidl",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

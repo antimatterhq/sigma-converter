@@ -1,23 +1,20 @@
-id: 869b9ca7-9ea2-4a5a-8325-e80e62f75445
 title: Suspicious Child Process Of SQL Server
+id: 869b9ca7-9ea2-4a5a-8325-e80e62f75445
 status: test
 level: high
+author: FPT.EagleEye Team, wagga
 description: Detects suspicious child processes of the SQLServer process. This could
     indicate potential RCE or SQL Injection.
-author: FPT.EagleEye Team, wagga
-date: '2020-12-11'
-modified: '2023-05-04'
+references:
+    - Internal Research
 tags:
     - attack.t1505.003
     - attack.t1190
     - attack.initial-access
     - attack.persistence
     - attack.privilege-escalation
-references:
-    - Internal Research
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''344482e4-a477-436c-aa70-7536d18a48c7''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+date: '2020-12-11'
+modified: '2023-05-04'
 logsource:
     category: process_creation
     product: windows
@@ -45,6 +42,9 @@ detection:
         Image: C:\Windows\System32\cmd.exe
         CommandLine|startswith: '"C:\Windows\system32\cmd.exe" '
     condition: selection and not 1 of filter_optional_*
+related:
+    -   id: 344482e4-a477-436c-aa70-7536d18a48c7
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -52,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:35.832107+00:00'
+            mapped_at: '2025-12-04T01:41:07.989121+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:35.832107+00:00'
+            mapped_at: '2025-12-04T01:41:07.989121+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:35.832132+00:00'
+            mapped_at: '2025-12-04T01:41:07.989135+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:35.832135+00:00'
+            mapped_at: '2025-12-04T01:41:07.989136+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:35.832138+00:00'
+            mapped_at: '2025-12-04T01:41:07.989137+00:00'

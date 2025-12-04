@@ -1,19 +1,18 @@
-id: 0afbd410-de03-4078-8491-f132303cb67d
 title: Renamed NetSupport RAT Execution
+id: 0afbd410-de03-4078-8491-f132303cb67d
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of a renamed "client32.exe" (NetSupport RAT) via
     Imphash, Product and OriginalFileName strings
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-19'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
 references:
     - https://redcanary.com/blog/misbehaving-rats/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-09-19'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -32,25 +31,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:53.656452+00:00'
+            mapped_at: '2025-12-04T01:49:41.847232+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:53.656452+00:00'
+            mapped_at: '2025-12-04T01:49:41.847232+00:00'
     detection_fields:
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:35:53.656479+00:00'
+            mapped_at: '2025-12-04T01:49:41.847250+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:53.656483+00:00'
+            mapped_at: '2025-12-04T01:49:41.847252+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:35:53.656485+00:00'
+            mapped_at: '2025-12-04T01:49:41.847254+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:53.656488+00:00'
+            mapped_at: '2025-12-04T01:49:41.847255+00:00'

@@ -1,24 +1,23 @@
-id: 38e7f511-3f74-41d4-836e-f57dfa18eead
 title: Potential Malicious Usage of CloudTrail System Manager
+id: 38e7f511-3f74-41d4-836e-f57dfa18eead
 status: experimental
 level: high
+author: jamesc-grafana
 description: 'Detect when System Manager successfully executes commands against an
     instance.
 
     '
-author: jamesc-grafana
-date: '2024-07-11'
-tags:
-    - attack.privilege-escalation
-    - attack.t1566
-    - attack.t1566.002
 references:
     - https://github.com/elastic/detection-rules/blob/main/rules/integrations/aws/initial_access_via_system_manager.toml
 falsepositives:
     - There are legitimate uses of SSM to send commands to EC2 instances
     - Legitimate users may have to use SSM to perform actions against machines in
         the Cloud to update or maintain them
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1566
+    - attack.t1566.002
+date: '2024-07-11'
 logsource:
     product: aws
     service: cloudtrail
@@ -35,21 +34,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:15.936537+00:00'
+            mapped_at: '2025-12-04T01:39:08.863349+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:15.936537+00:00'
+            mapped_at: '2025-12-04T01:39:08.863349+00:00'
     detection_fields:
         -   source_field: eventName
             target_table: api_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:16.614505+00:00'
+            target_field: api.operation
+            mapped_at: '2025-12-04T01:39:08.863362+00:00'
         -   source_field: eventSource
             target_table: api_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:16.614532+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:08.863363+00:00'
         -   source_field: responseElements.command.status
             target_table: api_activity
             target_field: http_response.status
-            mapped_at: '2025-11-26T02:22:16.614538+00:00'
+            mapped_at: '2025-12-04T01:39:08.863365+00:00'

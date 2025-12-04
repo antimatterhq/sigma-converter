@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "name": "HackTool - winPEAS Execution",
+    "comment": "WinPEAS is a script that search for possible paths to escalate privileges on Windows hosts. The checks are explained on book.hacktricks.xyz",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(process.file.name) = lower('winpeas.exe') AND (endswith(lower(process.name), lower('\\\\winpeasany_ofs.exe')) OR endswith(lower(process.name), lower('\\\\winpeasany.exe')) OR endswith(lower(process.name), lower('\\\\winpeasx64_ofs.exe')) OR endswith(lower(process.name), lower('\\\\winpeasx64.exe')) OR endswith(lower(process.name), lower('\\\\winpeasx86_ofs.exe')) OR endswith(lower(process.name), lower('\\\\winpeasx86.exe'))) OR contains(lower(process.cmd_line), lower(' applicationsinfo')) OR contains(lower(process.cmd_line), lower(' browserinfo')) OR contains(lower(process.cmd_line), lower(' eventsinfo')) OR contains(lower(process.cmd_line), lower(' fileanalysis')) OR contains(lower(process.cmd_line), lower(' filesinfo')) OR contains(lower(process.cmd_line), lower(' processinfo')) OR contains(lower(process.cmd_line), lower(' servicesinfo')) OR contains(lower(process.cmd_line), lower(' windowscreds')) OR contains(lower(process.cmd_line), lower('https://github.com/carlospolop/peass-ng/releases/latest/download/')) OR endswith(lower(process.parent_process.cmd_line), lower(' -linpeas')) AND endswith(lower(process.cmd_line), lower(' -linpeas'))))"
+      }
+    },
+    "output": {
+      "summary": "WinPEAS is a script that search for possible paths to escalate privileges on Windows hosts. The checks are explained on book.hacktricks.xyz",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://github.com/carlospolop/PEASS-ng, https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1082"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1087"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1046"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

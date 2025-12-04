@@ -1,24 +1,21 @@
-id: ecbc5e16-58e0-4521-9c60-eb9a7ea4ad34
 title: Meterpreter or Cobalt Strike Getsystem Service Installation - Security
+id: ecbc5e16-58e0-4521-9c60-eb9a7ea4ad34
 status: test
 level: high
+author: Teymur Kheirkhabarov, Ecco, Florian Roth (Nextron Systems)
 description: Detects the use of getsystem Meterpreter/Cobalt Strike command by detecting
     a specific service installation
-author: Teymur Kheirkhabarov, Ecco, Florian Roth (Nextron Systems)
-date: '2019-10-26'
-modified: '2023-11-15'
-tags:
-    - attack.privilege-escalation
-    - attack.t1134.001
-    - attack.t1134.002
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
     - https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''843544a7-56e0-4dcc-a44f-5cc266dd97d6''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1134.001
+    - attack.t1134.002
+date: '2019-10-26'
+modified: '2023-11-15'
 logsource:
     product: windows
     service: security
@@ -43,6 +40,9 @@ detection:
     selection_cli_share:
         ServiceFileName|startswith: \\127.0.0.1\ADMIN$\
     condition: selection_eid and 1 of selection_cli_*
+related:
+    -   id: 843544a7-56e0-4dcc-a44f-5cc266dd97d6
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -50,17 +50,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:47.614941+00:00'
+            mapped_at: '2025-12-04T01:55:19.474121+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:43:47.614941+00:00'
+            mapped_at: '2025-12-04T01:55:19.474121+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:48.512003+00:00'
+            mapped_at: '2025-12-04T01:55:19.474136+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:48.512028+00:00'
+            mapped_at: '2025-12-04T01:55:19.474138+00:00'

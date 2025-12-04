@@ -1,21 +1,20 @@
-id: cbec226f-63d9-4eca-9f52-dfb6652f24df
 title: Suspicious Process Parents
+id: cbec226f-63d9-4eca-9f52-dfb6652f24df
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious parent processes that should not have any children
     or should only have a single possible child program
-author: Florian Roth (Nextron Systems)
-date: '2022-03-21'
-modified: '2022-09-08'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://twitter.com/x86matthew/status/1505476263464607744?s=12
     - https://svch0st.medium.com/stats-from-hunting-cobalt-strike-beacons-c17e56255f9b
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2022-03-21'
+modified: '2022-09-08'
 logsource:
     category: process_creation
     product: windows
@@ -50,17 +49,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:19.469001+00:00'
+            mapped_at: '2025-12-04T01:51:04.488227+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:19.469001+00:00'
+            mapped_at: '2025-12-04T01:51:04.488227+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:37:19.469029+00:00'
+            mapped_at: '2025-12-04T01:51:04.488300+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:19.469033+00:00'
+            mapped_at: '2025-12-04T01:51:04.488319+00:00'

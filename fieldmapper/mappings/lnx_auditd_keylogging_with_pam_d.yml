@@ -1,15 +1,9 @@
-id: 49aae26c-450e-448b-911d-b3c13d178dfc
 title: Linux Keylogging with Pam.d
+id: 49aae26c-450e-448b-911d-b3c13d178dfc
 status: test
 level: high
-description: Detect attempt to enable auditing of TTY input
 author: Pawel Mazur
-date: '2021-05-24'
-modified: '2022-12-18'
-tags:
-    - attack.credential-access
-    - attack.t1003
-    - attack.t1056.001
+description: Detect attempt to enable auditing of TTY input
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.001/T1056.001.md
     - https://linux.die.net/man/8/pam_tty_audit
@@ -17,7 +11,12 @@ references:
     - https://access.redhat.com/articles/4409591#audit-record-types-2
 falsepositives:
     - Administrative work
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.t1056.001
+date: '2021-05-24'
+modified: '2022-12-18'
 logsource:
     product: linux
     service: auditd
@@ -39,17 +38,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:32.777478+00:00'
+            mapped_at: '2025-12-04T01:35:50.566577+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:32.777478+00:00'
+            mapped_at: '2025-12-04T01:35:50.566577+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:32.777509+00:00'
+            mapped_at: '2025-12-04T01:35:50.566594+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:16:32.777513+00:00'
+            mapped_at: '2025-12-04T01:35:50.566596+00:00'

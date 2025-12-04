@@ -1,7 +1,8 @@
-id: 8d31a8ce-46b5-4dd6-bdc3-680931f1db86
 title: Bad Opsec Powershell Code Artifacts
+id: 8d31a8ce-46b5-4dd6-bdc3-680931f1db86
 status: test
 level: critical
+author: ok @securonix invrep_de, oscd.community
 description: 'focuses on trivial artifacts observed in variants of prevalent offensive
     ps1 payloads, including
 
@@ -11,12 +12,6 @@ description: 'focuses on trivial artifacts observed in variants of prevalent off
     that often undergo minimal changes by attackers due to bad opsec.
 
     '
-author: ok @securonix invrep_de, oscd.community
-date: '2020-10-09'
-modified: '2022-12-25'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://newtonpaul.com/analysing-fileless-malware-cobalt-strike-beacon/
     - https://labs.sentinelone.com/top-tier-russian-organized-cybercrime-group-unveils-fileless-stealthy-powertrick-backdoor-for-high-value-targets/
@@ -24,9 +19,11 @@ references:
 falsepositives:
     - Moderate-to-low; Despite the shorter length/lower entropy for some of these,
         because of high specificity, fp appears to be fairly limited in many environments.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''73e733cc-1ace-3212-a107-ff2523cc9fc3''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2020-10-09'
+modified: '2022-12-25'
 logsource:
     category: ps_module
     product: windows
@@ -41,6 +38,9 @@ detection:
             - tifkin_
             - '0xdeadbeef'
     condition: selection_4103
+related:
+    -   id: 73e733cc-1ace-3212-a107-ff2523cc9fc3
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

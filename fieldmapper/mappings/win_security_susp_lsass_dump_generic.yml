@@ -1,23 +1,22 @@
-id: 4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76
 title: Potentially Suspicious AccessMask Requested From LSASS
+id: 4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76
 status: test
 level: medium
-description: Detects process handle on LSASS process with certain access mask
 author: Roberto Rodriguez, Teymur Kheirkhabarov, Dimitrios Slamaris, Mark Russinovich,
     Aleksey Potapov, oscd.community (update)
-date: '2019-11-01'
-modified: '2023-12-19'
-tags:
-    - attack.credential-access
-    - car.2019-04-004
-    - attack.t1003.001
+description: Detects process handle on LSASS process with certain access mask
 references:
     - https://web.archive.org/web/20230208123920/https://cyberwardog.blogspot.com/2017/03/chronicles-of-threat-hunter-hunting-for_22.html
     - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
 falsepositives:
     - Legitimate software accessing LSASS process for legitimate reason; update the
         whitelist with it
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - car.2019-04-004
+    - attack.t1003.001
+date: '2019-11-01'
+modified: '2023-12-19'
 logsource:
     product: windows
     service: security
@@ -120,29 +119,29 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:33.047592+00:00'
+            mapped_at: '2025-12-04T01:55:31.576341+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:33.047592+00:00'
+            mapped_at: '2025-12-04T01:55:31.576341+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:33.047608+00:00'
+            mapped_at: '2025-12-04T01:55:31.576368+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:33.047609+00:00'
+            mapped_at: '2025-12-04T01:55:31.576372+00:00'
         -   source_field: AccessMask
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:33.047611+00:00'
+            mapped_at: '2025-12-04T01:55:31.576375+00:00'
         -   source_field: AccessList
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:33.047612+00:00'
+            mapped_at: '2025-12-04T01:55:31.576377+00:00'
         -   source_field: ProcessName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:44:33.047613+00:00'
+            mapped_at: '2025-12-04T01:55:31.576384+00:00'

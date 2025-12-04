@@ -1,21 +1,18 @@
-id: c49c5062-0966-4170-9efd-9968c913a6cf
 title: Stop Windows Service Via PowerShell Stop-Service
+id: c49c5062-0966-4170-9efd-9968c913a6cf
 status: test
 level: low
-description: Detects the stopping of a Windows service via the PowerShell Cmdlet "Stop-Service"
 author: Jakob Weinzettl, oscd.community, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-03-05'
-tags:
-    - attack.impact
-    - attack.t1489
+description: Detects the stopping of a Windows service via the PowerShell Cmdlet "Stop-Service"
 references:
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/stop-service?view=powershell-7.4
 falsepositives:
     - There are many legitimate reasons to stop a service. This rule isn't looking
         for any suspicious behaviour in particular. Filter legitimate activity accordingly
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''eb87818d-db5d-49cc-a987-d5da331fbd90''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1489
+date: '2023-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -30,6 +27,9 @@ detection:
     selection_cli:
         CommandLine|contains: 'Stop-Service '
     condition: all of selection_*
+related:
+    -   id: eb87818d-db5d-49cc-a987-d5da331fbd90
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 2
@@ -37,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:36.875162+00:00'
+            mapped_at: '2025-12-04T01:41:08.627961+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:36.875162+00:00'
+            mapped_at: '2025-12-04T01:41:08.627961+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:36.875184+00:00'
+            mapped_at: '2025-12-04T01:41:08.627978+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:36.875188+00:00'
+            mapped_at: '2025-12-04T01:41:08.627980+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:36.875191+00:00'
+            mapped_at: '2025-12-04T01:41:08.627982+00:00'

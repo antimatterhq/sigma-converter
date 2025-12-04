@@ -1,7 +1,8 @@
-id: c6c56ada-612b-42d1-9a29-adad3c5c2c1e
 title: Audit Policy Tampering Via NT Resource Kit Auditpol
+id: c6c56ada-612b-42d1-9a29-adad3c5c2c1e
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Threat actors can use an older version of the auditpol binary available
     inside the NT resource kit to change audit policy configuration to impair detection
     capability.
@@ -10,21 +11,17 @@ description: 'Threat actors can use an older version of the auditpol binary avai
     as well as restoring a custom policy owned by the threat actor.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2021-12-18'
-modified: '2023-02-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
 references:
     - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Windows%202000%20Resource%20Kit%20Tools/AuditPol
 falsepositives:
     - The old auditpol utility isn't available by default on recent versions of Windows
         as it was replaced by a newer version. The FP rate should be very low except
         for tools that use a similar flag structure
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0a13e132-651d-11eb-ae93-0242ac130002''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2021-12-18'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -39,6 +36,9 @@ detection:
             - /process:none
             - /policy:none
     condition: selection
+related:
+    -   id: 0a13e132-651d-11eb-ae93-0242ac130002
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -46,13 +46,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:38.966064+00:00'
+            mapped_at: '2025-12-04T01:42:57.418958+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:38.966064+00:00'
+            mapped_at: '2025-12-04T01:42:57.418958+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:38.966091+00:00'
+            mapped_at: '2025-12-04T01:42:57.418969+00:00'

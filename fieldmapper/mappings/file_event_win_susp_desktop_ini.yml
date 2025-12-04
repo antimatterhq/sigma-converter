@@ -1,22 +1,21 @@
-id: 81315b50-6b60-4d8f-9928-3466e1022515
 title: Suspicious desktop.ini Action
+id: 81315b50-6b60-4d8f-9928-3466e1022515
 status: test
 level: medium
+author: Maxime Thiebaut (@0xThiebaut), Tim Shelton (HAWK.IO)
 description: Detects unusual processes accessing desktop.ini, which can be leveraged
     to alter how Explorer displays a folder's content (i.e. renaming files) without
     changing them on disk.
-author: Maxime Thiebaut (@0xThiebaut), Tim Shelton (HAWK.IO)
-date: '2020-03-19'
-modified: '2022-10-07'
-tags:
-    - attack.persistence
-    - attack.t1547.009
 references:
     - https://isc.sans.edu/forums/diary/Desktopini+as+a+postexploitation+tool/25912/
 falsepositives:
     - Operations performed through Windows SCCM or equivalent
     - Read only access list authority
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.009
+date: '2020-03-19'
+modified: '2022-10-07'
 logsource:
     category: file_event
     product: windows
@@ -41,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:30.103007+00:00'
+            mapped_at: '2025-12-04T01:53:07.936318+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:30.103007+00:00'
+            mapped_at: '2025-12-04T01:53:07.936318+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:30.103033+00:00'
+            mapped_at: '2025-12-04T01:53:07.936337+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:30.103037+00:00'
+            mapped_at: '2025-12-04T01:53:07.936339+00:00'

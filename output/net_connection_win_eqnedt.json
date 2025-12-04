@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Network Connection Initiated By Eqnedt32.EXE",
+    "comment": "Detects network connections from the Equation Editor process \"eqnedt32.exe\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "network_connection",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(process.name), lower('\\\\eqnedt32.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects network connections from the Equation Editor process \"eqnedt32.exe\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://twitter.com/forensicitguy/status/1513538712986079238, https://forensicitguy.github.io/xloader-formbook-velvetsweatshop-spreadsheet/, https://news.sophos.com/en-us/2019/07/18/a-new-equation-editor-exploit-goes-commercial-as-maldoc-attacks-using-it-spike/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1203"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

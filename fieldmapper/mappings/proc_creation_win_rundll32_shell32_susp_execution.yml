@@ -1,20 +1,19 @@
-id: 32b96012-7892-429e-b26c-ac2bf46066ff
 title: Shell32 DLL Execution in Suspicious Directory
+id: 32b96012-7892-429e-b26c-ac2bf46066ff
 status: test
 level: high
-description: Detects shell32.dll executing a DLL in a suspicious directory
 author: Christian Burkard (Nextron Systems)
-date: '2021-11-24'
-modified: '2023-02-09'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218.011
+description: Detects shell32.dll executing a DLL in a suspicious directory
 references:
     - https://www.group-ib.com/resources/threat-research/red-curl-2.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218.011
+date: '2021-11-24'
+modified: '2023-02-09'
 logsource:
     category: process_creation
     product: windows
@@ -42,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:19.762200+00:00'
+            mapped_at: '2025-12-04T01:40:55.954331+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:19.762200+00:00'
+            mapped_at: '2025-12-04T01:40:55.954331+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:19.762221+00:00'
+            mapped_at: '2025-12-04T01:40:55.954345+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:19.762223+00:00'
+            mapped_at: '2025-12-04T01:40:55.954347+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:19.762225+00:00'
+            mapped_at: '2025-12-04T01:40:55.954348+00:00'

@@ -1,20 +1,19 @@
-id: f01d1f70-cd41-42ec-9c0b-26dd9c22bf29
 title: Process Deletion of Its Own Executable
+id: f01d1f70-cd41-42ec-9c0b-26dd9c22bf29
 status: experimental
 level: medium
+author: Max Altgelt (Nextron Systems)
 description: 'Detects the deletion of a process''s executable by itself. This is usually
     not possible without workarounds and may be used by malware to hide its traces.
 
     '
-author: Max Altgelt (Nextron Systems)
-date: '2024-09-03'
-tags:
-    - attack.defense-evasion
 references:
     - https://github.com/joaoviictorti/RustRedOps/tree/ce04369a246006d399e8c61d9fe0e6b34f988a49/Self_Deletion
 falsepositives:
     - Some false positives are to be expected from uninstallers.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2024-09-03'
 logsource:
     category: file_delete
     product: windows
@@ -29,13 +28,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_delete
-            mapped_at: '2025-11-26T02:40:50.565397+00:00'
+            mapped_at: '2025-12-04T01:53:23.906810+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:50.565397+00:00'
+            mapped_at: '2025-12-04T01:53:23.906810+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:50.565408+00:00'
+            mapped_at: '2025-12-04T01:53:23.906844+00:00'

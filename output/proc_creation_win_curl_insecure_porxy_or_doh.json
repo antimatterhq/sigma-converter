@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Insecure Proxy/DOH Transfer Via Curl.EXE",
+    "comment": "Detects execution of \"curl.exe\" with the \"insecure\" flag over proxy or DOH.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\curl.exe')) AND lower(process.file.name) = lower('curl.exe') AND (contains(lower(process.cmd_line), lower('--doh-insecure')) OR contains(lower(process.cmd_line), lower('--proxy-insecure'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"curl.exe\" with the \"insecure\" flag over proxy or DOH.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Access to badly maintained internal or development systems Reference: https://curl.se/docs/manpage.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

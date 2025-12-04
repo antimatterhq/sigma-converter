@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PUA - Crassus Execution",
+    "comment": "Detects Crassus, a Windows privilege escalation discovery tool, based on PE metadata characteristics.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\crassus.exe')) AND lower(process.file.name) = lower('crassus.exe') AND contains(lower(device.desc), lower('crassus')))"
+      }
+    },
+    "output": {
+      "summary": "Detects Crassus, a Windows privilege escalation discovery tool, based on PE metadata characteristics.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://github.com/vu-ls/Crassus",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1590",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

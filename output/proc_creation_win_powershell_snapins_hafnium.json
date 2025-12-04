@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Exchange PowerShell Snap-Ins Usage",
+    "comment": "Detects adding and using Exchange PowerShell snap-ins to export mailbox data. As seen used by HAFNIUM and APT27",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND contains(lower(process.cmd_line), lower('add-pssnapin')) AND (contains(lower(process.cmd_line), lower('microsoft.exchange.powershell.snapin')) OR contains(lower(process.cmd_line), lower('microsoft.exchange.management.powershell.snapin'))) AND NOT (lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\msiexec.exe') AND contains(lower(process.cmd_line), lower('$exserver=get-exchangeserver ([environment]::machinename) -errorvariable exerr 2> $null'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects adding and using Exchange PowerShell snap-ins to export mailbox data. As seen used by HAFNIUM and APT27",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/, https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/, https://www.intrinsec.com/apt27-analysis/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1114"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious Msbuild Execution By Uncommon Parent Process",
+    "comment": "Detects suspicious execution of 'Msbuild.exe' by a uncommon parent process",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\msbuild.exe')) AND lower(process.file.name) = lower('msbuild.exe') AND NOT (endswith(lower(process.parent_process.name), lower('\\\\devenv.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msbuild.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\python.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\explorer.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\nuget.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious execution of 'Msbuild.exe' by a uncommon parent process",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://app.any.run/tasks/abdf586e-df0c-4d39-89a7-06bf24913401/, https://www.echotrail.io/insights/search/msbuild.exe",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

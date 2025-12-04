@@ -1,7 +1,8 @@
-id: 5ef9853e-4d0e-4a70-846f-a9ca37d876da
 title: Potential Credential Dumping Activity Via LSASS
+id: 5ef9853e-4d0e-4a70-846f-a9ca37d876da
 status: test
 level: medium
+author: Samir Bousseaden, Michael Haag
 description: 'Detects process access requests to the LSASS process with specific call
     trace calls and access masks.
 
@@ -9,13 +10,6 @@ description: 'Detects process access requests to the LSASS process with specific
     NanoDump, Invoke-Mimikatz, Procdump and even the Taskmgr dumping feature.
 
     '
-author: Samir Bousseaden, Michael Haag
-date: '2019-04-03'
-modified: '2024-03-02'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
-    - attack.s0002
 references:
     - https://web.archive.org/web/20230329170326/https://blog.menasec.net/2019/02/threat-hunting-21-procdump-or-taskmgr.html
     - https://web.archive.org/web/20230208123920/https://cyberwardog.blogspot.com/2017/03/chronicles-of-threat-hunter-hunting-for_22.html
@@ -23,7 +17,12 @@ references:
     - https://research.splunk.com/endpoint/windows_possible_credential_dumping/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0002
+date: '2019-04-03'
+modified: '2024-03-02'
 logsource:
     category: process_access
     product: windows
@@ -61,29 +60,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:18.979784+00:00'
+            mapped_at: '2025-12-04T01:40:28.721543+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:18.979784+00:00'
+            mapped_at: '2025-12-04T01:40:28.721543+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:19.683703+00:00'
+            mapped_at: '2025-12-04T01:40:28.721568+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:19.683718+00:00'
+            mapped_at: '2025-12-04T01:40:28.721575+00:00'
         -   source_field: CallTrace
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:19.683721+00:00'
+            mapped_at: '2025-12-04T01:40:28.721577+00:00'
         -   source_field: SourceUser
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:24:19.683722+00:00'
+            mapped_at: '2025-12-04T01:40:28.721578+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:19.683724+00:00'
+            mapped_at: '2025-12-04T01:40:28.721579+00:00'

@@ -1,19 +1,18 @@
-id: 0f16d9cf-0616-45c8-8fad-becc11b5a41c
 title: Renamed AutoHotkey.EXE Execution
+id: 0f16d9cf-0616-45c8-8fad-becc11b5a41c
 status: test
 level: medium
+author: Nasreddine Bencherchali
 description: Detects execution of a renamed autohotkey.exe binary based on PE metadata
     fields
-author: Nasreddine Bencherchali
-date: '2023-02-07'
-tags:
-    - attack.defense-evasion
 references:
     - https://www.autohotkey.com/download/
     - https://thedfirreport.com/2023/02/06/collect-exfiltrate-sleep-repeat/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-02-07'
 logsource:
     category: process_creation
     product: windows
@@ -46,25 +45,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:29.044287+00:00'
+            mapped_at: '2025-12-04T01:49:23.539248+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:29.044287+00:00'
+            mapped_at: '2025-12-04T01:49:23.539248+00:00'
     detection_fields:
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:35:29.044303+00:00'
+            mapped_at: '2025-12-04T01:49:23.539260+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:35:29.044306+00:00'
+            mapped_at: '2025-12-04T01:49:23.539262+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:29.044307+00:00'
+            mapped_at: '2025-12-04T01:49:23.539264+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:29.044309+00:00'
+            mapped_at: '2025-12-04T01:49:23.539265+00:00'

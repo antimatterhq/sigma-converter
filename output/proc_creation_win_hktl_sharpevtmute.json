@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - SharpEvtMute Execution",
+    "comment": "Detects the use of SharpEvtHook, a tool that tampers with the Windows event logs",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sharpevtmute.exe')) AND lower(device.desc) = lower('sharpevtmute') AND (contains(lower(process.cmd_line), lower('--filter \"rule ')) OR contains(lower(process.cmd_line), lower('--encoded --filter \\\\\"'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of SharpEvtHook, a tool that tampers with the Windows event logs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/bats3c/EvtMute",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

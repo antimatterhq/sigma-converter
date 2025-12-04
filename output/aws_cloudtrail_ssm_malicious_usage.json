@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential Malicious Usage of CloudTrail System Manager",
+    "comment": "Detect when System Manager successfully executes commands against an instance.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(api.operation) = lower('sendcommand') AND lower(metadata.product.name) = lower('ssm.amazonaws.com') AND lower(http_response.status) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Detect when System Manager successfully executes commands against an instance.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. There are legitimate uses of SSM to send commands to EC2 instances 2. Legitimate users may have to use SSM to perform actions against machines in the Cloud to update or maintain them Reference: https://github.com/elastic/detection-rules/blob/main/rules/integrations/aws/initial_access_via_system_manager.toml",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1566"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1566",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

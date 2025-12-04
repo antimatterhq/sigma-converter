@@ -1,7 +1,8 @@
-id: 9cfc00b6-bfb7-49ce-9781-ef78503154bb
 title: Wlrmdr.EXE Uncommon Argument Or Child Process
+id: 9cfc00b6-bfb7-49ce-9781-ef78503154bb
 status: test
 level: medium
+author: frack113, manasmbellani
 description: 'Detects the execution of "Wlrmdr.exe" with the "-u" command line flag
     which allows anything passed to it to be an argument of the ShellExecute API,
     which would allow an attacker to execute arbitrary binaries.
@@ -10,18 +11,16 @@ description: 'Detects the execution of "Wlrmdr.exe" with the "-u" command line f
     as a supplement for those that posses "ParentImage" telemetry.
 
     '
-author: frack113, manasmbellani
-date: '2022-02-16'
-modified: '2024-03-06'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://twitter.com/0gtweet/status/1493963591745220608?s=20&t=xUg9DsZhJy1q9bPTUWgeIQ
     - https://lolbas-project.github.io/lolbas/Binaries/Wlrmdr/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-02-16'
+modified: '2024-03-06'
 logsource:
     category: process_creation
     product: windows
@@ -55,25 +54,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:52.918797+00:00'
+            mapped_at: '2025-12-04T01:47:15.993930+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:52.918797+00:00'
+            mapped_at: '2025-12-04T01:47:15.993930+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:52.918831+00:00'
+            mapped_at: '2025-12-04T01:47:15.993946+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:52.918835+00:00'
+            mapped_at: '2025-12-04T01:47:15.993947+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:52.918838+00:00'
+            mapped_at: '2025-12-04T01:47:15.993949+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:52.918841+00:00'
+            mapped_at: '2025-12-04T01:47:15.993950+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Wmiexec Default Output File",
+    "comment": "Detects the creation of the default output filename used by the wmiexec tool",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND file.path rlike '\\\\\\\\Windows\\\\\\\\__1\\\\d\\{9\\}\\\\.\\\\d\\{1,7\\}$' AND file.path rlike 'C:\\\\\\\\__1\\\\d\\{9\\}\\\\.\\\\d\\{1,7\\}$' AND file.path rlike 'D:\\\\\\\\__1\\\\d\\{9\\}\\\\.\\\\d\\{1,7\\}$')"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of the default output filename used by the wmiexec tool",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://www.crowdstrike.com/blog/how-to-detect-and-prevent-impackets-wmiexec/, https://github.com/fortra/impacket/blob/f4b848fa27654ca95bc0f4c73dbba8b9c2c9f30a/examples/wmiexec.py",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1047"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

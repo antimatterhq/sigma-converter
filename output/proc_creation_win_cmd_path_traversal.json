@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential CommandLine Path Traversal Via Cmd.EXE",
+    "comment": "Detects potential path traversal attempt via cmd.exe. Could indicate possible command/argument confusion/hijacking",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND (contains(lower(process.parent_process.cmd_line), lower('/c')) OR contains(lower(process.parent_process.cmd_line), lower('/k')) OR contains(lower(process.parent_process.cmd_line), lower('/r'))) AND (contains(lower(process.cmd_line), lower('/c')) OR contains(lower(process.cmd_line), lower('/k')) OR contains(lower(process.cmd_line), lower('/r'))) AND lower(process.parent_process.cmd_line) = lower('/../../') AND contains(lower(process.cmd_line), lower('/../../')) AND NOT contains(lower(process.cmd_line), lower('\\\\tasktop\\\\keycloak\\\\bin\\\\/../../jre\\\\bin\\\\java')))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential path traversal attempt via cmd.exe. Could indicate possible command/argument confusion/hijacking",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Java tools are known to produce false-positive when loading libraries References: https://hackingiscool.pl/cmdhijack-command-argument-confusion-with-path-traversal-in-cmd-exe/, https://twitter.com/Oddvarmoe/status/1270633613449723905",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,13 +1,10 @@
-id: 4a241dea-235b-4a7e-8d76-50d817b146c4
 title: Suspicious PowerShell Mailbox Export to Share - PS
+id: 4a241dea-235b-4a7e-8d76-50d817b146c4
 status: test
 level: critical
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the powerShell New-MailboxExportRequest Cmdlet to exports
     a mailbox to a remote or local share, as used in ProxyShell exploitations
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-26'
-tags:
-    - attack.exfiltration
 references:
     - https://youtu.be/5mqid-7zp8k?t=2481
     - https://blog.orange.tw/2021/08/proxylogon-a-new-attack-surface-on-ms-exchange-part-1.html
@@ -18,9 +15,9 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''889719ef-dd62-43df-86c3-768fb08dc7c0''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+date: '2022-10-26'
 logsource:
     category: ps_script
     product: windows
@@ -32,6 +29,9 @@ detection:
             - ' -Mailbox '
             - ' -FilePath \\'
     condition: selection
+related:
+    -   id: 889719ef-dd62-43df-86c3-768fb08dc7c0
+        type: derived
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -39,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:11.813313+00:00'
+            mapped_at: '2025-12-04T01:53:36.773577+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:11.813313+00:00'
+            mapped_at: '2025-12-04T01:53:36.773577+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:11.813347+00:00'
+            mapped_at: '2025-12-04T01:53:36.773592+00:00'

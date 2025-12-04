@@ -1,24 +1,21 @@
-id: dff1e1cc-d3fd-47c8-bfc2-aeb878a754c0
 title: Shell Process Spawned by Java.EXE
+id: dff1e1cc-d3fd-47c8-bfc2-aeb878a754c0
 status: test
 level: medium
+author: Andreas Hunkeler (@Karneades), Nasreddine Bencherchali
 description: Detects shell spawned from Java host process, which could be a sign of
     exploitation (e.g. log4j exploitation)
-author: Andreas Hunkeler (@Karneades), Nasreddine Bencherchali
-date: '2021-12-17'
-modified: '2024-01-18'
-tags:
-    - attack.initial-access
-    - attack.persistence
-    - attack.privilege-escalation
 references:
     - https://web.archive.org/web/20231230220738/https://www.lunasec.io/docs/blog/log4j-zero-day/
 falsepositives:
     - Legitimate calls to system binaries
     - Company specific internal usage
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''0d34ed8b-1c12-4ff2-828c-16fc860b766d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.persistence
+    - attack.privilege-escalation
+date: '2021-12-17'
+modified: '2024-01-18'
 logsource:
     category: process_creation
     product: windows
@@ -34,6 +31,9 @@ detection:
         ParentImage|contains: build
         CommandLine|contains: build
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 0d34ed8b-1c12-4ff2-828c-16fc860b766d
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -41,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:22.772261+00:00'
+            mapped_at: '2025-12-04T01:45:05.463353+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:22.772261+00:00'
+            mapped_at: '2025-12-04T01:45:05.463353+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:22.772283+00:00'
+            mapped_at: '2025-12-04T01:45:05.463373+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:22.772285+00:00'
+            mapped_at: '2025-12-04T01:45:05.463375+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:22.772287+00:00'
+            mapped_at: '2025-12-04T01:45:05.463376+00:00'

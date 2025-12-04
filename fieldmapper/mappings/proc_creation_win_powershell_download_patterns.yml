@@ -1,24 +1,21 @@
-id: 3b6ab547-8ec2-4991-b9d2-2b06702a48d7
 title: PowerShell Download Pattern
+id: 3b6ab547-8ec2-4991-b9d2-2b06702a48d7
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), oscd.community, Jonhnathan Ribeiro
 description: Detects a Powershell process that contains download commands in its command
     line string
-author: Florian Roth (Nextron Systems), oscd.community, Jonhnathan Ribeiro
-date: '2019-01-16'
-modified: '2023-01-26'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://blog.redteam.pl/2020/06/black-kingdom-ransomware.html
     - https://lab52.io/blog/winter-vivern-all-summer/
     - https://hatching.io/blog/powershell-analysis/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e6c54d94-498c-4562-a37c-b469d8e9a275''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2019-01-16'
+modified: '2023-01-26'
 logsource:
     category: process_creation
     product: windows
@@ -39,6 +36,9 @@ detection:
             - string(
             - file(
     condition: all of selection_*
+related:
+    -   id: e6c54d94-498c-4562-a37c-b469d8e9a275
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -46,21 +46,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:27.504253+00:00'
+            mapped_at: '2025-12-04T01:40:59.137032+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:27.504253+00:00'
+            mapped_at: '2025-12-04T01:40:59.137032+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:27.504268+00:00'
+            mapped_at: '2025-12-04T01:40:59.137047+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:27.504271+00:00'
+            mapped_at: '2025-12-04T01:40:59.137050+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:27.504273+00:00'
+            mapped_at: '2025-12-04T01:40:59.137051+00:00'

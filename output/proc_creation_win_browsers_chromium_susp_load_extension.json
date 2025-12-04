@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Chromium Browser Instance Executed With Custom Extension",
+    "comment": "Detects a suspicious process spawning a Chromium based browser process with the 'load-extension' flag to start an instance with a custom extension",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wscript.exe'))) AND (endswith(lower(process.name), lower('\\\\brave.exe')) OR endswith(lower(process.name), lower('\\\\chrome.exe')) OR endswith(lower(process.name), lower('\\\\msedge.exe')) OR endswith(lower(process.name), lower('\\\\opera.exe')) OR endswith(lower(process.name), lower('\\\\vivaldi.exe'))) AND contains(lower(process.cmd_line), lower('--load-extension=')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious process spawning a Chromium based browser process with the 'load-extension' flag to start an instance with a custom extension",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://redcanary.com/blog/chromeloader/, https://emkc.org/s/RJjuLa, https://www.mandiant.com/resources/blog/lnk-between-browsers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1176"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

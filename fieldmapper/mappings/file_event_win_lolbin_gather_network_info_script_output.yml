@@ -1,22 +1,18 @@
-id: f92a6f1e-a512-4a15-9735-da09e78d7273
 title: GatherNetworkInfo.VBS Reconnaissance Script Output
+id: f92a6f1e-a512-4a15-9735-da09e78d7273
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of files which are the results of executing the built-in
     reconnaissance script "C:\Windows\System32\gatherNetworkInfo.vbs".
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-08'
-tags:
-    - attack.discovery
 references:
     - https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs
     - https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''575dce0c-8139-4e30-9295-1ee75969f7fe''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''07aa184a-870d-413d-893a-157f317f6f58''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+date: '2023-02-08'
 logsource:
     category: file_event
     product: windows
@@ -29,6 +25,11 @@ detection:
             - \sysportslog.txt
             - \VmSwitchLog.evtx
     condition: selection
+related:
+    -   id: 575dce0c-8139-4e30-9295-1ee75969f7fe
+        type: similar
+    -   id: 07aa184a-870d-413d-893a-157f317f6f58
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 3
@@ -36,13 +37,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:22.928743+00:00'
+            mapped_at: '2025-12-04T01:53:00.662020+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:22.928743+00:00'
+            mapped_at: '2025-12-04T01:53:00.662020+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:22.928755+00:00'
+            mapped_at: '2025-12-04T01:53:00.662032+00:00'

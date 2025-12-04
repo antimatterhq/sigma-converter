@@ -1,7 +1,9 @@
-id: d95de845-b83c-4a9a-8a6a-4fc802ebf6c0
 title: Suspicious Group And Account Reconnaissance Activity Using Net.EXE
+id: d95de845-b83c-4a9a-8a6a-4fc802ebf6c0
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), omkar72, @svch0st, Nasreddine Bencherchali
+    (Nextron Systems)
 description: 'Detects suspicious reconnaissance command line activity on Windows systems
     using Net.EXE
 
@@ -9,14 +11,6 @@ description: 'Detects suspicious reconnaissance command line activity on Windows
     LOCAL_SYSTEM)
 
     '
-author: Florian Roth (Nextron Systems), omkar72, @svch0st, Nasreddine Bencherchali
-    (Nextron Systems)
-date: '2019-01-16'
-modified: '2023-03-02'
-tags:
-    - attack.discovery
-    - attack.t1087.001
-    - attack.t1087.002
 references:
     - https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/
     - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
@@ -24,7 +18,12 @@ references:
 falsepositives:
     - Inventory tool runs
     - Administrative activity
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1087.001
+    - attack.t1087.002
+date: '2019-01-16'
+modified: '2023-03-02'
 logsource:
     category: process_creation
     product: windows
@@ -66,21 +65,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:01.058549+00:00'
+            mapped_at: '2025-12-04T01:44:01.285896+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:01.058549+00:00'
+            mapped_at: '2025-12-04T01:44:01.285896+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:01.058571+00:00'
+            mapped_at: '2025-12-04T01:44:01.285911+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:01.058574+00:00'
+            mapped_at: '2025-12-04T01:44:01.285913+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:01.058576+00:00'
+            mapped_at: '2025-12-04T01:44:01.285914+00:00'

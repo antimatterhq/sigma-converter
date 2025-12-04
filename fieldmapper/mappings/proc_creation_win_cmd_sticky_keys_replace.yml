@@ -1,7 +1,8 @@
-id: 1070db9a-3e5d-412e-8e7b-7183b616e1b3
 title: Persistence Via Sticky Key Backdoor
+id: 1070db9a-3e5d-412e-8e7b-7183b616e1b3
 status: test
 level: critical
+author: Sreeman
 description: 'By replacing the sticky keys executable with the local admins CMD executable,
     an attacker is able to access a privileged windows console session without authenticating
     to the system.
@@ -9,19 +10,17 @@ description: 'By replacing the sticky keys executable with the local admins CMD 
     When the sticky keys are "activated" the privilleged shell is launched.
 
     '
-author: Sreeman
-date: '2020-02-18'
-modified: '2023-03-07'
-tags:
-    - attack.t1546.008
-    - attack.privilege-escalation
 references:
     - https://www.fireeye.com/blog/threat-research/2017/03/apt29_domain_frontin.html
     - https://www.clearskysec.com/wp-content/uploads/2020/02/ClearSky-Fox-Kitten-Campaign-v1.pdf
     - https://learn.microsoft.com/en-us/archive/blogs/jonathantrull/detecting-sticky-key-backdoors
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.t1546.008
+    - attack.privilege-escalation
+date: '2020-02-18'
+modified: '2023-03-07'
 logsource:
     category: process_creation
     product: windows
@@ -39,13 +38,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:31.852669+00:00'
+            mapped_at: '2025-12-04T01:44:26.530949+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:31.852669+00:00'
+            mapped_at: '2025-12-04T01:44:26.530949+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:31.852686+00:00'
+            mapped_at: '2025-12-04T01:44:26.530961+00:00'

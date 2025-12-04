@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "RDP Connection Allowed Via Netsh.EXE",
+    "comment": "Detects usage of the netsh command to open and allow connections to port 3389 (RDP). As seen used by Sarwent Malware",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\netsh.exe')) AND lower(process.file.name) = lower('netsh.exe') AND contains(lower(process.cmd_line), lower('firewall ')) AND contains(lower(process.cmd_line), lower('add ')) AND contains(lower(process.cmd_line), lower('tcp ')) AND contains(lower(process.cmd_line), lower('3389')) AND (contains(lower(process.cmd_line), lower('portopening')) OR contains(lower(process.cmd_line), lower('allow'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the netsh command to open and allow connections to port 3389 (RDP). As seen used by Sarwent Malware",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administration activity Reference: https://labs.sentinelone.com/sarwent-malware-updates-command-detonation/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

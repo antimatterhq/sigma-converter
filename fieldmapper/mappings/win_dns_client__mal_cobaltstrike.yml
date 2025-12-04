@@ -1,22 +1,19 @@
-id: 0d18728b-f5bf-4381-9dcf-915539fff6c2
 title: Suspicious Cobalt Strike DNS Beaconing - DNS Client
+id: 0d18728b-f5bf-4381-9dcf-915539fff6c2
 status: test
 level: critical
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects a program that invoked suspicious DNS queries known from Cobalt
     Strike beacons
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-16'
-tags:
-    - attack.command-and-control
-    - attack.t1071.004
 references:
     - https://www.icebrg.io/blog/footprints-of-fin7-tracking-actor-patterns
     - https://www.sekoia.io/en/hunting-and-detecting-cobalt-strike/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f356a9c4-effd-4608-bbf8-408afd5cd006''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+date: '2023-01-16'
 logsource:
     product: windows
     service: dns-client
@@ -32,6 +29,9 @@ detection:
     selection_query_2:
         QueryName|contains: .stage.123456.
     condition: selection_eid and 1 of selection_query_*
+related:
+    -   id: f356a9c4-effd-4608-bbf8-408afd5cd006
+        type: similar
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -39,17 +39,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:19.423122+00:00'
+            mapped_at: '2025-12-04T01:56:40.210635+00:00'
         service:
             source_field: service
             source_value: dns-client
-            mapped_at: '2025-11-26T02:47:19.423122+00:00'
+            mapped_at: '2025-12-04T01:56:40.210635+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: dns_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:19.423159+00:00'
+            mapped_at: '2025-12-04T01:56:40.210656+00:00'
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:47:19.423163+00:00'
+            mapped_at: '2025-12-04T01:56:40.210658+00:00'

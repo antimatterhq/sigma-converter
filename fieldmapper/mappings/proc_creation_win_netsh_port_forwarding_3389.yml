@@ -1,22 +1,21 @@
-id: 782d6f3e-4c5d-4b8c-92a3-1d05fed72e63
 title: RDP Port Forwarding Rule Added Via Netsh.EXE
+id: 782d6f3e-4c5d-4b8c-92a3-1d05fed72e63
 status: test
 level: high
+author: Florian Roth (Nextron Systems), oscd.community
 description: Detects the execution of netsh to configure a port forwarding of port
     3389 (RDP) rule
-author: Florian Roth (Nextron Systems), oscd.community
-date: '2019-01-29'
-modified: '2023-02-13'
+references:
+    - https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html
+falsepositives:
+    - Legitimate administration activity
 tags:
     - attack.lateral-movement
     - attack.defense-evasion
     - attack.command-and-control
     - attack.t1090
-references:
-    - https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html
-falsepositives:
-    - Legitimate administration activity
-taxonomy: sigma
+date: '2019-01-29'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:31.101307+00:00'
+            mapped_at: '2025-12-04T01:47:46.135946+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:31.101307+00:00'
+            mapped_at: '2025-12-04T01:47:46.135946+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:31.101331+00:00'
+            mapped_at: '2025-12-04T01:47:46.135960+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:31.101335+00:00'
+            mapped_at: '2025-12-04T01:47:46.135962+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:31.101337+00:00'
+            mapped_at: '2025-12-04T01:47:46.135964+00:00'

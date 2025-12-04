@@ -1,21 +1,20 @@
-id: aac2fd97-bcba-491b-ad66-a6edf89c71bf
 title: Executable from Webdav
+id: aac2fd97-bcba-491b-ad66-a6edf89c71bf
 status: test
 level: medium
+author: SOC Prime, Adam Swan
 description: Detects executable access via webdav6. Can be seen in APT 29 such as
     from the emulated APT 29 hackathon https://github.com/OTRF/detection-hackathon-apt29/
-author: SOC Prime, Adam Swan
-date: '2020-05-01'
-modified: '2021-11-27'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - http://carnal0wnage.attackresearch.com/2012/06/webdav-server-to-download-custom.html
     - https://github.com/OTRF/detection-hackathon-apt29
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2020-05-01'
+modified: '2021-11-27'
 logsource:
     product: zeek
     service: http
@@ -34,21 +33,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:15:04.387409+00:00'
+            mapped_at: '2025-12-04T01:35:12.426621+00:00'
         service:
             source_field: service
             source_value: http
-            mapped_at: '2025-11-26T02:15:04.387409+00:00'
+            mapped_at: '2025-12-04T01:35:12.426621+00:00'
     detection_fields:
         -   source_field: c-useragent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:15:05.500365+00:00'
+            mapped_at: '2025-12-04T01:35:12.426634+00:00'
         -   source_field: c-uri
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:15:05.500373+00:00'
+            mapped_at: '2025-12-04T01:35:12.426636+00:00'
         -   source_field: resp_mime_types
             target_table: http_activity
             target_field: http_response.content_type
-            mapped_at: '2025-11-26T02:15:05.500374+00:00'
+            mapped_at: '2025-12-04T01:35:12.426637+00:00'

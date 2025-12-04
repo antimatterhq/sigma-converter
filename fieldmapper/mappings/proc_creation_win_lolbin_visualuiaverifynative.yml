@@ -1,14 +1,10 @@
-id: b30a8bc5-e21b-4ca2-9420-0a94019ac56a
 title: Use of VisualUiaVerifyNative.exe
+id: b30a8bc5-e21b-4ca2-9420-0a94019ac56a
 status: test
 level: medium
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
 description: VisualUiaVerifyNative.exe is a Windows SDK that can be used for AWL bypass
     and is listed in Microsoft's recommended block rules.
-author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
-date: '2022-06-01'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/VisualUiaVerifyNative/
     - https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac
@@ -16,7 +12,10 @@ references:
     - https://github.com/MicrosoftDocs/windows-itpro-docs/commit/937db704b9148e9cee7c7010cad4d00ce9c4fdad
 falsepositives:
     - Legitimate testing of Microsoft UI parts.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-06-01'
 logsource:
     category: process_creation
     product: windows
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:04.535801+00:00'
+            mapped_at: '2025-12-04T01:49:49.775367+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:04.535801+00:00'
+            mapped_at: '2025-12-04T01:49:49.775367+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:04.535819+00:00'
+            mapped_at: '2025-12-04T01:49:49.775381+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:04.535821+00:00'
+            mapped_at: '2025-12-04T01:49:49.775383+00:00'

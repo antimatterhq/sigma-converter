@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "LSASS Process Memory Dump Creation Via Taskmgr.EXE",
+    "comment": "Detects the creation of an \"lsass.dmp\" file by the taskmgr process. This indicates a manual dumping of the LSASS.exe process memory using Windows Task Manager.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (endswith(lower(actor.process.name), lower(':\\\\windows\\\\system32\\\\taskmgr.exe')) OR endswith(lower(actor.process.name), lower(':\\\\windows\\\\syswow64\\\\taskmgr.exe'))) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) AND contains(lower(file.path), lower('\\\\lsass')) AND contains(lower(file.path), lower('.dmp')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of an \"lsass.dmp\" file by the taskmgr process. This indicates a manual dumping of the LSASS.exe process memory using Windows Task Manager.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Rare case of troubleshooting by an administrator or support that has to be investigated regardless Reference: https://github.com/redcanaryco/atomic-red-team/blob/987e3ca988ae3cff4b9f6e388c139c05bf44bbb8/atomics/T1003.001/T1003.001.md#L1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

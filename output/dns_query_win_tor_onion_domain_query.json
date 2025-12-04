@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "DNS Query Tor .Onion Address - Sysmon",
+    "comment": "Detects DNS queries to an \".onion\" address related to Tor routing networks",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns_query",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(query.hostname), lower('.onion')))"
+      }
+    },
+    "output": {
+      "summary": "Detects DNS queries to an \".onion\" address related to Tor routing networks",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.logpoint.com/en/blog/detecting-tor-use-with-logpoint/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1090",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

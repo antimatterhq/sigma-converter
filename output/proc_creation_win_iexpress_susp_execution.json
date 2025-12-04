@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Self Extracting Package Creation Via Iexpress.EXE From Potentially Suspicious...",
+    "comment": "Detects the use of iexpress.exe to create binaries via Self Extraction Directive (SED) files located in potentially suspicious locations. This behavior has been observed in-the-wild by different threat actors.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\iexpress.exe')) AND lower(process.file.name) = lower('iexpress.exe') AND (contains(lower(process.cmd_line), lower(' -n ')) OR contains(lower(process.cmd_line), lower(' /n ')) OR contains(lower(process.cmd_line), lower(' \u2013n ')) OR contains(lower(process.cmd_line), lower(' \u2014n ')) OR contains(lower(process.cmd_line), lower(' \u2015n '))) AND (contains(lower(process.cmd_line), lower(':\\\\programdata\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\system32\\\\tasks\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\tasks\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of iexpress.exe to create binaries via Self Extraction Directive (SED) files located in potentially suspicious locations. This behavior has been observed in-the-wild by different threat actors.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrators building packages using iexpress.exe References: https://strontic.github.io/xcyclopedia/library/iexpress.exe-D594B2A33EFAFD0EABF09E3FDC05FCEA.html, https://en.wikipedia.org/wiki/IExpress, https://decoded.avast.io/janvojtesek/raspberry-robins-roshtyak-a-little-lesson-in-trickery/, https://www.virustotal.com/gui/file/602f4ae507fa8de57ada079adff25a6c2a899bd25cd092d0af7e62cdb619c93c/behavior",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,24 +1,21 @@
-id: 18988e1b-9087-4f8a-82fe-0414dce49878
 title: Execute Code with Pester.bat as Parent
+id: 18988e1b-9087-4f8a-82fe-0414dce49878
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali
 description: Detects code execution via Pester.bat (Pester - Powershell Modulte for
     testing)
-author: frack113, Nasreddine Bencherchali
-date: '2022-08-20'
-tags:
-    - attack.execution
-    - attack.t1059.001
-    - attack.defense-evasion
-    - attack.t1216
 references:
     - https://twitter.com/Oddvarmoe/status/993383596244258816
     - https://twitter.com/_st0pp3r_/status/1560072680887525378
 falsepositives:
     - Legitimate use of Pester for writing tests for Powershell scripts and modules
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''59e938ff-0d6d-4dc3-b13f-36cc28734d4e''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1216
+date: '2022-08-20'
 logsource:
     category: process_creation
     product: windows
@@ -33,6 +30,9 @@ detection:
             - '{ Invoke-Pester -EnableExit ;'
             - '{ Get-Help "'
     condition: all of selection_*
+related:
+    -   id: 59e938ff-0d6d-4dc3-b13f-36cc28734d4e
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -40,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:48.458844+00:00'
+            mapped_at: '2025-12-04T01:48:46.648139+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:48.458844+00:00'
+            mapped_at: '2025-12-04T01:48:46.648139+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:34:48.458872+00:00'
+            mapped_at: '2025-12-04T01:48:46.648156+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:34:48.458876+00:00'
+            mapped_at: '2025-12-04T01:48:46.648157+00:00'

@@ -1,7 +1,8 @@
-id: c649a6c7-cd8c-4a78-9c04-000fc76df954
 title: Potentially Suspicious Wuauclt Network Connection
+id: c649a6c7-cd8c-4a78-9c04-000fc76df954
 status: test
 level: medium
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
 description: 'Detects the use of the Windows Update Client binary (wuauclt.exe) to
     proxy execute code and making network connections.
 
@@ -9,17 +10,15 @@ description: 'Detects the use of the Windows Update Client binary (wuauclt.exe) 
     network connection and bypass this rule.
 
     '
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
-date: '2020-10-12'
-modified: '2024-03-12'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://dtm.uk/wuauclt/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-12'
+modified: '2024-03-12'
 logsource:
     category: network_connection
     product: windows
@@ -68,21 +67,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:13.158478+00:00'
+            mapped_at: '2025-12-04T01:51:33.408018+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:13.158478+00:00'
+            mapped_at: '2025-12-04T01:51:33.408018+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:13.158511+00:00'
+            mapped_at: '2025-12-04T01:51:33.408040+00:00'
         -   source_field: CommandLine
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:13.158514+00:00'
+            mapped_at: '2025-12-04T01:51:33.408044+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:13.158517+00:00'
+            mapped_at: '2025-12-04T01:51:33.408047+00:00'

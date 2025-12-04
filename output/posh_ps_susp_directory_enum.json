@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Powershell Directory Enumeration",
+    "comment": "Detects technique used by MAZE ransomware to enumerate directories using Powershell",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('foreach')) AND contains(lower(script.script_content.value), lower('get-childitem')) AND contains(lower(script.script_content.value), lower('-path ')) AND contains(lower(script.script_content.value), lower('-erroraction ')) AND contains(lower(script.script_content.value), lower('silentlycontinue')) AND contains(lower(script.script_content.value), lower('out-file ')) AND contains(lower(script.script_content.value), lower('-append')))"
+      }
+    },
+    "output": {
+      "summary": "Detects technique used by MAZE ransomware to enumerate directories using Powershell",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate PowerShell scripts References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1083/T1083.md, https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1083"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

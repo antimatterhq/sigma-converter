@@ -1,7 +1,8 @@
-id: 34275eb8-fa19-436b-b959-3d9ecd53fa1f
 title: Loaded Module Enumeration Via Tasklist.EXE
+id: 34275eb8-fa19-436b-b959-3d9ecd53fa1f
 status: experimental
 level: medium
+author: Swachchhanda Shrawan Poudel
 description: 'Detects the enumeration of a specific DLL or EXE being used by a binary
     via "tasklist.exe".
 
@@ -11,17 +12,15 @@ description: 'Detects the enumeration of a specific DLL or EXE being used by a b
     In order to dump the process memory or perform other nefarious actions.
 
     '
-author: Swachchhanda Shrawan Poudel
-date: '2024-02-12'
-modified: '2024-03-13'
-tags:
-    - attack.t1003
 references:
     - https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
     - https://pentestlab.blog/tag/svchost/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1003
+date: '2024-02-12'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:41.477764+00:00'
+            mapped_at: '2025-12-04T01:50:23.513563+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:41.477764+00:00'
+            mapped_at: '2025-12-04T01:50:23.513563+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:41.477789+00:00'
+            mapped_at: '2025-12-04T01:50:23.513592+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:41.477793+00:00'
+            mapped_at: '2025-12-04T01:50:23.513594+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:41.477796+00:00'
+            mapped_at: '2025-12-04T01:50:23.513596+00:00'

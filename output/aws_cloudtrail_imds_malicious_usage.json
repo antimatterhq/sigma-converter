@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Malicious Usage Of IMDS Credentials Outside Of AWS Infrastructure",
+    "comment": "Detects when an instance identity has taken an action that isn't inside SSM. This can indicate that a compromised EC2 instance is being used as a pivot point.",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (actor.user.uid rlike '.\\+:assumed-role/aws:.\\+' AND NOT (lower(metadata.product.name) = lower('ssm.amazonaws.com') AND lower(api.operation) = lower('registermanagedinstance') AND lower(src_endpoint.ip) = lower('aws internal')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when an instance identity has taken an action that isn't inside SSM. This can indicate that a compromised EC2 instance is being used as a pivot point.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: A team has configured an EC2 instance to use instance profiles that grant the option for the EC2 instance to talk to other AWS Services References: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-identity-roles.html, https://ermetic.com/blog/aws/aws-ec2-imds-what-you-need-to-know/, https://www.packetmischief.ca/2023/07/31/amazon-ec2-credential-exfiltration-how-it-happens-and-how-to-mitigate-it/#lifting-credentials-from-imds-this-is-why-we-cant-have-nice-things",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1078"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1078",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,19 +1,18 @@
-id: db6c06c4-bf3b-421c-aa88-15672b88c743
 title: Changes To PIM Settings
+id: db6c06c4-bf3b-421c-aa88-15672b88c743
 status: test
 level: high
-description: Detects when changes are made to PIM roles
 author: Mark Morowczynski '@markmorow', Yochana Henderson, '@Yochana-H'
-date: '2022-08-09'
-tags:
-    - attack.privilege-escalation
-    - attack.persistence
-    - attack.t1078.004
+description: Detects when changes are made to PIM roles
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-identity-management#azure-ad-roles-assignment
 falsepositives:
     - Legit administrative PIM setting configuration changes
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1078.004
+date: '2022-08-09'
 logsource:
     product: azure
     service: auditlogs
@@ -28,13 +27,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:10.832957+00:00'
+            mapped_at: '2025-12-04T01:37:37.151140+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:10.832957+00:00'
+            mapped_at: '2025-12-04T01:37:37.151140+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:19:11.526694+00:00'
+            mapped_at: '2025-12-04T01:37:37.151164+00:00'

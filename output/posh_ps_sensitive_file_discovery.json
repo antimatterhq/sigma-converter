@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Powershell Sensitive File Discovery",
+    "comment": "Detect adversaries enumerate sensitive files",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((contains(lower(script.script_content.value), lower('ls')) OR contains(lower(script.script_content.value), lower('get-childitem')) OR contains(lower(script.script_content.value), lower('gci'))) AND contains(lower(script.script_content.value), lower('-recurse')) AND (contains(lower(script.script_content.value), lower('.pass')) OR contains(lower(script.script_content.value), lower('.kdbx')) OR contains(lower(script.script_content.value), lower('.kdb'))))"
+      }
+    },
+    "output": {
+      "summary": "Detect adversaries enumerate sensitive files",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/malmoeb/status/1570814999370801158",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1083"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

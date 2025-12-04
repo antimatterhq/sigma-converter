@@ -1,107 +1,90 @@
-# Sigma Converter
+# Sigma → Databricks SQL Converter
 
-Convert Sigma detection rules to Databricks SQL with OCSF field mappings.
+Converts Sigma detection rules to Databricks SQL with OCSF field mappings for LakeWatch deployment.
 
-## Setup
+## Quick Start
 
 ```bash
+# Setup
 python3.12 -m venv .venv
 source .venv/bin/activate
-python3 -m pip install poetry
-python3 -m poetry update
+pip install poetry
+poetry install
+
+# Run tests
+pytest tests/unittests/
+pytest tests/integration/
 ```
 
-## Run Tests
+## Architecture
 
-```bash
-# Fast unit tests (~0.2 seconds)
-pytest tests/unittests/
+### Core Components
 
-# Integration tests (~3 minutes)
-pytest tests/integration/
+**`sigma/backends/databricks/`** - SQL generation
+- `base.py`: Single-event rule conversion, validation orchestration
+- `correlation.py`: Multi-event correlation using Spark SQL window functions
+- `lakewatch_rule.py`: LakeWatch JSON output format
+- `sql_validator.py`: Post-conversion SQL syntax validation via sqlglot
 
-# All tests
-pytest
+**`sigma/pipelines/lakewatch/`** - OCSF pipeline
+- Applies field mappings from `fieldmapper/mappings/`
+- Sets `rule.custom_attributes['table']` for OCSF event class
+- Injects `activity_id` and other OCSF-specific conditions
+
+**`sigma/validators/ocsf/`** - Pre-conversion validation
+- `MissingTableMappingIssue`: Rejects rules without valid OCSF table
+- `UnmappedFieldsIssue`: Rejects rules with unmapped detection fields
+- Validation runs before conversion; invalid rules are skipped
+
+**`fieldmapper/`** - AI-powered Sigma → OCSF mapping
+- `ocsf/mapper.py`: OpenAI structured outputs for field mapping
+- `ocsf/rules.py`: Rule loading, OCSF metadata injection
+- `mappings/`: Output directory for mapped rules (YAML with `ocsf_mapping` block)
+- `.mapping_cache.json`: Caches AI responses
+
+### Data Flow
+
+```
+Original Sigma Rule (rules/)
+    ↓
+AI Field Mapper (field-mapper)
+    ↓
+Mapped Rule (fieldmapper/mappings/)
+    ↓
+Pipeline Transformations (lakewatch_pipeline)
+    ↓
+OCSF Validation (validators)
+    ↓
+SQL Generation (DatabricksBackend)
+    ↓
+LakeWatch JSON (convert-lakewatch)
 ```
 
 ## Usage
 
-### Convert Rules to Databricks SQL
-
-```python
-from sigma.backends.databricks import DatabricksBackend
-from sigma.pipelines.lakewatch import lakewatch_pipeline
-from sigma.collection import SigmaCollection
-
-# Load rules and convert
-backend = DatabricksBackend(lakewatch_pipeline())
-collection = SigmaCollection.from_yaml("rule.yml")
-queries = backend.convert(collection)
-```
-
-### Map Rules to OCSF (CLI)
+### 1. Map Rules to OCSF (One-time per rule)
 
 ```bash
-# Set up data files first (one-time if not already there)
+# Setup OCSF data (one-time)
 python fieldmapper/ocsf_data/bin/ocsflite_parser.py --export-ai-schema .
 python fieldmapper/ocsf_data/bin/mitre.py
 
-# Map rules
-requires equivilent of; `export OPENAI_KEY="your-key"` if not already there.
-sigma-ocsf-field-mapper --map --output mappings/ --limit 10
+# Map rules (requires OPENAI_API_KEY env var)
+field-mapper --map --output fieldmapper/mappings/ --limit 10
 
-# Analyze mappings
-sigma-ocsf-field-mapper --analyze mappings/
-
-# Debug specific rule
-sigma-ocsf-field-mapper --map --file rule.yml --debug-prompt --no-cache
+# Analyze mapping coverage
+field-mapper --analyze fieldmapper/mappings/
 ```
 
-## Code Structure
+### 2. Convert to LakeWatch JSON (CLI)
 
-```
-sigma/
-├── backends/databricks/     # SQL generation
-└── pipelines/
-    ├── lakewatch/          # OCSF pipeline transformations
-    └── databricks/         # Snake case pipeline -- to be deprecated in future PR.
+```bash
+# Convert all mapped rules
+convert-lakewatch
 
-fieldmapper/
-├── ocsf/                   # AI mapper, rule loading
-├── mappings/               # OCSF-mapped rules (output)
-└── ocsf_data/              # Schema and MITRE data
-
-tests/
-├── unittests/              # Fast tests (inline YAML)
-└── integration/            # Slow tests (load files)
+# Options
+convert-lakewatch -i fieldmapper/mappings/ -o lakewatch_rules/
+convert-lakewatch -f specific_rule.yml
 ```
 
-## Key Components
-
-**DatabricksBackend**: Generates Databricks SQL from Sigma rules
-- Output formats: TBD:
-- Supports field modifiers: `|contains`, `|endswith`, `|startswith`, `|re`
-
-**lakewatch_pipeline**: OCSF-aware processing pipeline
-- Maps Sigma fields to OCSF fields
-- Auto-assigns OCSF table via `rule.custom_attributes['table']`
-- Uses `LogsourceCondition` for non-conflicted logsources
-- Uses `RuleIDCondition` for conflicted rules (same logsource → different tables)
-
-**Field Mapper**: AI-powered Sigma → OCSF mapping
-- Uses OpenAI structured outputs
-- Caches mappings in `.mapping_cache.json`
-- Outputs to `fieldmapper/mappings/`
-
-## Known Issues
-
-- `cidrmatch` generated but requires UDF implementation
-- Keyword rules (text without fields) not supported
-- Needs more testing
-
-## Configuration
-
-Edit rule paths in `fieldmapper/ocsf/rules.py`:
-```python
-PATHS = ["rules/"]  # Recursively scans subdirectories
-```
+Output: `<original_filename>.json` files ready for LakeWatch API deployment.

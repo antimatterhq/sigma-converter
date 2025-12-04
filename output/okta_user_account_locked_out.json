@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Okta User Account Locked Out",
+    "comment": "Detects when an user account is locked out.",
+    "annotations": {
+      "source": "sigma",
+      "product": "okta",
+      "service": "okta",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(message) = lower('max sign in attempts exceeded'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when an user account is locked out.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://developer.okta.com/docs/reference/api/system-log/, https://developer.okta.com/docs/reference/api/event-types/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1531"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

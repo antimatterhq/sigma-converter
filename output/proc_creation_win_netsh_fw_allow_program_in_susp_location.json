@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious Program Location Whitelisted In Firewall Via Netsh.EXE",
+    "comment": "Detects Netsh command execution that whitelists a program located in a suspicious location in the Windows Firewall",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\netsh.exe')) AND lower(process.file.name) = lower('netsh.exe') AND contains(lower(process.cmd_line), lower('firewall')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('allowedprogram')) AND contains(lower(process.cmd_line), lower('advfirewall')) AND contains(lower(process.cmd_line), lower('firewall')) AND contains(lower(process.cmd_line), lower('add')) AND contains(lower(process.cmd_line), lower('rule')) AND contains(lower(process.cmd_line), lower('action=allow')) AND contains(lower(process.cmd_line), lower('program=')) AND (contains(lower(process.cmd_line), lower(':\\\\$recycle.bin\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\recycler.bin\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\recyclers.bin\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\systemvolumeinformation\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\default\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\desktop\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\addins\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\cursors\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\debug\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\drivers\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\fonts\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\help\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\system32\\\\tasks\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\tasks\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\downloads\\\\')) OR contains(lower(process.cmd_line), lower('\\\\local settings\\\\temporary internet files\\\\')) OR contains(lower(process.cmd_line), lower('\\\\temporary internet files\\\\content.outlook\\\\')) OR contains(lower(process.cmd_line), lower('%public%\\\\')) OR contains(lower(process.cmd_line), lower('%temp%')) OR contains(lower(process.cmd_line), lower('%tmp%'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Netsh command execution that whitelists a program located in a suspicious location in the Windows Firewall",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.virusradar.com/en/Win32_Kasidet.AD/description, https://www.hybrid-analysis.com/sample/07e789f4f2f3259e7559fdccb36e96814c2dbff872a21e1fa03de9ee377d581f?environmentId=100",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

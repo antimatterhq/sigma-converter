@@ -1,21 +1,20 @@
-id: 39b31e81-5f5f-4898-9c0e-2160cfc0f9bf
 title: HackTool - Hashcat Password Cracker Execution
+id: 39b31e81-5f5f-4898-9c0e-2160cfc0f9bf
 status: test
 level: high
+author: frack113
 description: Execute Hashcat.exe with provided SAM file from registry of Windows and
     Password list to crack against
-author: frack113
-date: '2021-12-27'
-modified: '2023-02-04'
-tags:
-    - attack.credential-access
-    - attack.t1110.002
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1110.002/T1110.002.md#atomic-test-1---password-cracking-with-hashcat
     - https://hashcat.net/wiki/doku.php?id=hashcat
 falsepositives:
     - Tools that use similar command line flags and values
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1110.002
+date: '2021-12-27'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:46.497807+00:00'
+            mapped_at: '2025-12-04T01:49:37.351318+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:46.497807+00:00'
+            mapped_at: '2025-12-04T01:49:37.351318+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:46.497835+00:00'
+            mapped_at: '2025-12-04T01:49:37.351337+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:46.497838+00:00'
+            mapped_at: '2025-12-04T01:49:37.351339+00:00'

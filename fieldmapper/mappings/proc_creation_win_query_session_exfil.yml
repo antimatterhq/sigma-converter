@@ -1,19 +1,18 @@
-id: 53ef0cef-fa24-4f25-a34a-6c72dfa2e6e2
 title: Query Usage To Exfil Data
+id: 53ef0cef-fa24-4f25-a34a-6c72dfa2e6e2
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of "query.exe" a system binary to exfil information such
     as "sessions" and "processes" for later use
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-01'
-modified: '2023-01-19'
-tags:
-    - attack.execution
 references:
     - https://twitter.com/MichalKoczwara/status/1553634816016498688
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2022-08-01'
+modified: '2023-01-19'
 logsource:
     category: process_creation
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:10.025126+00:00'
+            mapped_at: '2025-12-04T01:44:56.423688+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:10.025126+00:00'
+            mapped_at: '2025-12-04T01:44:56.423688+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:10.025156+00:00'
+            mapped_at: '2025-12-04T01:44:56.423705+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:10.025160+00:00'
+            mapped_at: '2025-12-04T01:44:56.423707+00:00'

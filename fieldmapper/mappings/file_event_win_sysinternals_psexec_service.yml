@@ -1,24 +1,21 @@
-id: 259e5a6a-b8d2-4c38-86e2-26c5e651361d
 title: PsExec Service File Creation
+id: 259e5a6a-b8d2-4c38-86e2-26c5e651361d
 status: test
 level: low
+author: Thomas Patzke
 description: Detects default PsExec service filename which indicates PsExec service
     installation and execution
-author: Thomas Patzke
-date: '2017-06-12'
-modified: '2022-10-26'
-tags:
-    - attack.execution
-    - attack.t1569.002
-    - attack.s0029
 references:
     - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
     - https://jpcertcc.github.io/ToolAnalysisResultSheet
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''42c575ea-e41e-41f1-b248-8093c3e82a28''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1569.002
+    - attack.s0029
+date: '2017-06-12'
+modified: '2022-10-26'
 logsource:
     category: file_event
     product: windows
@@ -26,6 +23,9 @@ detection:
     selection:
         TargetFilename|endswith: \PSEXESVC.exe
     condition: selection
+related:
+    -   id: 42c575ea-e41e-41f1-b248-8093c3e82a28
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -33,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:44.944595+00:00'
+            mapped_at: '2025-12-04T01:53:19.356413+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:44.944595+00:00'
+            mapped_at: '2025-12-04T01:53:19.356413+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:44.944616+00:00'
+            mapped_at: '2025-12-04T01:53:19.356428+00:00'

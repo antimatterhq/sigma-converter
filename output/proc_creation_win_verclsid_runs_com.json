@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Verclsid.exe Runs COM Object",
+    "comment": "Detects when verclsid.exe is used to run COM object via GUID",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\verclsid.exe')) AND lower(process.file.name) = lower('verclsid.exe') AND contains(lower(process.cmd_line), lower('/s')) AND contains(lower(process.cmd_line), lower('/c')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when verclsid.exe is used to run COM object via GUID",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line False positive: Unknown References: https://lolbas-project.github.io/lolbas/Binaries/Verclsid/, https://gist.github.com/NickTyrer/0598b60112eaafe6d07789f7964290d5, https://bohops.com/2018/08/18/abusing-the-com-registry-structure-part-2-loading-techniques-for-evasion-and-persistence/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

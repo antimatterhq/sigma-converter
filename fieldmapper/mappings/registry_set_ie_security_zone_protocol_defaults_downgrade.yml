@@ -1,17 +1,14 @@
-id: 3fd4c8d7-8362-4557-a8e6-83b29cc0d724
 title: IE ZoneMap Setting Downgraded To MyComputer Zone For HTTP Protocols
+id: 3fd4c8d7-8362-4557-a8e6-83b29cc0d724
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), Michael Haag (idea)
 description: 'Detects changes to Internet Explorer''s (IE / Windows Internet properties)
     ZoneMap configuration of the "HTTP" and "HTTPS" protocols to point to the "My
     Computer" zone. This allows downloaded files from the Internet to be granted the
     same level of trust as files stored locally.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Michael Haag (idea)
-date: '2023-09-05'
-tags:
-    - attack.defense-evasion
 references:
     - https://twitter.com/M_haggis/status/1699056847154725107
     - https://twitter.com/JAMESWT_MHT/status/1699042827261391247
@@ -19,9 +16,9 @@ references:
     - https://www.virustotal.com/gui/file/339ff720c74dc44265b917b6d3e3ba0411d61f3cd3c328e9a2bae81592c8a6e5/content
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''10344bb3-7f65-46c2-b915-2d00d47be5b0''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-09-05'
 logsource:
     category: registry_set
     product: windows
@@ -33,6 +30,9 @@ detection:
             - \https
         Details|contains: DWORD (0x00000000)
     condition: selection
+related:
+    -   id: 10344bb3-7f65-46c2-b915-2d00d47be5b0
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Process Access via TrolleyExpress Exclusion",
+    "comment": "Detects a possible process memory dump that uses the white-listed Citrix TrolleyExpress.exe filename as a way to dump the lsass process memory",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('\\\\trolleyexpress 7')) OR contains(lower(process.cmd_line), lower('\\\\trolleyexpress 8')) OR contains(lower(process.cmd_line), lower('\\\\trolleyexpress 9')) OR contains(lower(process.cmd_line), lower('\\\\trolleyexpress.exe 7')) OR contains(lower(process.cmd_line), lower('\\\\trolleyexpress.exe 8')) OR contains(lower(process.cmd_line), lower('\\\\trolleyexpress.exe 9')) OR contains(lower(process.cmd_line), lower('\\\\trolleyexpress.exe -ma ')) OR endswith(lower(process.name), lower('\\\\trolleyexpress.exe')) AND NOT (contains(lower(process.file.name), lower('ctxinstall')) OR process.file.name is null)))"
+      }
+    },
+    "output": {
+      "summary": "Detects a possible process memory dump that uses the white-listed Citrix TrolleyExpress.exe filename as a way to dump the lsass process memory",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Unknown References: https://twitter.com/_xpn_/status/1491557187168178176, https://www.youtube.com/watch?v=Ie831jF0bb0",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

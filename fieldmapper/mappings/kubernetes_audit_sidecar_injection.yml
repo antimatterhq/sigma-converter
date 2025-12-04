@@ -1,7 +1,8 @@
-id: ad9012a6-e518-4432-9890-f3b82b8fc71f
 title: Potential Sidecar Injection Into Running Deployment
+id: ad9012a6-e518-4432-9890-f3b82b8fc71f
 status: experimental
 level: medium
+author: Leo Tsaousis (@laripping)
 description: 'Detects attempts to inject a sidecar container into a running deployment.
 
     A sidecar container is an additional container within a pod, that resides alongside
@@ -15,16 +16,14 @@ description: 'Detects attempts to inject a sidecar container into a running depl
     cluster.
 
     '
-author: Leo Tsaousis (@laripping)
-date: '2024-03-26'
-tags:
-    - attack.t1609
 references:
     - https://kubernetes.io/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch
     - https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Sidecar%20Injection/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1609
+date: '2024-03-26'
 logsource:
     category: application
     product: kubernetes
@@ -42,25 +41,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:38.199181+00:00'
+            mapped_at: '2025-12-04T01:39:59.834844+00:00'
         product:
             source_field: product
             source_value: kubernetes
-            mapped_at: '2025-11-26T02:23:38.199181+00:00'
+            mapped_at: '2025-12-04T01:39:59.834844+00:00'
         service:
             source_field: service
             source_value: audit
-            mapped_at: '2025-11-26T02:23:38.199181+00:00'
+            mapped_at: '2025-12-04T01:39:59.834844+00:00'
     detection_fields:
         -   source_field: verb
             target_table: api_activity
             target_field: api.operation
-            mapped_at: '2025-11-26T02:23:39.343504+00:00'
+            mapped_at: '2025-12-04T01:39:59.834860+00:00'
         -   source_field: apiGroup
             target_table: api_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:39.343514+00:00'
+            mapped_at: '2025-12-04T01:39:59.834862+00:00'
         -   source_field: objectRef.resource
             target_table: api_activity
             target_field: resources.name
-            mapped_at: '2025-11-26T02:23:39.343516+00:00'
+            mapped_at: '2025-12-04T01:39:59.834863+00:00'

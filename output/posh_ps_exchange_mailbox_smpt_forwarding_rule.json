@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell Mailbox SMTP Forward Rule",
+    "comment": "Detects usage of the powerShell Set-Mailbox Cmdlet to set-up an SMTP forwarding rule.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('set-mailbox ')) AND contains(lower(script.script_content.value), lower(' -delivertomailboxandforward ')) AND contains(lower(script.script_content.value), lower(' -forwardingsmtpaddress ')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the powerShell Set-Mailbox Cmdlet to set-up an SMTP forwarding rule.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of the cmdlet to forward emails Reference: https://m365internals.com/2022/10/07/hunting-in-on-premises-exchange-server-logs/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

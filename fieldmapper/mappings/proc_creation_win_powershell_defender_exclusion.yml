@@ -1,15 +1,10 @@
-id: 17769c90-230e-488b-a463-e05c08e9d48f
 title: Powershell Defender Exclusion
+id: 17769c90-230e-488b-a463-e05c08e9d48f
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects requests to exclude files, folders or processes from Antivirus
     scanning using PowerShell cmdlets
-author: Florian Roth (Nextron Systems)
-date: '2021-04-29'
-modified: '2022-05-12'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://learn.microsoft.com/en-us/defender-endpoint/configure-process-opened-file-exclusions-microsoft-defender-antivirus
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
@@ -17,9 +12,11 @@ references:
 falsepositives:
     - Possible Admin Activity
     - Other Cmdlets that may use the same parameters
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c1344fa2-323b-4d2e-9176-84b4d4821c88''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2021-04-29'
+modified: '2022-05-12'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +32,9 @@ detection:
             - ' -ExclusionProcess '
             - ' -ExclusionIpAddress '
     condition: all of selection*
+related:
+    -   id: c1344fa2-323b-4d2e-9176-84b4d4821c88
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -42,13 +42,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:10.419550+00:00'
+            mapped_at: '2025-12-04T01:50:53.929508+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:10.419550+00:00'
+            mapped_at: '2025-12-04T01:50:53.929508+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:10.419562+00:00'
+            mapped_at: '2025-12-04T01:50:53.929529+00:00'

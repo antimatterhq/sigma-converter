@@ -1,13 +1,9 @@
-id: e0c69ebd-b54f-4aed-8ae3-e3467843f3f0
 title: Renamed Cloudflared.EXE Execution
+id: e0c69ebd-b54f-4aed-8ae3-e3467843f3f0
 status: test
 level: high
-description: Detects the execution of a renamed "cloudflared" binary.
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-12-20'
-tags:
-    - attack.command-and-control
-    - attack.t1090.001
+description: Detects the execution of a renamed "cloudflared" binary.
 references:
     - https://github.com/cloudflare/cloudflared/releases
     - https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/
@@ -16,7 +12,10 @@ references:
     - https://www.guidepointsecurity.com/blog/tunnel-vision-cloudflared-abused-in-the-wild/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090.001
+date: '2023-12-20'
 logsource:
     category: process_creation
     product: windows
@@ -94,21 +93,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:12.264289+00:00'
+            mapped_at: '2025-12-04T01:46:40.744657+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:12.264289+00:00'
+            mapped_at: '2025-12-04T01:46:40.744657+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:12.264306+00:00'
+            mapped_at: '2025-12-04T01:46:40.744710+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:32:12.264308+00:00'
+            mapped_at: '2025-12-04T01:46:40.744713+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:12.264310+00:00'
+            mapped_at: '2025-12-04T01:46:40.744714+00:00'

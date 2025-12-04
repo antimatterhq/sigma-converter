@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Bad Opsec Defaults Sacrificial Processes With Improper Arguments",
+    "comment": "Detects attackers using tooling with bad opsec defaults. E.g. spawning a sacrificial process to inject a capability into the process without taking into account how the process is normally run. One trivial example of this is using rundll32.exe without arguments as a sacrificial process (default in CS, now highlighted by c2lint), running WerFault without arguments (Kraken - credit am0nsec), and other examples.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\werfault.exe')) AND endswith(lower(process.cmd_line), lower('werfault.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) AND endswith(lower(process.cmd_line), lower('rundll32.exe')) OR endswith(lower(process.name), lower('\\\\regsvcs.exe')) AND endswith(lower(process.cmd_line), lower('regsvcs.exe')) OR endswith(lower(process.name), lower('\\\\regasm.exe')) AND endswith(lower(process.cmd_line), lower('regasm.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) AND endswith(lower(process.cmd_line), lower('regsvr32.exe'))) AND NOT (contains(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\microsoft\\\\edgeupdate\\\\install\\\\{')) AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND endswith(lower(process.cmd_line), lower('rundll32.exe')) OR (contains(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\bravesoftware\\\\brave-browser\\\\application\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\google\\\\chrome\\\\application\\\\'))) AND endswith(lower(process.parent_process.name), lower('\\\\installer\\\\setup.exe')) AND contains(lower(process.parent_process.cmd_line), lower('--uninstall ')) AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND endswith(lower(process.cmd_line), lower('rundll32.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects attackers using tooling with bad opsec defaults. E.g. spawning a sacrificial process to inject a capability into the process without taking into account how the process is normally run. One trivial example of this is using rundll32.exe without arguments as a sacrificial process (default in CS, now highlighted by c2lint), running WerFault without arguments (Kraken - credit am0nsec), and other examples.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://blog.malwarebytes.com/malwarebytes-news/2020/10/kraken-attack-abuses-wer-service/, https://www.cobaltstrike.com/help-opsec, https://twitter.com/CyberRaiju/status/1251492025678983169, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/regsvr32, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/rundll32, https://learn.microsoft.com/en-us/dotnet/framework/tools/regasm-exe-assembly-registration-tool, https://learn.microsoft.com/en-us/dotnet/framework/tools/regsvcs-exe-net-services-installation-tool",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

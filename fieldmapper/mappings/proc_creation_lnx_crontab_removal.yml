@@ -1,22 +1,21 @@
-id: c2e234de-03a3-41e1-b39a-1e56dc17ba67
 title: Remove Scheduled Cron Task/Job
+id: c2e234de-03a3-41e1-b39a-1e56dc17ba67
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects usage of the ''crontab'' utility to remove the current crontab.
 
     This is a common occurrence where cryptocurrency miners compete against each other
     by removing traces of other miners to hijack the maximum amount of resources possible
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-15'
-tags:
-    - attack.defense-evasion
 references:
     - https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-09-15'
 logsource:
     category: process_creation
     product: linux
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:44.356622+00:00'
+            mapped_at: '2025-12-04T01:35:59.025353+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:44.356622+00:00'
+            mapped_at: '2025-12-04T01:35:59.025353+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:44.356634+00:00'
+            mapped_at: '2025-12-04T01:35:59.025365+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:44.356637+00:00'
+            mapped_at: '2025-12-04T01:35:59.025367+00:00'

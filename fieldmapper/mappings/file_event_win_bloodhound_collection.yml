@@ -1,12 +1,15 @@
-id: 02773bed-83bf-469f-b7ff-e676e7d78bab
 title: BloodHound Collection Files
+id: 02773bed-83bf-469f-b7ff-e676e7d78bab
 status: test
 level: high
+author: C.J. May
 description: Detects default file names outputted by the BloodHound collection tool
     SharpHound
-author: C.J. May
-date: '2022-08-09'
-modified: '2023-03-29'
+references:
+    - https://academy.hackthebox.com/course/preview/active-directory-bloodhound/bloodhound--data-collection
+falsepositives:
+    - Some false positives may arise in some environment and this may require some
+        tuning. Add additional filters or reduce level depending on the level of noise
 tags:
     - attack.discovery
     - attack.t1087.001
@@ -16,12 +19,8 @@ tags:
     - attack.t1069.002
     - attack.execution
     - attack.t1059.001
-references:
-    - https://academy.hackthebox.com/course/preview/active-directory-bloodhound/bloodhound--data-collection
-falsepositives:
-    - Some false positives may arise in some environment and this may require some
-        tuning. Add additional filters or reduce level depending on the level of noise
-taxonomy: sigma
+date: '2022-08-09'
+modified: '2023-03-29'
 logsource:
     category: file_event
     product: windows
@@ -48,17 +47,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:28.357348+00:00'
+            mapped_at: '2025-12-04T01:53:06.180018+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:28.357348+00:00'
+            mapped_at: '2025-12-04T01:53:06.180018+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:28.357368+00:00'
+            mapped_at: '2025-12-04T01:53:06.180033+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:28.357372+00:00'
+            mapped_at: '2025-12-04T01:53:06.180035+00:00'

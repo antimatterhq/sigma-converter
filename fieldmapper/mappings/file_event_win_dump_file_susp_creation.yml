@@ -1,23 +1,20 @@
-id: aba15bdd-657f-422a-bab3-ac2d2a0d6f1c
 title: Potentially Suspicious DMP/HDMP File Creation
+id: aba15bdd-657f-422a-bab3-ac2d2a0d6f1c
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation of a file with the ".dmp"/".hdmp" extension by a
     shell or scripting application such as "cmd", "powershell", etc. Often created
     by software during a crash. Memory dumps can sometimes contain sensitive information
     such as credentials. It's best to determine the source of the crash.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-09-07'
-tags:
-    - attack.defense-evasion
 references:
     - https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps
 falsepositives:
     - Some administrative PowerShell or VB scripts might have the ability to collect
         dumps and move them to other folders which might trigger a false positive.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3a525307-d100-48ae-b3b9-0964699d7f97''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-09-07'
 logsource:
     category: file_event
     product: windows
@@ -35,24 +32,27 @@ detection:
             - .dump
             - .hdmp
     condition: selection
+related:
+    -   id: 3a525307-d100-48ae-b3b9-0964699d7f97
+        type: similar
 ocsf_mapping:
     class_name: file_activity
-    activity_id: 3
+    activity_id: 1
     logsource:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:32.189579+00:00'
+            mapped_at: '2025-12-04T01:52:24.932853+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:32.189579+00:00'
+            mapped_at: '2025-12-04T01:52:24.932853+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:32.189613+00:00'
+            mapped_at: '2025-12-04T01:52:24.932877+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:32.189617+00:00'
+            mapped_at: '2025-12-04T01:52:24.932879+00:00'

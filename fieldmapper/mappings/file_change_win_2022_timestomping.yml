@@ -1,7 +1,8 @@
-id: 558eebe5-f2ba-4104-b339-36f7902bcc1a
 title: File Creation Date Changed to Another Year
+id: 558eebe5-f2ba-4104-b339-36f7902bcc1a
 status: test
 level: high
+author: frack113, Florian Roth (Nextron Systems)
 description: 'Attackers may change the file creation time of a backdoor to make it
     look like it was installed with the operating system.
 
@@ -9,17 +10,15 @@ description: 'Attackers may change the file creation time of a backdoor to make 
     not necessarily indicate malicious activity.
 
     '
-author: frack113, Florian Roth (Nextron Systems)
-date: '2022-08-12'
-modified: '2022-10-25'
-tags:
-    - attack.t1070.006
-    - attack.defense-evasion
 references:
     - https://www.inversecos.com/2022/04/defence-evasion-technique-timestomping.html
 falsepositives:
     - Changes made to or by the local NTP service
-taxonomy: sigma
+tags:
+    - attack.t1070.006
+    - attack.defense-evasion
+date: '2022-08-12'
+modified: '2022-10-25'
 logsource:
     category: file_change
     product: windows
@@ -49,30 +48,30 @@ detection:
         and not 1 of gen_filter*
 ocsf_mapping:
     class_name: file_activity
-    activity_id: 6
+    activity_id: 3
     logsource:
         category:
             source_field: category
             source_value: file_change
-            mapped_at: '2025-11-26T02:41:02.294533+00:00'
+            mapped_at: '2025-12-04T01:53:33.153508+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:02.294533+00:00'
+            mapped_at: '2025-12-04T01:53:33.153508+00:00'
     detection_fields:
         -   source_field: PreviousCreationUtcTime
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:41:03.141698+00:00'
+            mapped_at: '2025-12-04T01:53:33.153547+00:00'
         -   source_field: CreationUtcTime
             target_table: file_activity
             target_field: device.created_time
-            mapped_at: '2025-11-26T02:41:03.141710+00:00'
+            mapped_at: '2025-12-04T01:53:33.153549+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:41:03.141714+00:00'
+            mapped_at: '2025-12-04T01:53:33.153551+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:41:03.141716+00:00'
+            mapped_at: '2025-12-04T01:53:33.153553+00:00'

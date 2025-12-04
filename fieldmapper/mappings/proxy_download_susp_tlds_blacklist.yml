@@ -1,17 +1,9 @@
-id: 00d0b5ab-1f55-4120-8e83-487c0a7baf19
 title: Download From Suspicious TLD - Blacklist
+id: 00d0b5ab-1f55-4120-8e83-487c0a7baf19
 status: test
 level: low
-description: Detects download of certain file types from hosts in suspicious TLDs
 author: Florian Roth (Nextron Systems)
-date: '2017-11-07'
-modified: '2023-05-18'
-tags:
-    - attack.initial-access
-    - attack.t1566
-    - attack.execution
-    - attack.t1203
-    - attack.t1204.002
+description: Detects download of certain file types from hosts in suspicious TLDs
 references:
     - https://www.symantec.com/connect/blogs/shady-tld-research-gdn-and-our-2016-wrap
     - https://promos.mcafee.com/en-US/PDF/MTMW_Report.pdf
@@ -22,9 +14,14 @@ fields:
     - c-uri
 falsepositives:
     - All kinds of software downloads
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b5de2919-b74a-4805-91a7-5049accbaefe''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1566
+    - attack.execution
+    - attack.t1203
+    - attack.t1204.002
+date: '2017-11-07'
+modified: '2023-05-18'
 logsource:
     category: proxy
 detection:
@@ -110,6 +107,9 @@ detection:
             - .ga
             - .pw
     condition: selection
+related:
+    -   id: b5de2919-b74a-4805-91a7-5049accbaefe
+        type: similar
 ocsf_mapping:
     class_name: http_activity
     activity_id: 3
@@ -117,13 +117,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:07.834839+00:00'
+            mapped_at: '2025-12-04T01:34:52.194538+00:00'
     detection_fields:
         -   source_field: c-uri-extension
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:14:07.834861+00:00'
+            mapped_at: '2025-12-04T01:34:52.194552+00:00'
         -   source_field: cs-host
             target_table: http_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:14:07.834865+00:00'
+            mapped_at: '2025-12-04T01:34:52.194554+00:00'

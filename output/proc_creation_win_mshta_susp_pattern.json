@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Mshta.EXE Execution Patterns",
+    "comment": "Detects suspicious mshta process execution patterns",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\mshta.exe')) AND lower(process.file.name) = lower('mshta.exe') AND (endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wscript.exe'))) AND (contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\programdata\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\windows\\\\temp\\\\'))) OR endswith(lower(process.name), lower('\\\\mshta.exe')) AND lower(process.file.name) = lower('mshta.exe') AND NOT ((startswith(lower(process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\syswow64\\\\'))) AND (contains(lower(process.cmd_line), lower('.htm')) OR contains(lower(process.cmd_line), lower('.hta'))) AND (endswith(lower(process.cmd_line), lower('mshta.exe')) OR endswith(lower(process.cmd_line), lower('mshta'))))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious mshta process execution patterns",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://en.wikipedia.org/wiki/HTML_Application, https://www.echotrail.io/insights/search/mshta.exe, https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1106"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

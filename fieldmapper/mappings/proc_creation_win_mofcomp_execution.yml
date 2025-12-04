@@ -1,7 +1,8 @@
-id: 1dd05363-104e-4b4a-b963-196a534b03a1
 title: Potential Suspicious Mofcomp Execution
+id: 1dd05363-104e-4b4a-b963-196a534b03a1
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects execution of the "mofcomp" utility as a child of a suspicious
     shell or script running utility or by having a suspicious path in the commandline.
 
@@ -11,19 +12,17 @@ description: 'Detects execution of the "mofcomp" utility as a child of a suspici
     Attackers abuse this utility to install malicious MOF scripts
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-12'
-modified: '2023-04-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
     - https://github.com/The-DFIR-Report/Sigma-Rules/blob/75260568a7ffe61b2458ca05f6f25914efb44337/win_mofcomp_execution.yml
     - https://learn.microsoft.com/en-us/windows/win32/wmisdk/mofcomp
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-07-12'
+modified: '2023-04-11'
 logsource:
     category: process_creation
     product: windows
@@ -61,25 +60,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:44.832122+00:00'
+            mapped_at: '2025-12-04T01:41:15.262989+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:44.832122+00:00'
+            mapped_at: '2025-12-04T01:41:15.262989+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:44.832153+00:00'
+            mapped_at: '2025-12-04T01:41:15.263009+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:44.832157+00:00'
+            mapped_at: '2025-12-04T01:41:15.263010+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:44.832160+00:00'
+            mapped_at: '2025-12-04T01:41:15.263012+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:44.832162+00:00'
+            mapped_at: '2025-12-04T01:41:15.263013+00:00'

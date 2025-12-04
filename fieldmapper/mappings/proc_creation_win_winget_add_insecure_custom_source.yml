@@ -1,28 +1,24 @@
-id: 81a0ecb5-0a41-4ba1-b2ba-c944eb92bfa2
 title: Add Insecure Download Source To Winget
+id: 81a0ecb5-0a41-4ba1-b2ba-c944eb92bfa2
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects usage of winget to add a new insecure (http) download source.
 
     Winget will not allow the addition of insecure sources, hence this could indicate
     potential suspicious activity (or typos)
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-04-17'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1059
 references:
     - https://learn.microsoft.com/en-us/windows/package-manager/winget/source
     - https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget
 falsepositives:
     - False positives might occur if the users are unaware of such control checks
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''05ebafc8-7aa2-4bcd-a269-2aec93f9e842''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''c15a46a0-07d4-4c87-b4b6-89207835a83b''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1059
+date: '2023-04-17'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +32,11 @@ detection:
             - 'add '
             - http://
     condition: all of selection_*
+related:
+    -   id: 05ebafc8-7aa2-4bcd-a269-2aec93f9e842
+        type: similar
+    -   id: c15a46a0-07d4-4c87-b4b6-89207835a83b
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:58.145983+00:00'
+            mapped_at: '2025-12-04T01:43:58.987516+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:58.145983+00:00'
+            mapped_at: '2025-12-04T01:43:58.987516+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:58.145996+00:00'
+            mapped_at: '2025-12-04T01:43:58.987530+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:58.145998+00:00'
+            mapped_at: '2025-12-04T01:43:58.987536+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:58.146000+00:00'
+            mapped_at: '2025-12-04T01:43:58.987538+00:00'

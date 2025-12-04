@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Scheduled Task Executing Payload from Registry",
+    "comment": "Detects the creation of a schtasks that potentially executes a payload stored in the Windows Registry using PowerShell.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\schtasks.exe')) AND lower(process.file.name) = lower('schtasks.exe') AND contains(lower(process.cmd_line), lower('/create')) AND (contains(lower(process.cmd_line), lower('get-itemproperty')) OR contains(lower(process.cmd_line), lower(' gp '))) AND (contains(lower(process.cmd_line), lower('hkcu:')) OR contains(lower(process.cmd_line), lower('hklm:')) OR contains(lower(process.cmd_line), lower('registry::')) OR contains(lower(process.cmd_line), lower('hkey_'))) AND NOT (contains(lower(process.cmd_line), lower('frombase64string')) OR contains(lower(process.cmd_line), lower('encodedcommand'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a schtasks that potentially executes a payload stored in the Windows Registry using PowerShell.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

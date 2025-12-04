@@ -1,23 +1,22 @@
-id: d937b75f-a665-4480-88a5-2f20e9f9b22a
 title: Possible Privilege Escalation via Weak Service Permissions
+id: d937b75f-a665-4480-88a5-2f20e9f9b22a
 status: test
 level: high
+author: Teymur Kheirkhabarov
 description: Detection of sc.exe utility spawning by user with Medium integrity level
     to change service ImagePath or FailureCommand
-author: Teymur Kheirkhabarov
-date: '2019-10-26'
-modified: '2024-12-01'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1574.011
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
     - https://pentestlab.blog/2017/03/30/weak-service-permissions/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.011
+date: '2019-10-26'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:59.338285+00:00'
+            mapped_at: '2025-12-04T01:50:39.955532+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:59.338285+00:00'
+            mapped_at: '2025-12-04T01:50:39.955532+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:59.338339+00:00'
+            mapped_at: '2025-12-04T01:50:39.955548+00:00'
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:36:59.338344+00:00'
+            mapped_at: '2025-12-04T01:50:39.955550+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:59.338348+00:00'
+            mapped_at: '2025-12-04T01:50:39.955551+00:00'

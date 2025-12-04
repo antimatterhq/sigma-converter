@@ -1,21 +1,20 @@
-id: 44143844-0631-49ab-97a0-96387d6b2d7c
 title: File Download Using Notepad++ GUP Utility
+id: 44143844-0631-49ab-97a0-96387d6b2d7c
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of the Notepad++ updater (gup) from a process other
     than Notepad++ to download files.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-10'
-modified: '2023-03-02'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://twitter.com/nas_bench/status/1535322182863179776
 falsepositives:
     - Other parent processes other than notepad++ using GUP that are not currently
         identified
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-06-10'
+modified: '2023-03-02'
 logsource:
     category: process_creation
     product: windows
@@ -37,25 +36,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:51.664265+00:00'
+            mapped_at: '2025-12-04T01:41:21.589288+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:51.664265+00:00'
+            mapped_at: '2025-12-04T01:41:21.589288+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:51.664295+00:00'
+            mapped_at: '2025-12-04T01:41:21.589308+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:51.664303+00:00'
+            mapped_at: '2025-12-04T01:41:21.589310+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:51.664306+00:00'
+            mapped_at: '2025-12-04T01:41:21.589311+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:51.664308+00:00'
+            mapped_at: '2025-12-04T01:41:21.589313+00:00'

@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "name": "Potential Binary Proxy Execution Via Cdb.EXE",
+    "comment": "Detects usage of \"cdb.exe\" to launch arbitrary processes or commands from a debugger script file",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cdb.exe')) AND lower(process.file.name) = lower('cdb.exe') AND (contains(lower(process.cmd_line), lower(' -c ')) OR contains(lower(process.cmd_line), lower(' -cf '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of \"cdb.exe\" to launch arbitrary processes or commands from a debugger script file",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of debugging tools References: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Cdb/, https://web.archive.org/web/20170715043507/http://www.exploit-monday.com/2016/08/windbg-cdb-shellcode-runner.html, https://twitter.com/nas_bench/status/1534957360032120833",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1106"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1127"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

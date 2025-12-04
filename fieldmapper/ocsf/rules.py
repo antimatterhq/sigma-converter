@@ -72,6 +72,7 @@ class OCSFLite:
     activity_id: Optional[Union[int, str]] = None              # Target activity_id (int) or "<UNMAPPED>"
     logsource: Optional[LogSourceMapping] = None               # Logsource mappings
     detection_fields: Optional[List[DetectionFieldMapping]] = None  # Detection field mappings
+    has_unbound_values: bool = False                           # True if rule contains keyword-based detection blocks
     
     def to_dict(self) -> dict:
         """Convert to dictionary for serialization."""
@@ -81,6 +82,28 @@ class OCSFLite:
             'logsource': self.logsource.to_dict() if self.logsource else None,
             'detection_fields': [f.to_dict() for f in self.detection_fields] if self.detection_fields else []
         }
+
+
+@dataclass
+class OCSFValidationResult:
+    """Complete OCSF mapping validation state."""
+    event_class: Optional[str]
+    activity_id: Optional[int]
+    unmapped_fields: List[str]
+    
+    @property
+    def is_valid(self) -> bool:
+        """Check if all OCSF mappings are valid."""
+        return (
+            self.event_class 
+            and self.event_class != '<UNMAPPED>' 
+            and not self.unmapped_fields
+        )
+    
+    @property
+    def has_valid_table(self) -> bool:
+        """Check if event_class mapping is valid."""
+        return self.event_class and self.event_class != '<UNMAPPED>'
 
 
 @dataclass
@@ -96,8 +119,11 @@ class PipelineMappings:
     activity_id_mappings: Dict[str, int]
     """Rules with valid activity_id (integer) that should be added to WHERE clause"""
     
-    field_mappings: Dict[str, List[str]]
-    """Source field to list of target field paths (for FieldMappingTransformation)"""
+    logsource_field_mappings: Dict[tuple[Optional[str], Optional[str], Optional[str]], Dict[str, str]]
+    """1:1 field mappings for non-conflicted logsources (source_field -> target_field)"""
+    
+    conflicted_rule_field_mappings: Dict[str, Dict[str, str]]
+    """1:1 field mappings for conflicted rules (source_field -> target_field)"""
     
     @property
     def logsource_count(self) -> int:
@@ -121,8 +147,13 @@ class PipelineMappings:
     
     @property
     def field_mapping_count(self) -> int:
-        """Number of unique source fields mapped"""
-        return len(self.field_mappings)
+        """Number of unique source fields mapped across all logsources and conflicted rules"""
+        all_fields = set()
+        for mappings in self.logsource_field_mappings.values():
+            all_fields.update(mappings.keys())
+        for mappings in self.conflicted_rule_field_mappings.values():
+            all_fields.update(mappings.keys())
+        return len(all_fields)
 
 
 class SigmaRuleOCSFLite(SigmaRule):
@@ -322,6 +353,36 @@ class SigmaRuleOCSFLite(SigmaRule):
             return instance
 
     @classmethod
+    def from_sigma_rule_with_ocsf_mapping(cls, rule: SigmaRule) -> Optional['SigmaRuleOCSFLite']:
+        """
+        Convert a SigmaRule with ocsf_mapping in custom_attributes to SigmaRuleOCSFLite.
+        
+        Used by validators to work with CLI-loaded rules that have OCSF mappings
+        stored in custom_attributes.
+        
+        Args:
+            rule: SigmaRule with ocsf_mapping dict in custom_attributes
+            
+        Returns:
+            SigmaRuleOCSFLite instance or None if no valid ocsf_mapping
+        """
+        ocsf_mapping = rule.custom_attributes.get('ocsf_mapping')
+        if not ocsf_mapping or not isinstance(ocsf_mapping, dict):
+            return None
+        
+        # Build full dict with rule data and ocsf_mapping
+        full_dict = {
+            'ocsf_mapping': ocsf_mapping,
+            'id': rule.id,
+            'title': rule.title,
+            'detection': rule.detection,
+            'logsource': rule.logsource,
+            'custom_attributes': rule.custom_attributes,
+        }
+        
+        return cls.from_mapping_dict(full_dict)
+
+    @classmethod
     def build_pipeline_mappings(
         cls,
         mappings_dir: str = "fieldmapper/mappings"
@@ -333,7 +394,7 @@ class SigmaRuleOCSFLite(SigmaRule):
         1. Non-conflicted logsources: Where all rules with the same logsource map to the same table
         2. Conflicted rules: Where the logsource maps to multiple tables, requiring per-rule assignment
         3. Activity IDs: For rules with valid integer activity_id values
-        4. Field mappings: Source field -> list of target field paths (deduplicated)
+        4. Field mappings: Source field -> target field (1:1, scoped by event class/table)
         
         Args:
             mappings_dir: Directory containing OCSF-mapped rule files
@@ -347,8 +408,10 @@ class SigmaRuleOCSFLite(SigmaRule):
               For rules where logsource maps to multiple tables
             - activity_id_mappings: Dict[rule_id] -> activity_id
               For rules with valid integer activity_id
-            - field_mappings: Dict[source_field] -> List[target_field]
-              For FieldMappingTransformation (deduplicated across all rules)
+            - logsource_field_mappings: Dict[(category, product, service)] -> Dict[source_field, target_field]
+              For non-conflicted logsources (1:1 mappings, scoped by table)
+            - conflicted_rule_field_mappings: Dict[rule_id] -> Dict[source_field, target_field]
+              For conflicted rules (1:1 mappings, scoped by table)
         
         Example:
             >>> mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
@@ -365,9 +428,13 @@ class SigmaRuleOCSFLite(SigmaRule):
             >>> print(mappings.activity_id_mappings['f512acbf-e662-4903-843e-97ce4652b740'])
             12
             >>> 
-            >>> # Field mappings
-            >>> print(mappings.field_mappings['CommandLine'])
-            ['process.cmd_line']
+            >>> # Field mappings for non-conflicted logsources
+            >>> print(mappings.logsource_field_mappings[('process_creation', 'linux', None)]['CommandLine'])
+            'process.cmd_line'
+            >>> 
+            >>> # Field mappings for conflicted rules
+            >>> print(mappings.conflicted_rule_field_mappings['fcc6d700-68d9-4241-9a1a-06874d621b06']['Image'])
+            'actor.process.name'
             >>> 
             >>> # Use helper properties
             >>> print(f"Logsources: {mappings.logsource_count}, Conflicted: {mappings.conflicted_count}")
@@ -377,8 +444,9 @@ class SigmaRuleOCSFLite(SigmaRule):
         # Group rules by logsource
         logsource_to_rules = defaultdict(list)
         
-        # Field mappings accumulator (use set to avoid duplicates)
-        field_mappings_sets: Dict[str, set] = {}
+        # Field mappings accumulator grouped by table (use set to avoid duplicates)
+        # Structure: field_mappings_by_table[table_name][source_field] = set of target_fields
+        field_mappings_by_table: Dict[str, Dict[str, set]] = defaultdict(lambda: defaultdict(set))
         
         # Find all YAML files in mappings directory
         base_path = Path(mappings_dir)
@@ -413,14 +481,15 @@ class SigmaRuleOCSFLite(SigmaRule):
                     service = getattr(logsource, 'service', None)
                 
                 logsource_key = (category, product, service)
+                table_name = rule.ocsflite.class_name
                 
                 logsource_to_rules[logsource_key].append({
                     'id': str(rule.id),
-                    'table': rule.ocsflite.class_name,
+                    'table': table_name,
                     'activity_id': rule.ocsflite.activity_id
                 })
                 
-                # Extract field mappings (from ALL rules with detection_fields)
+                # Extract field mappings grouped by table
                 if rule.ocsflite and rule.ocsflite.detection_fields:
                     for field_mapping in rule.ocsflite.detection_fields:
                         # Skip unmapped fields
@@ -430,10 +499,8 @@ class SigmaRuleOCSFLite(SigmaRule):
                         source = field_mapping.source_field
                         target = field_mapping.target_field
                         
-                        # Add to mappings (use set to deduplicate)
-                        if source not in field_mappings_sets:
-                            field_mappings_sets[source] = set()
-                        field_mappings_sets[source].add(target)
+                        # Add to table-scoped mappings
+                        field_mappings_by_table[table_name][source].add(target)
             
             except Exception as e:
                 # Skip files that can't be loaded
@@ -465,15 +532,46 @@ class SigmaRuleOCSFLite(SigmaRule):
                 if isinstance(activity_id, int):
                     activity_id_mappings[rule['id']] = activity_id
         
-        # Convert field mapping sets to sorted lists for consistent output
-        field_mappings = {source: sorted(list(targets)) 
-                         for source, targets in sorted(field_mappings_sets.items())}
+        # Create table-scoped field mappings (1:1 only)
+        # For non-conflicted logsources: group by logsource_key
+        logsource_field_mappings = {}
+        for logsource_key, rules in logsource_to_rules.items():
+            tables = set(r['table'] for r in rules)
+            if len(tables) == 1:
+                # Non-conflicted: all rules with this logsource map to the same table
+                table_name = list(tables)[0]
+                # Get 1:1 mappings for this table (only unambiguous mappings)
+                table_mappings = {
+                    source: list(targets)[0]
+                    for source, targets in field_mappings_by_table[table_name].items()
+                    if len(targets) == 1  # Only include unambiguous 1:1 mappings
+                }
+                if table_mappings:  # Only add if there are mappings
+                    logsource_field_mappings[logsource_key] = table_mappings
+        
+        # For conflicted rules: create per-rule mappings
+        conflicted_rule_field_mappings = {}
+        for logsource_key, rules in logsource_to_rules.items():
+            tables = set(r['table'] for r in rules)
+            if len(tables) > 1:
+                # Conflicted: create per-rule mappings
+                for rule in rules:
+                    table_name = rule['table']
+                    # Get 1:1 mappings for this table (only unambiguous mappings)
+                    table_mappings = {
+                        source: list(targets)[0]
+                        for source, targets in field_mappings_by_table[table_name].items()
+                        if len(targets) == 1  # Only include unambiguous 1:1 mappings
+                    }
+                    if table_mappings:  # Only add if there are mappings
+                        conflicted_rule_field_mappings[rule['id']] = table_mappings
         
         return PipelineMappings(
             logsource_mappings=logsource_mappings,
             conflicted_rule_mappings=conflicted_rule_mappings,
             activity_id_mappings=activity_id_mappings,
-            field_mappings=field_mappings
+            logsource_field_mappings=logsource_field_mappings,
+            conflicted_rule_field_mappings=conflicted_rule_field_mappings
         )
 
     @property
@@ -660,6 +758,19 @@ class SigmaRuleOCSFLite(SigmaRule):
         
         return unmapped
 
+    def validate_ocsf_mappings(self) -> 'OCSFValidationResult':
+        """
+        Validate all OCSF mappings and return comprehensive result.
+        
+        Returns:
+            OCSFValidationResult with event_class, activity_id, and unmapped_fields
+        """
+        return OCSFValidationResult(
+            event_class=self.ocsflite.class_name,
+            activity_id=self.ocsflite.activity_id,
+            unmapped_fields=self.unmapped_fields()
+        )
+
     def create_logsource_mappings(self) -> None:
         """Initialize logsource mappings from the rule's logsource fields."""
         if not self.logsource:
@@ -735,7 +846,12 @@ class SigmaRuleOCSFLite(SigmaRule):
                     extract_fields_recursive(item)
         
         # Process all detection blocks
+        # Check for keyword-based detection blocks (unbound values)
         for detection_name, detection in self.detection.detections.items():
+            # Check if detection block name contains 'keywords' (case-insensitive)
+            # This matches patterns like 'selection_keywords', '*keywords', etc.
+            if 'keywords' in detection_name.lower():
+                self.ocsflite.has_unbound_values = True
             extract_fields_recursive(detection)
         
         # Always set detection_fields, even if empty
@@ -770,8 +886,8 @@ class SigmaRuleOCSFLite(SigmaRule):
         if event_class != "<UNMAPPED>":
             self.ocsflite.class_name = event_class
         
-        # if no detection fields to map
-        if not self.ocsflite.detection_fields:
+        # if no detection fields to map or rule contains unbound values
+        if not self.ocsflite.detection_fields or self.ocsflite.has_unbound_values:
             print(f"     Skipping field mapping: Rule '{self.title}' uses keyword-based detection (no fields)")
             return False
         
@@ -826,45 +942,38 @@ class SigmaRuleOCSFLite(SigmaRule):
             Dictionary representation suitable for YAML/JSON export
         """
         if full:
-            # Full export: include all SigmaRule attributes + OCSF mappings
-            # Define all SigmaRule attributes to export
-            rule_attrs = [
-                'id', 'title', 'status', 'level', 'description', 'author',
-                'date', 'modified', 'tags', 'references', 'fields',
-                'falsepositives', 'license', 'custom_attributes',
-                'name', 'related', 'scope', 'taxonomy',
-                'logsource',    # Original logsource from YAML
-                'detection'     # Original detection from YAML
-            ]
+            # Start with pySigma's base export (handles most fields correctly)
+            result = super().to_dict()
             
-            result = {}
+            # Add missing fields that pySigma doesn't export
             
-            # Export all SigmaRule attributes
-            for attr in rule_attrs:
-                if hasattr(self, attr):
-                    value = getattr(self, attr)
-                    if value is not None:
-                        # Skip empty collections (lists, tuples, dicts)
-                        if isinstance(value, (list, tuple, dict)) and not value:
-                            continue
-                        # Convert to serializable format
-                        if isinstance(value, (list, tuple)):
-                            # Convert items to strings if they're objects (like SigmaRuleTag)
-                            # but preserve simple types as-is
-                            result[attr] = [str(item) if not isinstance(item, (str, int, float, bool)) else item for item in value]
-                        elif isinstance(value, dict):
-                            result[attr] = value
-                        elif hasattr(value, 'to_dict'):
-                            # Use object's own serialization method
-                            result[attr] = value.to_dict()
-                        else:
-                            # Only convert non-serializable types to string
-                            if isinstance(value, (str, int, float, bool, type(None))):
-                                result[attr] = value
-                            else:
-                                result[attr] = str(value)
+            # 1. Related field - convert SigmaRelated object to YAML format
+            if self.related is not None:
+                result['related'] = [
+                    {
+                        'id': str(item.id),
+                        'type': item.type.name.lower()
+                    }
+                    for item in self.related.related
+                ]
             
-            # Add OCSF mappings (shows source -> target mappings)
+            # 2. Logsource - convert to dict
+            if self.logsource is not None:
+                result['logsource'] = self.logsource.to_dict()
+            
+            # 3. Detection - convert to dict
+            if self.detection is not None:
+                result['detection'] = self.detection.to_dict()
+            
+            # 4. Taxonomy (if different from default)
+            if self.taxonomy != 'sigma':
+                result['taxonomy'] = self.taxonomy
+            
+            # 5. License
+            if self.license is not None:
+                result['license'] = self.license
+            
+            # 6. Add our OCSF mappings
             result['ocsf_mapping'] = self.ocsflite.to_dict()
             
             return result
@@ -874,10 +983,8 @@ class SigmaRuleOCSFLite(SigmaRule):
             if self.ocsflite.detection_fields:
                 for mapping in self.ocsflite.detection_fields:
                     if mapping.target_field == "<UNMAPPED>":
-                        # Source field name stays as key, value is "<UNMAPPED>"
                         field_mappings[mapping.source_field] = "<UNMAPPED>"
                     elif mapping.target_field:
-                        # Format as "source_field: target_table.target_field"
                         field_mappings[mapping.source_field] = f"{mapping.target_table}.{mapping.target_field}"
                     else:
                         field_mappings[mapping.source_field] = None

@@ -1,23 +1,22 @@
-id: eca49c87-8a75-4f13-9c73-a5a29e845f03
 title: Suspicious Runscripthelper.exe
+id: eca49c87-8a75-4f13-9c73-a5a29e845f03
 status: test
 level: medium
-description: Detects execution of powershell scripts via Runscripthelper.exe
 author: Victor Sergeev, oscd.community
-date: '2020-10-09'
-modified: '2022-07-11'
-tags:
-    - attack.execution
-    - attack.t1059
-    - attack.defense-evasion
-    - attack.t1202
+description: Detects execution of powershell scripts via Runscripthelper.exe
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Runscripthelper/
 fields:
     - CommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+    - attack.defense-evasion
+    - attack.t1202
+date: '2020-10-09'
+modified: '2022-07-11'
 logsource:
     category: process_creation
     product: windows
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:48.577371+00:00'
+            mapped_at: '2025-12-04T01:50:29.676864+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:48.577371+00:00'
+            mapped_at: '2025-12-04T01:50:29.676864+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:48.577405+00:00'
+            mapped_at: '2025-12-04T01:50:29.676880+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:48.577409+00:00'
+            mapped_at: '2025-12-04T01:50:29.676882+00:00'

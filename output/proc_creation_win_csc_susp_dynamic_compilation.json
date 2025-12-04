@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Dynamic .NET Compilation Via Csc.EXE",
+    "comment": "Detects execution of \"csc.exe\" to compile .NET code. Attackers often leverage this to compile code on the fly and use it in other stages.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\csc.exe')) AND (contains(lower(process.cmd_line), lower(':\\\\perflogs\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\temporary internet')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\favorites\\\\')) AND contains(lower(process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\favourites\\\\')) AND contains(lower(process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\contacts\\\\')) AND contains(lower(process.cmd_line), lower(':\\\\users\\\\')) AND contains(lower(process.cmd_line), lower('\\\\pictures\\\\')) OR process.cmd_line rlike '\\(\\[Pp\\]rogram\\[Dd\\]ata|%\\(\\[Ll\\]ocal\\)?\\[Aa\\]pp\\[Dd\\]ata%|\\\\\\\\\\[Aa\\]pp\\[Dd\\]ata\\\\\\\\\\(\\[Ll\\]ocal\\(\\[Ll\\]ow\\)?|\\[Rr\\]oaming\\)\\)\\\\\\\\\\[^\\\\\\\\\\]\\{1,256\\}$') AND NOT (startswith(lower(process.parent_process.name), lower('c:\\\\program files (x86)\\\\')) OR startswith(lower(process.parent_process.name), lower('c:\\\\program files\\\\')) OR lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\sdiagnhost.exe') OR lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\inetsrv\\\\w3wp.exe')) AND NOT (lower(LOWER(process.parent_process.name)) in ('c:\\\\programdata\\\\chocolatey\\\\choco\\.exe', 'c:\\\\programdata\\\\chocolatey\\\\tools\\\\shimgen\\.exe') OR contains(lower(process.parent_process.cmd_line), lower('\\\\programdata\\\\microsoft\\\\windows defender advanced threat protection')) OR contains(lower(process.parent_process.cmd_line), lower('jwb7aciazgbhagkabablagqaiga6ahqacgb1agualaaiag0acwbnaciaogaiaeeabgbzagkaygbsaguaiabyaguacqb1agkacgblahmaiabqag8adwblahiauwboaguababsacaadgazac4amaagag8acgagag4azqb3aguacgaiah0ajw')) OR contains(lower(process.parent_process.cmd_line), lower('caewaiagyayqbpagwazqbkaciaogb0ahiadqblacwaigbtahmazwaiadoaigbbag4acwbpagiabablacaacgblaheadqbpahiazqbzacaauabvahcazqbyafmaaablagwabaagahyamwauadaaiabvahiaiabuaguadwblahiaigb9acca')) OR contains(lower(process.parent_process.cmd_line), lower('nahsaigbmageaaqbsaguazaaiadoadabyahuazqasaciabqbzagcaiga6aciaqqbuahmaaqbiagwazqagahiazqbxahuaaqbyaguacwagafaabwb3aguacgbtaggazqbsagwaiab2admalgawacaabwbyacaabgblahcazqbyaciafqana'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of \"csc.exe\" to compile .NET code. Attackers often leverage this to compile code on the fly and use it in other stages.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate software from program files - https://twitter.com/gN3mes1s/status/1206874118282448897 2. Legitimate Microsoft software - https://twitter.com/gabriele_pippi/status/1206907900268072962 3. Ansible References: https://securityboulevard.com/2019/08/agent-tesla-evading-edr-by-removing-api-hooks/, https://www.clearskysec.com/wp-content/uploads/2018/11/MuddyWater-Operations-in-Lebanon-and-Oman.pdf, https://app.any.run/tasks/c6993447-d1d8-414e-b856-675325e5aa09/, https://twitter.com/gN3mes1s/status/1206874118282448897, https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1027.004/T1027.004.md#atomic-test-1---compile-after-delivery-using-cscexe",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

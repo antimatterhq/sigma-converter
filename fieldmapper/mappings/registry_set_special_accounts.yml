@@ -1,25 +1,21 @@
-id: f8aebc67-a56d-4ec9-9fbe-7b0e8b7b4efd
 title: Hiding User Account Via SpecialAccounts Registry Key
+id: f8aebc67-a56d-4ec9-9fbe-7b0e8b7b4efd
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), frack113
 description: Detects modifications to the registry key "HKLM\Software\Microsoft\Windows
     NT\CurrentVersion\Winlogon\SpecialAccounts\Userlist" where the value is set to
     "0" in order to hide user account from being listed on the logon screen.
-author: Nasreddine Bencherchali (Nextron Systems), frack113
-date: '2022-07-12'
-modified: '2023-01-26'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.002
 references:
     - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
     - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1564.002/T1564.002.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8a58209c-7ae6-4027-afb0-307a78e4589a''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''9ec9fb1b-e059-4489-9642-f270c207923d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.002
+date: '2022-07-12'
+modified: '2023-01-26'
 logsource:
     category: registry_set
     product: windows
@@ -29,6 +25,11 @@ detection:
         TargetObject|contains: \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList
         Details: DWORD (0x00000000)
     condition: selection
+related:
+    -   id: 8a58209c-7ae6-4027-afb0-307a78e4589a
+        type: obsolete
+    -   id: 9ec9fb1b-e059-4489-9642-f270c207923d
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Use NTFS Short Name in Command Line",
+    "comment": "Detect use of the Windows 8.3 short name. Which could be used as a method to avoid command-line detection",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('~1.exe')) OR contains(lower(process.cmd_line), lower('~1.bat')) OR contains(lower(process.cmd_line), lower('~1.msi')) OR contains(lower(process.cmd_line), lower('~1.vbe')) OR contains(lower(process.cmd_line), lower('~1.vbs')) OR contains(lower(process.cmd_line), lower('~1.dll')) OR contains(lower(process.cmd_line), lower('~1.ps1')) OR contains(lower(process.cmd_line), lower('~1.js')) OR contains(lower(process.cmd_line), lower('~1.hta')) OR contains(lower(process.cmd_line), lower('~2.exe')) OR contains(lower(process.cmd_line), lower('~2.bat')) OR contains(lower(process.cmd_line), lower('~2.msi')) OR contains(lower(process.cmd_line), lower('~2.vbe')) OR contains(lower(process.cmd_line), lower('~2.vbs')) OR contains(lower(process.cmd_line), lower('~2.dll')) OR contains(lower(process.cmd_line), lower('~2.ps1')) OR contains(lower(process.cmd_line), lower('~2.js')) OR contains(lower(process.cmd_line), lower('~2.hta'))) AND NOT ((endswith(lower(process.parent_process.name), lower('\\\\webex\\\\webexhost.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\thor\\\\thor64.exe'))) AND contains(lower(process.cmd_line), lower('c:\\\\xampp\\\\vcredist\\\\vcredi~1.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detect use of the Windows 8.3 short name. Which could be used as a method to avoid command-line detection",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Applications could use this notation occasionally which might generate some false positives. In that case Investigate the parent and child process. References: https://www.acunetix.com/blog/articles/windows-short-8-3-filenames-web-security-problem/, https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc959352(v=technet.10), https://twitter.com/jonasLyk/status/1555914501802921984",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1564",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Use of Scriptrunner.exe",
+    "comment": "The \"ScriptRunner.exe\" binary can be abused to proxy execution through it and bypass possible whitelisting",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\scriptrunner.exe')) AND lower(process.file.name) = lower('scriptrunner.exe') AND contains(lower(process.cmd_line), lower(' -appvscript ')))"
+      }
+    },
+    "output": {
+      "summary": "The \"ScriptRunner.exe\" binary can be abused to proxy execution through it and bypass possible whitelisting",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use when App-v is deployed Reference: https://lolbas-project.github.io/lolbas/Binaries/Scriptrunner/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,26 +1,25 @@
-id: 6345b048-8441-43a7-9bed-541133633d7a
 title: ManageEngine Endpoint Central Dctask64.EXE Potential Abuse
+id: 6345b048-8441-43a7-9bed-541133633d7a
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of "dctask64.exe", a signed binary by ZOHO Corporation
     part of ManageEngine Endpoint Central.
 
     This binary can be abused for DLL injection, arbitrary command and process execution.
 
     '
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2020-01-28'
-modified: '2024-04-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1055.001
 references:
     - https://twitter.com/gN3mes1s/status/1222088214581825540
     - https://twitter.com/gN3mes1s/status/1222095963789111296
     - https://twitter.com/gN3mes1s/status/1222095371175911424
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1055.001
+date: '2020-01-28'
+modified: '2024-04-22'
 logsource:
     category: process_creation
     product: windows
@@ -45,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:11.308502+00:00'
+            mapped_at: '2025-12-04T01:45:45.532201+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:11.308502+00:00'
+            mapped_at: '2025-12-04T01:45:45.532201+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:11.308522+00:00'
+            mapped_at: '2025-12-04T01:45:45.532225+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:31:11.308523+00:00'
+            mapped_at: '2025-12-04T01:45:45.532227+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:11.308525+00:00'
+            mapped_at: '2025-12-04T01:45:45.532229+00:00'

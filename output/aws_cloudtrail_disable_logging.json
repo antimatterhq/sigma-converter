@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "AWS CloudTrail Important Change",
+    "comment": "Detects disabling, deleting and updating of a Trail",
+    "annotations": {
+      "source": "sigma",
+      "product": "aws",
+      "service": "cloudtrail",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('cloudtrail.amazonaws.com') AND (lower(LOWER(metadata.event_code)) in ('stoplogging', 'updatetrail', 'deletetrail')))"
+      }
+    },
+    "output": {
+      "summary": "Detects disabling, deleting and updating of a Trail",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Valid change in a Trail Reference: https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1562",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

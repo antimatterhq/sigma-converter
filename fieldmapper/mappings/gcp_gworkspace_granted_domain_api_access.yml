@@ -1,20 +1,19 @@
-id: 04e2a23a-9b29-4a5c-be3a-3542e3f982ba
 title: Google Workspace Granted Domain API Access
+id: 04e2a23a-9b29-4a5c-be3a-3542e3f982ba
 status: test
 level: medium
-description: Detects when an API access service account is granted domain authority.
 author: Austin Songer
-date: '2021-08-23'
-modified: '2023-10-11'
-tags:
-    - attack.persistence
-    - attack.t1098
+description: Detects when an API access service account is granted domain authority.
 references:
     - https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3
     - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-domain-settings#AUTHORIZE_API_CLIENT_ACCESS
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1098
+date: '2021-08-23'
+modified: '2023-10-11'
 logsource:
     product: gcp
     service: google_workspace.admin
@@ -30,17 +29,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:44.794072+00:00'
+            mapped_at: '2025-12-04T01:38:54.758691+00:00'
         service:
             source_field: service
             source_value: google_workspace.admin
-            mapped_at: '2025-11-26T02:21:44.794072+00:00'
+            mapped_at: '2025-12-04T01:38:54.758691+00:00'
     detection_fields:
         -   source_field: eventService
             target_table: entity_management
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:44.794083+00:00'
+            mapped_at: '2025-12-04T01:38:54.758705+00:00'
         -   source_field: eventName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:44.794085+00:00'
+            mapped_at: '2025-12-04T01:38:54.758707+00:00'

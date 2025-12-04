@@ -1,11 +1,16 @@
-id: e8a95b5e-c891-46e2-b33a-93937d3abc31
 title: Suspicious HH.EXE Execution
+id: e8a95b5e-c891-46e2-b33a-93937d3abc31
 status: test
 level: high
-description: Detects a suspicious execution of a Microsoft HTML Help (HH.exe)
 author: Maxim Pavlunin
-date: '2020-04-01'
-modified: '2023-04-12'
+description: Detects a suspicious execution of a Microsoft HTML Help (HH.exe)
+references:
+    - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/chm-badness-delivers-a-banking-trojan/
+    - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-27939090904026cc396b0b629c8e4314acd6f5dac40a676edbc87f4567b47eb7
+    - https://www.ptsecurity.com/ww-en/analytics/pt-esc-threat-intelligence/higaisa-or-winnti-apt-41-backdoors-old-and-new/
+    - https://www.zscaler.com/blogs/security-research/unintentional-leak-glimpse-attack-vectors-apt37
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.execution
@@ -21,14 +26,8 @@ tags:
     - attack.t1218.011
     - attack.t1566
     - attack.t1566.001
-references:
-    - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/chm-badness-delivers-a-banking-trojan/
-    - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-27939090904026cc396b0b629c8e4314acd6f5dac40a676edbc87f4567b47eb7
-    - https://www.ptsecurity.com/ww-en/analytics/pt-esc-threat-intelligence/higaisa-or-winnti-apt-41-backdoors-old-and-new/
-    - https://www.zscaler.com/blogs/security-research/unintentional-leak-glimpse-attack-vectors-apt37
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2020-04-01'
+modified: '2023-04-12'
 logsource:
     category: process_creation
     product: windows
@@ -52,21 +51,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:30.535159+00:00'
+            mapped_at: '2025-12-04T01:47:45.773079+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:30.535159+00:00'
+            mapped_at: '2025-12-04T01:47:45.773079+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:30.535186+00:00'
+            mapped_at: '2025-12-04T01:47:45.773093+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:30.535191+00:00'
+            mapped_at: '2025-12-04T01:47:45.773095+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:30.535194+00:00'
+            mapped_at: '2025-12-04T01:47:45.773096+00:00'

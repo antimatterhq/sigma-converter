@@ -1,7 +1,8 @@
-id: be58d2e2-06c8-4f58-b666-b99f6dc3b6cd
 title: Suspicious Process Masquerading As SvcHost.EXE
+id: be58d2e2-06c8-4f58-b666-b99f6dc3b6cd
 status: experimental
 level: high
+author: Swachchhanda Shrawan Poudel
 description: 'Detects a suspicious process that is masquerading as the legitimate
     "svchost.exe" by naming its binary "svchost.exe" and executing from an uncommon
     location.
@@ -10,20 +11,15 @@ description: 'Detects a suspicious process that is masquerading as the legitimat
     system processes like "svchost.exe" to evade detection.
 
     '
-author: Swachchhanda Shrawan Poudel
-date: '2024-08-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.005
 references:
     - https://tria.ge/240731-jh4crsycnb/behavioral2
     - https://redcanary.com/blog/threat-detection/process-masquerading/
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''01d2e2a1-5f09-44f7-9fc1-24faa7479b6d''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''e4a6b256-3e47-40fc-89d2-7a477edd6915''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.005
+date: '2024-08-07'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +33,11 @@ detection:
     filter_main_ofn:
         OriginalFileName: svchost.exe
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: 01d2e2a1-5f09-44f7-9fc1-24faa7479b6d
+        type: similar
+    -   id: e4a6b256-3e47-40fc-89d2-7a477edd6915
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,17 +45,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:36.356428+00:00'
+            mapped_at: '2025-12-04T01:47:01.745575+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:36.356428+00:00'
+            mapped_at: '2025-12-04T01:47:01.745575+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:36.356454+00:00'
+            mapped_at: '2025-12-04T01:47:01.745589+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:36.356458+00:00'
+            mapped_at: '2025-12-04T01:47:01.745591+00:00'

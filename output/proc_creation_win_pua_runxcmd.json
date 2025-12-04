@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PUA - RunXCmd Execution",
+    "comment": "Detects the use of the RunXCmd tool to execute commands with System or TrustedInstaller accounts",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' /account=system ')) OR contains(lower(process.cmd_line), lower(' /account=ti '))) AND contains(lower(process.cmd_line), lower('/exec=')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of the RunXCmd tool to execute commands with System or TrustedInstaller accounts",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.cmd_line, process.parent_process.cmd_line False positive: Legitimate use by administrators References: https://www.d7xtech.com/free-software/runx/, https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1569",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,21 +1,20 @@
-id: 9f107a84-532c-41af-b005-8d12a607639f
 title: Potentially Suspicious Cabinet File Expansion
+id: 9f107a84-532c-41af-b005-8d12a607639f
 status: test
 level: medium
+author: Bhabesh Raj, X__Junior (Nextron Systems)
 description: Detects the expansion or decompression of cabinet files from potentially
     suspicious or uncommon locations, e.g. seen in Iranian MeteorExpress related attacks
-author: Bhabesh Raj, X__Junior (Nextron Systems)
-date: '2021-07-30'
-modified: '2024-11-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://labs.sentinelone.com/meteorexpress-mysterious-wiper-paralyzes-iranian-trains-with-epic-troll
     - https://blog.malwarebytes.com/threat-intelligence/2021/08/new-variant-of-konni-malware-used-in-campaign-targetting-russia/
 falsepositives:
     - System administrator Usage
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2021-07-30'
+modified: '2024-11-13'
 logsource:
     category: process_creation
     product: windows
@@ -53,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:54.182830+00:00'
+            mapped_at: '2025-12-04T01:45:31.365461+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:54.182830+00:00'
+            mapped_at: '2025-12-04T01:45:31.365461+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:54.182848+00:00'
+            mapped_at: '2025-12-04T01:45:31.365474+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:54.182851+00:00'
+            mapped_at: '2025-12-04T01:45:31.365476+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:54.182852+00:00'
+            mapped_at: '2025-12-04T01:45:31.365477+00:00'

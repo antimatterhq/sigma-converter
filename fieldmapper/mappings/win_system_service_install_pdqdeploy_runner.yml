@@ -1,7 +1,8 @@
-id: b98a10af-1e1e-44a7-bab2-4cc026917648
 title: New PDQDeploy Service - Client Side
+id: b98a10af-1e1e-44a7-bab2-4cc026917648
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects PDQDeploy service installation on the target system.
 
     When a package is deployed via PDQDeploy it installs a remote service on the target
@@ -9,16 +10,14 @@ description: 'Detects PDQDeploy service installation on the target system.
     1
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-22'
-tags:
-    - attack.privilege-escalation
-    - attack.t1543.003
 references:
     - https://documentation.pdq.com/PDQDeploy/13.0.3.0/index.html?windows-services.htm
 falsepositives:
     - Legitimate use of the tool
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1543.003
+date: '2022-07-22'
 logsource:
     product: windows
     service: system
@@ -37,25 +36,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:20.869236+00:00'
+            mapped_at: '2025-12-04T01:57:13.713836+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:20.869236+00:00'
+            mapped_at: '2025-12-04T01:57:13.713836+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:20.869255+00:00'
+            mapped_at: '2025-12-04T01:57:13.713856+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:20.869256+00:00'
+            mapped_at: '2025-12-04T01:57:13.713858+00:00'
         -   source_field: ImagePath
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:48:20.869258+00:00'
+            mapped_at: '2025-12-04T01:57:13.713860+00:00'
         -   source_field: ServiceName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:20.869259+00:00'
+            mapped_at: '2025-12-04T01:57:13.713861+00:00'

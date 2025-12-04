@@ -1,23 +1,20 @@
-id: 96cd126d-f970-49c4-848a-da3a09f55c55
 title: Potential PowerShell Obfuscation Using Alias Cmdlets
+id: 96cd126d-f970-49c4-848a-da3a09f55c55
 status: test
 level: low
+author: frack113
 description: Detects Set-Alias or New-Alias cmdlet usage. Which can be use as a mean
     to obfuscate PowerShell scripts
-author: frack113
-date: '2023-01-08'
+references:
+    - https://github.com/1337Rin/Swag-PSO
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.execution
     - attack.t1027
     - attack.t1059.001
-references:
-    - https://github.com/1337Rin/Swag-PSO
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e8314f79-564d-4f79-bc13-fbc0bf2660d8''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2023-01-08'
 logsource:
     category: ps_script
     product: windows
@@ -28,6 +25,9 @@ detection:
             - 'Set-Alias '
             - 'New-Alias '
     condition: selection
+related:
+    -   id: e8314f79-564d-4f79-bc13-fbc0bf2660d8
+        type: derived
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -35,13 +35,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:28.495531+00:00'
+            mapped_at: '2025-12-04T01:54:37.548774+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:28.495531+00:00'
+            mapped_at: '2025-12-04T01:54:37.548774+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:28.495555+00:00'
+            mapped_at: '2025-12-04T01:54:37.548792+00:00'

@@ -1,23 +1,22 @@
-id: 778ba9a8-45e4-4b80-8e3e-34a419f0b85e
 title: TeamViewer Domain Query By Non-TeamViewer Application
+id: 778ba9a8-45e4-4b80-8e3e-34a419f0b85e
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects DNS queries to a TeamViewer domain only resolved by a TeamViewer
     client by an image that isn't named TeamViewer (sometimes used by threat actors
     for obfuscation)
-author: Florian Roth (Nextron Systems)
-date: '2022-01-30'
-modified: '2023-09-18'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://www.teamviewer.com/en-us/
 falsepositives:
     - Unknown binary names of TeamViewer
     - Depending on the environment the rule might require some initial tuning before
         usage to avoid FP with third party applications
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2022-01-30'
+modified: '2023-09-18'
 logsource:
     category: dns_query
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:36.887429+00:00'
+            mapped_at: '2025-12-04T01:51:12.777354+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:36.887429+00:00'
+            mapped_at: '2025-12-04T01:51:12.777354+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:38.812796+00:00'
+            mapped_at: '2025-12-04T01:51:12.777369+00:00'
         -   source_field: Image
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:38.812806+00:00'
+            mapped_at: '2025-12-04T01:51:12.777372+00:00'

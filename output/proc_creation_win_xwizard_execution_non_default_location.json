@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Xwizard.EXE Execution From Non-Default Location",
+    "comment": "Detects the execution of Xwizard tool from a non-default directory. When executed from a non-default directory, this utility can be abused in order to side load a custom version of \"xwizards.dll\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\xwizard.exe')) AND lower(process.file.name) = lower('xwizard.exe') AND NOT (startswith(lower(process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\syswow64\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\winsxs\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of Xwizard tool from a non-default directory. When executed from a non-default directory, this utility can be abused in order to side load a custom version of \"xwizards.dll\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Windows installed on non-C drive References: https://lolbas-project.github.io/lolbas/Binaries/Xwizard/, http://www.hexacorn.com/blog/2017/07/31/the-wizard-of-x-oppa-plugx-style/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1574",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

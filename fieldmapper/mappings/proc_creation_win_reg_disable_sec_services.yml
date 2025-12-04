@@ -1,15 +1,10 @@
-id: 5e95028c-5229-4214-afae-d653d573d0ec
 title: Security Service Disabled Via Reg.EXE
+id: 5e95028c-5229-4214-afae-d653d573d0ec
 status: test
 level: high
+author: Florian Roth (Nextron Systems), John Lambert (idea), elhoim
 description: Detects execution of "reg.exe" to disable security services such as Windows
     Defender.
-author: Florian Roth (Nextron Systems), John Lambert (idea), elhoim
-date: '2021-07-14'
-modified: '2023-06-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://twitter.com/JohnLaTwC/status/1415295021041979392
     - https://github.com/gordonbay/Windows-On-Reins/blob/e587ac7a0407847865926d575e3c46f68cf7c68d/wor.ps1
@@ -17,7 +12,11 @@ references:
     - https://bidouillesecurity.com/disable-windows-defender-in-powershell/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2021-07-14'
+modified: '2023-06-05'
 logsource:
     category: process_creation
     product: windows
@@ -52,13 +51,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:06.240838+00:00'
+            mapped_at: '2025-12-04T01:49:02.532587+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:06.240838+00:00'
+            mapped_at: '2025-12-04T01:49:02.532587+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:06.240855+00:00'
+            mapped_at: '2025-12-04T01:49:02.532614+00:00'

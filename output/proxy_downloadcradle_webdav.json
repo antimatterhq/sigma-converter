@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Windows WebDAV User Agent",
+    "comment": "Detects WebDav DownloadCradle",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (startswith(lower(http_request.user_agent), lower('microsoft-webdav-miniredir/')) AND lower(http_request.http_method) = lower('get'))"
+      }
+    },
+    "output": {
+      "summary": "Detects WebDav DownloadCradle",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Administrative scripts that download files from the Internet 2. Administrative scripts that retrieve certain website contents 3. Legitimate WebDAV administration Reference: https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Download/Upload Activity Using Type Command",
+    "comment": "Detects usage of the \"type\" command to download/upload data from WebDAV server",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('type ')) AND contains(lower(process.cmd_line), lower(' > \\\\')) OR contains(lower(process.cmd_line), lower('type \\\\')) AND contains(lower(process.cmd_line), lower(' > '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the \"type\" command to download/upload data from WebDAV server",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://mr0range.com/a-new-lolbin-using-the-windows-type-command-to-upload-download-files-81d7b6179e22",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

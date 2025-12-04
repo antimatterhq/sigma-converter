@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "name": "Findstr Launching .lnk File",
+    "comment": "Detects usage of findstr to identify and execute a lnk file as seen within the HHS redirect attack",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\find.exe')) OR endswith(lower(process.name), lower('\\\\findstr.exe'))) AND (lower(LOWER(process.file.name)) in ('find\\.exe', 'findstr\\.exe')) AND (endswith(lower(process.cmd_line), lower('.lnk')) OR endswith(lower(process.cmd_line), lower('.lnk\"')) OR endswith(lower(process.cmd_line), lower('.lnk\\''))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of findstr to identify and execute a lnk file as seen within the HHS redirect attack",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.bleepingcomputer.com/news/security/hhsgov-open-redirect-used-by-coronavirus-phishing-to-spread-malware/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1202"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

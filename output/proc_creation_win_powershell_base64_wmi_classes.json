@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "PowerShell Base64 Encoded WMI Classes",
+    "comment": "Detects calls to base64 encoded WMI class such as \"Win32_ShadowCopy\", \"Win32_ScheduledJob\", etc.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower('vwbpag4amwayaf8auwboageazabvahcaywbvahaaeq')) OR contains(lower(process.cmd_line), lower('caaqbuadmamgbfafmaaabhagqabwb3agmabwbwahka')) OR contains(lower(process.cmd_line), lower('xagkabgazadiaxwbtaggayqbkag8adwbjag8acab5a')) OR contains(lower(process.cmd_line), lower('v2lumzjfu2hhzg93y29we')) OR contains(lower(process.cmd_line), lower('dpbjmyx1noywrvd2nvch')) OR contains(lower(process.cmd_line), lower('xaw4zml9tagfkb3djb3b5')) OR contains(lower(process.cmd_line), lower('vwbpag4amwayaf8auwbjaggazqbkahuabablagqasgbvagia')) OR contains(lower(process.cmd_line), lower('caaqbuadmamgbfafmaywboaguazab1agwazqbkaeoabwbia')) OR contains(lower(process.cmd_line), lower('xagkabgazadiaxwbtagmaaablagqadqbsaguazabkag8ayg')) OR contains(lower(process.cmd_line), lower('v2lumzjfu2nozwr1bgvksm9i')) OR contains(lower(process.cmd_line), lower('dpbjmyx1njagvkdwxlzepvy')) OR contains(lower(process.cmd_line), lower('xaw4zml9ty2hlzhvszwrkb2')) OR contains(lower(process.cmd_line), lower('vwbpag4amwayaf8auabyag8aywblahmacw')) OR contains(lower(process.cmd_line), lower('caaqbuadmamgbfafaacgbvagmazqbzahma')) OR contains(lower(process.cmd_line), lower('xagkabgazadiaxwbqahiabwbjaguacwbza')) OR contains(lower(process.cmd_line), lower('v2lumzjfuhjvy2vzc')) OR contains(lower(process.cmd_line), lower('dpbjmyx1byb2nlc3')) OR contains(lower(process.cmd_line), lower('xaw4zml9qcm9jzxnz')) OR contains(lower(process.cmd_line), lower('vwbpag4amwayaf8avqbzaguacgbbagmaywbvahuabgb0a')) OR contains(lower(process.cmd_line), lower('caaqbuadmamgbfafuacwblahiaqqbjagmabwb1ag4ada')) OR contains(lower(process.cmd_line), lower('xagkabgazadiaxwbvahmazqbyaeeaywbjag8adqbuahqa')) OR contains(lower(process.cmd_line), lower('v2lumzjfvxnlckfjy291bn')) OR contains(lower(process.cmd_line), lower('dpbjmyx1vzzxjby2nvdw50')) OR contains(lower(process.cmd_line), lower('xaw4zml9vc2vyqwnjb3vud')) OR contains(lower(process.cmd_line), lower('vwbpag4amwayaf8atabvagcazwblagqatwbuafuacwblahia')) OR contains(lower(process.cmd_line), lower('caaqbuadmamgbfaewabwbnagcazqbkae8abgbvahmazqbya')) OR contains(lower(process.cmd_line), lower('xagkabgazadiaxwbmag8azwbnaguazabpag4avqbzaguacg')) OR contains(lower(process.cmd_line), lower('v2lumzjftg9nz2vkt25vc2vy')) OR contains(lower(process.cmd_line), lower('dpbjmyx0xvz2dlze9uvxnlc')) OR contains(lower(process.cmd_line), lower('xaw4zml9mb2dnzwrpblvzzx'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects calls to base64 encoded WMI class such as \"Win32_ShadowCopy\", \"Win32_ScheduledJob\", etc.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/mal_revil.yar",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

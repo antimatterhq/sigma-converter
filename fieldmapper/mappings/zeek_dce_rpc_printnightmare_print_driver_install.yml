@@ -1,7 +1,8 @@
-id: 7b33baef-2a75-4ca3-9da4-34f9a15382d8
 title: Possible PrintNightmare Print Driver Install
+id: 7b33baef-2a75-4ca3-9da4-34f9a15382d8
 status: stable
 level: medium
+author: '@neu5ron (Nate Guagenti)'
 description: 'Detects the remote installation of a print driver which is possible
     indication of the exploitation of PrintNightmare (CVE-2021-1675).
 
@@ -10,14 +11,6 @@ description: 'Detects the remote installation of a print driver which is possibl
     policy.
 
     '
-author: '@neu5ron (Nate Guagenti)'
-date: '2021-08-23'
-modified: '2022-07-07'
-tags:
-    - attack.execution
-    - cve.2021-1678
-    - cve.2021-1675
-    - cve.2021-34527
 references:
     - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-par/93d1915d-4d9f-4ceb-90a7-e8f2a59adc29
     - https://github.com/zeek/zeek/blob/691b099de13649d6576c7b9d637f8213ff818832/scripts/base/protocols/dce-rpc/consts.zeek
@@ -35,9 +28,13 @@ fields:
     - uid
 falsepositives:
     - Legitimate remote alteration of a printer driver.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''53389db6-ba46-48e3-a94c-e0f2cefe1583''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - cve.2021-1678
+    - cve.2021-1675
+    - cve.2021-34527
+date: '2021-08-23'
+modified: '2022-07-07'
 logsource:
     product: zeek
     service: dce_rpc
@@ -51,6 +48,9 @@ detection:
             - RpcAddPrinterDriver
             - RpcAsyncAddPrinterDriver
     condition: selection
+related:
+    -   id: 53389db6-ba46-48e3-a94c-e0f2cefe1583
+        type: derived
 ocsf_mapping:
     class_name: network_activity
     activity_id: <UNMAPPED>
@@ -58,13 +58,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: zeek
-            mapped_at: '2025-11-26T02:14:59.020404+00:00'
+            mapped_at: '2025-12-04T01:35:11.507060+00:00'
         service:
             source_field: service
             source_value: dce_rpc
-            mapped_at: '2025-11-26T02:14:59.020404+00:00'
+            mapped_at: '2025-12-04T01:35:11.507060+00:00'
     detection_fields:
         -   source_field: operation
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:14:59.020433+00:00'
+            mapped_at: '2025-12-04T01:35:11.507083+00:00'

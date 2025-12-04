@@ -1,7 +1,8 @@
-id: 8c1a5675-cb85-452f-a298-b01b22a51856
 title: Suspicious Invocation of Shell via AWK - Linux
+id: 8c1a5675-cb85-452f-a298-b01b22a51856
 status: experimental
 level: high
+author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
 description: 'Detects the execution of "awk" or it''s sibling commands, to invoke
     a shell using the system() function.
 
@@ -10,11 +11,6 @@ description: 'Detects the execution of "awk" or it''s sibling commands, to invok
     exploitation.
 
     '
-author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
-date: '2024-09-02'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://gtfobins.github.io/gtfobins/awk/#shell
     - https://gtfobins.github.io/gtfobins/gawk/#shell
@@ -22,7 +18,10 @@ references:
     - https://gtfobins.github.io/gtfobins/mawk/#shell
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2024-09-02'
 logsource:
     category: process_creation
     product: linux
@@ -49,17 +48,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:52.042686+00:00'
+            mapped_at: '2025-12-04T01:36:08.524270+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:52.042686+00:00'
+            mapped_at: '2025-12-04T01:36:08.524270+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:52.042720+00:00'
+            mapped_at: '2025-12-04T01:36:08.524292+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:52.042725+00:00'
+            mapped_at: '2025-12-04T01:36:08.524294+00:00'

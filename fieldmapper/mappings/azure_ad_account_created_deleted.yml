@@ -1,20 +1,19 @@
-id: 6f583da0-3a90-4566-a4ed-83c09fe18bbf
 title: Account Created And Deleted Within A Close Time Frame
+id: 6f583da0-3a90-4566-a4ed-83c09fe18bbf
 status: test
 level: high
+author: Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1', Tim Shelton
 description: Detects when an account was created and deleted in a short period of
     time.
-author: Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1', Tim Shelton
-date: '2022-08-11'
-modified: '2022-08-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1078
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#short-lived-accounts
 falsepositives:
     - Legit administrative action
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1078
+date: '2022-08-11'
+modified: '2022-08-18'
 logsource:
     product: azure
     service: auditlogs
@@ -32,17 +31,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:16.585223+00:00'
+            mapped_at: '2025-12-04T01:37:40.736571+00:00'
         service:
             source_field: service
             source_value: auditlogs
-            mapped_at: '2025-11-26T02:19:16.585223+00:00'
+            mapped_at: '2025-12-04T01:37:40.736571+00:00'
     detection_fields:
         -   source_field: properties.message
             target_table: account_change
             target_field: message
-            mapped_at: '2025-11-26T02:19:16.585250+00:00'
+            mapped_at: '2025-12-04T01:37:40.736589+00:00'
         -   source_field: Status
             target_table: account_change
             target_field: status_code
-            mapped_at: '2025-11-26T02:19:16.585254+00:00'
+            mapped_at: '2025-12-04T01:37:40.736592+00:00'

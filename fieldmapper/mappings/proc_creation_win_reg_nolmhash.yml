@@ -1,7 +1,8 @@
-id: 98dedfdd-8333-49d4-9f23-d7018cccae53
 title: Enable LM Hash Storage - ProcCreation
+id: 98dedfdd-8333-49d4-9f23-d7018cccae53
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects changes to the "NoLMHash" registry value in order to allow Windows
     to store LM Hashes.
 
@@ -9,21 +10,17 @@ description: 'Detects changes to the "NoLMHash" registry value in order to allow
     a LAN manager hash of your password in Active Directory and local SAM databases.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-12-15'
-modified: '2023-12-22'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
 references:
     - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-347a
     - https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/prevent-windows-store-lm-hash-password
     - https://www.sans.org/blog/protecting-privileged-domain-accounts-lm-hashes-the-good-the-bad-and-the-ugly/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''c420410f-c2d8-4010-856b-dffe21866437''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+date: '2023-12-15'
+modified: '2023-12-22'
 logsource:
     category: process_creation
     product: windows
@@ -34,6 +31,9 @@ detection:
             - NoLMHash
             - ' 0'
     condition: selection
+related:
+    -   id: c420410f-c2d8-4010-856b-dffe21866437
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -41,13 +41,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:22.338876+00:00'
+            mapped_at: '2025-12-04T01:45:54.204557+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:22.338876+00:00'
+            mapped_at: '2025-12-04T01:45:54.204557+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:22.338890+00:00'
+            mapped_at: '2025-12-04T01:45:54.204579+00:00'

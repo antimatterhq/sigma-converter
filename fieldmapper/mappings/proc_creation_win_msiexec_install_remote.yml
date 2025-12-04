@@ -1,21 +1,18 @@
-id: 8150732a-0c9d-4a99-82b9-9efb9b90c40c
 title: Suspicious Msiexec Quiet Install From Remote Location
+id: 8150732a-0c9d-4a99-82b9-9efb9b90c40c
 status: test
 level: medium
-description: Detects usage of Msiexec.exe to install packages hosted remotely quietly
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-28'
-modified: '2024-03-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.007
+description: Detects usage of Msiexec.exe to install packages hosted remotely quietly
 references:
     - https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f7b5f842-a6af-4da5-9e95-e32478f3cd2f''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.007
+date: '2022-10-28'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
             - http
             - \\
     condition: all of selection_*
+related:
+    -   id: f7b5f842-a6af-4da5-9e95-e32478f3cd2f
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:36.919136+00:00'
+            mapped_at: '2025-12-04T01:44:30.633448+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:36.919136+00:00'
+            mapped_at: '2025-12-04T01:44:30.633448+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:36.919149+00:00'
+            mapped_at: '2025-12-04T01:44:30.633462+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:36.919151+00:00'
+            mapped_at: '2025-12-04T01:44:30.633464+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:36.919152+00:00'
+            mapped_at: '2025-12-04T01:44:30.633465+00:00'

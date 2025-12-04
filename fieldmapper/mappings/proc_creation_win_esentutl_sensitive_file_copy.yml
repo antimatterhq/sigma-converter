@@ -1,18 +1,10 @@
-id: e7be6119-fc37-43f0-ad4f-1f3f99be2f9f
 title: Copying Sensitive Files with Credential Data
+id: e7be6119-fc37-43f0-ad4f-1f3f99be2f9f
 status: test
 level: high
+author: Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community
 description: Files with well-known filenames (sensitive files with credential data)
     copying
-author: Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community
-date: '2019-10-22'
-modified: '2024-06-04'
-tags:
-    - attack.credential-access
-    - attack.t1003.002
-    - attack.t1003.003
-    - car.2013-07-001
-    - attack.s0404
 references:
     - https://room362.com/post/2013/2013-06-10-volume-shadow-copy-ntdsdit-domain-hashes-remotely-part-1/
     - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
@@ -21,7 +13,14 @@ references:
 falsepositives:
     - Copying sensitive files for legitimate use (eg. backup) or forensic investigation
         by legitimate incident responder or forensic investigator.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+    - attack.t1003.003
+    - car.2013-07-001
+    - attack.s0404
+date: '2019-10-22'
+modified: '2024-06-04'
 logsource:
     category: process_creation
     product: windows
@@ -54,21 +53,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:14.642362+00:00'
+            mapped_at: '2025-12-04T01:49:10.089797+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:14.642362+00:00'
+            mapped_at: '2025-12-04T01:49:10.089797+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:14.642375+00:00'
+            mapped_at: '2025-12-04T01:49:10.089817+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:14.642377+00:00'
+            mapped_at: '2025-12-04T01:49:10.089819+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:14.642378+00:00'
+            mapped_at: '2025-12-04T01:49:10.089820+00:00'

@@ -1,22 +1,21 @@
-id: cfeed607-6aa4-4bbd-9627-b637deb723c8
 title: New or Renamed User Account with '$' Character
+id: cfeed607-6aa4-4bbd-9627-b637deb723c8
 status: test
 level: medium
+author: Ilyas Ochkov, oscd.community
 description: 'Detects the creation of a user with the "$" character. This can be used
     by attackers to hide a user or trick detection systems that lack the parsing mechanisms.
 
     '
-author: Ilyas Ochkov, oscd.community
-date: '2019-10-25'
-modified: '2024-01-16'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://twitter.com/SBousseaden/status/1387743867663958021
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2019-10-25'
+modified: '2024-01-16'
 logsource:
     product: windows
     service: security
@@ -38,25 +37,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:31.900411+00:00'
+            mapped_at: '2025-12-04T01:55:15.098344+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:43:31.900411+00:00'
+            mapped_at: '2025-12-04T01:55:15.098344+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: account_change
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:33.071887+00:00'
+            mapped_at: '2025-12-04T01:55:15.098377+00:00'
         -   source_field: SamAccountName
             target_table: account_change
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:43:33.071900+00:00'
+            mapped_at: '2025-12-04T01:55:15.098381+00:00'
         -   source_field: NewTargetUserName
             target_table: account_change
             target_field: user_result.name
-            mapped_at: '2025-11-26T02:43:33.071902+00:00'
+            mapped_at: '2025-12-04T01:55:15.098384+00:00'
         -   source_field: TargetUserName
             target_table: account_change
             target_field: user_result.name
-            mapped_at: '2025-11-26T02:43:33.071903+00:00'
+            mapped_at: '2025-12-04T01:55:15.098386+00:00'

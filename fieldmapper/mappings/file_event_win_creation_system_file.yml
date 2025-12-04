@@ -1,7 +1,8 @@
-id: d5866ddf-ce8f-4aea-b28e-d96485a20d3d
 title: Files With System Process Name In Unsuspected Locations
+id: d5866ddf-ce8f-4aea-b28e-d96485a20d3d
 status: test
 level: medium
+author: Sander Wiebing, Tim Shelton, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the creation of an executable with a system process name in
     folders other than the system ones (System32, SysWOW64, etc.).
 
@@ -9,19 +10,17 @@ description: 'Detects the creation of an executable with a system process name i
     in production.
 
     '
-author: Sander Wiebing, Tim Shelton, Nasreddine Bencherchali (Nextron Systems)
-date: '2020-05-26'
-modified: '2024-06-24'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.005
 references:
     - Internal Research
 falsepositives:
     - System processes copied outside their default folders for testing purposes
     - Third party software naming their software with the same names as the processes
         mentioned here
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.005
+date: '2020-05-26'
+modified: '2024-06-24'
 logsource:
     category: file_event
     product: windows
@@ -133,17 +132,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:02.426800+00:00'
+            mapped_at: '2025-12-04T01:52:47.127556+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:02.426800+00:00'
+            mapped_at: '2025-12-04T01:52:47.127556+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:02.426814+00:00'
+            mapped_at: '2025-12-04T01:52:47.127573+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:02.426816+00:00'
+            mapped_at: '2025-12-04T01:52:47.127576+00:00'

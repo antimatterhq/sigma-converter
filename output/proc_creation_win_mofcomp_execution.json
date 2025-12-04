@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Suspicious Mofcomp Execution",
+    "comment": "Detects execution of the \"mofcomp\" utility as a child of a suspicious shell or script running utility or by having a suspicious path in the commandline. The \"mofcomp\" utility parses a file containing MOF statements and adds the classes and class instances defined in the file to the WMI repository. Attackers abuse this utility to install malicious MOF scripts",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\mofcomp.exe')) AND lower(process.file.name) = lower('mofcomp.exe') AND (endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wsl.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wscript.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\cscript.exe'))) AND (contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp')) OR contains(lower(process.cmd_line), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('%temp%')) OR contains(lower(process.cmd_line), lower('%tmp%')) OR contains(lower(process.cmd_line), lower('%appdata%'))) AND NOT (lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\wbem\\\\wmiprvse.exe') AND contains(lower(process.cmd_line), lower('c:\\\\windows\\\\temp\\\\')) AND endswith(lower(process.cmd_line), lower('.mof'))) AND NOT (contains(lower(process.cmd_line), lower('c:\\\\windows\\\\temp\\\\')) AND endswith(lower(process.cmd_line), lower('.mof'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the \"mofcomp\" utility as a child of a suspicious shell or script running utility or by having a suspicious path in the commandline. The \"mofcomp\" utility parses a file containing MOF statements and adds the classes and class instances defined in the file to the WMI repository. Attackers abuse this utility to install malicious MOF scripts",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/, https://github.com/The-DFIR-Report/Sigma-Rules/blob/75260568a7ffe61b2458ca05f6f25914efb44337/win_mofcomp_execution.yml, https://learn.microsoft.com/en-us/windows/win32/wmisdk/mofcomp",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

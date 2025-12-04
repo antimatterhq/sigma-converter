@@ -1,15 +1,10 @@
-id: 8f88e3f6-2a49-48f5-a5c4-2f7eedf78710
 title: Java Running with Remote Debugging
+id: 8f88e3f6-2a49-48f5-a5c4-2f7eedf78710
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects a JAVA process running with remote debugging allowing more than
     just localhost to connect
-author: Florian Roth (Nextron Systems)
-date: '2019-01-16'
-modified: '2023-02-01'
-tags:
-    - attack.t1203
-    - attack.execution
 references:
     - https://dzone.com/articles/remote-debugging-java-applications-with-jdwp
 fields:
@@ -17,7 +12,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1203
+    - attack.execution
+date: '2019-01-16'
+modified: '2023-02-01'
 logsource:
     category: process_creation
     product: windows
@@ -40,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:02.943854+00:00'
+            mapped_at: '2025-12-04T01:41:30.638558+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:02.943854+00:00'
+            mapped_at: '2025-12-04T01:41:30.638558+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:02.943871+00:00'
+            mapped_at: '2025-12-04T01:41:30.638571+00:00'

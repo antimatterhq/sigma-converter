@@ -1,18 +1,14 @@
-id: ad691d92-15f2-4181-9aa4-723c74f9ddc3
 title: Potential Defense Evasion Via Right-to-Left Override
+id: ad691d92-15f2-4181-9aa4-723c74f9ddc3
 status: test
 level: high
+author: Micah Babinski, @micahbabinski
 description: 'Detects the presence of the "u202+E" character, which causes a terminal,
     browser, or operating system to render text in a right-to-left sequence.
 
     This is used as an obfuscation and masquerading techniques.
 
     '
-author: Micah Babinski, @micahbabinski
-date: '2023-02-15'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.002
 references:
     - https://redcanary.com/blog/right-to-left-override/
     - https://www.malwarebytes.com/blog/news/2014/01/the-rtlo-method
@@ -20,10 +16,10 @@ references:
 falsepositives:
     - Commandlines that contains scriptures such as arabic or hebrew might make use
         of this character
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''e0552b19-5a83-4222-b141-b36184bb8d79''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''584bca0f-3608-4402-80fd-4075ff6072e3''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.002
+date: '2023-02-15'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +27,11 @@ detection:
     selection:
         CommandLine|contains: ‮
     condition: selection
+related:
+    -   id: e0552b19-5a83-4222-b141-b36184bb8d79
+        type: derived
+    -   id: 584bca0f-3608-4402-80fd-4075ff6072e3
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:24.472499+00:00'
+            mapped_at: '2025-12-04T01:45:55.872492+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:24.472499+00:00'
+            mapped_at: '2025-12-04T01:45:55.872492+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:24.472514+00:00'
+            mapped_at: '2025-12-04T01:45:55.872506+00:00'

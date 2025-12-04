@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Child Process of AspNetCompiler",
+    "comment": "Detects potentially suspicious child processes of \"aspnet_compiler.exe\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\aspnet_compiler.exe')) AND (endswith(lower(process.name), lower('\\\\calc.exe')) OR endswith(lower(process.name), lower('\\\\notepad.exe'))) AND (contains(lower(process.name), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.name), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(process.name), lower('\\\\appdata\\\\local\\\\roaming\\\\')) OR contains(lower(process.name), lower(':\\\\temp\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\system32\\\\tasks\\\\')) OR contains(lower(process.name), lower(':\\\\windows\\\\tasks\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially suspicious child processes of \"aspnet_compiler.exe\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://lolbas-project.github.io/lolbas/Binaries/Aspnet_Compiler/, https://ijustwannared.team/2020/08/01/the-curious-case-of-aspnet_compiler-exe/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1127"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,21 +1,20 @@
-id: d29ada0f-af45-4f27-8f32-f7b77c3dbc4e
 title: HackTool - SysmonEnte Execution
+id: d29ada0f-af45-4f27-8f32-f7b77c3dbc4e
 status: test
 level: high
-description: Detects the use of SysmonEnte, a tool to attack the integrity of Sysmon
 author: Florian Roth (Nextron Systems)
-date: '2022-09-07'
-modified: '2023-11-28'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.002
+description: Detects the use of SysmonEnte, a tool to attack the integrity of Sysmon
 references:
     - https://codewhitesec.blogspot.com/2022/09/attacks-on-sysmon-revisited-sysmonente.html
     - https://github.com/codewhitesec/SysmonEnte/
     - https://github.com/codewhitesec/SysmonEnte/blob/main/screens/1.png
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.002
+date: '2022-09-07'
+modified: '2023-11-28'
 logsource:
     category: process_access
     product: windows
@@ -44,25 +43,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:12.801729+00:00'
+            mapped_at: '2025-12-04T01:40:13.373483+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:12.801729+00:00'
+            mapped_at: '2025-12-04T01:40:13.373483+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:12.801770+00:00'
+            mapped_at: '2025-12-04T01:40:13.373507+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:12.801774+00:00'
+            mapped_at: '2025-12-04T01:40:13.373509+00:00'
         -   source_field: CallTrace
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:12.801778+00:00'
+            mapped_at: '2025-12-04T01:40:13.373511+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:12.801781+00:00'
+            mapped_at: '2025-12-04T01:40:13.373512+00:00'

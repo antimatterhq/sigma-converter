@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "UAC Bypass Abusing Winsat Path Parsing - File",
+    "comment": "Detects the pattern of UAC Bypass using a path parsing issue in winsat.exe (UACMe 52)",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND startswith(lower(file.path), lower('c:\\\\users\\\\')) AND (endswith(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\system32\\\\winsat.exe')) OR endswith(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\system32\\\\winmm.dll'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the pattern of UAC Bypass using a path parsing issue in winsat.exe (UACMe 52)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/hfiref0x/UACME",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1548",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

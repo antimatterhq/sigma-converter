@@ -1,24 +1,23 @@
-id: 8202070f-edeb-4d31-a010-a26c72ac5600
 title: Suspicious Process By Web Server Process
+id: 8202070f-edeb-4d31-a010-a26c72ac5600
 status: test
 level: high
+author: Thomas Patzke, Florian Roth (Nextron Systems), Zach Stanford @svch0st, Tim
+    Shelton, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects potentially suspicious processes being spawned by a web server
     process which could be the result of a successfully placed web shell or exploitation
 
     '
-author: Thomas Patzke, Florian Roth (Nextron Systems), Zach Stanford @svch0st, Tim
-    Shelton, Nasreddine Bencherchali (Nextron Systems)
-date: '2019-01-16'
-modified: '2024-11-26'
-tags:
-    - attack.persistence
-    - attack.t1505.003
-    - attack.t1190
 references:
     - https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF
 falsepositives:
     - Particular web applications may spawn a shell process legitimately
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1505.003
+    - attack.t1190
+date: '2019-01-16'
+modified: '2024-11-26'
 logsource:
     category: process_creation
     product: windows
@@ -98,25 +97,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:07.150663+00:00'
+            mapped_at: '2025-12-04T01:50:50.373993+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:07.150663+00:00'
+            mapped_at: '2025-12-04T01:50:50.373993+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:37:07.150686+00:00'
+            mapped_at: '2025-12-04T01:50:50.374054+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:37:07.150690+00:00'
+            mapped_at: '2025-12-04T01:50:50.374305+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:07.150692+00:00'
+            mapped_at: '2025-12-04T01:50:50.374310+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:07.150695+00:00'
+            mapped_at: '2025-12-04T01:50:50.374311+00:00'

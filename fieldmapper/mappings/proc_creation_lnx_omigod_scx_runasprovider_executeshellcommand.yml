@@ -1,7 +1,8 @@
-id: 21541900-27a9-4454-9c4c-3f0a4240344a
 title: OMIGOD SCX RunAsProvider ExecuteShellCommand
+id: 21541900-27a9-4454-9c4c-3f0a4240344a
 status: test
 level: high
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
 description: 'Rule to detect the use of the SCX RunAsProvider Invoke_ExecuteShellCommand
     to execute any UNIX/Linux command using the /bin/sh shell.
 
@@ -12,9 +13,11 @@ description: 'Rule to detect the use of the SCX RunAsProvider Invoke_ExecuteShel
     Suite.
 
     '
-author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
-date: '2021-10-15'
-modified: '2022-10-05'
+references:
+    - https://www.wiz.io/blog/omigod-critical-vulnerabilities-in-omi-azure
+    - https://github.com/Azure/Azure-Sentinel/pull/3059
+falsepositives:
+    - Legitimate use of SCX RunAsProvider Invoke_ExecuteShellCommand.
 tags:
     - attack.privilege-escalation
     - attack.initial-access
@@ -22,12 +25,8 @@ tags:
     - attack.t1068
     - attack.t1190
     - attack.t1203
-references:
-    - https://www.wiz.io/blog/omigod-critical-vulnerabilities-in-omi-azure
-    - https://github.com/Azure/Azure-Sentinel/pull/3059
-falsepositives:
-    - Legitimate use of SCX RunAsProvider Invoke_ExecuteShellCommand.
-taxonomy: sigma
+date: '2021-10-15'
+modified: '2022-10-05'
 logsource:
     category: process_creation
     product: linux
@@ -45,25 +44,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:10.014075+00:00'
+            mapped_at: '2025-12-04T01:36:21.366992+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:10.014075+00:00'
+            mapped_at: '2025-12-04T01:36:21.366992+00:00'
     detection_fields:
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:17:11.139615+00:00'
+            mapped_at: '2025-12-04T01:36:21.367013+00:00'
         -   source_field: LogonId
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:17:11.139626+00:00'
+            mapped_at: '2025-12-04T01:36:21.367017+00:00'
         -   source_field: CurrentDirectory
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:17:11.139628+00:00'
+            mapped_at: '2025-12-04T01:36:21.367019+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:11.139630+00:00'
+            mapped_at: '2025-12-04T01:36:21.367021+00:00'

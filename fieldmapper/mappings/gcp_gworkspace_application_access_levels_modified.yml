@@ -1,7 +1,8 @@
-id: 22f2fb54-5312-435d-852f-7c74f81684ca
 title: Google Workspace Application Access Level Modified
+id: 22f2fb54-5312-435d-852f-7c74f81684ca
 status: test
 level: medium
+author: Bryan Lim
 description: 'Detects when an access level is changed for a Google workspace application.
 
     An access level is part of BeyondCorp Enterprise which is Google Workspace''s
@@ -11,18 +12,16 @@ description: 'Detects when an access level is changed for a Google workspace app
     workspace resources.
 
     '
-author: Bryan Lim
-date: '2024-01-12'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1098.003
 references:
     - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-application-settings
     - https://support.google.com/a/answer/9261439
 falsepositives:
     - Legitimate administrative activities changing the access levels for an application
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1098.003
+date: '2024-01-12'
 logsource:
     product: gcp
     service: google_workspace.admin
@@ -39,21 +38,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:42.699068+00:00'
+            mapped_at: '2025-12-04T01:38:53.568740+00:00'
         service:
             source_field: service
             source_value: google_workspace.admin
-            mapped_at: '2025-11-26T02:21:42.699068+00:00'
+            mapped_at: '2025-12-04T01:38:53.568740+00:00'
     detection_fields:
         -   source_field: eventService
             target_table: account_change
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:43.651952+00:00'
+            mapped_at: '2025-12-04T01:38:53.568795+00:00'
         -   source_field: eventName
             target_table: account_change
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:43.651980+00:00'
+            mapped_at: '2025-12-04T01:38:53.568802+00:00'
         -   source_field: setting_name
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:43.651984+00:00'
+            mapped_at: '2025-12-04T01:38:53.568804+00:00'

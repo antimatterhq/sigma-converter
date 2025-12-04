@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Using SettingSyncHost.exe as LOLBin",
+    "comment": "Detects using SettingSyncHost.exe to run hijacked binary",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND NOT (startswith(lower(process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\syswow64\\\\'))) AND contains(lower(process.parent_process.cmd_line), lower('cmd.exe /c')) AND contains(lower(process.parent_process.cmd_line), lower('roamdiag.cmd')) AND contains(lower(process.parent_process.cmd_line), lower('-outputpath')))"
+      }
+    },
+    "output": {
+      "summary": "Detects using SettingSyncHost.exe to run hijacked binary",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: TargetFilename, process.name False positive: Unknown Reference: https://www.hexacorn.com/blog/2020/02/02/settingsynchost-exe-as-a-lolbin",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1574",
+          "subTechniqueId": "008"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

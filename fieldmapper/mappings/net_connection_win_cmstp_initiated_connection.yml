@@ -1,24 +1,23 @@
-id: efafe0bf-4238-479e-af8f-797bd3490d2d
 title: Outbound Network Connection Initiated By Cmstp.EXE
+id: efafe0bf-4238-479e-af8f-797bd3490d2d
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects a network connection initiated by Cmstp.EXE
 
     Its uncommon for "cmstp.exe" to initiate an outbound network connection. Investigate
     the source of such requests to determine if they are malicious.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-30'
-modified: '2024-05-31'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.003
 references:
     - https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.003
+date: '2022-08-30'
+modified: '2024-05-31'
 logsource:
     category: network_connection
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:37:52.813955+00:00'
+            mapped_at: '2025-12-04T01:51:24.423231+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:52.813955+00:00'
+            mapped_at: '2025-12-04T01:51:24.423231+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:52.813978+00:00'
+            mapped_at: '2025-12-04T01:51:24.423252+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:52.813981+00:00'
+            mapped_at: '2025-12-04T01:51:24.423257+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:37:52.813983+00:00'
+            mapped_at: '2025-12-04T01:51:24.423259+00:00'

@@ -1,19 +1,18 @@
-id: 50e54b8d-ad73-43f8-96a1-5191685b17a4
 title: Silenttrinity Stager Msbuild Activity
+id: 50e54b8d-ad73-43f8-96a1-5191685b17a4
 status: test
 level: high
-description: Detects a possible remote connections to Silenttrinity c2
 author: Kiran kumar s, oscd.community
-date: '2020-10-11'
-modified: '2022-10-05'
-tags:
-    - attack.execution
-    - attack.t1127.001
+description: Detects a possible remote connections to Silenttrinity c2
 references:
     - https://www.blackhillsinfosec.com/my-first-joyride-with-silenttrinity/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1127.001
+date: '2020-10-11'
+modified: '2022-10-05'
 logsource:
     category: network_connection
     product: windows
@@ -28,26 +27,26 @@ detection:
     condition: selection and filter
 ocsf_mapping:
     class_name: network_activity
-    activity_id: <UNMAPPED>
+    activity_id: 1
     logsource:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:52.713452+00:00'
+            mapped_at: '2025-12-04T01:51:49.718963+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:52.713452+00:00'
+            mapped_at: '2025-12-04T01:51:49.718963+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:52.713472+00:00'
+            mapped_at: '2025-12-04T01:51:49.718996+00:00'
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:52.713475+00:00'
+            mapped_at: '2025-12-04T01:51:49.719000+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:52.713477+00:00'
+            mapped_at: '2025-12-04T01:51:49.719003+00:00'

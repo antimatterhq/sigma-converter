@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Inveigh Execution",
+    "comment": "Detects the use of Inveigh a cross-platform .NET IPv4/IPv6 machine-in-the-middle tool",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\inveigh.exe')) AND (lower(LOWER(process.file.name)) in ('\\\\inveigh\\.exe', '\\\\inveigh\\.dll')) AND lower(device.desc) = lower('inveigh') AND (contains(lower(process.cmd_line), lower(' -spooferip')) OR contains(lower(process.cmd_line), lower(' -replytoips ')) OR contains(lower(process.cmd_line), lower(' -replytodomains ')) OR contains(lower(process.cmd_line), lower(' -replytomacs ')) OR contains(lower(process.cmd_line), lower(' -snifferip'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of Inveigh a cross-platform .NET IPv4/IPv6 machine-in-the-middle tool",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Critical",
+      "fidelity": "Investigative",
+      "objective": "False positive: Very unlikely References: https://github.com/Kevin-Robertson/Inveigh, https://thedfirreport.com/2020/11/23/pysa-mespinoza-ransomware/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

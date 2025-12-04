@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Impacket Tools Execution",
+    "comment": "Detects the execution of different compiled Windows binaries of the impacket toolset (based on names or part of their names - could lead to false positives)",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.name), lower('\\\\goldenpac')) OR contains(lower(process.name), lower('\\\\karmasmb')) OR contains(lower(process.name), lower('\\\\kintercept')) OR contains(lower(process.name), lower('\\\\ntlmrelayx')) OR contains(lower(process.name), lower('\\\\rpcdump')) OR contains(lower(process.name), lower('\\\\samrdump')) OR contains(lower(process.name), lower('\\\\secretsdump')) OR contains(lower(process.name), lower('\\\\smbexec')) OR contains(lower(process.name), lower('\\\\smbrelayx')) OR contains(lower(process.name), lower('\\\\wmiexec')) OR contains(lower(process.name), lower('\\\\wmipersist'))) AND (endswith(lower(process.name), lower('\\\\atexec_windows.exe')) OR endswith(lower(process.name), lower('\\\\dcomexec_windows.exe')) OR endswith(lower(process.name), lower('\\\\dpapi_windows.exe')) OR endswith(lower(process.name), lower('\\\\finddelegation_windows.exe')) OR endswith(lower(process.name), lower('\\\\getadusers_windows.exe')) OR endswith(lower(process.name), lower('\\\\getnpusers_windows.exe')) OR endswith(lower(process.name), lower('\\\\getpac_windows.exe')) OR endswith(lower(process.name), lower('\\\\getst_windows.exe')) OR endswith(lower(process.name), lower('\\\\gettgt_windows.exe')) OR endswith(lower(process.name), lower('\\\\getuserspns_windows.exe')) OR endswith(lower(process.name), lower('\\\\ifmap_windows.exe')) OR endswith(lower(process.name), lower('\\\\mimikatz_windows.exe')) OR endswith(lower(process.name), lower('\\\\netview_windows.exe')) OR endswith(lower(process.name), lower('\\\\nmapanswermachine_windows.exe')) OR endswith(lower(process.name), lower('\\\\opdump_windows.exe')) OR endswith(lower(process.name), lower('\\\\psexec_windows.exe')) OR endswith(lower(process.name), lower('\\\\rdp_check_windows.exe')) OR endswith(lower(process.name), lower('\\\\sambapipe_windows.exe')) OR endswith(lower(process.name), lower('\\\\smbclient_windows.exe')) OR endswith(lower(process.name), lower('\\\\smbserver_windows.exe')) OR endswith(lower(process.name), lower('\\\\sniff_windows.exe')) OR endswith(lower(process.name), lower('\\\\sniffer_windows.exe')) OR endswith(lower(process.name), lower('\\\\split_windows.exe')) OR endswith(lower(process.name), lower('\\\\ticketer_windows.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of different compiled Windows binaries of the impacket toolset (based on names or part of their names - could lead to false positives)",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of the impacket tools Reference: https://github.com/ropnop/impacket_static_binaries/releases/tag/0.9.21-dev-binaries",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1557",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

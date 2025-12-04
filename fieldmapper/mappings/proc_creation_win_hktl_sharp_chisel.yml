@@ -1,22 +1,19 @@
-id: cf93e05e-d798-4d9e-b522-b0248dc61eaf
 title: HackTool - SharpChisel Execution
+id: cf93e05e-d798-4d9e-b522-b0248dc61eaf
 status: test
 level: high
-description: Detects usage of the Sharp Chisel via the commandline arguments
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-05'
-modified: '2023-02-13'
-tags:
-    - attack.command-and-control
-    - attack.t1090.001
+description: Detects usage of the Sharp Chisel via the commandline arguments
 references:
     - https://github.com/shantanu561993/SharpChisel
     - https://www.sentinelone.com/labs/wading-through-muddy-waters-recent-activity-of-an-iranian-state-sponsored-threat-actor/
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''8b0e12da-d3c3-49db-bb4f-256703f380e5''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090.001
+date: '2022-09-05'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -25,6 +22,9 @@ detection:
         Image|endswith: \SharpChisel.exe
         Product: SharpChisel
     condition: selection
+related:
+    -   id: 8b0e12da-d3c3-49db-bb4f-256703f380e5
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -32,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:14.547536+00:00'
+            mapped_at: '2025-12-04T01:47:33.718236+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:14.547536+00:00'
+            mapped_at: '2025-12-04T01:47:33.718236+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:14.547571+00:00'
+            mapped_at: '2025-12-04T01:47:33.718249+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:33:14.547575+00:00'
+            mapped_at: '2025-12-04T01:47:33.718251+00:00'

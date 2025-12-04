@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Rundll32.EXE Execution of UDL File",
+    "comment": "Detects the execution of rundll32.exe with the oledb32.dll library to open a UDL file. Threat actors can abuse this technique as a phishing vector to capture authentication credentials or other sensitive data.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\explorer.exe')) AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND contains(lower(process.cmd_line), lower('oledb32.dll')) AND contains(lower(process.cmd_line), lower(',opendslfile ')) AND contains(lower(process.cmd_line), lower('\\\\users*\\\\downloads\\\\')) AND endswith(lower(process.cmd_line), lower('.udl')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of rundll32.exe with the oledb32.dll library to open a UDL file. Threat actors can abuse this technique as a phishing vector to capture authentication credentials or other sensitive data.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: UDL files serve as a convenient and flexible tool for managing and testing database connections in various development and administrative scenarios. Reference: https://trustedsec.com/blog/oops-i-udld-it-again",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1071"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

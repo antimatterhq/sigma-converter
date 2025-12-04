@@ -1,21 +1,20 @@
-id: 808146b2-9332-4d78-9416-d7e47012d83d
 title: BPFDoor Abnormal Process ID or Lock File Accessed
+id: 808146b2-9332-4d78-9416-d7e47012d83d
 status: test
 level: high
+author: Rafal Piasecki
 description: detects BPFDoor .lock and .pid files access in temporary file storage
     facility
-author: Rafal Piasecki
-date: '2022-08-10'
-tags:
-    - attack.execution
-    - attack.t1106
-    - attack.t1059
 references:
     - https://www.sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/
     - https://www.elastic.co/security-labs/a-peek-behind-the-bpfdoor
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1106
+    - attack.t1059
+date: '2022-08-10'
 logsource:
     product: linux
     service: auditd
@@ -34,17 +33,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:50.352951+00:00'
+            mapped_at: '2025-12-04T01:35:31.089918+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:15:50.352951+00:00'
+            mapped_at: '2025-12-04T01:35:31.089918+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:50.352965+00:00'
+            mapped_at: '2025-12-04T01:35:31.089932+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:15:50.352967+00:00'
+            mapped_at: '2025-12-04T01:35:31.089934+00:00'

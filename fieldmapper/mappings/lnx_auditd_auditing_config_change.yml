@@ -1,14 +1,9 @@
-id: 977ef627-4539-4875-adf4-ed8f780c4922
 title: Auditing Configuration Changes on Linux Host
+id: 977ef627-4539-4875-adf4-ed8f780c4922
 status: test
 level: high
-description: Detect changes in auditd configuration files
 author: Mikhail Larin, oscd.community
-date: '2019-10-25'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.006
+description: Detect changes in auditd configuration files
 references:
     - https://github.com/Neo23x0/auditd/blob/master/audit.rules
     - Self Experience
@@ -18,7 +13,11 @@ fields:
     - key
 falsepositives:
     - Legitimate administrative activity
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.006
+date: '2019-10-25'
+modified: '2021-11-27'
 logsource:
     product: linux
     service: auditd
@@ -37,17 +36,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:51.492253+00:00'
+            mapped_at: '2025-12-04T01:35:32.133877+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:15:51.492253+00:00'
+            mapped_at: '2025-12-04T01:35:32.133877+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:51.492272+00:00'
+            mapped_at: '2025-12-04T01:35:32.133918+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:15:51.492275+00:00'
+            mapped_at: '2025-12-04T01:35:32.133923+00:00'

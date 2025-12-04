@@ -1,20 +1,19 @@
-id: 1eeed653-dbc8-4187-ad0c-eeebb20e6599
 title: Potential SPN Enumeration Via Setspn.EXE
+id: 1eeed653-dbc8-4187-ad0c-eeebb20e6599
 status: test
 level: medium
-description: Detects service principal name (SPN) enumeration used for Kerberoasting
 author: Markus Neis, keepwatch
-date: '2018-11-14'
-modified: '2023-10-23'
-tags:
-    - attack.credential-access
-    - attack.t1558.003
+description: Detects service principal name (SPN) enumeration used for Kerberoasting
 references:
     - https://web.archive.org/web/20200329173843/https://p16.praetorian.com/blog/how-to-use-kerberoasting-t1208-for-privilege-escalation
     - https://www.praetorian.com/blog/how-to-use-kerberoasting-t1208-for-privilege-escalation/?edition=2019
 falsepositives:
     - Administration activity
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1558.003
+date: '2018-11-14'
+modified: '2023-10-23'
 logsource:
     category: process_creation
     product: windows
@@ -37,25 +36,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:37.998918+00:00'
+            mapped_at: '2025-12-04T01:46:09.228771+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:37.998918+00:00'
+            mapped_at: '2025-12-04T01:46:09.228771+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:37.998939+00:00'
+            mapped_at: '2025-12-04T01:46:09.228787+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:37.998940+00:00'
+            mapped_at: '2025-12-04T01:46:09.228789+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:31:37.998942+00:00'
+            mapped_at: '2025-12-04T01:46:09.228790+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:37.998943+00:00'
+            mapped_at: '2025-12-04T01:46:09.228791+00:00'

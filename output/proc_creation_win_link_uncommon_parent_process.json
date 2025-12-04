@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Uncommon Link.EXE Parent Process",
+    "comment": "Detects an uncommon parent process of \"LINK.EXE\". Link.EXE in Microsoft incremental linker. Its a utility usually bundled with Visual Studio installation. Multiple utilities often found in the same folder (editbin.exe, dumpbin.exe, lib.exe, etc) have a hardcode call to the \"LINK.EXE\" binary without checking its validity. This would allow an attacker to sideload any binary with the name \"link.exe\" if one of the aforementioned tools get executed from a different location. By filtering the known locations of such utilities we can spot uncommon parent process of LINK.EXE that might be suspicious or malicious.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\link.exe')) AND contains(lower(process.cmd_line), lower('link /')) AND NOT ((startswith(lower(process.parent_process.name), lower('c:\\\\program files\\\\microsoft visual studio\\\\')) OR startswith(lower(process.parent_process.name), lower('c:\\\\program files (x86)\\\\microsoft visual studio\\\\'))) AND (contains(lower(process.parent_process.name), lower('\\\\vc\\\\bin\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\vc\\\\tools\\\\')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects an uncommon parent process of \"LINK.EXE\". Link.EXE in Microsoft incremental linker. Its a utility usually bundled with Visual Studio installation. Multiple utilities often found in the same folder (editbin.exe, dumpbin.exe, lib.exe, etc) have a hardcode call to the \"LINK.EXE\" binary without checking its validity. This would allow an attacker to sideload any binary with the name \"link.exe\" if one of the aforementioned tools get executed from a different location. By filtering the known locations of such utilities we can spot uncommon parent process of LINK.EXE that might be suspicious or malicious.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/0gtweet/status/1560732860935729152",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

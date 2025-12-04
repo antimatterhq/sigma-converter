@@ -1,22 +1,21 @@
-id: 1bbf25b9-8038-4154-a50b-118f2a32be27
 title: Suspicious Windows ANONYMOUS LOGON Local Account Created
+id: 1bbf25b9-8038-4154-a50b-118f2a32be27
 status: test
 level: high
+author: James Pemberton / @4A616D6573
 description: Detects the creation of suspicious accounts similar to ANONYMOUS LOGON,
     such as using additional spaces. Created as an covering detection for exclusion
     of Logon Type 3 from ANONYMOUS LOGON accounts.
-author: James Pemberton / @4A616D6573
-date: '2019-10-31'
-modified: '2022-10-09'
-tags:
-    - attack.persistence
-    - attack.t1136.001
-    - attack.t1136.002
 references:
     - https://twitter.com/SBousseaden/status/1189469425482829824
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1136.001
+    - attack.t1136.002
+date: '2019-10-31'
+modified: '2022-10-09'
 logsource:
     product: windows
     service: security
@@ -34,17 +33,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:14.975183+00:00'
+            mapped_at: '2025-12-04T01:55:44.798651+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:14.975183+00:00'
+            mapped_at: '2025-12-04T01:55:44.798651+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: account_change
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:14.975228+00:00'
+            mapped_at: '2025-12-04T01:55:44.798663+00:00'
         -   source_field: SamAccountName
             target_table: account_change
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:45:14.975233+00:00'
+            mapped_at: '2025-12-04T01:55:44.798665+00:00'

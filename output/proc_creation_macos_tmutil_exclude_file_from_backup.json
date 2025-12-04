@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "New File Exclusion Added To Time Machine Via Tmutil - MacOS",
+    "comment": "Detects the addition of a new file or path exclusion to MacOS Time Machine via the \"tmutil\" utility. An adversary could exclude a path from Time Machine backups to prevent certain files from being backed up.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "macos",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/tmutil')) AND contains(lower(process.cmd_line), lower('tmutil')) AND contains(lower(process.cmd_line), lower('addexclusion')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the addition of a new file or path exclusion to MacOS Time Machine via the \"tmutil\" utility. An adversary could exclude a path from Time Machine backups to prevent certain files from being backed up.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrator activity References: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1490/T1490.md#atomic-test-12---disable-time-machine, https://www.loobins.io/binaries/tmutil/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1490"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

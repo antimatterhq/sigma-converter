@@ -1,24 +1,21 @@
-id: 98ffaed4-aec2-4e04-9b07-31492fe68b3d
 title: VMMap Signed Dbghelp.DLL Potential Sideloading
+id: 98ffaed4-aec2-4e04-9b07-31492fe68b3d
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potential DLL sideloading of a signed dbghelp.dll by the Sysinternals
     VMMap.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-09-05'
+references:
+    - https://techcommunity.microsoft.com/t5/sysinternals-blog/zoomit-v7-1-procdump-2-0-for-linux-process-explorer-v17-05/ba-p/3884766
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.persistence
     - attack.privilege-escalation
     - attack.t1574.001
     - attack.t1574.002
-references:
-    - https://techcommunity.microsoft.com/t5/sysinternals-blog/zoomit-v7-1-procdump-2-0-for-linux-process-explorer-v17-05/ba-p/3884766
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''273a8dd8-3742-4302-bcc7-7df5a80fe425''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2023-09-05'
 logsource:
     category: image_load
     product: windows
@@ -30,6 +27,9 @@ detection:
             - \vmmap64.exe
         Signed: 'true'
     condition: selection
+related:
+    -   id: 273a8dd8-3742-4302-bcc7-7df5a80fe425
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

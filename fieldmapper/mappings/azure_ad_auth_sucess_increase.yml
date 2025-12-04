@@ -1,19 +1,18 @@
-id: 67d5f8fc-8325-44e4-8f5f-7c0ac07cb5ae
 title: Measurable Increase Of Successful Authentications
+id: 67d5f8fc-8325-44e4-8f5f-7c0ac07cb5ae
 status: test
 level: low
-description: Detects when successful sign-ins increased by 10% or greater.
 author: Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1', Tim Shelton
-date: '2022-08-11'
-modified: '2022-08-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1078
+description: Detects when successful sign-ins increased by 10% or greater.
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#monitoring-for-successful-unusual-sign-ins
 falsepositives:
     - Increase of users in the environment
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1078
+date: '2022-08-11'
+modified: '2022-08-18'
 logsource:
     product: azure
     service: signinlogs
@@ -29,17 +28,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:16.051836+00:00'
+            mapped_at: '2025-12-04T01:38:05.900537+00:00'
         service:
             source_field: service
             source_value: signinlogs
-            mapped_at: '2025-11-26T02:20:16.051836+00:00'
+            mapped_at: '2025-12-04T01:38:05.900537+00:00'
     detection_fields:
         -   source_field: Status
             target_table: authentication
             target_field: status_code
-            mapped_at: '2025-11-26T02:20:16.051864+00:00'
+            mapped_at: '2025-12-04T01:38:05.900561+00:00'
         -   source_field: Count
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:20:16.051868+00:00'
+            mapped_at: '2025-12-04T01:38:05.900563+00:00'

@@ -1,22 +1,21 @@
-id: 6e2a900a-ced9-4e4a-a9c2-13e706f9518a
 title: HackTool - Potential Remote Credential Dumping Activity Via CrackMapExec Or
     Impacket-Secretsdump
+id: 6e2a900a-ced9-4e4a-a9c2-13e706f9518a
 status: test
 level: high
+author: SecurityAura
 description: Detects default filenames output from the execution of CrackMapExec and
     Impacket-secretsdump against an endpoint.
-author: SecurityAura
-date: '2022-11-16'
-modified: '2024-06-27'
-tags:
-    - attack.credential-access
-    - attack.t1003
 references:
     - https://github.com/Porchetta-Industries/CrackMapExec
     - https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003
+date: '2022-11-16'
+modified: '2024-06-27'
 logsource:
     category: file_event
     product: windows
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:24.553947+00:00'
+            mapped_at: '2025-12-04T01:53:02.580622+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:24.553947+00:00'
+            mapped_at: '2025-12-04T01:53:02.580622+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:24.553968+00:00'
+            mapped_at: '2025-12-04T01:53:02.580653+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:24.553970+00:00'
+            mapped_at: '2025-12-04T01:53:02.580655+00:00'

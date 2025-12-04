@@ -1,15 +1,10 @@
-id: b3d34dc5-2efd-4ae3-845f-8ec14921f449
 title: Browser Started with Remote Debugging
+id: b3d34dc5-2efd-4ae3-845f-8ec14921f449
 status: test
 level: medium
+author: pH-T (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects browsers starting with the remote debugging flags. Which is a
     technique often used to perform browser injection attacks
-author: pH-T (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-27'
-modified: '2022-12-23'
-tags:
-    - attack.credential-access
-    - attack.t1185
 references:
     - https://yoroi.company/wp-content/uploads/2022/05/EternityGroup_report_compressed.pdf
     - https://www.mdsec.co.uk/2022/10/analysing-lastpass-part-1/
@@ -17,9 +12,11 @@ references:
     - https://github.com/wunderwuzzi23/firefox-cookiemonster
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3e8207c5-fcd2-4ea6-9418-15d45b4890e4''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1185
+date: '2022-07-27'
+modified: '2022-12-23'
 logsource:
     category: process_creation
     product: windows
@@ -30,6 +27,9 @@ detection:
         Image|endswith: \firefox.exe
         CommandLine|contains: ' -start-debugger-server'
     condition: 1 of selection_*
+related:
+    -   id: 3e8207c5-fcd2-4ea6-9418-15d45b4890e4
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -37,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:00.901969+00:00'
+            mapped_at: '2025-12-04T01:46:31.120335+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:00.901969+00:00'
+            mapped_at: '2025-12-04T01:46:31.120335+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:00.901984+00:00'
+            mapped_at: '2025-12-04T01:46:31.120355+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:00.901993+00:00'
+            mapped_at: '2025-12-04T01:46:31.120357+00:00'

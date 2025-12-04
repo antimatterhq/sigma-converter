@@ -1,22 +1,21 @@
-id: ec82e2a5-81ea-4211-a1f8-37a0286df2c2
 title: Suspicious DNS Query for IP Lookup Service APIs
+id: ec82e2a5-81ea-4211-a1f8-37a0286df2c2
 status: test
 level: medium
+author: Brandon George (blog post), Thomas Patzke
 description: Detects DNS queries for IP lookup services such as "api.ipify.org" originating
     from a non browser process.
-author: Brandon George (blog post), Thomas Patzke
-date: '2021-07-08'
-modified: '2024-03-22'
-tags:
-    - attack.reconnaissance
-    - attack.t1590
 references:
     - https://www.binarydefense.com/analysis-of-hancitor-when-boring-begets-beacon
     - https://twitter.com/neonprimetime/status/1436376497980428318
     - https://www.trendmicro.com/en_us/research/23/e/managed-xdr-investigation-of-ducktail-in-trend-micro-vision-one.html
 falsepositives:
     - Legitimate usage of IP lookup services such as ipify API
-taxonomy: sigma
+tags:
+    - attack.reconnaissance
+    - attack.t1590
+date: '2021-07-08'
+modified: '2024-03-22'
 logsource:
     category: dns_query
     product: windows
@@ -114,17 +113,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:46.266376+00:00'
+            mapped_at: '2025-12-04T01:51:19.672577+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:46.266376+00:00'
+            mapped_at: '2025-12-04T01:51:19.672577+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:46.266397+00:00'
+            mapped_at: '2025-12-04T01:51:19.672603+00:00'
         -   source_field: Image
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:46.266400+00:00'
+            mapped_at: '2025-12-04T01:51:19.672605+00:00'

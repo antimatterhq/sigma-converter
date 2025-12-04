@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "PUA - Advanced Port Scanner Execution",
+    "comment": "Detects the use of Advanced Port Scanner.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.name), lower('\\\\advanced_port_scanner')) AND contains(lower(process.file.name), lower('advanced_port_scanner')) AND contains(lower(device.desc), lower('advanced port scanner')) OR contains(lower(process.cmd_line), lower('/portable')) AND contains(lower(process.cmd_line), lower('/lng'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of Advanced Port Scanner.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Legitimate administrative use 2. Tools with similar commandline (very rare) Reference: https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/Advanced%20Port%20Scanner",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1046"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1135"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

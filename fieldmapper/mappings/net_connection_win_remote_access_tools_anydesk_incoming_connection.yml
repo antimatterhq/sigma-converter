@@ -1,25 +1,24 @@
-id: d58ba5c6-0ed7-4b9d-a433-6878379efda9
 title: Remote Access Tool - AnyDesk Incoming Connection
+id: d58ba5c6-0ed7-4b9d-a433-6878379efda9
 status: experimental
 level: medium
+author: '@d4ns4n_ (Wuerth-Phoenix)'
 description: 'Detects incoming connections to AnyDesk. This could indicate a potential
     remote attacker trying to connect to a listening instance of AnyDesk and use it
     as potential command and control channel.
 
     '
-author: '@d4ns4n_ (Wuerth-Phoenix)'
-date: '2024-09-02'
-tags:
-    - attack.persistence
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1219/T1219.md#atomic-test-2---anydesk-files-detected-test-on-windows
     - https://asec.ahnlab.com/en/40263/
 falsepositives:
     - Legitimate incoming connections (e.g. sysadmin activity). Most of the time I
         would expect outgoing connections (initiated locally).
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.command-and-control
+    - attack.t1219
+date: '2024-09-02'
 logsource:
     category: network_connection
     product: windows
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:47.317191+00:00'
+            mapped_at: '2025-12-04T01:51:46.873934+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:47.317191+00:00'
+            mapped_at: '2025-12-04T01:51:46.873934+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:47.317222+00:00'
+            mapped_at: '2025-12-04T01:51:46.873949+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:47.317226+00:00'
+            mapped_at: '2025-12-04T01:51:46.873951+00:00'

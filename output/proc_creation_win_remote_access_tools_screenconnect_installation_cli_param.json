@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Remote Access Tool - ScreenConnect Installation Execution",
+    "comment": "Detects ScreenConnect program starts that establish a remote access to a system.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('e=access&')) AND contains(lower(process.cmd_line), lower('y=guest&')) AND contains(lower(process.cmd_line), lower('&p=')) AND contains(lower(process.cmd_line), lower('&c=')) AND contains(lower(process.cmd_line), lower('&k=')))"
+      }
+    },
+    "output": {
+      "summary": "Detects ScreenConnect program starts that establish a remote access to a system.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use by administrative staff Reference: https://www.anomali.com/blog/probable-iranian-cyber-actors-static-kitten-conducting-cyberespionage-campaign-targeting-uae-and-kuwait-government-agencies",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1133"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

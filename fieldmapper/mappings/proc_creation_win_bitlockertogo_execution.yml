@@ -1,7 +1,8 @@
-id: 7f2376f9-42ee-4dfc-9360-fecff9a88fc8
 title: BitLockerTogo.EXE Execution
+id: 7f2376f9-42ee-4dfc-9360-fecff9a88fc8
 status: experimental
 level: low
+author: Josh Nickels, mttaggart
 description: 'Detects the execution of "BitLockerToGo.EXE".
 
     BitLocker To Go is BitLocker Drive Encryption on removable data drives. This feature
@@ -15,11 +16,6 @@ description: 'Detects the execution of "BitLockerToGo.EXE".
     process hollowing.
 
     '
-author: Josh Nickels, mttaggart
-date: '2024-07-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://tria.ge/240521-ynezpagf56/behavioral1
     - https://any.run/report/6eea2773c1b4b5c6fb7c142933e220c96f9a4ec89055bf0cf54accdcde7df535/a407f006-ee45-420d-b576-f259094df091
@@ -27,7 +23,10 @@ references:
     - https://bazaar.abuse.ch/sample/64e6605496919cd76554915cbed88e56fdec10dec6523918a631754664b8c8d3/
 falsepositives:
     - Legitimate usage of BitLockerToGo.exe to encrypt portable devices.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2024-07-11'
 logsource:
     category: process_creation
     product: windows
@@ -42,13 +41,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:33.217389+00:00'
+            mapped_at: '2025-12-04T01:42:51.502010+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:33.217389+00:00'
+            mapped_at: '2025-12-04T01:42:51.502010+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:33.217406+00:00'
+            mapped_at: '2025-12-04T01:42:51.502023+00:00'

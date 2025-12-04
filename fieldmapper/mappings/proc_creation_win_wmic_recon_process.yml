@@ -1,22 +1,21 @@
-id: 221b251a-357a-49a9-920a-271802777cc0
 title: Process Reconnaissance Via Wmic.EXE
+id: 221b251a-357a-49a9-920a-271802777cc0
 status: test
 level: medium
+author: frack113
 description: Detects the execution of "wmic" with the "process" flag, which adversary
     might use to list processes running on the compromised host or list installed
     software hotfixes and patches.
-author: frack113
-date: '2022-01-01'
-modified: '2023-02-14'
-tags:
-    - attack.execution
-    - attack.t1047
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1047/T1047.md
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1047
+date: '2022-01-01'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:36.809333+00:00'
+            mapped_at: '2025-12-04T01:42:55.860855+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:36.809333+00:00'
+            mapped_at: '2025-12-04T01:42:55.860855+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:36.809353+00:00'
+            mapped_at: '2025-12-04T01:42:55.860869+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:36.809356+00:00'
+            mapped_at: '2025-12-04T01:42:55.860871+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:36.809358+00:00'
+            mapped_at: '2025-12-04T01:42:55.860873+00:00'

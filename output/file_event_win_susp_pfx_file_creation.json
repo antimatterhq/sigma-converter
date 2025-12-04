@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious PFX File Creation",
+    "comment": "A general detection for processes creating PFX files. This could be an indicator of an adversary exporting a local certificate to a PFX file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(file.path), lower('.pfx')) AND NOT (contains(lower(file.path), lower('\\\\templates\\\\windows\\\\windows_temporarykey.pfx')) AND contains(lower(file.path), lower('\\\\cmake\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "A general detection for processes creating PFX files. This could be an indicator of an adversary exporting a local certificate to a PFX file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: System administrators managing certificates. References: https://github.com/OTRF/detection-hackathon-apt29/issues/14, https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/6.B.1_6392C9F1-D975-4F75-8A70-433DEDD7F622.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1552",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,21 +1,20 @@
-id: c7746f1c-47d3-43d6-8c45-cd1e54b6b0a2
 title: Kernel Memory Dump Via LiveKD
+id: c7746f1c-47d3-43d6-8c45-cd1e54b6b0a2
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of LiveKD with the "-m" flag to potentially dump the
     kernel memory
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-16'
-modified: '2024-03-13'
-tags:
-    - attack.defense-evasion
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/livekd
     - https://4sysops.com/archives/creating-a-complete-memory-dump-without-a-blue-screen/
     - https://kb.acronis.com/content/60892
 falsepositives:
     - Unlikely in production environment
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-05-16'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:07.487515+00:00'
+            mapped_at: '2025-12-04T01:50:50.931178+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:07.487515+00:00'
+            mapped_at: '2025-12-04T01:50:50.931178+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:07.487534+00:00'
+            mapped_at: '2025-12-04T01:50:50.931197+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:07.487538+00:00'
+            mapped_at: '2025-12-04T01:50:50.931199+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:07.487540+00:00'
+            mapped_at: '2025-12-04T01:50:50.931200+00:00'

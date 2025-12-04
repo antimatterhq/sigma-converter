@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential SysInternals ProcDump Evasion",
+    "comment": "Detects uses of the SysInternals ProcDump utility in which ProcDump or its output get renamed, or a dump file is moved or copied to a different name",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('copy procdump')) OR contains(lower(process.cmd_line), lower('move procdump')) OR contains(lower(process.cmd_line), lower('copy ')) AND contains(lower(process.cmd_line), lower('.dmp ')) AND (contains(lower(process.cmd_line), lower('2.dmp')) OR contains(lower(process.cmd_line), lower('lsass')) OR contains(lower(process.cmd_line), lower('out.dmp'))) OR contains(lower(process.cmd_line), lower('copy lsass.exe_')) OR contains(lower(process.cmd_line), lower('move lsass.exe_'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects uses of the SysInternals ProcDump utility in which ProcDump or its output get renamed, or a dump file is moved or copied to a different name",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives are expected in cases in which ProcDump just gets copied to a different directory without any renaming Reference: https://twitter.com/mrd0x/status/1480785527901204481",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

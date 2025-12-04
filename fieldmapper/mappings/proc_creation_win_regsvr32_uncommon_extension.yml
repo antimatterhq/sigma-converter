@@ -1,22 +1,21 @@
-id: 50919691-7302-437f-8e10-1fe088afa145
 title: Regsvr32 DLL Execution With Uncommon Extension
+id: 50919691-7302-437f-8e10-1fe088afa145
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects a "regsvr32" execution where the DLL doesn't contain a common
     file extension.
-author: Florian Roth (Nextron Systems)
-date: '2019-07-17'
-modified: '2023-05-24'
-tags:
-    - attack.defense-evasion
-    - attack.t1574
-    - attack.execution
 references:
     - https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/
 falsepositives:
     - Other legitimate extensions currently not in the list either from third party
         or specific Windows components.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574
+    - attack.execution
+date: '2019-07-17'
+modified: '2023-05-24'
 logsource:
     category: process_creation
     product: windows
@@ -46,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:10.769978+00:00'
+            mapped_at: '2025-12-04T01:49:07.150965+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:10.769978+00:00'
+            mapped_at: '2025-12-04T01:49:07.150965+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:10.770006+00:00'
+            mapped_at: '2025-12-04T01:49:07.150992+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:10.770009+00:00'
+            mapped_at: '2025-12-04T01:49:07.150994+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:10.770012+00:00'
+            mapped_at: '2025-12-04T01:49:07.150996+00:00'

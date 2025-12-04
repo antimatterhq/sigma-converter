@@ -10,7 +10,8 @@ from sigma.pipelines.lakewatch.custom_conditions import RuleIDCondition
 
 # Get all pipeline mappings (field mappings, table assignments, activity_id) in a single pass
 # This includes:
-# - field_mappings: for Sigma field -> OCSF field mapping (FieldMappingTransformation)
+# - logsource_field_mappings: for Sigma field -> OCSF field mapping (FieldMappingTransformation) for non-conflicted logsources
+# - conflicted_rule_field_mappings: for Sigma field -> OCSF field mapping (FieldMappingTransformation) for conflicted rules
 # - logsource_mappings: for non-conflicting logsources (LogsourceCondition)
 # - conflicted_rule_mappings: for rules needing per-rule table assignment (RuleIDCondition)
 # - activity_id_mappings: for rules with valid activity_id to add to WHERE clause
@@ -54,13 +55,47 @@ def lakewatch_pipeline() -> ProcessingPipeline:
                 value="gold"
             )
         ),
-        
-        # Step 2: Apply field mappings
-        ProcessingItem(
-            identifier="lakewatch_field_mapping",
-            transformation=FieldMappingTransformation(mapping=lakewatch_mappings.field_mappings)
-        ),
     ]
+    
+    # Step 2a: Apply field mappings for non-conflicted logsources
+    # These use the same LogsourceCondition as table assignments
+    for (category, product, service), table_name in lakewatch_mappings.logsource_mappings.items():
+        if (category, product, service) in lakewatch_mappings.logsource_field_mappings:
+            field_mapping = lakewatch_mappings.logsource_field_mappings[(category, product, service)]
+            # Create a safe identifier from logsource fields
+            id_parts = []
+            if category:
+                id_parts.append(f"cat_{category.replace(' ', '_')}")
+            if product:
+                id_parts.append(f"prod_{product.replace(' ', '_')}")
+            if service:
+                id_parts.append(f"svc_{service.replace(' ', '_')}")
+            identifier = "field_mapping_ls_" + "_".join(id_parts) if id_parts else "field_mapping_ls_default"
+            
+            items.append(
+                ProcessingItem(
+                    identifier=identifier,
+                    transformation=FieldMappingTransformation(mapping=field_mapping),
+                    rule_conditions=[LogsourceCondition(
+                        category=category,
+                        product=product,
+                        service=service
+                    )]
+                )
+            )
+    
+    # Step 2b: Apply field mappings for conflicted rules
+    # These use the same RuleIDCondition as table assignments
+    for rule_id, table_name in lakewatch_mappings.conflicted_rule_mappings.items():
+        if rule_id in lakewatch_mappings.conflicted_rule_field_mappings:
+            field_mapping = lakewatch_mappings.conflicted_rule_field_mappings[rule_id]
+            items.append(
+                ProcessingItem(
+                    identifier=f"field_mapping_rule_{rule_id}",
+                    transformation=FieldMappingTransformation(mapping=field_mapping),
+                    rule_conditions=[RuleIDCondition(rule_id=rule_id)]
+                )
+            )
     
     # Step 3a: Apply table assignments for non-conflicted logsources
     # These logsources map unambiguously to a single OCSF table

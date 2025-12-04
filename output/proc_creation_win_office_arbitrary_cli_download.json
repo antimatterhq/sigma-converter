@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potential Arbitrary File Download Using Office Application",
+    "comment": "Detects potential arbitrary file download using a Microsoft Office application",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\excel.exe')) OR endswith(lower(process.name), lower('\\\\powerpnt.exe')) OR endswith(lower(process.name), lower('\\\\winword.exe'))) AND (lower(LOWER(process.file.name)) in ('excel\\.exe', 'powerpnt\\.exe', 'winword\\.exe')) AND (contains(lower(process.cmd_line), lower('http://')) OR contains(lower(process.cmd_line), lower('https://'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential arbitrary file download using a Microsoft Office application",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Winword/, https://lolbas-project.github.io/lolbas/OtherMSBinaries/Powerpnt/, https://lolbas-project.github.io/lolbas/OtherMSBinaries/Excel/, https://medium.com/@reegun/unsanitized-file-validation-leads-to-malicious-payload-download-via-office-binaries-202d02db7191",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

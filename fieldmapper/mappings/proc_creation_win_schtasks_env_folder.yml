@@ -1,16 +1,11 @@
-id: 81325ce1-be01-4250-944f-b4789644556f
 title: Schedule Task Creation From Env Variable Or Potentially Suspicious Path Via
     Schtasks.EXE
+id: 81325ce1-be01-4250-944f-b4789644556f
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects Schtask creations that point to a suspicious folder or an environment
     variable often used by malware
-author: Florian Roth (Nextron Systems)
-date: '2022-02-21'
-modified: '2024-10-28'
-tags:
-    - attack.execution
-    - attack.t1053.005
 references:
     - https://www.welivesecurity.com/2022/01/18/donot-go-do-not-respawn/
     - https://www.joesandbox.com/analysis/514608/0/html#324415FF7D8324231381BAD48A052F85DF04
@@ -20,9 +15,11 @@ falsepositives:
         installations
     - Software that uses the AppData folder and scheduled tasks to update the software
         in the AppData folders
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''43f487f0-755f-4c2a-bce7-d6d2eec2fcf8''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1053.005
+date: '2022-02-21'
+modified: '2024-10-28'
 logsource:
     category: process_creation
     product: windows
@@ -76,6 +73,9 @@ detection:
             - '/Create /TN "klcp_update" /XML '
             - \klcp_update_task.xml
     condition: ( all of selection_1_* or all of selection_2_* ) and not 1 of filter_optional_*
+related:
+    -   id: 43f487f0-755f-4c2a-bce7-d6d2eec2fcf8
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -83,21 +83,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:28.253136+00:00'
+            mapped_at: '2025-12-04T01:43:36.950788+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:28.253136+00:00'
+            mapped_at: '2025-12-04T01:43:36.950788+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:28.253151+00:00'
+            mapped_at: '2025-12-04T01:43:36.950803+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:28.253153+00:00'
+            mapped_at: '2025-12-04T01:43:36.950805+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:28:28.253155+00:00'
+            mapped_at: '2025-12-04T01:43:36.950806+00:00'

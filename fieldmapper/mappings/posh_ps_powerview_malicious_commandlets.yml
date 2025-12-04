@@ -1,14 +1,9 @@
-id: dcd74b95-3f36-4ed9-9598-0490951643aa
 title: PowerView PowerShell Cmdlets - ScriptBlock
+id: dcd74b95-3f36-4ed9-9598-0490951643aa
 status: test
 level: high
-description: Detects Cmdlet names from PowerView of the PowerSploit exploitation framework.
 author: Bhabesh Raj
-date: '2021-05-18'
-modified: '2023-11-22'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects Cmdlet names from PowerView of the PowerSploit exploitation framework.
 references:
     - https://powersploit.readthedocs.io/en/stable/Recon/README
     - https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon
@@ -16,9 +11,11 @@ references:
     - https://adsecurity.org/?p=2277
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b2317cfa-4a47-4ead-b3ff-297438c0bc2d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2021-05-18'
+modified: '2023-11-22'
 logsource:
     category: ps_script
     product: windows
@@ -79,6 +76,9 @@ detection:
             - Request-SPNTicket
             - Resolve-IPAddress
     condition: selection
+related:
+    -   id: b2317cfa-4a47-4ead-b3ff-297438c0bc2d
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: 1
@@ -86,13 +86,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:00.961928+00:00'
+            mapped_at: '2025-12-04T01:54:15.344210+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:00.961928+00:00'
+            mapped_at: '2025-12-04T01:54:15.344210+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:00.961943+00:00'
+            mapped_at: '2025-12-04T01:54:15.344227+00:00'

@@ -1,19 +1,18 @@
-id: 3ab79e90-9fab-4cdf-a7b2-6522bc742adb
 title: HackTool - RemoteKrbRelay SMB Relay Secrets Dump Module Indicators
+id: 3ab79e90-9fab-4cdf-a7b2-6522bc742adb
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the creation of file with specific names used by RemoteKrbRelay
     SMB Relay attack module.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-06-27'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://github.com/CICADA8-Research/RemoteKrbRelay/blob/19ec76ba7aa50c2722b23359bc4541c0a9b2611c/Exploit/RemoteKrbRelay/Relay/Attacks/RemoteRegistry.cs#L31-L40
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2024-06-27'
 logsource:
     category: file_event
     product: windows
@@ -26,18 +25,18 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: file_activity
-    activity_id: 3
+    activity_id: 1
     logsource:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:01.784211+00:00'
+            mapped_at: '2025-12-04T01:52:46.593379+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:01.784211+00:00'
+            mapped_at: '2025-12-04T01:52:46.593379+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:01.784225+00:00'
+            mapped_at: '2025-12-04T01:52:46.593479+00:00'

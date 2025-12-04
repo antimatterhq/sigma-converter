@@ -1,24 +1,21 @@
-id: 9ac94dc8-9042-493c-ba45-3b5e7c86b980
 title: Disable Important Scheduled Task
+id: 9ac94dc8-9042-493c-ba45-3b5e7c86b980
 status: test
 level: high
+author: frack113, Nasreddine Bencherchali (Nextron Systems), X__Junior
 description: Detects when adversaries stop services or processes by disabling their
     respective scheduled tasks in order to conduct data destructive activities
-author: frack113, Nasreddine Bencherchali (Nextron Systems), X__Junior
-date: '2021-12-26'
-modified: '2024-08-25'
-tags:
-    - attack.impact
-    - attack.t1489
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-8---windows---disable-the-sr-scheduled-task
     - https://twitter.com/MichalKoczwara/status/1553634816016498688
     - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7595ba94-cf3b-4471-aa03-4f6baa9e5fad''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1489
+date: '2021-12-26'
+modified: '2024-08-25'
 logsource:
     category: process_creation
     product: windows
@@ -39,6 +36,9 @@ detection:
             - \Windows\WindowsBackup\
             - \Windows\WindowsUpdate\
     condition: selection
+related:
+    -   id: 7595ba94-cf3b-4471-aa03-4f6baa9e5fad
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -46,17 +46,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:18.813652+00:00'
+            mapped_at: '2025-12-04T01:44:15.718657+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:18.813652+00:00'
+            mapped_at: '2025-12-04T01:44:15.718657+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:18.813673+00:00'
+            mapped_at: '2025-12-04T01:44:15.718672+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:18.813674+00:00'
+            mapped_at: '2025-12-04T01:44:15.718674+00:00'

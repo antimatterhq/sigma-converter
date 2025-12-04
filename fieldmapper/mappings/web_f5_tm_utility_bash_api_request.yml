@@ -1,14 +1,10 @@
-id: 85254a62-22be-4239-b79c-2ec17e566c37
 title: F5 BIG-IP iControl Rest API Command Execution - Webserver
+id: 85254a62-22be-4239-b79c-2ec17e566c37
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), Thurein Oo
 description: Detects POST requests to the F5 BIG-IP iControl Rest API "bash" endpoint,
     which allows the execution of commands on the BIG-IP
-author: Nasreddine Bencherchali (Nextron Systems), Thurein Oo
-date: '2023-11-08'
-tags:
-    - attack.execution
-    - attack.t1190
 references:
     - https://f5-sdk.readthedocs.io/en/latest/apidoc/f5.bigip.tm.util.html#module-f5.bigip.tm.util.bash
     - https://community.f5.com/t5/technical-forum/icontrolrest-11-5-execute-bash-command/td-p/203029
@@ -16,9 +12,10 @@ references:
 falsepositives:
     - Legitimate usage of the BIG IP REST API to execute command for administration
         purposes
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b59c98c6-95e8-4d65-93ee-f594dfb96b17''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1190
+date: '2023-11-08'
 logsource:
     category: webserver
 detection:
@@ -26,6 +23,9 @@ detection:
         cs-method: POST
         cs-uri-query|endswith: /mgmt/tm/util/bash
     condition: selection
+related:
+    -   id: b59c98c6-95e8-4d65-93ee-f594dfb96b17
+        type: similar
 ocsf_mapping:
     class_name: http_activity
     activity_id: 6
@@ -33,13 +33,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: webserver
-            mapped_at: '2025-11-26T02:14:27.621772+00:00'
+            mapped_at: '2025-12-04T01:35:01.832357+00:00'
     detection_fields:
         -   source_field: cs-method
             target_table: http_activity
             target_field: http_request.http_method
-            mapped_at: '2025-11-26T02:14:27.621824+00:00'
+            mapped_at: '2025-12-04T01:35:01.832375+00:00'
         -   source_field: cs-uri-query
             target_table: http_activity
             target_field: http_request.args
-            mapped_at: '2025-11-26T02:14:27.621828+00:00'
+            mapped_at: '2025-12-04T01:35:01.832377+00:00'

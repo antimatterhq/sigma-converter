@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Bitsadmin to Uncommon TLD",
+    "comment": "Detects Bitsadmin connections to domains with uncommon TLDs",
+    "annotations": {
+      "source": "sigma",
+      "category": "proxy",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (startswith(lower(http_request.user_agent), lower('microsoft bits/')) AND NOT (endswith(lower(dst_endpoint.hostname), lower('.com')) OR endswith(lower(dst_endpoint.hostname), lower('.net')) OR endswith(lower(dst_endpoint.hostname), lower('.org')) OR endswith(lower(dst_endpoint.hostname), lower('.scdn.co')) OR endswith(lower(dst_endpoint.hostname), lower('.sfx.ms'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Bitsadmin connections to domains with uncommon TLDs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: ClientIP, http_request.url, http_request.user_agent False positive: Rare programs that use Bitsadmin and update from regional TLDs e.g. .uk or .ca References: https://twitter.com/jhencinski/status/1102695118455349248, https://isc.sans.edu/forums/diary/Investigating+Microsoft+BITS+Activity/23281/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1197"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

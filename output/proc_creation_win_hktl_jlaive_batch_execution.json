@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "HackTool - Jlaive In-Memory Assembly Execution",
+    "comment": "Detects the use of Jlaive to execute assemblies in a copied PowerShell",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) AND endswith(lower(process.parent_process.cmd_line), lower('.bat')) AND (endswith(lower(process.name), lower('\\\\xcopy.exe')) AND contains(lower(process.cmd_line), lower('powershell.exe')) AND contains(lower(process.cmd_line), lower('.bat.exe')) OR endswith(lower(process.name), lower('\\\\xcopy.exe')) AND contains(lower(process.cmd_line), lower('pwsh.exe')) AND contains(lower(process.cmd_line), lower('.bat.exe')) OR endswith(lower(process.name), lower('\\\\attrib.exe')) AND contains(lower(process.cmd_line), lower('+s')) AND contains(lower(process.cmd_line), lower('+h')) AND contains(lower(process.cmd_line), lower('.bat.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of Jlaive to execute assemblies in a copied PowerShell",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://jstnk9.github.io/jstnk9/research/Jlaive-Antivirus-Evasion-Tool, https://web.archive.org/web/20220514073704/https://github.com/ch2sh/Jlaive",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

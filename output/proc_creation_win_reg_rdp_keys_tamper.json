@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential Tampering With RDP Related Registry Keys Via Reg.EXE",
+    "comment": "Detects the execution of \"reg.exe\" for enabling/disabling the RDP service on the host by tampering with the 'CurrentControlSet\\Control\\Terminal Server' values",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\reg.exe')) AND lower(process.file.name) = lower('reg.exe') AND contains(lower(process.cmd_line), lower(' add ')) AND contains(lower(process.cmd_line), lower('\\\\currentcontrolset\\\\control\\\\terminal server')) AND contains(lower(process.cmd_line), lower('reg_dword')) AND contains(lower(process.cmd_line), lower(' /f')) AND (contains(lower(process.cmd_line), lower('licensing core')) AND contains(lower(process.cmd_line), lower('enableconcurrentsessions')) OR contains(lower(process.cmd_line), lower('winstations\\\\rdp-tcp')) OR contains(lower(process.cmd_line), lower('maxinstancecount')) OR contains(lower(process.cmd_line), lower('fenablewinstation')) OR contains(lower(process.cmd_line), lower('tsuserenabled')) OR contains(lower(process.cmd_line), lower('tsenabled')) OR contains(lower(process.cmd_line), lower('tsappcompat')) OR contains(lower(process.cmd_line), lower('idlewinstationpoolcount')) OR contains(lower(process.cmd_line), lower('tsadvertise')) OR contains(lower(process.cmd_line), lower('allowtsconnections')) OR contains(lower(process.cmd_line), lower('fsinglesessionperuser')) OR contains(lower(process.cmd_line), lower('fdenytsconnections'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of \"reg.exe\" for enabling/disabling the RDP service on the host by tampering with the 'CurrentControlSet\\Control\\Terminal Server' values",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://thedfirreport.com/2022/02/21/qbot-and-zerologon-lead-to-full-domain-compromise/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1021",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1112"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

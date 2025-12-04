@@ -1,22 +1,21 @@
-id: 4abc0ec4-db5a-412f-9632-26659cddf145
 title: UEFI Persistence Via Wpbbin - ProcessCreation
+id: 4abc0ec4-db5a-412f-9632-26659cddf145
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of the binary "wpbbin" which is used as part of the
     UEFI based persistence method described in the reference section
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-18'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
-    - attack.t1542.001
 references:
     - https://grzegorztworek.medium.com/using-uefi-to-inject-executable-files-into-bitlocker-protected-drives-8ff4ca59c94c
     - https://persistence-info.github.io/Data/wpbbin.html
 falsepositives:
     - Legitimate usage of the file by hardware manufacturer such as lenovo (Thanks
         @0gtweet for the tip)
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.t1542.001
+date: '2022-07-18'
 logsource:
     category: process_creation
     product: windows
@@ -31,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:59.773571+00:00'
+            mapped_at: '2025-12-04T01:50:40.507509+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:59.773571+00:00'
+            mapped_at: '2025-12-04T01:50:40.507509+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:59.773584+00:00'
+            mapped_at: '2025-12-04T01:50:40.507532+00:00'

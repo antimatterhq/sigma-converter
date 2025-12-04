@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PUA - Chisel Tunneling Tool Execution",
+    "comment": "Detects usage of the Chisel tunneling tool via the commandline arguments",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\chisel.exe')) OR (contains(lower(process.cmd_line), lower('exe client ')) OR contains(lower(process.cmd_line), lower('exe server '))) AND (contains(lower(process.cmd_line), lower('-socks5')) OR contains(lower(process.cmd_line), lower('-reverse')) OR contains(lower(process.cmd_line), lower(' r:')) OR contains(lower(process.cmd_line), lower(':127.0.0.1:')) OR contains(lower(process.cmd_line), lower('-tls-skip-verify ')) OR contains(lower(process.cmd_line), lower(':socks')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the Chisel tunneling tool via the commandline arguments",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some false positives may occur with other tools with similar commandlines References: https://github.com/jpillora/chisel/, https://arcticwolf.com/resources/blog/lorenz-ransomware-chiseling-in/, https://blog.sekoia.io/lucky-mouse-incident-response-to-detection-engineering/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1090",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

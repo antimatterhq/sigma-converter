@@ -1,22 +1,21 @@
-id: f0507c0f-a3a2-40f5-acc6-7f543c334993
 title: Suspicious File Execution From Internet Hosted WebDav Share
+id: f0507c0f-a3a2-40f5-acc6-7f543c334993
 status: test
 level: high
+author: pH-T (Nextron Systems)
 description: Detects the execution of the "net use" command to mount a WebDAV server
     and then immediately execute some content in it. As seen being used in malicious
     LNK files
-author: pH-T (Nextron Systems)
-date: '2022-09-01'
-modified: '2023-02-21'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://twitter.com/ShadowChasing1/status/1552595370961944576
     - https://www.virustotal.com/gui/file/a63376ee1dba76361df73338928e528ca5b20171ea74c24581605366dcaa0104/behavior
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2022-09-01'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:10.862920+00:00'
+            mapped_at: '2025-12-04T01:46:39.342040+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:10.862920+00:00'
+            mapped_at: '2025-12-04T01:46:39.342040+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:10.862943+00:00'
+            mapped_at: '2025-12-04T01:46:39.342056+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:10.862946+00:00'
+            mapped_at: '2025-12-04T01:46:39.342058+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:10.862948+00:00'
+            mapped_at: '2025-12-04T01:46:39.342059+00:00'

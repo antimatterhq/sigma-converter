@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Visual Studio Code Tunnel Shell Execution",
+    "comment": "Detects the execution of a shell (powershell, bash, wsl...) via Visual Studio Code tunnel. Attackers can abuse this functionality to establish a C2 channel and execute arbitrary commands on the system.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.parent_process.name), lower('\\\\servers\\\\stable-')) AND endswith(lower(process.parent_process.name), lower('\\\\server\\\\node.exe')) AND contains(lower(process.parent_process.cmd_line), lower('.vscode-server')) AND ((endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('\\\\terminal\\\\browser\\\\media\\\\shellintegration.ps1')) OR endswith(lower(process.name), lower('\\\\wsl.exe')) OR endswith(lower(process.name), lower('\\\\bash.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a shell (powershell, bash, wsl...) via Visual Studio Code tunnel. Attackers can abuse this functionality to establish a C2 channel and execute arbitrary commands on the system.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of Visual Studio Code tunnel and running code from there References: https://ipfyx.fr/post/visual-studio-code-tunnel/, https://badoption.eu/blog/2023/01/31/code_c2.html, https://code.visualstudio.com/docs/remote/tunnels",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

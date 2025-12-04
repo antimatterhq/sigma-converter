@@ -1,24 +1,23 @@
-id: 69483748-1525-4a6c-95ca-90dc8d431b68
 title: Suspicious Microsoft Office Child Process - MacOS
+id: 69483748-1525-4a6c-95ca-90dc8d431b68
 status: test
 level: high
+author: Sohan G (D4rkCiph3r)
 description: Detects suspicious child processes spawning from microsoft office suite
     applications such as word or excel. This could indicates malicious macro execution
-author: Sohan G (D4rkCiph3r)
-date: '2023-01-31'
-modified: '2023-02-04'
+references:
+    - https://redcanary.com/blog/applescript/
+    - https://objective-see.org/blog/blog_0x4B.html
+falsepositives:
+    - Unknown
 tags:
     - attack.execution
     - attack.persistence
     - attack.t1059.002
     - attack.t1137.002
     - attack.t1204.002
-references:
-    - https://redcanary.com/blog/applescript/
-    - https://objective-see.org/blog/blog_0x4B.html
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2023-01-31'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: macos
@@ -49,17 +48,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:43.385793+00:00'
+            mapped_at: '2025-12-04T01:34:38.229983+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:43.385793+00:00'
+            mapped_at: '2025-12-04T01:34:38.229983+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:13:43.385807+00:00'
+            mapped_at: '2025-12-04T01:34:38.230019+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:43.385810+00:00'
+            mapped_at: '2025-12-04T01:34:38.230022+00:00'

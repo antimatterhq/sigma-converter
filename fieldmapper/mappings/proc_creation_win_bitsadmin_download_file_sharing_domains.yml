@@ -1,17 +1,9 @@
-id: 8518ed3d-f7c9-4601-a26c-f361a4256a0c
 title: Suspicious Download From File-Sharing Website Via Bitsadmin
+id: 8518ed3d-f7c9-4601-a26c-f361a4256a0c
 status: experimental
 level: high
-description: Detects usage of bitsadmin downloading a file from a suspicious domain
 author: Florian Roth (Nextron Systems)
-date: '2022-06-28'
-modified: '2024-08-22'
-tags:
-    - attack.defense-evasion
-    - attack.persistence
-    - attack.t1197
-    - attack.s0190
-    - attack.t1036.003
+description: Detects usage of bitsadmin downloading a file from a suspicious domain
 references:
     - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
     - https://isc.sans.edu/diary/22264
@@ -21,7 +13,14 @@ references:
     - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
 falsepositives:
     - Some legitimate apps use this, but limited.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+    - attack.s0190
+    - attack.t1036.003
+date: '2022-06-28'
+modified: '2024-08-22'
 logsource:
     category: process_creation
     product: windows
@@ -74,21 +73,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:32.953696+00:00'
+            mapped_at: '2025-12-04T01:41:57.232959+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:32.953696+00:00'
+            mapped_at: '2025-12-04T01:41:57.232959+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:32.953714+00:00'
+            mapped_at: '2025-12-04T01:41:57.232981+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:32.953716+00:00'
+            mapped_at: '2025-12-04T01:41:57.232983+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:32.953718+00:00'
+            mapped_at: '2025-12-04T01:41:57.232984+00:00'

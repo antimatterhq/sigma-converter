@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Volume Shadow Copy VSS_PS.dll Load",
+    "comment": "Detects the image load of vss_ps.dll by uncommon executables",
+    "annotations": {
+      "source": "sigma",
+      "category": "image_load",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(module.file.path), lower('\\\\vss_ps.dll')) AND NOT (startswith(lower(process.name), lower('c:\\\\windows\\\\')) AND (endswith(lower(process.name), lower('\\\\clussvc.exe')) OR endswith(lower(process.name), lower('\\\\dismhost.exe')) OR endswith(lower(process.name), lower('\\\\dllhost.exe')) OR endswith(lower(process.name), lower('\\\\inetsrv\\\\appcmd.exe')) OR endswith(lower(process.name), lower('\\\\inetsrv\\\\iissetup.exe')) OR endswith(lower(process.name), lower('\\\\msiexec.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\searchindexer.exe')) OR endswith(lower(process.name), lower('\\\\srtasks.exe')) OR endswith(lower(process.name), lower('\\\\svchost.exe')) OR endswith(lower(process.name), lower('\\\\system32\\\\systempropertiesadvanced.exe')) OR endswith(lower(process.name), lower('\\\\taskhostw.exe')) OR endswith(lower(process.name), lower('\\\\thor.exe')) OR endswith(lower(process.name), lower('\\\\thor64.exe')) OR endswith(lower(process.name), lower('\\\\tiworker.exe')) OR endswith(lower(process.name), lower('\\\\vssvc.exe')) OR endswith(lower(process.name), lower('\\\\wmiprvse.exe')) OR endswith(lower(process.name), lower('\\\\wsmprovhost.exe'))) OR startswith(lower(process.name), lower('c:\\\\program files\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files (x86)\\\\')) OR startswith(lower(process.cmd_line), lower('c:\\\\$winreagent\\\\scratch\\\\')) AND contains(lower(process.cmd_line), lower('\\\\dismhost.exe {')) OR process.name is null))"
+      }
+    },
+    "output": {
+      "summary": "Detects the image load of vss_ps.dll by uncommon executables",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.virustotal.com/gui/file/ba88ca45589fae0139a40ca27738a8fc2dfbe1be5a64a9558f4e0f52b35c5add, https://twitter.com/am0nsec/status/1412232114980982787",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1490"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

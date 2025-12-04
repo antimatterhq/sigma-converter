@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious PowerShell Invocations - Specific",
+    "comment": "Detects suspicious PowerShell invocation command parameters",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('-nop')) AND contains(lower(script.script_content.value), lower(' -w ')) AND contains(lower(script.script_content.value), lower('hidden')) AND contains(lower(script.script_content.value), lower(' -c ')) AND contains(lower(script.script_content.value), lower('[convert]::frombase64string')) OR contains(lower(script.script_content.value), lower(' -w ')) AND contains(lower(script.script_content.value), lower('hidden')) AND contains(lower(script.script_content.value), lower('-noni')) AND contains(lower(script.script_content.value), lower('-nop')) AND contains(lower(script.script_content.value), lower(' -c ')) AND contains(lower(script.script_content.value), lower('iex')) AND contains(lower(script.script_content.value), lower('new-object')) OR contains(lower(script.script_content.value), lower(' -w ')) AND contains(lower(script.script_content.value), lower('hidden')) AND contains(lower(script.script_content.value), lower('-ep')) AND contains(lower(script.script_content.value), lower('bypass')) AND contains(lower(script.script_content.value), lower('-enc')) OR contains(lower(script.script_content.value), lower('powershell')) AND contains(lower(script.script_content.value), lower('reg')) AND contains(lower(script.script_content.value), lower('add')) AND contains(lower(script.script_content.value), lower('hkcu\\\\software\\\\microsoft\\\\windows\\\\currentversion\\\\run')) OR contains(lower(script.script_content.value), lower('bypass')) AND contains(lower(script.script_content.value), lower('-noprofile')) AND contains(lower(script.script_content.value), lower('-windowstyle')) AND contains(lower(script.script_content.value), lower('hidden')) AND contains(lower(script.script_content.value), lower('new-object')) AND contains(lower(script.script_content.value), lower('system.net.webclient')) AND contains(lower(script.script_content.value), lower('.download')) OR contains(lower(script.script_content.value), lower('iex')) AND contains(lower(script.script_content.value), lower('new-object')) AND contains(lower(script.script_content.value), lower('net.webclient')) AND contains(lower(script.script_content.value), lower('.download'))) AND NOT (contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(\\'https://community.chocolatey.org/install.ps1')) OR contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(\\'https://chocolatey.org/install.ps1\\')')) OR contains(lower(script.script_content.value), lower('write-chocolateywarning'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious PowerShell invocation command parameters",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

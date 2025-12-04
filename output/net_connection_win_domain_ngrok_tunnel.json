@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "name": "Communication To Ngrok Tunneling Service Initiated",
+    "comment": "Detects an executable initiating a network connection to \"ngrok\" tunneling domains. Attackers were seen using this \"ngrok\" in order to store their second stage payloads and malware. While communication with such domains can be legitimate, often times is a sign of either data exfiltration by malicious actors or additional download.",
+    "annotations": {
+      "source": "sigma",
+      "category": "network_connection",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM network_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(dst_endpoint.hostname), lower('tunnel.us.ngrok.com')) OR contains(lower(dst_endpoint.hostname), lower('tunnel.eu.ngrok.com')) OR contains(lower(dst_endpoint.hostname), lower('tunnel.ap.ngrok.com')) OR contains(lower(dst_endpoint.hostname), lower('tunnel.au.ngrok.com')) OR contains(lower(dst_endpoint.hostname), lower('tunnel.sa.ngrok.com')) OR contains(lower(dst_endpoint.hostname), lower('tunnel.jp.ngrok.com')) OR contains(lower(dst_endpoint.hostname), lower('tunnel.in.ngrok.com'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects an executable initiating a network connection to \"ngrok\" tunneling domains. Attackers were seen using this \"ngrok\" in order to store their second stage payloads and malware. While communication with such domains can be legitimate, often times is a sign of either data exfiltration by malicious actors or additional download.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of the ngrok service. References: https://twitter.com/hakluke/status/1587733971814977537/photo/1, https://ngrok.com/docs/secure-tunnels/tunnels/ssh-reverse-tunnel-agent",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1567"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1568",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1572"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1090"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1102"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

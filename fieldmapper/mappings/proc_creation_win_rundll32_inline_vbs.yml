@@ -1,20 +1,19 @@
-id: 1cc50f3f-1fc8-4acf-b2e9-6f172e1fdebd
 title: Suspicious Rundll32 Invoking Inline VBScript
+id: 1cc50f3f-1fc8-4acf-b2e9-6f172e1fdebd
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious process related to rundll32 based on command line
     that invokes inline VBScript as seen being used by UNC2452
-author: Florian Roth (Nextron Systems)
-date: '2021-03-05'
-modified: '2022-10-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1055
 references:
     - https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1055
+date: '2021-03-05'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:22.355601+00:00'
+            mapped_at: '2025-12-04T01:46:50.938001+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:22.355601+00:00'
+            mapped_at: '2025-12-04T01:46:50.938001+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:22.355624+00:00'
+            mapped_at: '2025-12-04T01:46:50.938021+00:00'

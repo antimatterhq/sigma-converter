@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Uncommon AddinUtil.EXE CommandLine Execution",
+    "comment": "Detects execution of the Add-In deployment cache updating utility (AddInutil.exe) with uncommon Addinroot or Pipelineroot paths. An adversary may execute AddinUtil.exe with uncommon Addinroot/Pipelineroot paths that point to the adversaries Addins.Store payload.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\addinutil.exe')) AND lower(process.file.name) = lower('addinutil.exe') AND (contains(lower(process.cmd_line), lower('-addinroot:')) OR contains(lower(process.cmd_line), lower('-pipelineroot:'))) AND NOT (contains(lower(process.cmd_line), lower('-addinroot:\"c:\\\\program files (x86)\\\\common files\\\\microsoft shared\\\\vsta')) OR contains(lower(process.cmd_line), lower('-addinroot:c:\\\\program files (x86)\\\\common files\\\\microsoft shared\\\\vsta')) OR contains(lower(process.cmd_line), lower('-pipelineroot:\"c:\\\\program files (x86)\\\\common files\\\\microsoft shared\\\\vsta')) OR contains(lower(process.cmd_line), lower('-pipelineroot:c:\\\\program files (x86)\\\\common files\\\\microsoft shared\\\\vsta'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the Add-In deployment cache updating utility (AddInutil.exe) with uncommon Addinroot or Pipelineroot paths. An adversary may execute AddinUtil.exe with uncommon Addinroot/Pipelineroot paths that point to the adversaries Addins.Store payload.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

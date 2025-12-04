@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential DLL Injection Or Execution Using Tracker.exe",
+    "comment": "Detects potential DLL injection and execution using \"Tracker.exe\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND endswith(lower(process.name), lower('\\\\tracker.exe')) AND lower(device.desc) = lower('tracker') AND (contains(lower(process.cmd_line), lower(' /d ')) OR contains(lower(process.cmd_line), lower(' /c '))) AND NOT (contains(lower(process.cmd_line), lower(' /errorreport:prompt ')) OR endswith(lower(process.parent_process.name), lower('\\\\msbuild\\\\current\\\\bin\\\\msbuild.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\msbuild\\\\current\\\\bin\\\\amd64\\\\msbuild.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential DLL injection and execution using \"Tracker.exe\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Tracker/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

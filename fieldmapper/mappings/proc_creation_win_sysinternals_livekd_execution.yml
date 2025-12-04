@@ -1,17 +1,16 @@
-id: a85f7765-698a-4088-afa0-ecfbf8d01fa4
 title: Potential Memory Dumping Activity Via LiveKD
+id: a85f7765-698a-4088-afa0-ecfbf8d01fa4
 status: test
 level: medium
-description: Detects execution of LiveKD based on PE metadata or image name
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-15'
-tags:
-    - attack.defense-evasion
+description: Detects execution of LiveKD based on PE metadata or image name
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/livekd
 falsepositives:
     - Administration and debugging activity (must be investigated)
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-05-15'
 logsource:
     category: process_creation
     product: windows
@@ -29,17 +28,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:50.099776+00:00'
+            mapped_at: '2025-12-04T01:41:20.025211+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:50.099776+00:00'
+            mapped_at: '2025-12-04T01:41:20.025211+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:50.099802+00:00'
+            mapped_at: '2025-12-04T01:41:20.025222+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:50.099806+00:00'
+            mapped_at: '2025-12-04T01:41:20.025223+00:00'

@@ -1,7 +1,8 @@
-id: 8cbc9475-8d05-4e27-9c32-df960716c701
 title: Potentially Suspicious Desktop Background Change Using Reg.EXE
+id: 8cbc9475-8d05-4e27-9c32-df960716c701
 status: test
 level: medium
+author: Stephen Lincoln @slincoln-aiq (AttackIQ)
 description: 'Detects the execution of "reg.exe" to alter registry keys that would
     replace the user''s desktop background.
 
@@ -9,13 +10,6 @@ description: 'Detects the execution of "reg.exe" to alter registry keys that wou
     a ransom note or other image.
 
     '
-author: Stephen Lincoln @slincoln-aiq (AttackIQ)
-date: '2023-12-21'
-tags:
-    - attack.defense-evasion
-    - attack.impact
-    - attack.t1112
-    - attack.t1491.001
 references:
     - https://www.attackiq.com/2023/09/20/emulating-rhysida/
     - https://research.checkpoint.com/2023/the-rhysida-ransomware-activity-analysis-and-ties-to-vice-society/
@@ -26,9 +20,12 @@ references:
 falsepositives:
     - Administrative scripts that change the desktop background to a company logo
         or other image.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''85b88e05-dadc-430b-8a9e-53ff1cd30aae''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.impact
+    - attack.t1112
+    - attack.t1491.001
+date: '2023-12-21'
 logsource:
     category: process_creation
     product: windows
@@ -56,6 +53,9 @@ detection:
             - /v WallpaperStyle
             - /d 2
     condition: all of selection_reg_* and selection_keys and 1 of selection_cli_reg_*
+related:
+    -   id: 85b88e05-dadc-430b-8a9e-53ff1cd30aae
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -63,21 +63,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:08.442165+00:00'
+            mapped_at: '2025-12-04T01:44:54.870954+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:08.442165+00:00'
+            mapped_at: '2025-12-04T01:44:54.870954+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:08.442182+00:00'
+            mapped_at: '2025-12-04T01:44:54.870969+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:08.442188+00:00'
+            mapped_at: '2025-12-04T01:44:54.870972+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:08.442190+00:00'
+            mapped_at: '2025-12-04T01:44:54.870973+00:00'

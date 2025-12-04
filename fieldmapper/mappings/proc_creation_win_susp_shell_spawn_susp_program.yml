@@ -1,18 +1,10 @@
-id: 3a6586ad-127a-4d3b-a677-1e6eacdf8fde
 title: Windows Shell/Scripting Processes Spawning Suspicious Programs
+id: 3a6586ad-127a-4d3b-a677-1e6eacdf8fde
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Tim Shelton
 description: Detects suspicious child processes of a Windows shell and scripting processes
     such as wscript, rundll32, powershell, mshta...etc.
-author: Florian Roth (Nextron Systems), Tim Shelton
-date: '2018-04-06'
-modified: '2023-05-23'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1059.005
-    - attack.t1059.001
-    - attack.t1218
 references:
     - https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html
 fields:
@@ -24,7 +16,14 @@ fields:
 falsepositives:
     - Administrative scripts
     - Microsoft SCCM
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1059.005
+    - attack.t1059.001
+    - attack.t1218
+date: '2018-04-06'
+modified: '2023-05-23'
 logsource:
     category: process_creation
     product: windows
@@ -75,29 +74,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:12.967621+00:00'
+            mapped_at: '2025-12-04T01:49:08.731661+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:12.967621+00:00'
+            mapped_at: '2025-12-04T01:49:08.731661+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:12.967667+00:00'
+            mapped_at: '2025-12-04T01:49:08.731779+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:12.967672+00:00'
+            mapped_at: '2025-12-04T01:49:08.731788+00:00'
         -   source_field: CurrentDirectory
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:35:12.967676+00:00'
+            mapped_at: '2025-12-04T01:49:08.731790+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:35:12.967680+00:00'
+            mapped_at: '2025-12-04T01:49:08.731791+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:12.967683+00:00'
+            mapped_at: '2025-12-04T01:49:08.731793+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "CredUI.DLL Loaded By Uncommon Process",
+    "comment": "Detects loading of \"credui.dll\" and related DLLs by an uncommon process. Attackers might leverage this DLL for potential use of \"CredUIPromptForCredentials\" or \"CredUnPackAuthenticationBufferW\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "image_load",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((endswith(lower(module.file.path), lower('\\\\credui.dll')) OR endswith(lower(module.file.path), lower('\\\\wincredui.dll'))) AND (lower(LOWER(process.file.name)) in ('credui\\.dll', 'wincredui\\.dll')) AND NOT (startswith(lower(process.name), lower('c:\\\\program files (x86)\\\\')) OR startswith(lower(process.name), lower('c:\\\\program files\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\system32\\\\')) OR startswith(lower(process.name), lower('c:\\\\windows\\\\syswow64\\\\')) OR lower(LOWER(process.name)) in ('c:\\\\windows\\\\explorer\\.exe', 'c:\\\\windows\\\\immersivecontrolpanel\\\\systemsettings\\.exe', 'c:\\\\windows\\\\regedit\\.exe')) AND NOT (endswith(lower(process.name), lower('\\\\opera_autoupdate.exe')) OR endswith(lower(process.name), lower('\\\\procexp64.exe')) OR endswith(lower(process.name), lower('\\\\procexp.exe')) OR startswith(lower(process.name), lower('c:\\\\users\\\\')) AND contains(lower(process.name), lower('\\\\appdata\\\\local\\\\microsoft\\\\teams\\\\')) AND endswith(lower(process.name), lower('\\\\teams.exe')) OR startswith(lower(process.name), lower('c:\\\\users\\\\')) AND contains(lower(process.name), lower('\\\\appdata\\\\local\\\\microsoft\\\\onedrive\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects loading of \"credui.dll\" and related DLLs by an uncommon process. Attackers might leverage this DLL for potential use of \"CredUIPromptForCredentials\" or \"CredUnPackAuthenticationBufferW\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Other legitimate processes loading those DLLs in your environment. References: https://securitydatasets.com/notebooks/atomic/windows/credential_access/SDWIN-201020013208.html, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.002/T1056.002.md#atomic-test-2---powershell---prompt-user-for-password, https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creduipromptforcredentialsa, https://github.com/S12cybersecurity/RDPCredentialStealer",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1056",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

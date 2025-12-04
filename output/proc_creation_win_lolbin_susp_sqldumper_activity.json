@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Dumping Process via Sqldumper.exe",
+    "comment": "Detects process dump via legitimate sqldumper.exe binary",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sqldumper.exe')) AND (contains(lower(process.cmd_line), lower('0x0110')) OR contains(lower(process.cmd_line), lower('0x01100:40'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects process dump via legitimate sqldumper.exe binary",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate MSSQL Server actions References: https://twitter.com/countuponsec/status/910977826853068800, https://twitter.com/countuponsec/status/910969424215232518, https://lolbas-project.github.io/lolbas/OtherMSBinaries/Sqldumper/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

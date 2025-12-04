@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious X509Enrollment - Ps Script",
+    "comment": "Detect use of X509Enrollment",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(script.script_content.value), lower('x509enrollment.cbinaryconverter')) OR contains(lower(script.script_content.value), lower('884e2002-217d-11da-b2a4-000e7bbb2b09')))"
+      }
+    },
+    "output": {
+      "summary": "Detect use of X509Enrollment",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrative script References: https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=42, https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=41, https://learn.microsoft.com/en-us/dotnet/api/microsoft.hpc.scheduler.store.cx509enrollmentwebclassfactoryclass?view=hpc-sdk-5.1.6115",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1553",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

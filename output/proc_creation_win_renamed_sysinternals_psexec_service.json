@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Renamed PsExec Service Execution",
+    "comment": "Detects suspicious launch of a renamed version of the PSEXESVC service with, which is not often used by legitimate administrators",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.file.name) = lower('psexesvc.exe') AND NOT lower(process.name) = lower('c:\\\\windows\\\\psexesvc.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious launch of a renamed version of the PSEXESVC service with, which is not often used by legitimate administrators",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate administrative tasks References: https://learn.microsoft.com/en-us/sysinternals/downloads/psexec, https://www.youtube.com/watch?v=ro2QuZTIMBM",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

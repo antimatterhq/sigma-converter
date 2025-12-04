@@ -1,22 +1,21 @@
-id: 258fc8ce-8352-443a-9120-8a11e4857fa5
 title: Potential Arbitrary Command Execution Using Msdt.EXE
+id: 258fc8ce-8352-443a-9120-8a11e4857fa5
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects processes leveraging the "ms-msdt" handler or the "msdt.exe"
     binary to execute arbitrary commands as seen in the follina (CVE-2022-30190) vulnerability
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-05-29'
-modified: '2024-03-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1202
 references:
     - https://twitter.com/nao_sec/status/1530196847679401984
     - https://app.any.run/tasks/713f05d2-fe78-4b9d-a744-f7c133e3fafb/
     - https://twitter.com/_JohnHammond/status/1531672601067675648
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+date: '2022-05-29'
+modified: '2024-03-13'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:17.352513+00:00'
+            mapped_at: '2025-12-04T01:40:54.041414+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:17.352513+00:00'
+            mapped_at: '2025-12-04T01:40:54.041414+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:17.352532+00:00'
+            mapped_at: '2025-12-04T01:40:54.041442+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:17.352535+00:00'
+            mapped_at: '2025-12-04T01:40:54.041444+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:17.352537+00:00'
+            mapped_at: '2025-12-04T01:40:54.041446+00:00'

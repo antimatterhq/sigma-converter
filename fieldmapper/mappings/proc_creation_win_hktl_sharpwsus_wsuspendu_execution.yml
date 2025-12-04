@@ -1,7 +1,8 @@
-id: b0ce780f-10bd-496d-9067-066d23dc3aa5
 title: HackTool - SharpWSUS/WSUSpendu Execution
+id: b0ce780f-10bd-496d-9067-066d23dc3aa5
 status: experimental
 level: high
+author: '@Kostastsale, Nasreddine Bencherchali (Nextron Systems)'
 description: 'Detects the execution of SharpWSUS or WSUSpendu, utilities that allow
     for lateral movement through WSUS.
 
@@ -10,20 +11,18 @@ description: 'Detects the execution of SharpWSUS or WSUSpendu, utilities that al
     networking limitations.
 
     '
-author: '@Kostastsale, Nasreddine Bencherchali (Nextron Systems)'
-date: '2022-10-07'
-modified: '2024-08-23'
-tags:
-    - attack.execution
-    - attack.lateral-movement
-    - attack.t1210
 references:
     - https://labs.nettitude.com/blog/introducing-sharpwsus/
     - https://github.com/nettitude/SharpWSUS
     - https://web.archive.org/web/20210512154016/https://github.com/AlsidOfficial/WSUSpendu/blob/master/WSUSpendu.ps1
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.lateral-movement
+    - attack.t1210
+date: '2022-10-07'
+modified: '2024-08-23'
 logsource:
     category: process_creation
     product: windows
@@ -54,13 +53,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:25.142106+00:00'
+            mapped_at: '2025-12-04T01:44:21.243718+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:25.142106+00:00'
+            mapped_at: '2025-12-04T01:44:21.243718+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:25.142124+00:00'
+            mapped_at: '2025-12-04T01:44:21.243757+00:00'

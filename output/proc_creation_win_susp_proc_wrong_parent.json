@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Windows Processes Suspicious Parent Directory",
+    "comment": "Detect suspicious parent processes of well-known Windows processes",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\svchost.exe')) OR endswith(lower(process.name), lower('\\\\taskhost.exe')) OR endswith(lower(process.name), lower('\\\\lsm.exe')) OR endswith(lower(process.name), lower('\\\\lsass.exe')) OR endswith(lower(process.name), lower('\\\\services.exe')) OR endswith(lower(process.name), lower('\\\\lsaiso.exe')) OR endswith(lower(process.name), lower('\\\\csrss.exe')) OR endswith(lower(process.name), lower('\\\\wininit.exe')) OR endswith(lower(process.name), lower('\\\\winlogon.exe'))) AND NOT ((endswith(lower(process.parent_process.name), lower('\\\\savservice.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\ngen.exe'))) AND (contains(lower(process.parent_process.name), lower('\\\\system32\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\syswow64\\\\'))) OR (contains(lower(process.parent_process.name), lower('\\\\windows defender\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\microsoft security client\\\\'))) AND endswith(lower(process.parent_process.name), lower('\\\\msmpeng.exe')) OR process.parent_process.name is null AND lower(process.parent_process.name) = lower('-')))"
+      }
+    },
+    "output": {
+      "summary": "Detect suspicious parent processes of well-known Windows processes",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some security products seem to spawn these References: https://web.archive.org/web/20180718061628/https://securitybytes.io/blue-team-fundamentals-part-two-windows-processes-759fe15965e2, https://www.carbonblack.com/2014/06/10/screenshot-demo-hunt-evil-faster-than-ever-with-carbon-black/, https://www.13cubed.com/downloads/windows_process_genealogy_v2.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

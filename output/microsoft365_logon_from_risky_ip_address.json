@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Logon from a Risky IP Address",
+    "comment": "Detects when a Microsoft Cloud App Security reported when a user signs into your sanctioned apps from a risky IP address.",
+    "annotations": {
+      "source": "sigma",
+      "product": "m365",
+      "service": "threat_management",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(metadata.product.name) = lower('securitycompliancecenter') AND lower(metadata.event_code) = lower('log on from a risky ip address') AND lower(actor.authorizations.decision) = lower('success'))"
+      }
+    },
+    "output": {
+      "summary": "Detects when a Microsoft Cloud App Security reported when a user signs into your sanctioned apps from a risky IP address.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy, https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1078"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

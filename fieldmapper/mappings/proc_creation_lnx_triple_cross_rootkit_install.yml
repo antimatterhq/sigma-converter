@@ -1,19 +1,18 @@
-id: 22236d75-d5a0-4287-bf06-c93b1770860f
 title: Triple Cross eBPF Rootkit Install Commands
+id: 22236d75-d5a0-4287-bf06-c93b1770860f
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects default install commands of the Triple Cross eBPF rootkit based
     on the "deployer.sh" script
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1014
 references:
     - https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/apps/deployer.sh
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1014
+date: '2022-07-05'
 logsource:
     category: process_creation
     product: linux
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:46.325927+00:00'
+            mapped_at: '2025-12-04T01:36:53.851055+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:46.325927+00:00'
+            mapped_at: '2025-12-04T01:36:53.851055+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:46.325945+00:00'
+            mapped_at: '2025-12-04T01:36:53.851069+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:46.325948+00:00'
+            mapped_at: '2025-12-04T01:36:53.851072+00:00'

@@ -1,21 +1,18 @@
-id: 07e3cb2c-0608-410d-be4b-1511cb1a0448
 title: Tamper Windows Defender Remove-MpPreference
+id: 07e3cb2c-0608-410d-be4b-1511cb1a0448
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects attempts to remove Windows Defender configurations using the
     'MpPreference' cmdlet
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/windows-10-controlled-folder-access-event-search/ba-p/2326088
 falsepositives:
     - Legitimate PowerShell scripts
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ae2bdd58-0681-48ac-be7f-58ab4e593458''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2022-08-05'
 logsource:
     category: process_creation
     product: windows
@@ -29,6 +26,9 @@ detection:
             - '-AttackSurfaceReductionRules_Actions '
             - '-CheckForSignaturesBeforeRunningScan '
     condition: all of selection_*
+related:
+    -   id: ae2bdd58-0681-48ac-be7f-58ab4e593458
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -36,13 +36,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:52.102358+00:00'
+            mapped_at: '2025-12-04T01:43:55.427028+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:52.102358+00:00'
+            mapped_at: '2025-12-04T01:43:55.427028+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:52.102379+00:00'
+            mapped_at: '2025-12-04T01:43:55.427040+00:00'

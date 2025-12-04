@@ -1,21 +1,18 @@
-id: 9e1bef8d-0fff-46f6-8465-9aa54e128c1e
 title: Use Of Hidden Paths Or Files
+id: 9e1bef8d-0fff-46f6-8465-9aa54e128c1e
 status: test
 level: low
+author: David Burkett, @signalblur
 description: Detects calls to hidden files or files located in hidden directories
     in NIX systems.
-author: David Burkett, @signalblur
-date: '2022-12-30'
-tags:
-    - attack.defense-evasion
-    - attack.t1574.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d08722cd-3d09-449a-80b4-83ea2d9d4616''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574.001
+date: '2022-12-30'
 logsource:
     product: linux
     service: auditd
@@ -30,6 +27,9 @@ detection:
             - /.pyenv/
             - /.rustup/toolchains
     condition: selection and not filter
+related:
+    -   id: d08722cd-3d09-449a-80b4-83ea2d9d4616
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: <UNMAPPED>
@@ -37,17 +37,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:35.258664+00:00'
+            mapped_at: '2025-12-04T01:35:26.058660+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:15:35.258664+00:00'
+            mapped_at: '2025-12-04T01:35:26.058660+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:36.158723+00:00'
+            mapped_at: '2025-12-04T01:35:26.058677+00:00'
         -   source_field: name
             target_table: file_activity
             target_field: file.name
-            mapped_at: '2025-11-26T02:15:36.158736+00:00'
+            mapped_at: '2025-12-04T01:35:26.058679+00:00'

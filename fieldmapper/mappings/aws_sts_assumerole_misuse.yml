@@ -1,18 +1,10 @@
-id: 905d389b-b853-46d0-9d3d-dea0d3a3cd49
 title: AWS STS AssumeRole Misuse
+id: 905d389b-b853-46d0-9d3d-dea0d3a3cd49
 status: test
 level: low
+author: Austin Songer @austinsonger
 description: Identifies the suspicious use of AssumeRole. Attackers could move laterally
     and escalate privileges.
-author: Austin Songer @austinsonger
-date: '2021-07-24'
-modified: '2022-10-09'
-tags:
-    - attack.lateral-movement
-    - attack.privilege-escalation
-    - attack.t1548
-    - attack.t1550
-    - attack.t1550.001
 references:
     - https://github.com/elastic/detection-rules/pull/1214
     - https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
@@ -23,7 +15,14 @@ falsepositives:
     - AssumeRole from unfamiliar users or hosts should be investigated. If known behavior
         is causing false positives, it can be exempted from the rule.
     - Automated processes that uses Terraform may lead to false positives.
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.privilege-escalation
+    - attack.t1548
+    - attack.t1550
+    - attack.t1550.001
+date: '2021-07-24'
+modified: '2022-10-09'
 logsource:
     product: aws
     service: cloudtrail
@@ -39,17 +38,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:38.414992+00:00'
+            mapped_at: '2025-12-04T01:39:20.762775+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:38.414992+00:00'
+            mapped_at: '2025-12-04T01:39:20.762775+00:00'
     detection_fields:
         -   source_field: userIdentity.type
             target_table: user_access
             target_field: actor.user.type
-            mapped_at: '2025-11-26T02:22:40.062318+00:00'
+            mapped_at: '2025-12-04T01:39:20.762788+00:00'
         -   source_field: userIdentity.sessionContext.sessionIssuer.type
             target_table: user_access
             target_field: actor.process.session.issuer
-            mapped_at: '2025-11-26T02:22:40.062325+00:00'
+            mapped_at: '2025-12-04T01:39:20.762790+00:00'

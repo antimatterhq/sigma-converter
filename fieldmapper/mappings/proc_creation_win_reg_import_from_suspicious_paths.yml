@@ -1,22 +1,19 @@
-id: 62e0298b-e994-4189-bc87-bc699aa62d97
 title: Potential Suspicious Registry File Imported Via Reg.EXE
+id: 62e0298b-e994-4189-bc87-bc699aa62d97
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali
 description: Detects the import of '.reg' files from suspicious paths using the 'reg.exe'
     utility
-author: frack113, Nasreddine Bencherchali
-date: '2022-08-01'
-modified: '2023-02-05'
-tags:
-    - attack.t1112
-    - attack.defense-evasion
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/reg-import
 falsepositives:
     - Legitimate import of keys
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''73bba97f-a82d-42ce-b315-9182e76c57b1''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.t1112
+    - attack.defense-evasion
+date: '2022-08-01'
+modified: '2023-02-05'
 logsource:
     category: process_creation
     product: windows
@@ -36,6 +33,9 @@ detection:
             - C:\Windows\Temp\
             - C:\ProgramData\
     condition: all of selection_*
+related:
+    -   id: 73bba97f-a82d-42ce-b315-9182e76c57b1
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -43,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:34.310795+00:00'
+            mapped_at: '2025-12-04T01:49:28.391856+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:34.310795+00:00'
+            mapped_at: '2025-12-04T01:49:28.391856+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:34.310816+00:00'
+            mapped_at: '2025-12-04T01:49:28.391894+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:34.310820+00:00'
+            mapped_at: '2025-12-04T01:49:28.391896+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:34.310822+00:00'
+            mapped_at: '2025-12-04T01:49:28.391898+00:00'

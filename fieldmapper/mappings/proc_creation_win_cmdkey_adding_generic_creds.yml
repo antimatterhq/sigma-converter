@@ -1,24 +1,23 @@
-id: b1ec66c6-f4d1-4b5c-96dd-af28ccae7727
 title: New Generic Credentials Added Via Cmdkey.EXE
+id: b1ec66c6-f4d1-4b5c-96dd-af28ccae7727
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects usage of "cmdkey.exe" to add generic credentials.
 
     As an example, this can be used before connecting to an RDP session via command
     line interface.
 
     '
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-03'
-modified: '2024-03-05'
-tags:
-    - attack.credential-access
-    - attack.t1003.005
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md#t1021001---remote-desktop-protocol
 falsepositives:
     - Legitimate usage for administration purposes
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.005
+date: '2023-02-03'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:12.883147+00:00'
+            mapped_at: '2025-12-04T01:44:10.387681+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:12.883147+00:00'
+            mapped_at: '2025-12-04T01:44:10.387681+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:12.883166+00:00'
+            mapped_at: '2025-12-04T01:44:10.387696+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:12.883169+00:00'
+            mapped_at: '2025-12-04T01:44:10.387706+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:12.883171+00:00'
+            mapped_at: '2025-12-04T01:44:10.387707+00:00'

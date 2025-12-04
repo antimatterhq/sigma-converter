@@ -1,21 +1,18 @@
-id: 29f171d7-aa47-42c7-9c7b-3c87938164d9
 title: DNS Query for Anonfiles.com Domain - DNS Client
+id: 29f171d7-aa47-42c7-9c7b-3c87938164d9
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects DNS queries for anonfiles.com, which is an anonymous file upload
     platform often used for malicious purposes
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-16'
-tags:
-    - attack.exfiltration
-    - attack.t1567.002
 references:
     - https://www.trendmicro.com/vinfo/us/security/news/ransomware-spotlight/ransomware-spotlight-blackbyte
 falsepositives:
     - Rare legitimate access to anonfiles.com
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''065cceea-77ec-4030-9052-fc0affea7110''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+date: '2023-01-16'
 logsource:
     product: windows
     service: dns-client
@@ -26,6 +23,9 @@ detection:
         EventID: 3008
         QueryName|contains: .anonfiles.com
     condition: selection
+related:
+    -   id: 065cceea-77ec-4030-9052-fc0affea7110
+        type: similar
 ocsf_mapping:
     class_name: dns_activity
     activity_id: 1
@@ -33,17 +33,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:18.959406+00:00'
+            mapped_at: '2025-12-04T01:56:36.141956+00:00'
         service:
             source_field: service
             source_value: dns-client
-            mapped_at: '2025-11-26T02:47:18.959406+00:00'
+            mapped_at: '2025-12-04T01:56:36.141956+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: dns_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:18.959432+00:00'
+            mapped_at: '2025-12-04T01:56:36.141970+00:00'
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:47:18.959436+00:00'
+            mapped_at: '2025-12-04T01:56:36.141972+00:00'

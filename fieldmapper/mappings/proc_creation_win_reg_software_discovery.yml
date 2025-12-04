@@ -1,24 +1,21 @@
-id: e13f668e-7f95-443d-98d2-1816a7648a7b
 title: Detected Windows Software Discovery
+id: e13f668e-7f95-443d-98d2-1816a7648a7b
 status: test
 level: medium
+author: Nikita Nazarov, oscd.community
 description: Adversaries may attempt to enumerate software for a variety of reasons,
     such as figuring out what security measures are present or if the compromised
     system has a version of software that is vulnerable.
-author: Nikita Nazarov, oscd.community
-date: '2020-10-16'
-modified: '2022-10-09'
-tags:
-    - attack.discovery
-    - attack.t1518
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518/T1518.md
     - https://github.com/harleyQu1nn/AggressorScripts
 falsepositives:
     - Legitimate administration activities
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''2650dd1a-eb2a-412d-ac36-83f06c4f2282''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1518
+date: '2020-10-16'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +28,9 @@ detection:
             - /v
             - svcversion
     condition: selection
+related:
+    -   id: 2650dd1a-eb2a-412d-ac36-83f06c4f2282
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:46.467639+00:00'
+            mapped_at: '2025-12-04T01:47:11.045688+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:46.467639+00:00'
+            mapped_at: '2025-12-04T01:47:11.045688+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:46.467671+00:00'
+            mapped_at: '2025-12-04T01:47:11.045706+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:46.467675+00:00'
+            mapped_at: '2025-12-04T01:47:11.045708+00:00'

@@ -1,21 +1,20 @@
-id: 0b0ea3cc-99c8-4730-9c53-45deee2a4c86
 title: Microsoft Defender Blocked from Loading Unsigned DLL
+id: 0b0ea3cc-99c8-4730-9c53-45deee2a4c86
 status: test
 level: high
+author: Bhabesh Raj
 description: Detects Code Integrity (CI) engine blocking Microsoft Defender's processes
     (MpCmdRun and NisSrv) from loading unsigned DLLs which may be an attempt to sideload
     arbitrary DLL
-author: Bhabesh Raj
-date: '2022-08-02'
-modified: '2022-09-28'
-tags:
-    - attack.defense-evasion
-    - attack.t1574.002
 references:
     - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1574.002
+date: '2022-08-02'
+modified: '2022-09-28'
 logsource:
     product: windows
     service: security-mitigations
@@ -35,17 +34,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:52.170166+00:00'
+            mapped_at: '2025-12-04T01:56:26.565352+00:00'
         service:
             source_field: service
             source_value: security-mitigations
-            mapped_at: '2025-11-26T02:46:52.170166+00:00'
+            mapped_at: '2025-12-04T01:56:26.565352+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:52.956297+00:00'
+            mapped_at: '2025-12-04T01:56:26.565377+00:00'
         -   source_field: ProcessPath
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:46:52.956320+00:00'
+            mapped_at: '2025-12-04T01:56:26.565381+00:00'

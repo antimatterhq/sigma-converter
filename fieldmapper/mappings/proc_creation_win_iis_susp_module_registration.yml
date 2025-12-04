@@ -1,20 +1,19 @@
-id: 043c4b8b-3a54-4780-9682-081cb6b8185c
 title: Suspicious IIS Module Registration
+id: 043c4b8b-3a54-4780-9682-081cb6b8185c
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Microsoft (idea)
 description: Detects a suspicious IIS module registration as described in Microsoft
     threat report on IIS backdoors
-author: Florian Roth (Nextron Systems), Microsoft (idea)
-date: '2022-08-04'
-modified: '2023-01-23'
-tags:
-    - attack.persistence
-    - attack.t1505.004
 references:
     - https://www.microsoft.com/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/
 falsepositives:
     - Administrative activity
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1505.004
+date: '2022-08-04'
+modified: '2023-01-23'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:58.893575+00:00'
+            mapped_at: '2025-12-04T01:45:35.809849+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:58.893575+00:00'
+            mapped_at: '2025-12-04T01:45:35.809849+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:58.893600+00:00'
+            mapped_at: '2025-12-04T01:45:35.809863+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:58.893603+00:00'
+            mapped_at: '2025-12-04T01:45:35.809872+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:58.893604+00:00'
+            mapped_at: '2025-12-04T01:45:35.809873+00:00'

@@ -1,22 +1,21 @@
-id: 123e4e6d-b123-48f8-b261-7214938acaf0
 title: Startup/Logon Script Added to Group Policy Object
+id: 123e4e6d-b123-48f8-b261-7214938acaf0
 status: experimental
 level: medium
+author: Elastic, Josh Nickels, Marius Rothenbücher
 description: 'Detects the modification of Group Policy Objects (GPO) to add a startup/logon
     script to users or computer objects.
 
     '
-author: Elastic, Josh Nickels, Marius Rothenbücher
-date: '2024-09-06'
-tags:
-    - attack.privilege-escalation
-    - attack.t1484.001
-    - attack.t1547
 references:
     - https://www.elastic.co/guide/en/security/current/startup-logon-script-added-to-group-policy-object.html
 falsepositives:
     - Legitimate execution by system administrators.
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1484.001
+    - attack.t1547
+date: '2024-09-06'
 logsource:
     product: windows
     service: security
@@ -45,38 +44,38 @@ detection:
     condition: selection_eventid and (all of selection_attributes_* or selection_share)
 ocsf_mapping:
     class_name: scheduled_job_activity
-    activity_id: 2
+    activity_id: 3
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:43.089400+00:00'
+            mapped_at: '2025-12-04T01:55:59.889278+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:43.089400+00:00'
+            mapped_at: '2025-12-04T01:55:59.889278+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:43.089421+00:00'
+            mapped_at: '2025-12-04T01:55:59.889309+00:00'
         -   source_field: AttributeLDAPDisplayName
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:43.089424+00:00'
+            mapped_at: '2025-12-04T01:55:59.889313+00:00'
         -   source_field: AttributeValue
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:43.089427+00:00'
+            mapped_at: '2025-12-04T01:55:59.889316+00:00'
         -   source_field: ShareName
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:43.089429+00:00'
+            mapped_at: '2025-12-04T01:55:59.889319+00:00'
         -   source_field: RelativeTargetName
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:43.089431+00:00'
+            mapped_at: '2025-12-04T01:55:59.889321+00:00'
         -   source_field: AccessList
             target_table: scheduled_job_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:43.089433+00:00'
+            mapped_at: '2025-12-04T01:55:59.889324+00:00'

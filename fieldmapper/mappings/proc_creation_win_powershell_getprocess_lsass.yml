@@ -1,20 +1,19 @@
-id: b2815d0d-7481-4bf0-9b6c-a4c48a94b349
 title: PowerShell Get-Process LSASS
+id: b2815d0d-7481-4bf0-9b6c-a4c48a94b349
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects a "Get-Process" cmdlet and it's aliases on lsass process, which
     is in almost all cases a sign of malicious activity
-author: Florian Roth (Nextron Systems)
-date: '2021-04-23'
-modified: '2023-01-05'
-tags:
-    - attack.credential-access
-    - attack.t1552.004
 references:
     - https://web.archive.org/web/20220205033028/https://twitter.com/PythonResponder/status/1385064506049630211
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1552.004
+date: '2021-04-23'
+modified: '2023-01-05'
 logsource:
     category: process_creation
     product: windows
@@ -32,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:07.799274+00:00'
+            mapped_at: '2025-12-04T01:50:51.444807+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:07.799274+00:00'
+            mapped_at: '2025-12-04T01:50:51.444807+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:07.799290+00:00'
+            mapped_at: '2025-12-04T01:50:51.444825+00:00'

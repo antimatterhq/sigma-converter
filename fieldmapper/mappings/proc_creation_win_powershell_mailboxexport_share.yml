@@ -1,14 +1,10 @@
-id: 889719ef-dd62-43df-86c3-768fb08dc7c0
 title: Suspicious PowerShell Mailbox Export to Share
+id: 889719ef-dd62-43df-86c3-768fb08dc7c0
 status: test
 level: critical
+author: Florian Roth (Nextron Systems)
 description: Detects usage of the powerShell New-MailboxExportRequest Cmdlet to exports
     a mailbox to a remote or local share, as used in ProxyShell exploitations
-author: Florian Roth (Nextron Systems)
-date: '2021-08-07'
-modified: '2022-10-26'
-tags:
-    - attack.exfiltration
 references:
     - https://youtu.be/5mqid-7zp8k?t=2481
     - https://blog.orange.tw/2021/08/proxylogon-a-new-attack-surface-on-ms-exchange-part-1.html
@@ -19,7 +15,10 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+date: '2021-08-07'
+modified: '2022-10-26'
 logsource:
     category: process_creation
     product: windows
@@ -37,13 +36,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:26.570047+00:00'
+            mapped_at: '2025-12-04T01:45:57.462998+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:26.570047+00:00'
+            mapped_at: '2025-12-04T01:45:57.462998+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:26.570069+00:00'
+            mapped_at: '2025-12-04T01:45:57.463011+00:00'

@@ -1,19 +1,18 @@
-id: 8ad1600d-e9dc-4251-b0ee-a65268f29add
 title: AWS Root Credentials
+id: 8ad1600d-e9dc-4251-b0ee-a65268f29add
 status: test
 level: medium
-description: Detects AWS root account usage
 author: vitaliy0x1
-date: '2020-01-21'
-modified: '2022-10-09'
-tags:
-    - attack.privilege-escalation
-    - attack.t1078.004
+description: Detects AWS root account usage
 references:
     - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html
 falsepositives:
     - AWS Tasks That Require AWS Account Root User Credentials https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1078.004
+date: '2020-01-21'
+modified: '2022-10-09'
 logsource:
     product: aws
     service: cloudtrail
@@ -30,17 +29,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:53.562400+00:00'
+            mapped_at: '2025-12-04T01:39:26.639145+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:53.562400+00:00'
+            mapped_at: '2025-12-04T01:39:26.639145+00:00'
     detection_fields:
         -   source_field: userIdentity.type
             target_table: authentication
             target_field: actor.user.type
-            mapped_at: '2025-11-26T02:22:54.481055+00:00'
+            mapped_at: '2025-12-04T01:39:26.639168+00:00'
         -   source_field: eventType
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:54.481064+00:00'
+            mapped_at: '2025-12-04T01:39:26.639170+00:00'

@@ -1,27 +1,24 @@
-id: 517490a7-115a-48c6-8862-1a481504d5a8
 title: Potential Shim Database Persistence via Sdbinst.EXE
+id: 517490a7-115a-48c6-8862-1a481504d5a8
 status: test
 level: medium
+author: Markus Neis
 description: 'Detects installation of a new shim using sdbinst.exe.
 
     Adversaries may establish persistence and/or elevate privileges by executing malicious
     content triggered by application shims
 
     '
-author: Markus Neis
-date: '2019-01-16'
-modified: '2023-12-06'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.t1546.011
 references:
     - https://www.mandiant.com/resources/blog/fin7-shim-databases-persistence
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''18ee686c-38a3-4f65-9f44-48a077141f42''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1546.011
+date: '2019-01-16'
+modified: '2023-12-06'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
             - :\Program Files (x86)\IIS Express\iisexpressshim.sdb
             - :\Program Files\IIS Express\iisexpressshim.sdb
     condition: all of selection_* and not 1 of filter_optional_*
+related:
+    -   id: 18ee686c-38a3-4f65-9f44-48a077141f42
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,25 +44,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:24.136346+00:00'
+            mapped_at: '2025-12-04T01:43:34.815598+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:24.136346+00:00'
+            mapped_at: '2025-12-04T01:43:34.815598+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:24.136361+00:00'
+            mapped_at: '2025-12-04T01:43:34.815612+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:24.136363+00:00'
+            mapped_at: '2025-12-04T01:43:34.815614+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:24.136364+00:00'
+            mapped_at: '2025-12-04T01:43:34.815615+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:24.136365+00:00'
+            mapped_at: '2025-12-04T01:43:34.815616+00:00'

@@ -1,7 +1,8 @@
-id: e83e8899-c9b2-483b-b355-5decc942b959
 title: Interesting Service Enumeration Via Sc.EXE
+id: e83e8899-c9b2-483b-b355-5decc942b959
 status: test
 level: low
+author: Swachchhanda Shrawan Poudel
 description: 'Detects the enumeration and query of interesting and in some cases sensitive
     services on the system via "sc.exe".
 
@@ -9,16 +10,14 @@ description: 'Detects the enumeration and query of interesting and in some cases
     order to find different attack vectors.
 
     '
-author: Swachchhanda Shrawan Poudel
-date: '2024-02-12'
-tags:
-    - attack.t1003
 references:
     - https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
     - https://pentestlab.blog/tag/svchost/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.t1003
+date: '2024-02-12'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:11.225597+00:00'
+            mapped_at: '2025-12-04T01:49:54.177258+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:11.225597+00:00'
+            mapped_at: '2025-12-04T01:49:54.177258+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:11.225633+00:00'
+            mapped_at: '2025-12-04T01:49:54.177283+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:11.225637+00:00'
+            mapped_at: '2025-12-04T01:49:54.177288+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:11.225640+00:00'
+            mapped_at: '2025-12-04T01:49:54.177290+00:00'

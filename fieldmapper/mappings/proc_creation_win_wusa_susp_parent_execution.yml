@@ -1,7 +1,8 @@
-id: ef64fc9c-a45e-43cc-8fd8-7d75d73b4c99
 title: Wusa.EXE Executed By Parent Process Located In Suspicious Location
+id: ef64fc9c-a45e-43cc-8fd8-7d75d73b4c99
 status: experimental
 level: high
+author: X__Junior (Nextron Systems)
 description: 'Detects execution of the "wusa.exe" (Windows Update Standalone Installer)
     utility by a parent process that is located in a suspicious location.
 
@@ -10,16 +11,14 @@ description: 'Detects execution of the "wusa.exe" (Windows Update Standalone Ins
     gain elevated privileges.
 
     '
-author: X__Junior (Nextron Systems)
-date: '2023-11-26'
-modified: '2024-08-15'
-tags:
-    - attack.execution
 references:
     - https://www.fortinet.com/blog/threat-research/konni-campaign-distributed-via-malicious-document
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-11-26'
+modified: '2024-08-15'
 logsource:
     category: process_creation
     product: windows
@@ -53,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:23.545039+00:00'
+            mapped_at: '2025-12-04T01:43:34.453592+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:23.545039+00:00'
+            mapped_at: '2025-12-04T01:43:34.453592+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:23.545053+00:00'
+            mapped_at: '2025-12-04T01:43:34.453605+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:23.545055+00:00'
+            mapped_at: '2025-12-04T01:43:34.453607+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:23.545056+00:00'
+            mapped_at: '2025-12-04T01:43:34.453609+00:00'

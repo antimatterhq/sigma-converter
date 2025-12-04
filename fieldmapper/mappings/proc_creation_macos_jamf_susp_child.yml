@@ -1,13 +1,10 @@
-id: 2316929c-01aa-438c-970f-099145ab1ee6
 title: JAMF MDM Potential Suspicious Child Process
+id: 2316929c-01aa-438c-970f-099145ab1ee6
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects potential suspicious child processes of "jamf". Could be a sign
     of potential abuse of Jamf as a C2 server as seen by Typhon MythicAgent.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-08-22'
-tags:
-    - attack.execution
 references:
     - https://github.com/MythicAgents/typhon/
     - https://www.zoocoup.org/casper/jamf_cheatsheet.pdf
@@ -15,7 +12,9 @@ references:
 falsepositives:
     - Legitimate execution of custom scripts or commands by Jamf administrators. Apply
         additional filters accordingly
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-08-22'
 logsource:
     category: process_creation
     product: macos
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:35.689755+00:00'
+            mapped_at: '2025-12-04T01:34:32.023245+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:35.689755+00:00'
+            mapped_at: '2025-12-04T01:34:32.023245+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:13:35.689808+00:00'
+            mapped_at: '2025-12-04T01:34:32.023274+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:35.689812+00:00'
+            mapped_at: '2025-12-04T01:34:32.023277+00:00'

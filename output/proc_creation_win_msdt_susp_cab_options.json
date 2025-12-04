@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Cabinet File Execution Via Msdt.EXE",
+    "comment": "Detects execution of msdt.exe using the \"cab\" flag which could indicates suspicious diagcab files with embedded answer files leveraging CVE-2022-30190",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\msdt.exe')) AND lower(process.file.name) = lower('msdt.exe') AND (contains(lower(process.cmd_line), lower(' -cab ')) OR contains(lower(process.cmd_line), lower(' /cab ')) OR contains(lower(process.cmd_line), lower(' \u2013cab ')) OR contains(lower(process.cmd_line), lower(' \u2014cab ')) OR contains(lower(process.cmd_line), lower(' \u2015cab '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of msdt.exe using the \"cab\" flag which could indicates suspicious diagcab files with embedded answer files leveraging CVE-2022-30190",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of \".diagcab\" files References: https://twitter.com/nas_bench/status/1537896324837781506, https://github.com/GossiTheDog/ThreatHunting/blob/e85884abbf05d5b41efc809ea6532b10b45bd05c/AdvancedHuntingQueries/DogWalk-DiagCab, https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-9015912909545e72ed42cbac4d1e96295e8964579c406d23fd9c47a8091576a0, https://irsl.medium.com/the-trouble-with-microsofts-troubleshooters-6e32fc80b8bd",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1202"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

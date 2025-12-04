@@ -1,23 +1,20 @@
-id: ec19ebab-72dc-40e1-9728-4c0b805d722c
 title: Tamper Windows Defender - PSClassic
+id: ec19ebab-72dc-40e1-9728-4c0b805d722c
 status: test
 level: high
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: Attempting to disable scheduled scanning and other parts of Windows Defender
     ATP or set default actions to allow.
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2021-06-07'
-modified: '2024-01-02'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
 falsepositives:
     - Legitimate PowerShell scripts that disable Windows Defender for troubleshooting
         purposes. Must be investigated.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''14c71865-6cd3-44ae-adaa-1db923fae5f2''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2021-06-07'
+modified: '2024-01-02'
 logsource:
     category: ps_classic_provider_start
     product: windows
@@ -81,6 +78,9 @@ detection:
             - SevereThreatDefaultAction Allow
             - stdefac Allow
     condition: selection_set_mppreference and 1 of selection_options_*
+related:
+    -   id: 14c71865-6cd3-44ae-adaa-1db923fae5f2
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

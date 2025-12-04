@@ -1,17 +1,16 @@
-id: 2111118f-7e46-4fc8-974a-59fd8ec95196
 title: DiagTrackEoP Default Login Username
+id: 2111118f-7e46-4fc8-974a-59fd8ec95196
 status: test
 level: critical
-description: Detects the default "UserName" used by the DiagTrackEoP POC
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-03'
-tags:
-    - attack.privilege-escalation
+description: Detects the default "UserName" used by the DiagTrackEoP POC
 references:
     - https://github.com/Wh04m1001/DiagTrackEoP/blob/3a2fc99c9700623eb7dc7d4b5f314fd9ce5ef51f/main.cpp#L46
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+date: '2022-08-03'
 logsource:
     product: windows
     service: security
@@ -23,26 +22,26 @@ detection:
     condition: selection
 ocsf_mapping:
     class_name: authentication
-    activity_id: <UNMAPPED>
+    activity_id: 1
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:33.180930+00:00'
+            mapped_at: '2025-12-04T01:56:47.178767+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:47:33.180930+00:00'
+            mapped_at: '2025-12-04T01:56:47.178767+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:34.036134+00:00'
+            mapped_at: '2025-12-04T01:56:47.178782+00:00'
         -   source_field: LogonType
             target_table: authentication
             target_field: logon_type
-            mapped_at: '2025-11-26T02:47:34.036154+00:00'
+            mapped_at: '2025-12-04T01:56:47.178784+00:00'
         -   source_field: TargetOutboundUserName
             target_table: authentication
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:47:34.036156+00:00'
+            mapped_at: '2025-12-04T01:56:47.178912+00:00'

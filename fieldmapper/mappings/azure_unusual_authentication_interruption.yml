@@ -1,19 +1,18 @@
-id: 8366030e-7216-476b-9927-271d79f13cf3
 title: Azure Unusual Authentication Interruption
+id: 8366030e-7216-476b-9927-271d79f13cf3
 status: test
 level: medium
-description: Detects when there is a interruption in the authentication process.
 author: Austin Songer @austinsonger
-date: '2021-11-26'
-modified: '2022-12-18'
-tags:
-    - attack.initial-access
-    - attack.t1078
+description: Detects when there is a interruption in the authentication process.
 references:
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1078
+date: '2021-11-26'
+modified: '2022-12-18'
 logsource:
     product: azure
     service: signinlogs
@@ -36,17 +35,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:20:36.298284+00:00'
+            mapped_at: '2025-12-04T01:38:11.011943+00:00'
         service:
             source_field: service
             source_value: signinlogs
-            mapped_at: '2025-11-26T02:20:36.298284+00:00'
+            mapped_at: '2025-12-04T01:38:11.011943+00:00'
     detection_fields:
         -   source_field: ResultType
             target_table: authentication
             target_field: status_id
-            mapped_at: '2025-11-26T02:20:36.298316+00:00'
+            mapped_at: '2025-12-04T01:38:11.011958+00:00'
         -   source_field: ResultDescription
             target_table: authentication
             target_field: status_detail
-            mapped_at: '2025-11-26T02:20:36.298319+00:00'
+            mapped_at: '2025-12-04T01:38:11.011960+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious EventLog Recon Activity Using Log Query Utilities",
+    "comment": "Detects execution of different log query utilities and commands to search and dump the content of specific event logs or look for specific event IDs. This technique is used by threat actors in order to extract sensitive information from events logs such as usernames, IP addresses, hostnames, etc.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('microsoft-windows-powershell')) OR contains(lower(process.cmd_line), lower('microsoft-windows-security-auditing')) OR contains(lower(process.cmd_line), lower('microsoft-windows-terminalservices-localsessionmanager')) OR contains(lower(process.cmd_line), lower('microsoft-windows-terminalservices-remoteconnectionmanager')) OR contains(lower(process.cmd_line), lower('microsoft-windows-windows defender')) OR contains(lower(process.cmd_line), lower('powershellcore')) OR contains(lower(process.cmd_line), lower('security')) OR contains(lower(process.cmd_line), lower('windows powershell')) OR lower(process.cmd_line) regexp '.*-instanceid 462..*' OR lower(process.cmd_line) regexp '.*\\.eventid -eq 462..*' OR lower(process.cmd_line) regexp '.*eventcode=.462..*' OR lower(process.cmd_line) regexp '.*eventidentifier=.462..*' OR lower(process.cmd_line) regexp '.*system[eventid=462.].*' OR contains(lower(process.cmd_line), lower('-instanceid 4778')) OR contains(lower(process.cmd_line), lower('.eventid -eq 4778')) OR contains(lower(process.cmd_line), lower('system[eventid=4778]')) OR lower(process.cmd_line) regexp '.*eventcode=.4778..*' OR lower(process.cmd_line) regexp '.*eventidentifier=.4778..*' OR contains(lower(process.cmd_line), lower('-instanceid 25')) OR contains(lower(process.cmd_line), lower('.eventid -eq 25')) OR contains(lower(process.cmd_line), lower('system[eventid=25]')) OR lower(process.cmd_line) regexp '.*eventcode=.25..*' OR lower(process.cmd_line) regexp '.*eventidentifier=.25..*') AND (contains(lower(process.cmd_line), lower('select')) AND contains(lower(process.cmd_line), lower('win32_ntlogevent')) OR endswith(lower(process.name), lower('\\\\wevtutil.exe')) AND lower(process.file.name) = lower('wevtutil.exe') AND (contains(lower(process.cmd_line), lower(' qe ')) OR contains(lower(process.cmd_line), lower(' query-events '))) OR endswith(lower(process.name), lower('\\\\wmic.exe')) AND lower(process.file.name) = lower('wmic.exe') AND contains(lower(process.cmd_line), lower(' ntevent')) OR contains(lower(process.cmd_line), lower('get-winevent ')) OR contains(lower(process.cmd_line), lower('get-eventlog '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of different log query utilities and commands to search and dump the content of specific event logs or look for specific event IDs. This technique is used by threat actors in order to extract sensitive information from events logs such as usernames, IP addresses, hostnames, etc.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of the utility by administrators to query the event log References: http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html, https://thedfirreport.com/2023/10/30/netsupport-intrusion-results-in-domain-compromise/, https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-144a, https://www.group-ib.com/blog/apt41-world-tour-2021/, https://labs.withsecure.com/content/dam/labs/docs/f-secureLABS-tlp-white-lazarus-threat-intel-report2.pdf, https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/get-winevent?view=powershell-7.3, https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-eventlog?view=powershell-5.1, http://www.solomonson.com/posts/2010-07-09-reading-eventviewer-command-line/, https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1552"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

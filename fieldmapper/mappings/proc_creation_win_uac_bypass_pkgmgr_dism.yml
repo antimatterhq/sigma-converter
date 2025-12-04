@@ -1,21 +1,20 @@
-id: a743ceba-c771-4d75-97eb-8a90f7f4844c
 title: UAC Bypass Using PkgMgr and DISM
+id: a743ceba-c771-4d75-97eb-8a90f7f4844c
 status: test
 level: high
+author: Christian Burkard (Nextron Systems)
 description: Detects the pattern of UAC Bypass using pkgmgr.exe and dism.exe (UACMe
     23)
-author: Christian Burkard (Nextron Systems)
-date: '2021-08-23'
-modified: '2024-12-01'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1548.002
 references:
     - https://github.com/hfiref0x/UACME
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+date: '2021-08-23'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:23.443065+00:00'
+            mapped_at: '2025-12-04T01:45:55.330270+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:23.443065+00:00'
+            mapped_at: '2025-12-04T01:45:55.330270+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:23.443085+00:00'
+            mapped_at: '2025-12-04T01:45:55.330282+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:23.443087+00:00'
+            mapped_at: '2025-12-04T01:45:55.330283+00:00'
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:31:23.443089+00:00'
+            mapped_at: '2025-12-04T01:45:55.330285+00:00'

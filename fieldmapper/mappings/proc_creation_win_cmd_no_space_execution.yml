@@ -1,25 +1,24 @@
-id: a16980c2-0c56-4de0-9a79-17971979efdd
 title: Cmd.EXE Missing Space Characters Execution Anomaly
+id: a16980c2-0c56-4de0-9a79-17971979efdd
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects Windows command lines that miss a space before or after the
     /c flag when running a command using the cmd.exe.
 
     This could be a sign of obfuscation of a fat finger problem (typo by the developer).
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-08-23'
-modified: '2023-03-06'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://twitter.com/cyb3rops/status/1562072617552678912
     - https://ss64.com/nt/cmd.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2022-08-23'
+modified: '2023-03-06'
 logsource:
     category: process_creation
     product: windows
@@ -75,13 +74,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:14.499269+00:00'
+            mapped_at: '2025-12-04T01:43:25.875595+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:14.499269+00:00'
+            mapped_at: '2025-12-04T01:43:25.875595+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:14.499299+00:00'
+            mapped_at: '2025-12-04T01:43:25.875613+00:00'

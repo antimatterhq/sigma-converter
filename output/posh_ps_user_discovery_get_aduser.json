@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "User Discovery And Export Via Get-ADUser Cmdlet - PowerShell",
+    "comment": "Detects usage of the Get-ADUser cmdlet to collect user information and output it to a file",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('get-aduser ')) AND contains(lower(script.script_content.value), lower(' -filter *')) AND (contains(lower(script.script_content.value), lower(' > ')) OR contains(lower(script.script_content.value), lower(' | select ')) OR contains(lower(script.script_content.value), lower('out-file')) OR contains(lower(script.script_content.value), lower('set-content')) OR contains(lower(script.script_content.value), lower('add-content'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the Get-ADUser cmdlet to collect user information and output it to a file",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate admin scripts may use the same technique, it's better to exclude specific computers or users who execute these commands or scripts often References: http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html, https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1033"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,17 +1,10 @@
-id: a537cfc3-4297-4789-92b5-345bfd845ad0
 title: Service DACL Abuse To Hide Services Via Sc.EXE
+id: a537cfc3-4297-4789-92b5-345bfd845ad0
 status: test
 level: high
+author: Andreas Hunkeler (@Karneades)
 description: Detects usage of the "sc.exe" utility adding a new service with special
     permission seen used by threat actors which makes the service hidden and unremovable.
-author: Andreas Hunkeler (@Karneades)
-date: '2021-12-20'
-modified: '2022-08-08'
-tags:
-    - attack.persistence
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1574.011
 references:
     - https://blog.talosintelligence.com/2021/10/threat-hunting-in-large-datasets-by.html
     - https://www.sans.org/blog/red-team-tactics-hiding-windows-services/
@@ -19,10 +12,13 @@ references:
     - https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''99cf1e02-00fb-4c0d-8375-563f978dfd37''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''98c5aeef-32d5-492f-b174-64a691896d25''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1574.011
+date: '2021-12-20'
+modified: '2022-08-08'
 logsource:
     category: process_creation
     product: windows
@@ -35,6 +31,11 @@ detection:
             - sdset
             - DCLCWPDTSD
     condition: all of selection_*
+related:
+    -   id: 99cf1e02-00fb-4c0d-8375-563f978dfd37
+        type: similar
+    -   id: 98c5aeef-32d5-492f-b174-64a691896d25
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -42,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:17.889677+00:00'
+            mapped_at: '2025-12-04T01:42:33.678692+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:17.889677+00:00'
+            mapped_at: '2025-12-04T01:42:33.678692+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:17.889704+00:00'
+            mapped_at: '2025-12-04T01:42:33.678717+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:17.889707+00:00'
+            mapped_at: '2025-12-04T01:42:33.678719+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:17.889709+00:00'
+            mapped_at: '2025-12-04T01:42:33.678727+00:00'

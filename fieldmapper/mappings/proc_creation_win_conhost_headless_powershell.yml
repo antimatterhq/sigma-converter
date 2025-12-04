@@ -1,25 +1,22 @@
-id: 056c7317-9a09-4bd4-9067-d051312752ea
 title: Powershell Executed From Headless ConHost Process
+id: 056c7317-9a09-4bd4-9067-d051312752ea
 status: experimental
 level: medium
+author: Matt Anderson (Huntress)
 description: 'Detects the use of powershell commands from headless ConHost window.
 
     The "--headless" flag hides the windows from the user upon execution.
 
     '
-author: Matt Anderson (Huntress)
-date: '2024-07-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1059.001
-    - attack.t1059.003
 references:
     - https://www.huntress.com/blog/fake-browser-updates-lead-to-boinc-volunteer-computing-software
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''00ca75ab-d5ce-43be-b86c-55ff39c6abfc''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1059.001
+    - attack.t1059.003
+date: '2024-07-23'
 logsource:
     category: process_creation
     product: windows
@@ -32,6 +29,9 @@ detection:
             - --headless
             - powershell
     condition: all of selection_*
+related:
+    -   id: 00ca75ab-d5ce-43be-b86c-55ff39c6abfc
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -39,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:13.347448+00:00'
+            mapped_at: '2025-12-04T01:42:27.807018+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:13.347448+00:00'
+            mapped_at: '2025-12-04T01:42:27.807018+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:13.347466+00:00'
+            mapped_at: '2025-12-04T01:42:27.807031+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:13.347469+00:00'
+            mapped_at: '2025-12-04T01:42:27.807033+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:13.347470+00:00'
+            mapped_at: '2025-12-04T01:42:27.807034+00:00'

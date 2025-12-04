@@ -1,19 +1,18 @@
-id: 2953194b-e33c-4859-b9e8-05948c167447
 title: DD File Overwrite
+id: 2953194b-e33c-4859-b9e8-05948c167447
 status: test
 level: low
-description: Detects potential overwriting and deletion of a file using DD.
 author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
-date: '2021-10-15'
-modified: '2022-07-07'
-tags:
-    - attack.impact
-    - attack.t1485
+description: Detects potential overwriting and deletion of a file using DD.
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md#atomic-test-2---macoslinux---overwrite-file-with-dd
 falsepositives:
     - Any user deleting files that way.
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1485
+date: '2021-10-15'
+modified: '2022-07-07'
 logsource:
     category: process_creation
     product: linux
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:25.506828+00:00'
+            mapped_at: '2025-12-04T01:36:32.381089+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:25.506828+00:00'
+            mapped_at: '2025-12-04T01:36:32.381089+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:25.506847+00:00'
+            mapped_at: '2025-12-04T01:36:32.381118+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:25.506850+00:00'
+            mapped_at: '2025-12-04T01:36:32.381120+00:00'

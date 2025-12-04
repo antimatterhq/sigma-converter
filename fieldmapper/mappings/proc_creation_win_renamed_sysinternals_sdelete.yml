@@ -1,15 +1,10 @@
-id: c1d867fe-8d95-4487-aab4-e53f2d339f90
 title: Renamed Sysinternals Sdelete Execution
+id: c1d867fe-8d95-4487-aab4-e53f2d339f90
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the use of a renamed SysInternals Sdelete, which is something
     an administrator shouldn't do (the renaming)
-author: Florian Roth (Nextron Systems)
-date: '2022-09-06'
-modified: '2023-02-03'
-tags:
-    - attack.impact
-    - attack.t1485
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/sdelete
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md
@@ -20,7 +15,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - System administrator usage
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1485
+date: '2022-09-06'
+modified: '2023-02-03'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:13.416485+00:00'
+            mapped_at: '2025-12-04T01:44:10.770107+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:13.416485+00:00'
+            mapped_at: '2025-12-04T01:44:10.770107+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:13.416502+00:00'
+            mapped_at: '2025-12-04T01:44:10.770123+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:13.416504+00:00'
+            mapped_at: '2025-12-04T01:44:10.770125+00:00'

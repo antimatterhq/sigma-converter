@@ -1,7 +1,8 @@
-id: 8b93a509-1cb8-42e1-97aa-ee24224cdc15
 title: Sensitive File Dump Via Wbadmin.EXE
+id: 8b93a509-1cb8-42e1-97aa-ee24224cdc15
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), frack113
 description: 'Detects the dump of highly sensitive files such as "NTDS.DIT" and "SECURITY"
     hive.
 
@@ -9,11 +10,6 @@ description: 'Detects the dump of highly sensitive files such as "NTDS.DIT" and 
     that might contain credential or sensitive information.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), frack113
-date: '2024-05-10'
-tags:
-    - attack.credential-access
-    - attack.t1003.003
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/blob/2cc01b01132b5c304027a658c698ae09dd6a92bf/yml/OSBinaries/Wbadmin.yml
     - https://lolbas-project.github.io/lolbas/Binaries/Wbadmin/
@@ -22,7 +18,10 @@ references:
 falsepositives:
     - Legitimate backup operation by authorized administrators. Matches must be investigated
         and allowed on a case by case basis.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+date: '2024-05-10'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:25.668457+00:00'
+            mapped_at: '2025-12-04T01:41:48.219397+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:25.668457+00:00'
+            mapped_at: '2025-12-04T01:41:48.219397+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:25.668509+00:00'
+            mapped_at: '2025-12-04T01:41:48.219417+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:25.668513+00:00'
+            mapped_at: '2025-12-04T01:41:48.219420+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:25.668515+00:00'
+            mapped_at: '2025-12-04T01:41:48.219421+00:00'

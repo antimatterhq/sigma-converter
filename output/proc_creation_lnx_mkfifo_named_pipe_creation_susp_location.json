@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious Named Pipe Created Via Mkfifo",
+    "comment": "Detects the creation of a new named pipe using the \"mkfifo\" utility in a potentially suspicious location",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/mkfifo')) AND contains(lower(process.cmd_line), lower(' /tmp/')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a new named pipe using the \"mkfifo\" utility in a potentially suspicious location",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://dev.to/0xbf/use-mkfifo-to-create-named-pipe-linux-tips-5bbk, https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

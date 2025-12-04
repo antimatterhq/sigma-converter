@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Appended Extension",
+    "comment": "Detects file renames where the target filename uses an uncommon double extension. Could indicate potential ransomware activity renaming files and adding a custom extension to the encrypted files, such as \".jpg.crypted\", \".docx.locky\", etc.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_rename",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('5') AND (endswith(lower(file.path), lower('.doc')) OR endswith(lower(file.path), lower('.docx')) OR endswith(lower(file.path), lower('.jpeg')) OR endswith(lower(file.path), lower('.jpg')) OR endswith(lower(file.path), lower('.lnk')) OR endswith(lower(file.path), lower('.pdf')) OR endswith(lower(file.path), lower('.png')) OR endswith(lower(file.path), lower('.pst')) OR endswith(lower(file.path), lower('.rtf')) OR endswith(lower(file.path), lower('.xls')) OR endswith(lower(file.path), lower('.xlsx'))) AND (contains(lower(file.path), lower('.doc.')) OR contains(lower(file.path), lower('.docx.')) OR contains(lower(file.path), lower('.jpeg.')) OR contains(lower(file.path), lower('.jpg.')) OR contains(lower(file.path), lower('.lnk.')) OR contains(lower(file.path), lower('.pdf.')) OR contains(lower(file.path), lower('.png.')) OR contains(lower(file.path), lower('.pst.')) OR contains(lower(file.path), lower('.rtf.')) OR contains(lower(file.path), lower('.xls.')) OR contains(lower(file.path), lower('.xlsx.'))) AND NOT (endswith(lower(file.path), lower('.backup')) OR endswith(lower(file.path), lower('.bak')) OR endswith(lower(file.path), lower('.old')) OR endswith(lower(file.path), lower('.orig')) OR endswith(lower(file.path), lower('.temp')) OR endswith(lower(file.path), lower('.tmp'))) AND NOT (contains(lower(file.path), lower(':\\\\programdata\\\\anaconda3\\\\')) AND endswith(lower(file.path), lower('.c~'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects file renames where the target filename uses an uncommon double extension. Could indicate potential ransomware activity renaming files and adding a custom extension to the encrypted files, such as \".jpg.crypted\", \".docx.locky\", etc.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Backup software References: https://app.any.run/tasks/d66ead5a-faf4-4437-93aa-65785afaf9e5/, https://blog.cyble.com/2022/08/10/onyx-ransomware-renames-its-leak-site-to-vsop/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1486"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

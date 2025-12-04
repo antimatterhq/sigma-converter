@@ -1,21 +1,18 @@
-id: 26b692dc-1722-49b2-b496-a8258aa6371d
 title: Clear PowerShell History - PowerShell
+id: 26b692dc-1722-49b2-b496-a8258aa6371d
 status: test
 level: medium
-description: Detects keywords that could indicate clearing PowerShell history
 author: Ilyas Ochkov, Jonhnathan Ribeiro, Daniil Yugoslavskiy, oscd.community
-date: '2022-01-25'
-modified: '2022-12-02'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.003
+description: Detects keywords that could indicate clearing PowerShell history
 references:
     - https://gist.github.com/hook-s3c/7363a856c3cdbadeb71085147f042c1a
 falsepositives:
     - Legitimate PowerShell scripts
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''dfba4ce1-e0ea-495f-986e-97140f31af2d''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.003
+date: '2022-01-25'
+modified: '2022-12-02'
 logsource:
     category: ps_script
     product: windows
@@ -39,6 +36,9 @@ detection:
             - -HistorySaveStyle
             - SaveNothing
     condition: 1 of selection_* or all of selection1*
+related:
+    -   id: dfba4ce1-e0ea-495f-986e-97140f31af2d
+        type: derived
 ocsf_mapping:
     class_name: script_activity
     activity_id: <UNMAPPED>
@@ -46,13 +46,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:18.625204+00:00'
+            mapped_at: '2025-12-04T01:54:29.587741+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:18.625204+00:00'
+            mapped_at: '2025-12-04T01:54:29.587741+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:18.625239+00:00'
+            mapped_at: '2025-12-04T01:54:29.587758+00:00'

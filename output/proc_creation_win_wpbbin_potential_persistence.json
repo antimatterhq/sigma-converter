@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "UEFI Persistence Via Wpbbin - ProcessCreation",
+    "comment": "Detects execution of the binary \"wpbbin\" which is used as part of the UEFI based persistence method described in the reference section",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.name) = lower('c:\\\\windows\\\\system32\\\\wpbbin.exe'))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the binary \"wpbbin\" which is used as part of the UEFI based persistence method described in the reference section",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of the file by hardware manufacturer such as lenovo (Thanks @0gtweet for the tip) References: https://grzegorztworek.medium.com/using-uefi-to-inject-executable-files-into-bitlocker-protected-drives-8ff4ca59c94c, https://persistence-info.github.io/Data/wpbbin.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1542",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

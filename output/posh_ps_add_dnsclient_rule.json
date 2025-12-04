@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Powershell Add Name Resolution Policy Table Rule",
+    "comment": "Detects powershell scripts that adds a Name Resolution Policy Table (NRPT) rule for the specified namespace. This will bypass the default DNS server and uses a specified server for answering the query.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('add-dnsclientnrptrule')) AND contains(lower(script.script_content.value), lower('-namesp')) AND contains(lower(script.script_content.value), lower('-namese')))"
+      }
+    },
+    "output": {
+      "summary": "Detects powershell scripts that adds a Name Resolution Policy Table (NRPT) rule for the specified namespace. This will bypass the default DNS server and uses a specified server for answering the query.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/NathanMcNulty/status/1569497348841287681, https://learn.microsoft.com/en-us/powershell/module/dnsclient/add-dnsclientnrptrule?view=windowsserver2022-ps",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1565"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

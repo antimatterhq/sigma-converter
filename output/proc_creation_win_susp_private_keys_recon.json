@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Private Keys Reconnaissance Via CommandLine Tools",
+    "comment": "Adversaries may search for private key certificate files on compromised systems for insecurely stored credential",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('.key')) OR contains(lower(process.cmd_line), lower('.pgp')) OR contains(lower(process.cmd_line), lower('.gpg')) OR contains(lower(process.cmd_line), lower('.ppk')) OR contains(lower(process.cmd_line), lower('.p12')) OR contains(lower(process.cmd_line), lower('.pem')) OR contains(lower(process.cmd_line), lower('.pfx')) OR contains(lower(process.cmd_line), lower('.cer')) OR contains(lower(process.cmd_line), lower('.p7b')) OR contains(lower(process.cmd_line), lower('.asc'))) AND (endswith(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND contains(lower(process.cmd_line), lower('dir ')) OR (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND contains(lower(process.cmd_line), lower('get-childitem ')) OR endswith(lower(process.name), lower('\\\\findstr.exe')) AND lower(process.file.name) = lower('findstr.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may search for private key certificate files on compromised systems for insecurely stored credential",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.004/T1552.004.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1552",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

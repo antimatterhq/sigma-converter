@@ -1,15 +1,10 @@
-id: c7942406-33dd-4377-a564-0f62db0593a3
 title: Suspicious CodePage Switch Via CHCP
+id: c7942406-33dd-4377-a564-0f62db0593a3
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
 description: Detects a code page switch in command line or batch scripts to a rare
     language
-author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
-date: '2019-10-14'
-modified: '2023-03-07'
-tags:
-    - attack.t1036
-    - attack.defense-evasion
 references:
     - https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers
     - https://twitter.com/cglyer/status/1183756892952248325
@@ -18,7 +13,11 @@ fields:
 falsepositives:
     - Administrative activity (adjust code pages according to your organization's
         region)
-taxonomy: sigma
+tags:
+    - attack.t1036
+    - attack.defense-evasion
+date: '2019-10-14'
+modified: '2023-03-07'
 logsource:
     category: process_creation
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:15.326594+00:00'
+            mapped_at: '2025-12-04T01:45:01.091894+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:15.326594+00:00'
+            mapped_at: '2025-12-04T01:45:01.091894+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:15.326610+00:00'
+            mapped_at: '2025-12-04T01:45:01.091914+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:15.326612+00:00'
+            mapped_at: '2025-12-04T01:45:01.091916+00:00'

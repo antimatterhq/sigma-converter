@@ -1,16 +1,12 @@
-id: 8b48ad89-10d8-4382-a546-50588c410f0d
 title: Suspicious Remote AppX Package Locations
+id: 8b48ad89-10d8-4382-a546-50588c410f0d
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects an appx package added to the pipeline of the "to be processed"
     packages which was downloaded from a suspicious domain.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-11'
-modified: '2024-08-22'
-tags:
-    - attack.defense-evasion
 references:
     - Internal Research
     - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
@@ -18,7 +14,10 @@ references:
     - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2023-01-11'
+modified: '2024-08-22'
 logsource:
     product: windows
     service: appxdeployment-server
@@ -64,17 +63,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:47:21.760303+00:00'
+            mapped_at: '2025-12-04T01:56:42.548444+00:00'
         service:
             source_field: service
             source_value: appxdeployment-server
-            mapped_at: '2025-11-26T02:47:21.760303+00:00'
+            mapped_at: '2025-12-04T01:56:42.548444+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: scheduled_job_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:47:21.760325+00:00'
+            mapped_at: '2025-12-04T01:56:42.548459+00:00'
         -   source_field: Path
             target_table: scheduled_job_activity
             target_field: job.file.path
-            mapped_at: '2025-11-26T02:47:21.760327+00:00'
+            mapped_at: '2025-12-04T01:56:42.548461+00:00'

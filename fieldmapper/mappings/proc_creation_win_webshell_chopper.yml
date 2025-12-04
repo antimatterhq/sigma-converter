@@ -1,22 +1,21 @@
-id: fa3c117a-bc0d-416e-a31b-0c0e80653efb
 title: Chopper Webshell Process Pattern
+id: fa3c117a-bc0d-416e-a31b-0c0e80653efb
 status: test
 level: high
+author: Florian Roth (Nextron Systems), MSTI (query)
 description: Detects patterns found in process executions cause by China Chopper like
     tiny (ASPX) webshells
-author: Florian Roth (Nextron Systems), MSTI (query)
-date: '2022-10-01'
+references:
+    - https://www.microsoft.com/security/blog/2022/09/30/analyzing-attacks-using-the-exchange-vulnerabilities-cve-2022-41040-and-cve-2022-41082/
+falsepositives:
+    - Unknown
 tags:
     - attack.persistence
     - attack.t1505.003
     - attack.t1018
     - attack.t1033
     - attack.t1087
-references:
-    - https://www.microsoft.com/security/blog/2022/09/30/analyzing-attacks-using-the-exchange-vulnerabilities-cve-2022-41040-and-cve-2022-41082/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-10-01'
 logsource:
     category: process_creation
     product: windows
@@ -42,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:27.399223+00:00'
+            mapped_at: '2025-12-04T01:44:23.077349+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:27.399223+00:00'
+            mapped_at: '2025-12-04T01:44:23.077349+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:27.399241+00:00'
+            mapped_at: '2025-12-04T01:44:23.077376+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:29:27.399244+00:00'
+            mapped_at: '2025-12-04T01:44:23.077377+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:27.399246+00:00'
+            mapped_at: '2025-12-04T01:44:23.077379+00:00'

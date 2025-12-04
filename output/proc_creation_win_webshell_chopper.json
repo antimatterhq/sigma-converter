@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "name": "Chopper Webshell Process Pattern",
+    "comment": "Detects patterns found in process executions cause by China Chopper like tiny (ASPX) webshells",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\w3wp.exe')) AND endswith(lower(process.parent_process.name), lower('\\\\w3wp.exe')) AND (contains(lower(process.cmd_line), lower('&ipconfig&echo')) OR contains(lower(process.cmd_line), lower('&quser&echo')) OR contains(lower(process.cmd_line), lower('&whoami&echo')) OR contains(lower(process.cmd_line), lower('&c:&echo')) OR contains(lower(process.cmd_line), lower('&cd&echo')) OR contains(lower(process.cmd_line), lower('&dir&echo')) OR contains(lower(process.cmd_line), lower('&echo [e]')) OR contains(lower(process.cmd_line), lower('&echo [s]'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects patterns found in process executions cause by China Chopper like tiny (ASPX) webshells",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.microsoft.com/security/blog/2022/09/30/analyzing-attacks-using-the-exchange-vulnerabilities-cve-2022-41040-and-cve-2022-41082/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1018"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1033"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1087"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

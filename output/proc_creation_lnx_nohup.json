@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Nohup Execution",
+    "comment": "Detects usage of nohup which could be leveraged by an attacker to keep a process running or break out from restricted environments",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('/nohup')))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of nohup which could be leveraged by an attacker to keep a process running or break out from restricted environments",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrators or installed processes that leverage nohup References: https://gtfobins.github.io/gtfobins/nohup/, https://en.wikipedia.org/wiki/Nohup, https://www.computerhope.com/unix/unohup.htm",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

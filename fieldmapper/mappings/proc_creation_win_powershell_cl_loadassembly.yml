@@ -1,22 +1,21 @@
-id: c57872c7-614f-4d7f-a40d-b78c8df2d30d
 title: Assembly Loading Via CL_LoadAssembly.ps1
+id: c57872c7-614f-4d7f-a40d-b78c8df2d30d
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: Detects calls to "LoadAssemblyFromPath" or "LoadAssemblyFromNS" that
     are part of the "CL_LoadAssembly.ps1" script. This can be abused to load different
     assemblies and bypass App locker controls.
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2022-05-21'
-modified: '2023-08-17'
-tags:
-    - attack.defense-evasion
-    - attack.t1216
 references:
     - https://bohops.com/2018/01/07/executing-commands-and-bypassing-applocker-with-powershell-diagnostic-scripts/
     - https://lolbas-project.github.io/lolbas/Scripts/CL_LoadAssembly/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1216
+date: '2022-05-21'
+modified: '2023-08-17'
 logsource:
     category: process_creation
     product: windows
@@ -33,13 +32,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:11.630336+00:00'
+            mapped_at: '2025-12-04T01:44:09.546154+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:11.630336+00:00'
+            mapped_at: '2025-12-04T01:44:09.546154+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:11.630353+00:00'
+            mapped_at: '2025-12-04T01:44:09.546167+00:00'

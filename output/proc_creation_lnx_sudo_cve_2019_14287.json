@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Sudo Privilege Escalation CVE-2019-14287",
+    "comment": "Detects users trying to exploit sudo vulnerability reported in CVE-2019-14287",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower(' -u#')))"
+      }
+    },
+    "output": {
+      "summary": "Detects users trying to exploit sudo vulnerability reported in CVE-2019-14287",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://www.openwall.com/lists/oss-security/2019/10/14/1, https://access.redhat.com/security/cve/cve-2019-14287, https://twitter.com/matthieugarin/status/1183970598210412546",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1068"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1548",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

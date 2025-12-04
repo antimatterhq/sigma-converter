@@ -1,16 +1,12 @@
-id: 3603f18a-ec15-43a1-9af2-d196c8a7fec6
 title: System Integrity Protection (SIP) Disabled
+id: 3603f18a-ec15-43a1-9af2-d196c8a7fec6
 status: test
 level: medium
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
 description: 'Detects the use of csrutil to disable the Configure System Integrity
     Protection (SIP). This technique is used in post-exploit scenarios.
 
     '
-author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2024-01-02'
-tags:
-    - attack.discovery
-    - attack.t1518.001
 references:
     - https://ss64.com/osx/csrutil.html
     - https://objective-see.org/blog/blog_0x6D.html
@@ -18,7 +14,10 @@ references:
     - https://www.virustotal.com/gui/file/05a2adb266ec6c0ba9ed176d87d8530e71e845348c13caf9f60049760c312cd3/behavior
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1518.001
+date: '2024-01-02'
 logsource:
     category: process_creation
     product: macos
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:14.902122+00:00'
+            mapped_at: '2025-12-04T01:34:11.352671+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:14.902122+00:00'
+            mapped_at: '2025-12-04T01:34:11.352671+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:14.902143+00:00'
+            mapped_at: '2025-12-04T01:34:11.352688+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:14.902146+00:00'
+            mapped_at: '2025-12-04T01:34:11.352690+00:00'

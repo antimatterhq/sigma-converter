@@ -1,20 +1,19 @@
-id: 7aa7009a-28b9-4344-8c1f-159489a390df
 title: HackTool - Windows Credential Editor (WCE) Execution
+id: 7aa7009a-28b9-4344-8c1f-159489a390df
 status: test
 level: critical
-description: Detects the use of Windows Credential Editor (WCE)
 author: Florian Roth (Nextron Systems)
-date: '2019-12-31'
-modified: '2024-11-23'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
-    - attack.s0005
+description: Detects the use of Windows Credential Editor (WCE)
 references:
     - https://www.ampliasecurity.com/research/windows-credentials-editor/
 falsepositives:
     - Another service that uses a single -s command line switch
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0005
+date: '2019-12-31'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -36,25 +35,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:39.273845+00:00'
+            mapped_at: '2025-12-04T01:42:01.565534+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:39.273845+00:00'
+            mapped_at: '2025-12-04T01:42:01.565534+00:00'
     detection_fields:
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:26:39.273873+00:00'
+            mapped_at: '2025-12-04T01:42:01.565571+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:39.273876+00:00'
+            mapped_at: '2025-12-04T01:42:01.565575+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:39.273879+00:00'
+            mapped_at: '2025-12-04T01:42:01.565579+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:39.273881+00:00'
+            mapped_at: '2025-12-04T01:42:01.565582+00:00'

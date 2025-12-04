@@ -1,23 +1,20 @@
-id: 9b8d9203-4e0f-4cd9-bb06-4cc4ea6d0e9a
 title: Invoke-Obfuscation Via Use MSHTA - Security
+id: 9b8d9203-4e0f-4cd9-bb06-4cc4ea6d0e9a
 status: test
 level: high
-description: Detects Obfuscated Powershell via use MSHTA in Scripts
 author: Nikita Nazarov, oscd.community
-date: '2020-10-09'
-modified: '2022-11-29'
+description: Detects Obfuscated Powershell via use MSHTA in Scripts
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''7e9c7999-0f9b-4d4a-a6ed-af6d553d4af4''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-09'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -32,6 +29,9 @@ detection:
             - .run
             - window.close
     condition: selection
+related:
+    -   id: 7e9c7999-0f9b-4d4a-a6ed-af6d553d4af4
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -39,17 +39,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:27.017627+00:00'
+            mapped_at: '2025-12-04T01:56:16.222977+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:27.017627+00:00'
+            mapped_at: '2025-12-04T01:56:16.222977+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:27.017662+00:00'
+            mapped_at: '2025-12-04T01:56:16.223002+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:27.017665+00:00'
+            mapped_at: '2025-12-04T01:56:16.223005+00:00'

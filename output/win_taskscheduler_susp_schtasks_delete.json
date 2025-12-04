@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Important Scheduled Task Deleted",
+    "comment": "Detects when adversaries try to stop system services or processes by deleting their respective scheduled tasks in order to conduct data destructive activities",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "taskscheduler",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND metadata.event_code = 141 AND (contains(lower(job.name), lower('\\\\windows\\\\systemrestore\\\\sr')) OR contains(lower(job.name), lower('\\\\windows\\\\windows defender\\\\')) OR contains(lower(job.name), lower('\\\\windows\\\\bitlocker')) OR contains(lower(job.name), lower('\\\\windows\\\\windowsbackup\\\\')) OR contains(lower(job.name), lower('\\\\windows\\\\windowsupdate\\\\')) OR contains(lower(job.name), lower('\\\\windows\\\\updateorchestrator\\\\')) OR contains(lower(job.name), lower('\\\\windows\\\\exploitguard'))) AND NOT (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when adversaries try to stop system services or processes by deleting their respective scheduled tasks in order to conduct data destructive activities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.socinvestigation.com/most-common-windows-event-ids-to-hunt-mind-map/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1489"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

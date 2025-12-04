@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Linux Package Uninstall",
+    "comment": "Detects linux package removal using builtin tools such as \"yum\", \"apt\", \"apt-get\" or \"dpkg\".",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/yum')) AND (contains(lower(process.cmd_line), lower('erase')) OR contains(lower(process.cmd_line), lower('remove'))) OR (endswith(lower(process.name), lower('/apt')) OR endswith(lower(process.name), lower('/apt-get'))) AND (contains(lower(process.cmd_line), lower('remove')) OR contains(lower(process.cmd_line), lower('purge'))) OR endswith(lower(process.name), lower('/dpkg')) AND (contains(lower(process.cmd_line), lower('--remove ')) OR contains(lower(process.cmd_line), lower(' -r '))) OR endswith(lower(process.name), lower('/rpm')) AND contains(lower(process.cmd_line), lower(' -e '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects linux package removal using builtin tools such as \"yum\", \"apt\", \"apt-get\" or \"dpkg\".",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrator or administrator scripts might delete packages for several reasons (debugging, troubleshooting). References: https://sysdig.com/blog/mitre-defense-evasion-falco, https://www.tutorialspoint.com/how-to-install-a-software-on-linux-using-yum-command, https://linuxhint.com/uninstall_yum_package/, https://linuxhint.com/uninstall-debian-packages/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1070"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

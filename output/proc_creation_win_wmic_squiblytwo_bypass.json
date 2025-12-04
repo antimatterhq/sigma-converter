@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "name": "Potential SquiblyTwo Technique Execution",
+    "comment": "Detects potential SquiblyTwo attack technique with possible renamed WMIC via Imphash and OriginalFileName fields",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\wmic.exe')) AND lower(process.file.name) = lower('wmic.exe') AND (contains(lower(process.file.hashes.value), lower('imphash=1b1a3f43bf37b5bfe60751f2ee2f326e')) OR contains(lower(process.file.hashes.value), lower('imphash=37777a96245a3c74eb217308f3546f4c')) OR contains(lower(process.file.hashes.value), lower('imphash=9d87c9d67ce724033c0b40cc4ca1b206'))) AND contains(lower(process.cmd_line), lower('format:')) AND contains(lower(process.cmd_line), lower('http')))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential SquiblyTwo attack technique with possible renamed WMIC via Imphash and OriginalFileName fields",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://web.archive.org/web/20190209154607/https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html, https://twitter.com/mattifestation/status/986280382042595328, https://atomicredteam.io/defense-evasion/T1220/, https://lolbas-project.github.io/lolbas/Binaries/Wmic/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1047"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1220"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

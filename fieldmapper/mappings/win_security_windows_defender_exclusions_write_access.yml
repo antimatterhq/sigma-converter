@@ -1,26 +1,22 @@
-id: e9c8808f-4cfb-4ba9-97d4-e5f3beaa244d
 title: Windows Defender Exclusion Registry Key - Write Access Requested
+id: e9c8808f-4cfb-4ba9-97d4-e5f3beaa244d
 status: test
 level: medium
+author: '@BarryShooshooga, Nasreddine Bencherchali (Nextron Systems)'
 description: 'Detects write access requests to the Windows Defender exclusions registry
     keys. This could be an indication of an attacker trying to request a handle or
     access the object to write new exclusions in order to bypass security.
 
     '
-author: '@BarryShooshooga, Nasreddine Bencherchali (Nextron Systems)'
-date: '2019-10-26'
-modified: '2023-11-11'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://www.bleepingcomputer.com/news/security/gootkit-malware-bypasses-windows-defender-by-setting-path-exclusions/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''46a68649-f218-4f86-aea1-16a759d81820''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''a33f8808-2812-4373-ae95-8cfb82134978''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2019-10-26'
+modified: '2023-11-11'
 logsource:
     product: windows
     service: security
@@ -36,6 +32,11 @@ detection:
             - 4663
         ObjectName|contains: \Microsoft\Windows Defender\Exclusions\
     condition: selection
+related:
+    -   id: 46a68649-f218-4f86-aea1-16a759d81820
+        type: derived
+    -   id: a33f8808-2812-4373-ae95-8cfb82134978
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -43,21 +44,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:43:42.262125+00:00'
+            mapped_at: '2025-12-04T01:55:17.293521+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:43:42.262125+00:00'
+            mapped_at: '2025-12-04T01:55:17.293521+00:00'
     detection_fields:
         -   source_field: AccessList
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:42.262153+00:00'
+            mapped_at: '2025-12-04T01:55:17.293534+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:43:42.262157+00:00'
+            mapped_at: '2025-12-04T01:55:17.293536+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:43:42.262160+00:00'
+            mapped_at: '2025-12-04T01:55:17.293537+00:00'

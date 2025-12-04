@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Persistence Via Outlook Form",
+    "comment": "Detects the creation of a new Outlook form which can contain malicious code",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(actor.process.name), lower('\\\\outlook.exe')) AND (contains(lower(file.path), lower('\\\\appdata\\\\local\\\\microsoft\\\\forms\\\\ipm')) OR contains(lower(file.path), lower('\\\\local settings\\\\application data\\\\microsoft\\\\forms'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a new Outlook form which can contain malicious code",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of outlook forms References: https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=76, https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=79, https://learn.microsoft.com/en-us/office/vba/outlook/concepts/outlook-forms/create-an-outlook-form, https://www.slipstick.com/developer/custom-form/clean-outlooks-forms-cache/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1137",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

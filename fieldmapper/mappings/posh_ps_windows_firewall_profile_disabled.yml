@@ -1,15 +1,10 @@
-id: 488b44e7-3781-4a71-888d-c95abfacf44d
 title: Windows Firewall Profile Disabled
+id: 488b44e7-3781-4a71-888d-c95abfacf44d
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Detects when a user disables the Windows Firewall via a Profile to help
     evade defense.
-author: Austin Songer @austinsonger
-date: '2021-10-12'
-modified: '2022-12-30'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.004
 references:
     - https://learn.microsoft.com/en-us/powershell/module/netsecurity/set-netfirewallprofile?view=windowsserver2022-ps
     - https://www.tutorialspoint.com/how-to-get-windows-firewall-profile-settings-using-powershell
@@ -18,9 +13,11 @@ references:
     - https://www.elastic.co/guide/en/security/current/windows-firewall-disabled-via-powershell.html
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''12f6b752-042d-483e-bf9c-915a6d06ad75''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.004
+date: '2021-10-12'
+modified: '2022-12-30'
 logsource:
     category: ps_script
     product: windows
@@ -38,6 +35,9 @@ detection:
             - Domain
             - Private
     condition: all of selection*
+related:
+    -   id: 12f6b752-042d-483e-bf9c-915a6d06ad75
+        type: similar
 ocsf_mapping:
     class_name: script_activity
     activity_id: <UNMAPPED>
@@ -45,13 +45,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:32.706610+00:00'
+            mapped_at: '2025-12-04T01:54:41.465955+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:32.706610+00:00'
+            mapped_at: '2025-12-04T01:54:41.465955+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:32.706626+00:00'
+            mapped_at: '2025-12-04T01:54:41.465969+00:00'

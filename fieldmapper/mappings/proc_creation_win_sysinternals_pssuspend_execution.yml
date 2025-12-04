@@ -1,23 +1,20 @@
-id: 48bbc537-b652-4b4e-bd1d-281172df448f
 title: Sysinternals PsSuspend Execution
+id: 48bbc537-b652-4b4e-bd1d-281172df448f
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of Sysinternals PsSuspend which can be abused to suspend
     critical processes
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-03-23'
-tags:
-    - attack.discovery
-    - attack.persistence
-    - attack.t1543.003
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/pssuspend
     - https://twitter.com/0gtweet/status/1638069413717975046
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4beb6ae0-f85b-41e2-8f18-8668abc8af78''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.persistence
+    - attack.t1543.003
+date: '2023-03-23'
 logsource:
     category: process_creation
     product: windows
@@ -28,6 +25,9 @@ detection:
             - \pssuspend.exe
             - \pssuspend64.exe
     condition: selection
+related:
+    -   id: 4beb6ae0-f85b-41e2-8f18-8668abc8af78
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -35,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:17.869577+00:00'
+            mapped_at: '2025-12-04T01:48:22.343972+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:17.869577+00:00'
+            mapped_at: '2025-12-04T01:48:22.343972+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:17.869607+00:00'
+            mapped_at: '2025-12-04T01:48:22.343986+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:17.869612+00:00'
+            mapped_at: '2025-12-04T01:48:22.343988+00:00'

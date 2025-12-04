@@ -1,15 +1,10 @@
-id: 52ff7941-8211-46f9-84f8-9903efb7077d
 title: HackTool - PPID Spoofing SelectMyParent Tool Execution
+id: 52ff7941-8211-46f9-84f8-9903efb7077d
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the use of parent process ID spoofing tools like Didier Stevens
     tool SelectMyParent
-author: Florian Roth (Nextron Systems)
-date: '2022-07-23'
-modified: '2024-11-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1134.004
 references:
     - https://pentestlab.blog/2020/02/24/parent-pid-spoofing/
     - https://www.picussecurity.com/resource/blog/how-to-detect-parent-pid-ppid-spoofing-attacks
@@ -17,7 +12,11 @@ references:
     - https://www.virustotal.com/gui/search/filename%253A*spoof*%2520filename%253A*ppid*/files
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1134.004
+date: '2022-07-23'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -55,29 +54,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:25.813960+00:00'
+            mapped_at: '2025-12-04T01:47:42.455321+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:25.813960+00:00'
+            mapped_at: '2025-12-04T01:47:42.455321+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:25.814028+00:00'
+            mapped_at: '2025-12-04T01:47:42.455336+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:25.814031+00:00'
+            mapped_at: '2025-12-04T01:47:42.455338+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:25.814033+00:00'
+            mapped_at: '2025-12-04T01:47:42.455339+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:33:25.814034+00:00'
+            mapped_at: '2025-12-04T01:47:42.455341+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:33:25.814035+00:00'
+            mapped_at: '2025-12-04T01:47:42.455342+00:00'

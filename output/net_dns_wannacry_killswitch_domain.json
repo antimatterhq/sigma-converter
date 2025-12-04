@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Wannacry Killswitch Domain",
+    "comment": "Detects wannacry killswitch domain dns queries",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(query.hostname)) in ('ifferfsodp9ifjaposdfjhgosurijfaewrwergwea\\.testing', 'ifferfsodp9ifjaposdfjhgosurijfaewrwergwea\\.test', 'ifferfsodp9ifjaposdfjhgosurijfaewrwergwea\\.com', 'ayylmaotjhsstasdfasdfasdfasdfasdfasdfasdf\\.com', 'iuqssfsodp9ifjaposdfjhgosurijfaewrwergwea\\.com')))"
+      }
+    },
+    "output": {
+      "summary": "Detects wannacry killswitch domain dns queries",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Analyst testing Reference: https://www.mandiant.com/resources/blog/wannacry-ransomware-campaign",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1071",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

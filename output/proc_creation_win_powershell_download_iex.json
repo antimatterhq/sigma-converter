@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PowerShell Download and Execution Cradles",
+    "comment": "Detects PowerShell download and execution cradles.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('.downloadstring(')) OR contains(lower(process.cmd_line), lower('.downloadfile(')) OR contains(lower(process.cmd_line), lower('invoke-webrequest ')) OR contains(lower(process.cmd_line), lower('iwr '))) AND (contains(lower(process.cmd_line), lower(';iex $')) OR contains(lower(process.cmd_line), lower('| iex')) OR contains(lower(process.cmd_line), lower('|iex ')) OR contains(lower(process.cmd_line), lower('i`e`x')) OR contains(lower(process.cmd_line), lower('i`ex')) OR contains(lower(process.cmd_line), lower('ie`x')) OR contains(lower(process.cmd_line), lower('iex ')) OR contains(lower(process.cmd_line), lower('iex (')) OR contains(lower(process.cmd_line), lower('iex(')) OR contains(lower(process.cmd_line), lower('invoke-expression'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell download and execution cradles.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some PowerShell installers were seen using similar combinations. Apply filters accordingly References: https://github.com/VirtualAlllocEx/Payload-Download-Cradles/blob/88e8eca34464a547c90d9140d70e9866dcbc6a12/Download-Cradles.cmd, https://labs.withsecure.com/publications/fin7-target-veeam-servers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

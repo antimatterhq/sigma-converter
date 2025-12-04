@@ -1,20 +1,19 @@
-id: 880973f3-9708-491c-a77b-2a35a1921158
 title: Linux Shell Pipe to Shell
+id: 880973f3-9708-491c-a77b-2a35a1921158
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious process command line that starts with a shell that
     executes something and finally gets piped into another shell
-author: Florian Roth (Nextron Systems)
-date: '2022-03-14'
-modified: '2022-07-26'
-tags:
-    - attack.defense-evasion
-    - attack.t1140
 references:
     - Internal Research
 falsepositives:
     - Legitimate software that uses these patterns
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1140
+date: '2022-03-14'
+modified: '2022-07-26'
 logsource:
     category: process_creation
     product: linux
@@ -42,13 +41,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:33.371929+00:00'
+            mapped_at: '2025-12-04T01:36:39.649639+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:33.371929+00:00'
+            mapped_at: '2025-12-04T01:36:39.649639+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:33.371940+00:00'
+            mapped_at: '2025-12-04T01:36:39.649656+00:00'

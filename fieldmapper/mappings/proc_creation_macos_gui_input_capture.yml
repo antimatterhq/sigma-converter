@@ -1,20 +1,19 @@
-id: 60f1ce20-484e-41bd-85f4-ac4afec2c541
 title: GUI Input Capture - macOS
+id: 60f1ce20-484e-41bd-85f4-ac4afec2c541
 status: test
 level: low
-description: Detects attempts to use system dialog prompts to capture user credentials
 author: remotephone, oscd.community
-date: '2020-10-13'
-modified: '2022-12-25'
-tags:
-    - attack.credential-access
-    - attack.t1056.002
+description: Detects attempts to use system dialog prompts to capture user credentials
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.002/T1056.002.md
     - https://scriptingosx.com/2018/08/user-interaction-from-bash-scripts/
 falsepositives:
     - Legitimate administration tools and activities
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1056.002
+date: '2020-10-13'
+modified: '2022-12-25'
 logsource:
     category: process_creation
     product: macos
@@ -45,17 +44,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:39.661052+00:00'
+            mapped_at: '2025-12-04T01:34:34.574977+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:39.661052+00:00'
+            mapped_at: '2025-12-04T01:34:34.574977+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:39.661077+00:00'
+            mapped_at: '2025-12-04T01:34:34.574991+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:39.661080+00:00'
+            mapped_at: '2025-12-04T01:34:34.574993+00:00'

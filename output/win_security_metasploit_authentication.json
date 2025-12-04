@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Metasploit SMB Authentication",
+    "comment": "Alerts on Metasploit host's authentications on the domain.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(metadata.event_code)) in (4625, 4624)) AND logon_type = 3 AND lower(auth_protocol) = lower('ntlm') AND dst_endpoint.hostname rlike '^\\[A-Za-z0-9\\]\\{16\\}$' OR metadata.event_code = 4776 AND dst_endpoint.hostname rlike '^\\[A-Za-z0-9\\]\\{16\\}$')"
+      }
+    },
+    "output": {
+      "summary": "Alerts on Metasploit host's authentications on the domain.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Linux hostnames composed of 16 characters. Reference: https://github.com/rapid7/metasploit-framework/blob/1416b5776d963f21b7b5b45d19f3e961201e0aed/lib/rex/proto/smb/client.rb",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1021",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

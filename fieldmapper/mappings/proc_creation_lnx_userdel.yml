@@ -1,15 +1,11 @@
-id: 08f26069-6f80-474b-8d1f-d971c6fedea0
 title: User Has Been Deleted Via Userdel
+id: 08f26069-6f80-474b-8d1f-d971c6fedea0
 status: test
 level: medium
+author: Tuan Le (NCSGroup)
 description: Detects execution of the "userdel" binary. Which is used to delete a
     user account and related files. This is sometimes abused by threat actors in order
     to cover their tracks
-author: Tuan Le (NCSGroup)
-date: '2022-12-26'
-tags:
-    - attack.impact
-    - attack.t1531
 references:
     - https://linuxize.com/post/how-to-delete-group-in-linux/
     - https://www.cyberciti.biz/faq/linux-remove-user-command/
@@ -17,7 +13,10 @@ references:
     - https://linux.die.net/man/8/userdel
 falsepositives:
     - Legitimate administrator activities
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1531
+date: '2022-12-26'
 logsource:
     category: process_creation
     product: linux
@@ -32,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:06.141085+00:00'
+            mapped_at: '2025-12-04T01:36:18.670842+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:06.141085+00:00'
+            mapped_at: '2025-12-04T01:36:18.670842+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:06.141101+00:00'
+            mapped_at: '2025-12-04T01:36:18.670862+00:00'

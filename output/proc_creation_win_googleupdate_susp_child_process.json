@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potentially Suspicious GoogleUpdate Child Process",
+    "comment": "Detects potentially suspicious child processes of \"GoogleUpdate.exe\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\googleupdate.exe')) AND NOT (contains(lower(process.name), lower('\\\\google')) AND (endswith(lower(process.name), lower('\\\\setup.exe')) OR endswith(lower(process.name), lower('chrome_updater.exe')) OR endswith(lower(process.name), lower('chrome_installer.exe'))) OR process.name is null))"
+      }
+    },
+    "output": {
+      "summary": "Detects potentially suspicious child processes of \"GoogleUpdate.exe\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/goofy-guineapig/NCSC-MAR-Goofy-Guineapig.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

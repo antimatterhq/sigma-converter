@@ -1,19 +1,18 @@
-id: 74c01ace-0152-4094-8ae2-6fd776dd43e5
 title: File or Folder Permissions Change
+id: 74c01ace-0152-4094-8ae2-6fd776dd43e5
 status: test
 level: low
-description: Detects file and folder permission changes.
 author: Jakob Weinzettl, oscd.community
-date: '2019-09-23'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1222.002
+description: Detects file and folder permission changes.
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md
 falsepositives:
     - User interacting with files permissions (normal/daily behaviour).
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1222.002
+date: '2019-09-23'
+modified: '2021-11-27'
 logsource:
     product: linux
     service: auditd
@@ -31,17 +30,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:15:43.042153+00:00'
+            mapped_at: '2025-12-04T01:35:28.124620+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:15:43.042153+00:00'
+            mapped_at: '2025-12-04T01:35:28.124620+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:43.042174+00:00'
+            mapped_at: '2025-12-04T01:35:28.124638+00:00'
         -   source_field: a0
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:15:43.042177+00:00'
+            mapped_at: '2025-12-04T01:35:28.124641+00:00'

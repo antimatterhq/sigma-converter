@@ -1,22 +1,19 @@
-id: 4beb6ae0-f85b-41e2-8f18-8668abc8af78
 title: Sysinternals PsSuspend Suspicious Execution
+id: 4beb6ae0-f85b-41e2-8f18-8668abc8af78
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects suspicious execution of Sysinternals PsSuspend, where the utility
     is used to suspend critical processes such as AV or EDR to bypass defenses
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-03-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://learn.microsoft.com/en-us/sysinternals/downloads/pssuspend
     - https://twitter.com/0gtweet/status/1638069413717975046
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''48bbc537-b652-4b4e-bd1d-281172df448f''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2023-03-23'
 logsource:
     category: process_creation
     product: windows
@@ -29,6 +26,9 @@ detection:
     selection_cli:
         CommandLine|contains: msmpeng.exe
     condition: all of selection_*
+related:
+    -   id: 48bbc537-b652-4b4e-bd1d-281172df448f
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -36,21 +36,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:58.716335+00:00'
+            mapped_at: '2025-12-04T01:44:46.753648+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:58.716335+00:00'
+            mapped_at: '2025-12-04T01:44:46.753648+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:58.716377+00:00'
+            mapped_at: '2025-12-04T01:44:46.753660+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:58.716382+00:00'
+            mapped_at: '2025-12-04T01:44:46.753662+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:58.716384+00:00'
+            mapped_at: '2025-12-04T01:44:46.753663+00:00'

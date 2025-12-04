@@ -1,24 +1,21 @@
-id: 0d34ed8b-1c12-4ff2-828c-16fc860b766d
 title: Suspicious Processes Spawned by Java.EXE
+id: 0d34ed8b-1c12-4ff2-828c-16fc860b766d
 status: test
 level: high
+author: Andreas Hunkeler (@Karneades), Florian Roth
 description: Detects suspicious processes spawned from a Java host process which could
     indicate a sign of exploitation (e.g. log4j)
-author: Andreas Hunkeler (@Karneades), Florian Roth
-date: '2021-12-17'
-modified: '2024-01-18'
-tags:
-    - attack.initial-access
-    - attack.persistence
-    - attack.privilege-escalation
 references:
     - https://web.archive.org/web/20231230220738/https://www.lunasec.io/docs/blog/log4j-zero-day/
 falsepositives:
     - Legitimate calls to system binaries
     - Company specific internal usage
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''dff1e1cc-d3fd-47c8-bfc2-aeb878a754c0''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.persistence
+    - attack.privilege-escalation
+date: '2021-12-17'
+modified: '2024-01-18'
 logsource:
     category: process_creation
     product: windows
@@ -50,6 +47,9 @@ detection:
             - \wmic.exe
             - \wscript.exe
     condition: selection
+related:
+    -   id: dff1e1cc-d3fd-47c8-bfc2-aeb878a754c0
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -57,17 +57,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:20.846175+00:00'
+            mapped_at: '2025-12-04T01:44:17.730637+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:20.846175+00:00'
+            mapped_at: '2025-12-04T01:44:17.730637+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:29:20.846189+00:00'
+            mapped_at: '2025-12-04T01:44:17.730650+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:20.846191+00:00'
+            mapped_at: '2025-12-04T01:44:17.730669+00:00'

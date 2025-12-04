@@ -1,24 +1,21 @@
-id: cb0fe7c5-f3a3-484d-aa25-d350a7912729
 title: Suspicious Driver/DLL Installation Via Odbcconf.EXE
+id: cb0fe7c5-f3a3-484d-aa25-d350a7912729
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of "odbcconf" with the "INSTALLDRIVER" action where
     the driver doesn't contain a ".dll" extension. This is often used as a defense
     evasion method.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.008
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
     - https://web.archive.org/web/20191023232753/https://twitter.com/Hexacorn/status/1187143326673330176
     - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3f5491e2-8db8-496b-9e95-1029fce852d4''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.008
+date: '2023-05-23'
 logsource:
     category: process_creation
     product: windows
@@ -31,6 +28,9 @@ detection:
     filter_main_dll_ext:
         CommandLine|contains: .dll
     condition: all of selection_* and not 1 of filter_main_*
+related:
+    -   id: 3f5491e2-8db8-496b-9e95-1029fce852d4
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -38,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:32.047623+00:00'
+            mapped_at: '2025-12-04T01:41:04.832716+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:32.047623+00:00'
+            mapped_at: '2025-12-04T01:41:04.832716+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:32.047637+00:00'
+            mapped_at: '2025-12-04T01:41:04.832728+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:32.047639+00:00'
+            mapped_at: '2025-12-04T01:41:04.832730+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:32.047640+00:00'
+            mapped_at: '2025-12-04T01:41:04.832731+00:00'

@@ -1,7 +1,8 @@
-id: 47147b5b-9e17-4d76-b8d2-7bac24c5ce1b
 title: Potential Browser Data Stealing
+id: 47147b5b-9e17-4d76-b8d2-7bac24c5ce1b
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Adversaries may acquire credentials from web browsers by reading files
     specific to the target browser.
 
@@ -12,19 +13,15 @@ description: 'Adversaries may acquire credentials from web browsers by reading f
     store.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-23'
-modified: '2023-08-29'
-tags:
-    - attack.credential-access
-    - attack.t1555.003
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.003/T1555.003.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''fc028194-969d-4122-8abe-0470d5b8f12f''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1555.003
+date: '2022-12-23'
+modified: '2023-08-29'
 logsource:
     category: process_creation
     product: windows
@@ -73,6 +70,9 @@ detection:
             - \uCozMedia\Uran\User Data
             - \Vivaldi\User Data
     condition: all of selection_*
+related:
+    -   id: fc028194-969d-4122-8abe-0470d5b8f12f
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -80,21 +80,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:55.717822+00:00'
+            mapped_at: '2025-12-04T01:45:32.855794+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:55.717822+00:00'
+            mapped_at: '2025-12-04T01:45:32.855794+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:55.717841+00:00'
+            mapped_at: '2025-12-04T01:45:32.855807+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:55.717844+00:00'
+            mapped_at: '2025-12-04T01:45:32.855809+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:55.717846+00:00'
+            mapped_at: '2025-12-04T01:45:32.855810+00:00'

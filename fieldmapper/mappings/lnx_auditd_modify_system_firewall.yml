@@ -1,7 +1,8 @@
-id: 323ff3f5-0013-4847-bbd4-250b5edb62cc
 title: Modify System Firewall
+id: 323ff3f5-0013-4847-bbd4-250b5edb62cc
 status: test
 level: medium
+author: IAI
 description: 'Detects the removal of system firewall rules. Adversaries may only delete
     or modify a specific system firewall rule to bypass controls limiting network
     usage or access.
@@ -9,19 +10,15 @@ description: 'Detects the removal of system firewall rules. Adversaries may only
     Detection rules that match only on the disabling of firewalls will miss this.
 
     '
-author: IAI
-date: '2023-03-06'
-tags:
-    - attack.t1562.004
-    - attack.defense-evasion
 references:
     - https://www.trendmicro.com/en_us/research/22/c/cyclops-blink-sets-sights-on-asus-routers--.html
     - https://blog.aquasec.com/container-security-tnt-container-attack
 falsepositives:
     - Legitimate admin activity
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''53059bc0-1472-438b-956a-7508a94a91f0''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.t1562.004
+    - attack.defense-evasion
+date: '2023-03-06'
 logsource:
     product: linux
     service: auditd
@@ -39,6 +36,9 @@ detection:
         a0: ufw
         a1|contains: delete
     condition: 1 of selection*
+related:
+    -   id: 53059bc0-1472-438b-956a-7508a94a91f0
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: <UNMAPPED>
@@ -46,21 +46,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:06.257164+00:00'
+            mapped_at: '2025-12-04T01:35:36.768183+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:06.257164+00:00'
+            mapped_at: '2025-12-04T01:35:36.768183+00:00'
     detection_fields:
         -   source_field: type
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:06.257179+00:00'
+            mapped_at: '2025-12-04T01:35:36.768208+00:00'
         -   source_field: a0
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:06.257182+00:00'
+            mapped_at: '2025-12-04T01:35:36.768211+00:00'
         -   source_field: a1
             target_table: file_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:06.257184+00:00'
+            mapped_at: '2025-12-04T01:35:36.768214+00:00'

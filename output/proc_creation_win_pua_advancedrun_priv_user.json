@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PUA - AdvancedRun Suspicious Execution",
+    "comment": "Detects the execution of AdvancedRun utility in the context of the TrustedInstaller, SYSTEM, Local Service or Network Service accounts",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('/exefilename')) OR contains(lower(process.cmd_line), lower('/commandline'))) AND (contains(lower(process.cmd_line), lower(' /runas 8 ')) OR contains(lower(process.cmd_line), lower(' /runas 4 ')) OR contains(lower(process.cmd_line), lower(' /runas 10 ')) OR contains(lower(process.cmd_line), lower(' /runas 11 '))) AND (endswith(lower(process.cmd_line), lower('/runas 8')) OR endswith(lower(process.cmd_line), lower('/runas 4')) OR endswith(lower(process.cmd_line), lower('/runas 10')) OR endswith(lower(process.cmd_line), lower('/runas 11'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of AdvancedRun utility in the context of the TrustedInstaller, SYSTEM, Local Service or Network Service accounts",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/splinter_code/status/1483815103279603714, https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3, https://www.elastic.co/security-labs/operation-bleeding-bear, https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1134",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

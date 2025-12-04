@@ -1,22 +1,19 @@
-id: c3cefdf4-6703-4e1c-bad8-bf422fc5015a
 title: Outlook Security Settings Updated - Registry
+id: c3cefdf4-6703-4e1c-bad8-bf422fc5015a
 status: test
 level: medium
-description: Detects changes to the registry values related to outlook security settings
 author: frack113
-date: '2021-12-28'
-modified: '2023-08-17'
-tags:
-    - attack.persistence
-    - attack.t1137
+description: Detects changes to the registry values related to outlook security settings
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1137/T1137.md
     - https://learn.microsoft.com/en-us/outlook/troubleshoot/security/information-about-email-security-settings
 falsepositives:
     - Administrative activity
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1137
+date: '2021-12-28'
+modified: '2023-08-17'
 logsource:
     category: registry_set
     product: windows
@@ -26,6 +23,9 @@ detection:
             - \SOFTWARE\Microsoft\Office\
             - \Outlook\Security\
     condition: selection
+related:
+    -   id: a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

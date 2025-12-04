@@ -1,20 +1,19 @@
-id: 1c12727d-02bf-45ff-a9f3-d49806a3cf43
 title: Renamed Plink Execution
+id: 1c12727d-02bf-45ff-a9f3-d49806a3cf43
 status: test
 level: high
-description: Detects the execution of a renamed version of the Plink binary
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-06'
-modified: '2023-02-03'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
+description: Detects the execution of a renamed version of the Plink binary
 references:
     - https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/
     - https://the.earth.li/~sgtatham/putty/0.58/htmldoc/Chapter7.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2022-06-06'
+modified: '2023-02-03'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:32.603161+00:00'
+            mapped_at: '2025-12-04T01:46:57.873211+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:32.603161+00:00'
+            mapped_at: '2025-12-04T01:46:57.873211+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:32.603181+00:00'
+            mapped_at: '2025-12-04T01:46:57.873228+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:32.603195+00:00'
+            mapped_at: '2025-12-04T01:46:57.873230+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:32.603197+00:00'
+            mapped_at: '2025-12-04T01:46:57.873232+00:00'

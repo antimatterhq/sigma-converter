@@ -1,20 +1,19 @@
-id: bd8b828d-0dca-48e1-8a63-8a58ecf2644f
 title: Group Membership Reconnaissance Via Whoami.EXE
+id: bd8b828d-0dca-48e1-8a63-8a58ecf2644f
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of whoami.exe with the /group command line flag
     to show group membership for the current user, account type, security identifiers
     (SID), and attributes.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-02-28'
-tags:
-    - attack.discovery
-    - attack.t1033
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/whoami
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1033
+date: '2023-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:12.220792+00:00'
+            mapped_at: '2025-12-04T01:45:46.026040+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:12.220792+00:00'
+            mapped_at: '2025-12-04T01:45:46.026040+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:12.220811+00:00'
+            mapped_at: '2025-12-04T01:45:46.026053+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:12.220814+00:00'
+            mapped_at: '2025-12-04T01:45:46.026054+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:12.220815+00:00'
+            mapped_at: '2025-12-04T01:45:46.026056+00:00'

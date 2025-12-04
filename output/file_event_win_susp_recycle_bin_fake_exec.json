@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "Suspicious File Creation Activity From Fake Recycle.Bin Folder",
+    "comment": "Detects file write event from/to a fake recycle bin folder that is often used as a staging directory for malware",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (contains(lower(actor.process.name), lower('recyclers.bin\\\\')) OR contains(lower(actor.process.name), lower('recycler.bin\\\\'))) AND (contains(lower(file.path), lower('recyclers.bin\\\\')) OR contains(lower(file.path), lower('recycler.bin\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects file write event from/to a fake recycle bin folder that is often used as a staging directory for malware",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.mandiant.com/resources/blog/infected-usb-steal-secrets, https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

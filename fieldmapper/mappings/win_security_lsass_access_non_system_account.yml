@@ -1,20 +1,19 @@
-id: 962fe167-e48d-4fd6-9974-11e5b9a5d6d1
 title: LSASS Access From Non System Account
+id: 962fe167-e48d-4fd6-9974-11e5b9a5d6d1
 status: test
 level: medium
+author: Roberto Rodriguez @Cyb3rWard0g
 description: Detects potential mimikatz-like tools accessing LSASS from non system
     account
-author: Roberto Rodriguez @Cyb3rWard0g
-date: '2019-06-20'
-modified: '2023-12-11'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://threathunterplaybook.com/hunts/windows/170105-LSASSMemoryReadAccess/notebook.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2019-06-20'
+modified: '2023-12-11'
 logsource:
     product: windows
     service: security
@@ -62,33 +61,33 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:07.480249+00:00'
+            mapped_at: '2025-12-04T01:56:09.826046+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:46:07.480249+00:00'
+            mapped_at: '2025-12-04T01:56:09.826046+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:07.480304+00:00'
+            mapped_at: '2025-12-04T01:56:09.826075+00:00'
         -   source_field: AccessMask
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:07.480309+00:00'
+            mapped_at: '2025-12-04T01:56:09.826078+00:00'
         -   source_field: ObjectType
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:07.480312+00:00'
+            mapped_at: '2025-12-04T01:56:09.826093+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:07.480316+00:00'
+            mapped_at: '2025-12-04T01:56:09.826095+00:00'
         -   source_field: SubjectUserName
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:46:07.480319+00:00'
+            mapped_at: '2025-12-04T01:56:09.826097+00:00'
         -   source_field: ProcessName
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:46:07.480322+00:00'
+            mapped_at: '2025-12-04T01:56:09.826099+00:00'

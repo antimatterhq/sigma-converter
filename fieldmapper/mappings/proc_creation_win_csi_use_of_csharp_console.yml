@@ -1,20 +1,19 @@
-id: a9e416a8-e613-4f8b-88b8-a7d1d1af2f61
 title: Suspicious Use of CSharp Interactive Console
+id: a9e416a8-e613-4f8b-88b8-a7d1d1af2f61
 status: test
 level: high
-description: Detects the execution of CSharp interactive console by PowerShell
 author: Michael R. (@nahamike01)
-date: '2020-03-08'
-modified: '2022-07-14'
-tags:
-    - attack.execution
-    - attack.t1127
+description: Detects the execution of CSharp interactive console by PowerShell
 references:
     - https://redcanary.com/blog/detecting-attacks-leveraging-the-net-framework/
 falsepositives:
     - Possible depending on environment. Pair with other factors such as net connections,
         command-line args, etc.
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1127
+date: '2020-03-08'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -34,21 +33,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:17.359747+00:00'
+            mapped_at: '2025-12-04T01:43:29.155330+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:17.359747+00:00'
+            mapped_at: '2025-12-04T01:43:29.155330+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:17.359760+00:00'
+            mapped_at: '2025-12-04T01:43:29.155343+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:17.359762+00:00'
+            mapped_at: '2025-12-04T01:43:29.155345+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:17.359764+00:00'
+            mapped_at: '2025-12-04T01:43:29.155346+00:00'

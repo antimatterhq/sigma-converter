@@ -1,22 +1,21 @@
-id: a39d7fa7-3fbd-4dc2-97e1-d87f546b1bbc
 title: Program Executions in Suspicious Folders
+id: a39d7fa7-3fbd-4dc2-97e1-d87f546b1bbc
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: Detects program executions in suspicious non-program folders related
     to malware or hacking activity
-author: Florian Roth (Nextron Systems)
-date: '2018-01-23'
-modified: '2021-11-27'
-tags:
-    - attack.t1587
-    - attack.t1584
-    - attack.resource-development
 references:
     - Internal Research
 falsepositives:
     - Admin activity (especially in /tmp folders)
     - Crazy web applications
-taxonomy: sigma
+tags:
+    - attack.t1587
+    - attack.t1584
+    - attack.resource-development
+date: '2018-01-23'
+modified: '2021-11-27'
 logsource:
     product: linux
     service: auditd
@@ -48,17 +47,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:25.172783+00:00'
+            mapped_at: '2025-12-04T01:35:45.903879+00:00'
         service:
             source_field: service
             source_value: auditd
-            mapped_at: '2025-11-26T02:16:25.172783+00:00'
+            mapped_at: '2025-12-04T01:35:45.903879+00:00'
     detection_fields:
         -   source_field: type
             target_table: account_change
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:16:25.172796+00:00'
+            mapped_at: '2025-12-04T01:35:45.903901+00:00'
         -   source_field: exe
             target_table: account_change
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:16:25.172798+00:00'
+            mapped_at: '2025-12-04T01:35:45.903903+00:00'

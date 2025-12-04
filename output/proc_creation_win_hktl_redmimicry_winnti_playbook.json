@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "HackTool - RedMimicry Winnti Playbook Execution",
+    "comment": "Detects actions caused by the RedMimicry Winnti playbook a automated breach emulations utility",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe'))) AND (contains(lower(process.cmd_line), lower('gthread-3.6.dll')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\temp\\\\tmp.bat')) OR contains(lower(process.cmd_line), lower('sigcmm-2.4.dll'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects actions caused by the RedMimicry Winnti playbook a automated breach emulations utility",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://redmimicry.com/posts/redmimicry-winnti/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1106"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1218",
+          "subTechniqueId": "011"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

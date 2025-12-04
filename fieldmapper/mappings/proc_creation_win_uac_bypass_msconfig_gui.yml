@@ -1,20 +1,19 @@
-id: ad92e3f9-7eb6-460e-96b1-582b0ccbb980
 title: UAC Bypass Using MSConfig Token Modification - Process
+id: ad92e3f9-7eb6-460e-96b1-582b0ccbb980
 status: test
 level: high
-description: Detects the pattern of UAC Bypass using a msconfig GUI hack (UACMe 55)
 author: Christian Burkard (Nextron Systems)
-date: '2021-08-30'
-modified: '2024-12-01'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1548.002
+description: Detects the pattern of UAC Bypass using a msconfig GUI hack (UACMe 55)
 references:
     - https://github.com/hfiref0x/UACME
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1548.002
+date: '2021-08-30'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -35,21 +34,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:52.186077+00:00'
+            mapped_at: '2025-12-04T01:42:13.538291+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:52.186077+00:00'
+            mapped_at: '2025-12-04T01:42:13.538291+00:00'
     detection_fields:
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:26:52.186100+00:00'
+            mapped_at: '2025-12-04T01:42:13.538310+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:52.186102+00:00'
+            mapped_at: '2025-12-04T01:42:13.538312+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:52.186103+00:00'
+            mapped_at: '2025-12-04T01:42:13.538313+00:00'

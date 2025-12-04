@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Google Workspace Application Removed",
+    "comment": "Detects when an an application is removed from Google Workspace.",
+    "annotations": {
+      "source": "sigma",
+      "product": "gcp",
+      "service": "google_workspace.admin",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND lower(metadata.product.name) = lower('admin.googleapis.com') AND (lower(LOWER(api.operation)) in ('remove_application', 'remove_application_from_whitelist')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when an an application is removed from Google Workspace.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Application being removed may be performed by a System Administrator. References: https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3, https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-domain-settings?hl=en#REMOVE_APPLICATION, https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-domain-settings?hl=en#REMOVE_APPLICATION_FROM_WHITELIST",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

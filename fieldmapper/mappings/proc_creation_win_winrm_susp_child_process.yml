@@ -1,22 +1,21 @@
-id: 5cc2cda8-f261-4d88-a2de-e9e193c86716
 title: Suspicious Processes Spawned by WinRM
+id: 5cc2cda8-f261-4d88-a2de-e9e193c86716
 status: test
 level: high
+author: Andreas Hunkeler (@Karneades), Markus Neis
 description: Detects suspicious processes including shells spawnd from WinRM host
     process
-author: Andreas Hunkeler (@Karneades), Markus Neis
-date: '2021-05-20'
-modified: '2022-07-14'
+references:
+    - Internal Research
+falsepositives:
+    - Legitimate WinRM usage
 tags:
     - attack.t1190
     - attack.initial-access
     - attack.persistence
     - attack.privilege-escalation
-references:
-    - Internal Research
-falsepositives:
-    - Legitimate WinRM usage
-taxonomy: sigma
+date: '2021-05-20'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:07.000973+00:00'
+            mapped_at: '2025-12-04T01:49:03.397057+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:07.000973+00:00'
+            mapped_at: '2025-12-04T01:49:03.397057+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:07.000984+00:00'
+            mapped_at: '2025-12-04T01:49:03.397071+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:07.000986+00:00'
+            mapped_at: '2025-12-04T01:49:03.397073+00:00'

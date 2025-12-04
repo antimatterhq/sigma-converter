@@ -1,7 +1,8 @@
-id: b48492dc-c5ef-4572-8dff-32bc241c15c8
 title: Load Of RstrtMgr.DLL By A Suspicious Process
+id: b48492dc-c5ef-4572-8dff-32bc241c15c8
 status: test
 level: high
+author: Luc Génaux
 description: 'Detects the load of RstrtMgr DLL (Restart Manager) by a suspicious process.
 
     This library has been used during ransomware campaigns to kill processes that
@@ -11,13 +12,6 @@ description: 'Detects the load of RstrtMgr DLL (Restart Manager) by a suspicious
     It could also be used for anti-analysis purposes by shut downing specific processes.
 
     '
-author: Luc Génaux
-date: '2023-11-28'
-tags:
-    - attack.impact
-    - attack.defense-evasion
-    - attack.t1486
-    - attack.t1562.001
 references:
     - https://www.crowdstrike.com/blog/windows-restart-manager-part-1/
     - https://www.crowdstrike.com/blog/windows-restart-manager-part-2/
@@ -25,9 +19,12 @@ references:
     - https://taiwan.postsen.com/business/88601/Hamas-hackers-use-data-destruction-software-BiBi-which-consumes-a-lot-of-processor-resources-to-wipe-Windows-computer-data--iThome.html
 falsepositives:
     - Processes related to software installation
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3669afd2-9891-4534-a626-e5cf03810a61''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.defense-evasion
+    - attack.t1486
+    - attack.t1562.001
+date: '2023-11-28'
 logsource:
     category: image_load
     product: windows
@@ -49,6 +46,9 @@ detection:
             - :\Users\
             - \Contacts\
     condition: selection_img and 1 of selection_folders_*
+related:
+    -   id: 3669afd2-9891-4534-a626-e5cf03810a61
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -56,21 +56,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: image_load
-            mapped_at: '2025-11-26T02:24:35.941304+00:00'
+            mapped_at: '2025-12-04T01:40:35.345621+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:35.941304+00:00'
+            mapped_at: '2025-12-04T01:40:35.345621+00:00'
     detection_fields:
         -   source_field: ImageLoaded
             target_table: process_activity
             target_field: module.file.path
-            mapped_at: '2025-11-26T02:24:35.941336+00:00'
+            mapped_at: '2025-12-04T01:40:35.345637+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:24:35.941339+00:00'
+            mapped_at: '2025-12-04T01:40:35.345638+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:24:35.941341+00:00'
+            mapped_at: '2025-12-04T01:40:35.345640+00:00'

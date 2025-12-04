@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "name": "PUA - AdFind Suspicious Execution",
+    "comment": "Detects AdFind execution with common flags seen used during attacks",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('domainlist')) OR contains(lower(process.cmd_line), lower('trustdmp')) OR contains(lower(process.cmd_line), lower('dcmodes')) OR contains(lower(process.cmd_line), lower('adinfo')) OR contains(lower(process.cmd_line), lower(' dclist ')) OR contains(lower(process.cmd_line), lower('computer_pwdnotreqd')) OR contains(lower(process.cmd_line), lower('objectcategory=')) OR contains(lower(process.cmd_line), lower('-subnets -f')) OR contains(lower(process.cmd_line), lower('name=\"domain admins\"')) OR contains(lower(process.cmd_line), lower('-sc u:')) OR contains(lower(process.cmd_line), lower('domainncs')) OR contains(lower(process.cmd_line), lower('dompol')) OR contains(lower(process.cmd_line), lower(' oudmp ')) OR contains(lower(process.cmd_line), lower('subnetdmp')) OR contains(lower(process.cmd_line), lower('gpodmp')) OR contains(lower(process.cmd_line), lower('fspdmp')) OR contains(lower(process.cmd_line), lower('users_noexpire')) OR contains(lower(process.cmd_line), lower('computers_active')) OR contains(lower(process.cmd_line), lower('computers_pwdnotreqd'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects AdFind execution with common flags seen used during attacks",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate admin activity References: https://www.joeware.net/freetools/tools/adfind/, https://thedfirreport.com/2020/05/08/adfind-recon/, https://thedfirreport.com/2021/01/11/trickbot-still-alive-and-well/, https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx, https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/bf62ece1c679b07b5fb49c4bae947fe24c81811f/fin6/Emulation_Plan/Phase1.md, https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1087.002/T1087.002.md#atomic-test-7---adfind---enumerate-active-directory-user-objects",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1018"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1069",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1482"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

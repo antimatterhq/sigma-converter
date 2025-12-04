@@ -1,25 +1,22 @@
-id: 7fcc54cb-f27d-4684-84b7-436af096f858
 title: Sudo Privilege Escalation CVE-2019-14287 - Builtin
+id: 7fcc54cb-f27d-4684-84b7-436af096f858
 status: test
 level: critical
-description: Detects users trying to exploit sudo vulnerability reported in CVE-2019-14287
 author: Florian Roth (Nextron Systems)
-date: '2019-10-15'
-modified: '2022-11-26'
-tags:
-    - attack.privilege-escalation
-    - attack.t1068
-    - attack.t1548.003
-    - cve.2019-14287
+description: Detects users trying to exploit sudo vulnerability reported in CVE-2019-14287
 references:
     - https://www.openwall.com/lists/oss-security/2019/10/14/1
     - https://access.redhat.com/security/cve/cve-2019-14287
     - https://twitter.com/matthieugarin/status/1183970598210412546
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f74107df-b6c6-4e80-bf00-4170b658162b''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.t1068
+    - attack.t1548.003
+    - cve.2019-14287
+date: '2019-10-15'
+modified: '2022-11-26'
 logsource:
     product: linux
     service: sudo
@@ -29,6 +26,9 @@ detection:
             - '#-*'
             - '#*4294967295'
     condition: selection_user
+related:
+    -   id: f74107df-b6c6-4e80-bf00-4170b658162b
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -36,13 +36,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:18:00.356132+00:00'
+            mapped_at: '2025-12-04T01:36:57.155422+00:00'
         service:
             source_field: service
             source_value: sudo
-            mapped_at: '2025-11-26T02:18:00.356132+00:00'
+            mapped_at: '2025-12-04T01:36:57.155422+00:00'
     detection_fields:
         -   source_field: USER
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:18:01.114633+00:00'
+            mapped_at: '2025-12-04T01:36:57.155444+00:00'

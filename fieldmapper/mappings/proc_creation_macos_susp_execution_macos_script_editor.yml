@@ -1,12 +1,15 @@
-id: 6e4dcdd1-e48b-42f7-b2d8-3b413fc58cb4
 title: Suspicious Execution via macOS Script Editor
+id: 6e4dcdd1-e48b-42f7-b2d8-3b413fc58cb4
 status: test
 level: medium
+author: Tim Rauch (rule), Elastic (idea)
 description: Detects when the macOS Script Editor utility spawns an unusual child
     process.
-author: Tim Rauch (rule), Elastic (idea)
-date: '2022-10-21'
-modified: '2022-12-28'
+references:
+    - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-7f541fbc4a4a28a92970e8bf53effea5bd934604429112c920affb457f5b2685
+    - https://wojciechregula.blog/post/macos-red-teaming-initial-access-via-applescript-url/
+falsepositives:
+    - Unknown
 tags:
     - attack.t1566
     - attack.t1566.002
@@ -19,12 +22,8 @@ tags:
     - attack.persistence
     - attack.t1553
     - attack.defense-evasion
-references:
-    - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-7f541fbc4a4a28a92970e8bf53effea5bd934604429112c920affb457f5b2685
-    - https://wojciechregula.blog/post/macos-red-teaming-initial-access-via-applescript-url/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-10-21'
+modified: '2022-12-28'
 logsource:
     category: process_creation
     product: macos
@@ -62,17 +61,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:42.540642+00:00'
+            mapped_at: '2025-12-04T01:34:36.858184+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:42.540642+00:00'
+            mapped_at: '2025-12-04T01:34:36.858184+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:13:42.540672+00:00'
+            mapped_at: '2025-12-04T01:34:36.858198+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:42.540677+00:00'
+            mapped_at: '2025-12-04T01:34:36.858200+00:00'

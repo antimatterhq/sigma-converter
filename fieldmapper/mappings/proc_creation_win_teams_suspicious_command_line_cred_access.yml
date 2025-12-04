@@ -1,7 +1,8 @@
-id: d2eb17db-1d39-41dc-b57f-301f6512fa75
 title: Potentially Suspicious Command Targeting Teams Sensitive Files
+id: d2eb17db-1d39-41dc-b57f-301f6512fa75
 status: test
 level: medium
+author: '@SerkinValery'
 description: 'Detects a commandline containing references to the Microsoft Teams database
     or cookies files from a process other than Teams.
 
@@ -9,18 +10,16 @@ description: 'Detects a commandline containing references to the Microsoft Teams
     about the logged in accounts.
 
     '
-author: '@SerkinValery'
-date: '2022-09-16'
-modified: '2023-12-18'
-tags:
-    - attack.credential-access
-    - attack.t1528
 references:
     - https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/
     - https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1528
+date: '2022-09-16'
+modified: '2023-12-18'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:56.755216+00:00'
+            mapped_at: '2025-12-04T01:48:07.973610+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:56.755216+00:00'
+            mapped_at: '2025-12-04T01:48:07.973610+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:56.755242+00:00'
+            mapped_at: '2025-12-04T01:48:07.973625+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:56.755245+00:00'
+            mapped_at: '2025-12-04T01:48:07.973626+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Winrar Execution in Non-Standard Folder",
+    "comment": "Detects a suspicious winrar execution in a folder which is not the default installation folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\rar.exe')) OR endswith(lower(process.name), lower('\\\\winrar.exe'))) AND lower(device.desc) = lower('command line rar') AND NOT (endswith(lower(process.name), lower('\\\\unrar.exe')) OR contains(lower(process.name), lower(':\\\\program files (x86)\\\\winrar\\\\')) OR contains(lower(process.name), lower(':\\\\program files\\\\winrar\\\\'))) AND NOT contains(lower(process.name), lower(':\\\\windows\\\\temp\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious winrar execution in a folder which is not the default installation folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of WinRAR in a folder of a software that bundles WinRAR Reference: https://twitter.com/cyb3rops/status/1460978167628406785",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Collection",
+          "techniqueId": "T1560",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

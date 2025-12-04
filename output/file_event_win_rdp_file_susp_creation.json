@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": ".RDP File Created By Uncommon Application",
+    "comment": "Detects creation of a file with an \".rdp\" extension by an application that doesn't commonly create such files.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(file.path), lower('.rdp')) AND (endswith(lower(actor.process.name), lower('\\\\brave.exe')) OR endswith(lower(actor.process.name), lower('\\\\ccleaner browser\\\\application\\\\ccleanerbrowser.exe')) OR endswith(lower(actor.process.name), lower('\\\\chromium.exe')) OR endswith(lower(actor.process.name), lower('\\\\firefox.exe')) OR endswith(lower(actor.process.name), lower('\\\\google\\\\chrome\\\\application\\\\chrome.exe')) OR endswith(lower(actor.process.name), lower('\\\\iexplore.exe')) OR endswith(lower(actor.process.name), lower('\\\\microsoftedge.exe')) OR endswith(lower(actor.process.name), lower('\\\\msedge.exe')) OR endswith(lower(actor.process.name), lower('\\\\opera.exe')) OR endswith(lower(actor.process.name), lower('\\\\vivaldi.exe')) OR endswith(lower(actor.process.name), lower('\\\\whale.exe')) OR endswith(lower(actor.process.name), lower('\\\\olk.exe')) OR endswith(lower(actor.process.name), lower('\\\\outlook.exe')) OR endswith(lower(actor.process.name), lower('\\\\runtimebroker.exe')) OR endswith(lower(actor.process.name), lower('\\\\thunderbird.exe')) OR endswith(lower(actor.process.name), lower('\\\\discord.exe')) OR endswith(lower(actor.process.name), lower('\\\\keybase.exe')) OR endswith(lower(actor.process.name), lower('\\\\msteams.exe')) OR endswith(lower(actor.process.name), lower('\\\\slack.exe')) OR endswith(lower(actor.process.name), lower('\\\\teams.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of a file with an \".rdp\" extension by an application that doesn't commonly create such files.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/, https://web.archive.org/web/20230726144748/https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

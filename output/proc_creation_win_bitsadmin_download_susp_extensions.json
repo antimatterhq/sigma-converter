@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "File With Suspicious Extension Downloaded Via Bitsadmin",
+    "comment": "Detects usage of bitsadmin downloading a file with a suspicious extension",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\bitsadmin.exe')) AND lower(process.file.name) = lower('bitsadmin.exe') AND (contains(lower(process.cmd_line), lower(' /transfer ')) OR contains(lower(process.cmd_line), lower(' /create ')) OR contains(lower(process.cmd_line), lower(' /addfile '))) AND (contains(lower(process.cmd_line), lower('.7z')) OR contains(lower(process.cmd_line), lower('.asax')) OR contains(lower(process.cmd_line), lower('.ashx')) OR contains(lower(process.cmd_line), lower('.asmx')) OR contains(lower(process.cmd_line), lower('.asp')) OR contains(lower(process.cmd_line), lower('.aspx')) OR contains(lower(process.cmd_line), lower('.bat')) OR contains(lower(process.cmd_line), lower('.cfm')) OR contains(lower(process.cmd_line), lower('.cgi')) OR contains(lower(process.cmd_line), lower('.chm')) OR contains(lower(process.cmd_line), lower('.cmd')) OR contains(lower(process.cmd_line), lower('.dll')) OR contains(lower(process.cmd_line), lower('.gif')) OR contains(lower(process.cmd_line), lower('.jpeg')) OR contains(lower(process.cmd_line), lower('.jpg')) OR contains(lower(process.cmd_line), lower('.jsp')) OR contains(lower(process.cmd_line), lower('.jspx')) OR contains(lower(process.cmd_line), lower('.log')) OR contains(lower(process.cmd_line), lower('.png')) OR contains(lower(process.cmd_line), lower('.ps1')) OR contains(lower(process.cmd_line), lower('.psm1')) OR contains(lower(process.cmd_line), lower('.rar')) OR contains(lower(process.cmd_line), lower('.scf')) OR contains(lower(process.cmd_line), lower('.sct')) OR contains(lower(process.cmd_line), lower('.txt')) OR contains(lower(process.cmd_line), lower('.vbe')) OR contains(lower(process.cmd_line), lower('.vbs')) OR contains(lower(process.cmd_line), lower('.war')) OR contains(lower(process.cmd_line), lower('.wsf')) OR contains(lower(process.cmd_line), lower('.wsh')) OR contains(lower(process.cmd_line), lower('.xll')) OR contains(lower(process.cmd_line), lower('.zip'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of bitsadmin downloading a file with a suspicious extension",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin, https://isc.sans.edu/diary/22264, https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1197"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

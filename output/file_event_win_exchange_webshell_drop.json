@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious ASPX File Drop by Exchange",
+    "comment": "Detects suspicious file type dropped by an Exchange component in IIS into a suspicious folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(actor.process.name), lower('\\\\w3wp.exe')) AND contains(lower(actor.process.cmd_line), lower('msexchange')) AND (contains(lower(file.path), lower('frontend\\\\httpproxy\\\\')) OR contains(lower(file.path), lower('\\\\inetpub\\\\wwwroot\\\\aspnet_client\\\\'))) AND (endswith(lower(file.path), lower('.aspx')) OR endswith(lower(file.path), lower('.asp')) OR endswith(lower(file.path), lower('.ashx'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious file type dropped by an Exchange component in IIS into a suspicious folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.microsoft.com/security/blog/2022/09/30/analyzing-attacks-using-the-exchange-vulnerabilities-cve-2022-41040-and-cve-2022-41082/, https://www.gteltsc.vn/blog/canh-bao-chien-dich-tan-cong-su-dung-lo-hong-zero-day-tren-microsoft-exchange-server-12714.html, https://en.gteltsc.vn/blog/cap-nhat-nhe-ve-lo-hong-bao-mat-0day-microsoft-exchange-dang-duoc-su-dung-de-tan-cong-cac-to-chuc-tai-viet-nam-9685.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

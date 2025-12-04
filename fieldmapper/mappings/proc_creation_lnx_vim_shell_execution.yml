@@ -1,7 +1,8 @@
-id: 7ab8f73a-fcff-428b-84aa-6a5ff7877dea
 title: Vim GTFOBin Abuse - Linux
+id: 7ab8f73a-fcff-428b-84aa-6a5ff7877dea
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the use of "vim" and it''s siblings commands to execute a shell
     or proxy commands.
 
@@ -9,19 +10,17 @@ description: 'Detects the use of "vim" and it''s siblings commands to execute a 
     execution, or to break out from restricted environments.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-28'
-modified: '2024-09-02'
-tags:
-    - attack.discovery
-    - attack.t1083
 references:
     - https://gtfobins.github.io/gtfobins/vim/
     - https://gtfobins.github.io/gtfobins/rvim/
     - https://gtfobins.github.io/gtfobins/vimdiff/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1083
+date: '2022-12-28'
+modified: '2024-09-02'
 logsource:
     category: process_creation
     product: linux
@@ -52,17 +51,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:43.232807+00:00'
+            mapped_at: '2025-12-04T01:36:50.712880+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:43.232807+00:00'
+            mapped_at: '2025-12-04T01:36:50.712880+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:43.232823+00:00'
+            mapped_at: '2025-12-04T01:36:50.712904+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:43.232825+00:00'
+            mapped_at: '2025-12-04T01:36:50.712906+00:00'

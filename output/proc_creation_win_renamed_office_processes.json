@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Renamed Office Binary Execution",
+    "comment": "Detects the execution of a renamed office binary",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(process.file.name)) in ('excel\\.exe', 'msaccess\\.exe', 'mspub\\.exe', 'onenote\\.exe', 'onenotem\\.exe', 'outlook\\.exe', 'powerpnt\\.exe', 'winword\\.exe')) AND (lower(LOWER(device.desc)) in ('microsoft access', 'microsoft excel', 'microsoft onenote', 'microsoft outlook', 'microsoft powerpoint', 'microsoft publisher', 'microsoft word', 'sent to onenote tool')) AND NOT (endswith(lower(process.name), lower('\\\\excel.exe')) OR endswith(lower(process.name), lower('\\\\excelcnv.exe')) OR endswith(lower(process.name), lower('\\\\msaccess.exe')) OR endswith(lower(process.name), lower('\\\\mspub.exe')) OR endswith(lower(process.name), lower('\\\\onenote.exe')) OR endswith(lower(process.name), lower('\\\\onenotem.exe')) OR endswith(lower(process.name), lower('\\\\outlook.exe')) OR endswith(lower(process.name), lower('\\\\powerpnt.exe')) OR endswith(lower(process.name), lower('\\\\winword.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of a renamed office binary",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://infosec.exchange/@sbousseaden/109542254124022664",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

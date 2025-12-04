@@ -1,20 +1,19 @@
-id: 6004abd0-afa4-4557-ba90-49d172e0a299
 title: Execute Pcwrun.EXE To Leverage Follina
+id: 6004abd0-afa4-4557-ba90-49d172e0a299
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects indirect command execution via Program Compatibility Assistant
     "pcwrun.exe" leveraging the follina (CVE-2022-30190) vulnerability
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
-    - attack.execution
 references:
     - https://twitter.com/nas_bench/status/1535663791362519040
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.execution
+date: '2022-06-13'
 logsource:
     category: process_creation
     product: windows
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:39.337563+00:00'
+            mapped_at: '2025-12-04T01:48:39.596009+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:39.337563+00:00'
+            mapped_at: '2025-12-04T01:48:39.596009+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:39.337588+00:00'
+            mapped_at: '2025-12-04T01:48:39.596022+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:39.337591+00:00'
+            mapped_at: '2025-12-04T01:48:39.596024+00:00'

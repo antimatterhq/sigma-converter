@@ -1,7 +1,8 @@
-id: cd3a808c-c7b7-4c50-a2f3-f4cfcd436435
 title: Google Cloud Kubernetes CronJob
+id: cd3a808c-c7b7-4c50-a2f3-f4cfcd436435
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: 'Identifies when a Google Cloud Kubernetes CronJob runs in Azure Cloud.
     Kubernetes Job is a controller that creates one or more pods and ensures that
     a specified number of them successfully terminate.
@@ -13,13 +14,6 @@ description: 'Identifies when a Google Cloud Kubernetes CronJob runs in Azure Cl
     code that would run as a container in the cluster.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-11-22'
-modified: '2022-12-25'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.execution
 references:
     - https://cloud.google.com/kubernetes-engine/docs
     - https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
@@ -27,7 +21,12 @@ references:
 falsepositives:
     - Google Cloud Kubernetes CronJob/Job may be done by a system administrator.
     - If known behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.execution
+date: '2021-11-22'
+modified: '2022-12-25'
 logsource:
     product: gcp
     service: gcp.audit
@@ -44,13 +43,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:37.094736+00:00'
+            mapped_at: '2025-12-04T01:38:51.232682+00:00'
         service:
             source_field: service
             source_value: gcp.audit
-            mapped_at: '2025-11-26T02:21:37.094736+00:00'
+            mapped_at: '2025-12-04T01:38:51.232682+00:00'
     detection_fields:
         -   source_field: gcp.audit.method_name
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:21:37.094752+00:00'
+            mapped_at: '2025-12-04T01:38:51.232725+00:00'

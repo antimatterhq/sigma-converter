@@ -1,30 +1,23 @@
-id: e1693bc8-7168-4eab-8718-cdcaa68a1738
 title: Suspicious WMIC Execution Via Office Process
+id: e1693bc8-7168-4eab-8718-cdcaa68a1738
 status: test
 level: high
+author: Vadim Khrykov, Cyb3rEng
 description: Office application called wmic to proxye execution through a LOLBIN process.
     This is often used to break suspicious parent-child chain (Office app spawns LOLBin).
-author: Vadim Khrykov, Cyb3rEng
-date: '2021-08-23'
-modified: '2023-02-14'
+references:
+    - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
+    - https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml
+falsepositives:
+    - Unknown
 tags:
     - attack.t1204.002
     - attack.t1047
     - attack.t1218.010
     - attack.execution
     - attack.defense-evasion
-references:
-    - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
-    - https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''438025f9-5856-4663-83f7-52f878a70a50''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''518643ba-7d9c-4fa5-9f37-baed36059f6a''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''9d1c72f5-43f0-4da5-9320-648cf2099dd0''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''c0e1c3d5-4381-4f18-8145-2583f06a1fe5''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''04f5363a-6bca-42ff-be70-0d28bf629ead''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+date: '2021-08-23'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -58,6 +51,17 @@ detection:
             - wscript
             - cscript
     condition: all of selection_*
+related:
+    -   id: 438025f9-5856-4663-83f7-52f878a70a50
+        type: derived
+    -   id: 518643ba-7d9c-4fa5-9f37-baed36059f6a
+        type: obsolete
+    -   id: 9d1c72f5-43f0-4da5-9320-648cf2099dd0
+        type: obsolete
+    -   id: c0e1c3d5-4381-4f18-8145-2583f06a1fe5
+        type: obsolete
+    -   id: 04f5363a-6bca-42ff-be70-0d28bf629ead
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -65,25 +69,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:47.521925+00:00'
+            mapped_at: '2025-12-04T01:49:38.520571+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:47.521925+00:00'
+            mapped_at: '2025-12-04T01:49:38.520571+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:47.521945+00:00'
+            mapped_at: '2025-12-04T01:49:38.520784+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:47.521948+00:00'
+            mapped_at: '2025-12-04T01:49:38.520866+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:35:47.521950+00:00'
+            mapped_at: '2025-12-04T01:49:38.520870+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:47.521952+00:00'
+            mapped_at: '2025-12-04T01:49:38.520871+00:00'

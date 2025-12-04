@@ -1,7 +1,8 @@
-id: df68f791-ad95-447f-a271-640a0dab9cf8
 title: DNS Query Request To OneLaunch Update Service
+id: df68f791-ad95-447f-a271-640a0dab9cf8
 status: test
 level: low
+author: Josh Nickels
 description: 'Detects DNS query requests to "update.onelaunch.com". This domain is
     associated with the OneLaunch adware application.
 
@@ -9,18 +10,16 @@ description: 'Detects DNS query requests to "update.onelaunch.com". This domain 
     this domain.
 
     '
-author: Josh Nickels
-date: '2024-02-26'
-tags:
-    - attack.collection
-    - attack.t1056
 references:
     - https://www.malwarebytes.com/blog/detections/pup-optional-onelaunch-silentcf
     - https://www.myantispyware.com/2020/12/14/how-to-uninstall-onelaunch-browser-removal-guide/
     - https://malware.guide/browser-hijacker/remove-onelaunch-virus/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1056
+date: '2024-02-26'
 logsource:
     category: dns_query
     product: windows
@@ -36,17 +35,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:40.013354+00:00'
+            mapped_at: '2025-12-04T01:51:13.618625+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:40.013354+00:00'
+            mapped_at: '2025-12-04T01:51:13.618625+00:00'
     detection_fields:
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:40.013412+00:00'
+            mapped_at: '2025-12-04T01:51:13.618644+00:00'
         -   source_field: Image
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:40.013424+00:00'
+            mapped_at: '2025-12-04T01:51:13.618645+00:00'

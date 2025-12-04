@@ -1,7 +1,8 @@
-id: 3da70954-0f2c-4103-adff-b7440368f50e
 title: Suspicious PROCEXP152.sys File Created In TMP
+id: 3da70954-0f2c-4103-adff-b7440368f50e
 status: test
 level: medium
+author: xknow (@xknow_infosec), xorxes (@xor_xes)
 description: 'Detects the creation of the PROCEXP152.sys file in the application-data
     local temporary folder.
 
@@ -10,19 +11,17 @@ description: 'Detects the creation of the PROCEXP152.sys file in the application
     KDU.
 
     '
-author: xknow (@xknow_infosec), xorxes (@xor_xes)
-date: '2019-04-08'
-modified: '2022-11-22'
-tags:
-    - attack.t1562.001
-    - attack.defense-evasion
 references:
     - https://web.archive.org/web/20230331181619/https://blog.dylan.codes/evading-sysmon-and-windows-event-logging/
 falsepositives:
     - Other legimate tools using this driver and filename (like Sysinternals). Note
         - Clever attackers may easily bypass this detection by just renaming the driver
         filename. Therefore just Medium-level and don't rely on it.
-taxonomy: sigma
+tags:
+    - attack.t1562.001
+    - attack.defense-evasion
+date: '2019-04-08'
+modified: '2022-11-22'
 logsource:
     category: file_event
     product: windows
@@ -44,17 +43,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:21.180127+00:00'
+            mapped_at: '2025-12-04T01:52:13.097841+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:21.180127+00:00'
+            mapped_at: '2025-12-04T01:52:13.097841+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:21.180184+00:00'
+            mapped_at: '2025-12-04T01:52:13.097861+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:21.180193+00:00'
+            mapped_at: '2025-12-04T01:52:13.097865+00:00'

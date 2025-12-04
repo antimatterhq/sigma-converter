@@ -1,20 +1,19 @@
-id: ee39a9f7-5a79-4b0a-9815-d36b3cf28d3e
 title: Okta FastPass Phishing Detection
+id: ee39a9f7-5a79-4b0a-9815-d36b3cf28d3e
 status: test
 level: high
-description: Detects when Okta FastPass prevents a known phishing site.
 author: Austin Songer @austinsonger
-date: '2023-05-07'
-tags:
-    - attack.initial-access
-    - attack.t1566
+description: Detects when Okta FastPass prevents a known phishing site.
 references:
     - https://sec.okta.com/fastpassphishingdetection
     - https://developer.okta.com/docs/reference/api/system-log/
     - https://developer.okta.com/docs/reference/api/event-types/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1566
+date: '2023-05-07'
 logsource:
     product: okta
     service: okta
@@ -31,21 +30,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: okta
-            mapped_at: '2025-11-26T02:18:36.851708+00:00'
+            mapped_at: '2025-12-04T01:37:17.383964+00:00'
         service:
             source_field: service
             source_value: okta
-            mapped_at: '2025-11-26T02:18:36.851708+00:00'
+            mapped_at: '2025-12-04T01:37:17.383964+00:00'
     detection_fields:
         -   source_field: outcome.reason
             target_table: user_access
             target_field: status_detail
-            mapped_at: '2025-11-26T02:18:38.383954+00:00'
+            mapped_at: '2025-12-04T01:37:17.383977+00:00'
         -   source_field: outcome.result
             target_table: user_access
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:18:38.383985+00:00'
+            mapped_at: '2025-12-04T01:37:17.383979+00:00'
         -   source_field: eventtype
             target_table: user_access
             target_field: action
-            mapped_at: '2025-11-26T02:18:38.383989+00:00'
+            mapped_at: '2025-12-04T01:37:17.383981+00:00'

@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Publisher Attachment File Dropped In Suspicious Location",
+    "comment": "Detects creation of files with the \".pub\" extension in suspicious or uncommon locations. This could be a sign of attackers abusing Publisher documents",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR contains(lower(file.path), lower('\\\\users\\\\public\\\\')) OR contains(lower(file.path), lower('\\\\windows\\\\temp\\\\')) OR contains(lower(file.path), lower('c:\\\\temp\\\\'))) AND endswith(lower(file.path), lower('.pub')))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of files with the \".pub\" extension in suspicious or uncommon locations. This could be a sign of attackers abusing Publisher documents",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of \".pub\" files from those locations Reference: https://twitter.com/EmericNasi/status/1623224526220804098",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

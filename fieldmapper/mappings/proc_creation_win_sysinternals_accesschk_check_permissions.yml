@@ -1,17 +1,12 @@
-id: c625d754-6a3d-4f65-9c9a-536aea960d37
 title: Permission Check Via Accesschk.EXE
+id: c625d754-6a3d-4f65-9c9a-536aea960d37
 status: test
 level: medium
+author: Teymur Kheirkhabarov (idea), Mangatas Tondang, oscd.community, Nasreddine
+    Bencherchali (Nextron Systems)
 description: Detects the usage of the "Accesschk" utility, an access and privilege
     audit tool developed by SysInternal and often being abused by attacker to verify
     process privileges
-author: Teymur Kheirkhabarov (idea), Mangatas Tondang, oscd.community, Nasreddine
-    Bencherchali (Nextron Systems)
-date: '2020-10-13'
-modified: '2023-02-20'
-tags:
-    - attack.discovery
-    - attack.t1069.001
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment?slide=43
     - https://www.youtube.com/watch?v=JGs-aKf2OtU&ab_channel=OFFZONEMOSCOW
@@ -19,7 +14,11 @@ references:
     - https://github.com/gladiatx0r/Powerless/blob/04f553bbc0c65baf4e57344deff84e3f016e6b51/Powerless.bat
 falsepositives:
     - System administrator Usage
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1069.001
+date: '2020-10-13'
+modified: '2023-02-20'
 logsource:
     category: process_creation
     product: windows
@@ -45,29 +44,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:30.436005+00:00'
+            mapped_at: '2025-12-04T01:46:56.143721+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:30.436005+00:00'
+            mapped_at: '2025-12-04T01:46:56.143721+00:00'
     detection_fields:
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:32:30.436023+00:00'
+            mapped_at: '2025-12-04T01:46:56.143739+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:32:30.436025+00:00'
+            mapped_at: '2025-12-04T01:46:56.143740+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:30.436026+00:00'
+            mapped_at: '2025-12-04T01:46:56.143742+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:30.436028+00:00'
+            mapped_at: '2025-12-04T01:46:56.143743+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:30.436029+00:00'
+            mapped_at: '2025-12-04T01:46:56.143745+00:00'

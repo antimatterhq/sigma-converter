@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Linux Shell Pipe to Shell",
+    "comment": "Detects suspicious process command line that starts with a shell that executes something and finally gets piped into another shell",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (startswith(lower(process.cmd_line), lower('sh -c ')) OR startswith(lower(process.cmd_line), lower('bash -c '))) AND (contains(lower(process.cmd_line), lower('| bash ')) OR contains(lower(process.cmd_line), lower('| sh ')) OR contains(lower(process.cmd_line), lower('|bash ')) OR contains(lower(process.cmd_line), lower('|sh '))) AND (endswith(lower(process.cmd_line), lower('| bash')) OR endswith(lower(process.cmd_line), lower('| sh')) OR endswith(lower(process.cmd_line), lower('|bash')) OR endswith(lower(process.cmd_line), lower(' |sh'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious process command line that starts with a shell that executes something and finally gets piped into another shell",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate software that uses these patterns Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1140"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

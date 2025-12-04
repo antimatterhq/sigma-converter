@@ -1,23 +1,22 @@
-id: 4f2cd9b6-4a17-440f-bb2a-687abb65993a
 title: Uncommon AddinUtil.EXE CommandLine Execution
+id: 4f2cd9b6-4a17-440f-bb2a-687abb65993a
 status: test
 level: medium
+author: Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)
 description: 'Detects execution of the Add-In deployment cache updating utility (AddInutil.exe)
     with uncommon Addinroot or Pipelineroot paths. An adversary may execute AddinUtil.exe
     with uncommon Addinroot/Pipelineroot paths that point to the adversaries Addins.Store
     payload.
 
     '
-author: Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)
-date: '2023-09-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2023-09-18'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:58.952334+00:00'
+            mapped_at: '2025-12-04T01:41:27.996613+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:58.952334+00:00'
+            mapped_at: '2025-12-04T01:41:27.996613+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:58.952363+00:00'
+            mapped_at: '2025-12-04T01:41:27.996628+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:58.952368+00:00'
+            mapped_at: '2025-12-04T01:41:27.996630+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:58.952371+00:00'
+            mapped_at: '2025-12-04T01:41:27.996631+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Add Potential Suspicious New Download Source To Winget",
+    "comment": "Detects usage of winget to add new potentially suspicious download sources",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\winget.exe')) AND lower(process.file.name) = lower('winget.exe') AND contains(lower(process.cmd_line), lower('source ')) AND contains(lower(process.cmd_line), lower('add ')) AND process.cmd_line rlike '://\\\\d\\{1,3\\}\\\\.\\\\d\\{1,3\\}\\\\.\\\\d\\{1,3\\}\\\\.\\\\d\\{1,3\\}')"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of winget to add new potentially suspicious download sources",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/windows/package-manager/winget/source, https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

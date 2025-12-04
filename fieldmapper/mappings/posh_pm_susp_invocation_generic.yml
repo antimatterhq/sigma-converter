@@ -1,22 +1,18 @@
-id: bbb80e91-5746-4fbe-8898-122e2cafdbf4
 title: Suspicious PowerShell Invocations - Generic - PowerShell Module
+id: bbb80e91-5746-4fbe-8898-122e2cafdbf4
 status: test
 level: high
-description: Detects suspicious PowerShell invocation command parameters
 author: Florian Roth (Nextron Systems)
-date: '2017-03-12'
-modified: '2023-01-03'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects suspicious PowerShell invocation command parameters
 references:
     - Internal Research
 falsepositives:
     - Very special / sneaky PowerShell scripts
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''3d304fda-78aa-43ed-975c-d740798a49c1''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''ed965133-513f-41d9-a441-e38076a0798f''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2017-03-12'
+modified: '2023-01-03'
 logsource:
     category: ps_module
     product: windows
@@ -38,6 +34,11 @@ detection:
             - ' -noni '
             - ' -noninteractive '
     condition: all of selection*
+related:
+    -   id: 3d304fda-78aa-43ed-975c-d740798a49c1
+        type: derived
+    -   id: ed965133-513f-41d9-a441-e38076a0798f
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

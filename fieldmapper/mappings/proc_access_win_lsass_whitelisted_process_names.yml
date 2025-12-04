@@ -1,26 +1,25 @@
-id: 4be8b654-0c01-4c9d-a10c-6b28467fc651
 title: LSASS Access From Potentially White-Listed Processes
+id: 4be8b654-0c01-4c9d-a10c-6b28467fc651
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects a possible process memory dump that uses a white-listed filename
     like TrolleyExpress.exe as a way to dump the LSASS process memory without Microsoft
     Defender interference
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-02-10'
-modified: '2023-11-29'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
-    - attack.s0002
 references:
     - https://twitter.com/_xpn_/status/1491557187168178176
     - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz
     - https://twitter.com/mrd0x/status/1460597833917251595
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+    - attack.s0002
+date: '2022-02-10'
+modified: '2023-11-29'
 logsource:
     category: process_access
     product: windows
@@ -66,21 +65,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:25.986652+00:00'
+            mapped_at: '2025-12-04T01:40:32.138182+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:25.986652+00:00'
+            mapped_at: '2025-12-04T01:40:32.138182+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:25.986672+00:00'
+            mapped_at: '2025-12-04T01:40:32.138196+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:25.986674+00:00'
+            mapped_at: '2025-12-04T01:40:32.138198+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:25.986675+00:00'
+            mapped_at: '2025-12-04T01:40:32.138199+00:00'

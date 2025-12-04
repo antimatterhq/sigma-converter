@@ -1,20 +1,19 @@
-id: 8c0eca51-0f88-4db2-9183-fdfb10c703f9
 title: LSA PPL Protection Disabled Via Reg.EXE
+id: 8c0eca51-0f88-4db2-9183-fdfb10c703f9
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the usage of the "reg.exe" utility to disable PPL protection
     on the LSA process
-author: Florian Roth (Nextron Systems)
-date: '2022-03-22'
-modified: '2023-03-26'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.010
 references:
     - https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell/
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.010
+date: '2022-03-22'
+modified: '2023-03-26'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:05.987750+00:00'
+            mapped_at: '2025-12-04T01:49:50.716223+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:05.987750+00:00'
+            mapped_at: '2025-12-04T01:49:50.716223+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:05.987779+00:00'
+            mapped_at: '2025-12-04T01:49:50.716239+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:05.987784+00:00'
+            mapped_at: '2025-12-04T01:49:50.716241+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:05.987788+00:00'
+            mapped_at: '2025-12-04T01:49:50.716243+00:00'

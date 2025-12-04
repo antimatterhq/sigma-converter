@@ -1,7 +1,8 @@
-id: 0afecb6e-6223-4a82-99fb-bf5b981e92a5
 title: Remote Access Tool - ScreenConnect Temporary File
+id: 0afecb6e-6223-4a82-99fb-bf5b981e92a5
 status: test
 level: low
+author: Ali Alwashali
 description: 'Detects the creation of files in a specific location by ScreenConnect
     RMM.
 
@@ -10,18 +11,14 @@ description: 'Detects the creation of files in a specific location by ScreenConn
     before execution.
 
     '
-author: Ali Alwashali
-date: '2023-10-10'
-tags:
-    - attack.execution
-    - attack.t1059.003
 references:
     - https://github.com/SigmaHQ/sigma/pull/4467
 falsepositives:
     - Legitimate use of ScreenConnect
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b1f73849-6329-4069-bc8f-78a604bb8b23''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.003
+date: '2023-10-10'
 logsource:
     category: file_event
     product: windows
@@ -30,6 +27,9 @@ detection:
         Image|endswith: \ScreenConnect.WindowsClient.exe
         TargetFilename|contains: \Documents\ConnectWiseControl\Temp\
     condition: selection
+related:
+    -   id: b1f73849-6329-4069-bc8f-78a604bb8b23
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -37,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:09.587702+00:00'
+            mapped_at: '2025-12-04T01:52:51.736423+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:09.587702+00:00'
+            mapped_at: '2025-12-04T01:52:51.736423+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:09.587735+00:00'
+            mapped_at: '2025-12-04T01:52:51.736440+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:09.587742+00:00'
+            mapped_at: '2025-12-04T01:52:51.736442+00:00'

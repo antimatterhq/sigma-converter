@@ -1,17 +1,12 @@
-id: 882e858a-3233-4ba8-855e-2f3d3575803d
 title: DNS Query Request By QuickAssist.EXE
+id: 882e858a-3233-4ba8-855e-2f3d3575803d
 status: experimental
 level: low
+author: Muhammad Faisal (@faisalusuf)
 description: 'Detects DNS queries initiated by "QuickAssist.exe" to Microsoft Quick
     Assist primary endpoint that is used to establish a session.
 
     '
-author: Muhammad Faisal (@faisalusuf)
-date: '2024-12-19'
-tags:
-    - attack.initial-access
-    - attack.t1071.001
-    - attack.t1210
 references:
     - https://www.microsoft.com/en-us/security/blog/2024/05/15/threat-actors-misusing-quick-assist-in-social-engineering-attacks-leading-to-ransomware/
     - https://www.linkedin.com/posts/kevin-beaumont-security_ive-been-assisting-a-few-orgs-hit-with-successful-activity-7268055739116445701-xxjZ/
@@ -19,7 +14,11 @@ references:
     - https://learn.microsoft.com/en-us/windows/client-management/client-tools/quick-assist
 falsepositives:
     - Legitimate use of Quick Assist in the environment.
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1071.001
+    - attack.t1210
+date: '2024-12-19'
 logsource:
     category: dns_query
     product: windows
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: dns_query
-            mapped_at: '2025-11-26T02:37:43.610811+00:00'
+            mapped_at: '2025-12-04T01:51:16.530885+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:43.610811+00:00'
+            mapped_at: '2025-12-04T01:51:16.530885+00:00'
     detection_fields:
         -   source_field: Image
             target_table: dns_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:43.610821+00:00'
+            mapped_at: '2025-12-04T01:51:16.530901+00:00'
         -   source_field: QueryName
             target_table: dns_activity
             target_field: query.hostname
-            mapped_at: '2025-11-26T02:37:43.610823+00:00'
+            mapped_at: '2025-12-04T01:51:16.530903+00:00'

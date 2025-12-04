@@ -1,18 +1,14 @@
-id: c2b86e67-b880-4eec-b045-50bc98ef4844
 title: HackTool - LaZagne Execution
+id: c2b86e67-b880-4eec-b045-50bc98ef4844
 status: experimental
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of the LaZagne. A utility used to retrieve multiple
     types of passwords stored on a local computer.
 
     LaZagne has been leveraged multiple times by threat actors in order to dump credentials.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2024-06-24'
-modified: '2024-08-16'
-tags:
-    - attack.credential-access
 references:
     - https://github.com/AlessandroZ/LaZagne/tree/master
     - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
@@ -21,7 +17,10 @@ references:
     - https://github.com/CyberMonitor/APT_CyberCriminal_Campagin_Collections/raw/800c0e06571993a54e39571cf27fd474dcc5c0bc/2017/2017.11.14.Muddying_the_Water/muddying-the-water-targeted-attacks.pdf
 falsepositives:
     - Some false positive is expected from tools with similar command line flags.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+date: '2024-06-24'
+modified: '2024-08-16'
 logsource:
     category: process_creation
     product: windows
@@ -139,17 +138,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:37.294700+00:00'
+            mapped_at: '2025-12-04T01:45:14.693319+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:37.294700+00:00'
+            mapped_at: '2025-12-04T01:45:14.693319+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:37.294728+00:00'
+            mapped_at: '2025-12-04T01:45:14.693334+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:37.294731+00:00'
+            mapped_at: '2025-12-04T01:45:14.693336+00:00'

@@ -1,19 +1,11 @@
-id: fd877b94-9bb5-4191-bb25-d79cbd93c167
 title: Dumping of Sensitive Hives Via Reg.EXE
+id: fd877b94-9bb5-4191-bb25-d79cbd93c167
 status: test
 level: high
-description: Detects the usage of "reg.exe" in order to dump sensitive registry hives.
-    This includes SAM, SYSTEM and SECURITY hives.
 author: Teymur Kheirkhabarov, Endgame, JHasenbusch, Daniil Yugoslavskiy, oscd.community,
     frack113
-date: '2019-10-22'
-modified: '2023-12-13'
-tags:
-    - attack.credential-access
-    - attack.t1003.002
-    - attack.t1003.004
-    - attack.t1003.005
-    - car.2013-07-001
+description: Detects the usage of "reg.exe" in order to dump sensitive registry hives.
+    This includes SAM, SYSTEM and SECURITY hives.
 references:
     - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
     - https://eqllib.readthedocs.io/en/latest/analytics/aed95fc6-5e3f-49dc-8b35-06508613f979.html
@@ -22,10 +14,14 @@ references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-1---registry-dump-of-sam-creds-and-secrets
 falsepositives:
     - Dumping hives for legitimate purpouse i.e. backup or forensic investigation
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''038cd51c-3ad8-41c5-ba8f-5d1c92f3cc1e''),
-    type=<SigmaRelatedType.OBSOLETE: 4>), SigmaRelatedItem(id=UUID(''4d6c9da1-318b-4edf-bcea-b6c93fa98fd0''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.002
+    - attack.t1003.004
+    - attack.t1003.005
+    - car.2013-07-001
+date: '2019-10-22'
+modified: '2023-12-13'
 logsource:
     category: process_creation
     product: windows
@@ -58,6 +54,11 @@ detection:
             - \ˢam
             - \ˢecurity
     condition: all of selection_*
+related:
+    -   id: 038cd51c-3ad8-41c5-ba8f-5d1c92f3cc1e
+        type: obsolete
+    -   id: 4d6c9da1-318b-4edf-bcea-b6c93fa98fd0
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -65,21 +66,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:11.400051+00:00'
+            mapped_at: '2025-12-04T01:46:39.683391+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:11.400051+00:00'
+            mapped_at: '2025-12-04T01:46:39.683391+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:11.400075+00:00'
+            mapped_at: '2025-12-04T01:46:39.683414+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:11.400077+00:00'
+            mapped_at: '2025-12-04T01:46:39.683416+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:11.400078+00:00'
+            mapped_at: '2025-12-04T01:46:39.683417+00:00'

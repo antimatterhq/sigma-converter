@@ -1,15 +1,10 @@
-id: 242301bc-f92f-4476-8718-78004a6efd9f
 title: DLL Loaded via CertOC.EXE
+id: 242301bc-f92f-4476-8718-78004a6efd9f
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: Detects when a user installs certificates by using CertOC.exe to loads
     the target DLL file.
-author: Austin Songer @austinsonger
-date: '2021-10-23'
-modified: '2024-03-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://twitter.com/sblmsrsn/status/1445758411803480072?s=20
     - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-fe98e74189873d6df72a15df2eaa0315c59ba9cdaca93ecd68afc4ea09194ef2
@@ -19,9 +14,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''84232095-ecca-4015-b0d7-7726507ee793''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2021-10-23'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -32,6 +29,9 @@ detection:
     selection_cli:
         CommandLine|contains|windash: ' -LoadDLL '
     condition: all of selection_*
+related:
+    -   id: 84232095-ecca-4015-b0d7-7726507ee793
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -39,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:06.288829+00:00'
+            mapped_at: '2025-12-04T01:46:35.883383+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:06.288829+00:00'
+            mapped_at: '2025-12-04T01:46:35.883383+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:06.288843+00:00'
+            mapped_at: '2025-12-04T01:46:35.883394+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:06.288845+00:00'
+            mapped_at: '2025-12-04T01:46:35.883396+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:06.288847+00:00'
+            mapped_at: '2025-12-04T01:46:35.883397+00:00'

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Hidden Powershell in Link File Pattern",
+    "comment": "Detects events that appear when a user click on a link file with a powershell command in it",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.parent_process.name) = lower('c:\\\\windows\\\\explorer.exe') AND lower(process.name) = lower('c:\\\\windows\\\\system32\\\\cmd.exe') AND contains(lower(process.cmd_line), lower('powershell')) AND contains(lower(process.cmd_line), lower('.lnk')))"
+      }
+    },
+    "output": {
+      "summary": "Detects events that appear when a user click on a link file with a powershell command in it",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate commands in .lnk files Reference: https://www.x86matthew.com/view_post?id=embed_exe_lnk",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,15 +1,10 @@
-id: ebef4391-1a81-4761-a40a-1db446c0e625
 title: New ActiveScriptEventConsumer Created Via Wmic.EXE
+id: ebef4391-1a81-4761-a40a-1db446c0e625
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects WMIC executions in which an event consumer gets created. This
     could be used to establish persistence
-author: Florian Roth (Nextron Systems)
-date: '2021-06-25'
-modified: '2023-02-14'
-tags:
-    - attack.persistence
-    - attack.t1546.003
 references:
     - https://twitter.com/johnlatwc/status/1408062131321270282?s=12
     - https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-windows-management-instrumentation.pdf
@@ -18,7 +13,11 @@ fields:
     - ParentCommandLine
 falsepositives:
     - Legitimate software creating script event consumers
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1546.003
+date: '2021-06-25'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -35,13 +34,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:36.394076+00:00'
+            mapped_at: '2025-12-04T01:49:29.573282+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:36.394076+00:00'
+            mapped_at: '2025-12-04T01:49:29.573282+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:36.394091+00:00'
+            mapped_at: '2025-12-04T01:49:29.573308+00:00'

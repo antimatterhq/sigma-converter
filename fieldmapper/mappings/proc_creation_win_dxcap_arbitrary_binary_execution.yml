@@ -1,24 +1,23 @@
-id: 60f16a96-db70-42eb-8f76-16763e333590
 title: New Capture Session Launched Via DXCap.EXE
+id: 60f16a96-db70-42eb-8f76-16763e333590
 status: test
 level: medium
+author: Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the execution of "DXCap.EXE" with the "-c" flag, which allows
     a user to launch any arbitrary binary or windows package through DXCap itself.
     This can be abused to potentially bypass application whitelisting.
 
     '
-author: Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)
-date: '2019-10-26'
-modified: '2022-06-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dxcap/
     - https://twitter.com/harr0ey/status/992008180904419328
 falsepositives:
     - Legitimate execution of dxcap.exe by legitimate user
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2019-10-26'
+modified: '2022-06-09'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:21.000115+00:00'
+            mapped_at: '2025-12-04T01:51:05.236573+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:21.000115+00:00'
+            mapped_at: '2025-12-04T01:51:05.236573+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:21.000474+00:00'
+            mapped_at: '2025-12-04T01:51:05.236590+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:21.000478+00:00'
+            mapped_at: '2025-12-04T01:51:05.236592+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:21.000479+00:00'
+            mapped_at: '2025-12-04T01:51:05.236594+00:00'

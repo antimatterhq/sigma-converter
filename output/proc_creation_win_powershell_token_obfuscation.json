@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Powershell Token Obfuscation - Process Creation",
+    "comment": "Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND process.cmd_line rlike '\\\\w\\+`\\(\\\\w\\+|-|.\\)`\\[\\\\w\\+|\\\\s\\]' AND process.cmd_line rlike '\"\\(\\\\\\{\\\\d\\\\\\}\\)\\+\"\\\\s*-f' AND process.cmd_line rlike '\\(?i\\)\\\\$\\\\\\{`?e`?n`?v`?:`?p`?a`?t`?h`?\\\\\\}' AND NOT contains(lower(process.cmd_line), lower('${env:path}')))"
+      }
+    },
+    "output": {
+      "summary": "Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/danielbohannon/Invoke-Obfuscation",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027",
+          "subTechniqueId": "009"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,22 +1,21 @@
-id: 6a69f62d-ce75-4b57-8dce-6351eb55b362
 title: Esentutl Steals Browser Information
+id: 6a69f62d-ce75-4b57-8dce-6351eb55b362
 status: test
 level: medium
+author: frack113
 description: One way Qbot steals sensitive information is by extracting browser data
     from Internet Explorer and Microsoft Edge by using the built-in utility esentutl.exe
-author: frack113
-date: '2022-02-13'
-modified: '2024-03-05'
-tags:
-    - attack.collection
-    - attack.t1005
 references:
     - https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/
     - https://redcanary.com/threat-detection-report/threats/qbot/
     - https://thedfirreport.com/2022/10/31/follina-exploit-leads-to-domain-compromise/
 falsepositives:
     - Legitimate use
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1005
+date: '2022-02-13'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:27.372285+00:00'
+            mapped_at: '2025-12-04T01:47:43.906657+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:27.372285+00:00'
+            mapped_at: '2025-12-04T01:47:43.906657+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:27.372316+00:00'
+            mapped_at: '2025-12-04T01:47:43.906674+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:27.372320+00:00'
+            mapped_at: '2025-12-04T01:47:43.906676+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:27.372323+00:00'
+            mapped_at: '2025-12-04T01:47:43.906677+00:00'

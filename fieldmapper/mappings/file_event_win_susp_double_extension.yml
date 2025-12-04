@@ -1,16 +1,11 @@
-id: b4926b47-a9d7-434c-b3a0-adc3fa0bd13e
 title: Suspicious Double Extension Files
+id: b4926b47-a9d7-434c-b3a0-adc3fa0bd13e
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), frack113
 description: Detects dropped files with double extensions, which is often used by
     malware as a method to abuse the fact that Windows hide default extensions by
     default.
-author: Nasreddine Bencherchali (Nextron Systems), frack113
-date: '2022-06-19'
-modified: '2022-11-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.007
 references:
     - https://www.crowdstrike.com/blog/meet-crowdstrikes-adversary-of-the-month-for-june-mustang-panda/
     - https://www.anomali.com/blog/china-based-apt-mustang-panda-targets-minority-groups-public-and-private-sector-organizations
@@ -19,10 +14,11 @@ references:
     - https://twitter.com/luc4m/status/1073181154126254080
 falsepositives:
     - Unlikely
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1cdd9a09-06c9-4769-99ff-626e2b3991b8''),
-    type=<SigmaRelatedType.DERIVED: 2>), SigmaRelatedItem(id=UUID(''3215aa19-f060-4332-86d5-5602511f3ca8''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.007
+date: '2022-06-19'
+modified: '2022-11-07'
 logsource:
     category: file_event
     product: windows
@@ -47,20 +43,25 @@ detection:
             - .rar.exe
             - .zip.exe
     condition: 1 of selection_*
+related:
+    -   id: 1cdd9a09-06c9-4769-99ff-626e2b3991b8
+        type: derived
+    -   id: 3215aa19-f060-4332-86d5-5602511f3ca8
+        type: similar
 ocsf_mapping:
     class_name: file_activity
-    activity_id: 3
+    activity_id: 1
     logsource:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:43.567699+00:00'
+            mapped_at: '2025-12-04T01:52:34.765793+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:43.567699+00:00'
+            mapped_at: '2025-12-04T01:52:34.765793+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:43.567726+00:00'
+            mapped_at: '2025-12-04T01:52:34.765825+00:00'

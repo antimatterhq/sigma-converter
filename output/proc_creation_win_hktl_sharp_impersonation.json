@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "HackTool - SharpImpersonation Execution",
+    "comment": "Detects execution of the SharpImpersonation tool. Which can be used to manipulate tokens on a Windows computers remotely (PsExec/WmiExec) or interactively",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\sharpimpersonation.exe')) AND lower(process.file.name) = lower('sharpimpersonation.exe') OR contains(lower(process.cmd_line), lower(' user:')) AND contains(lower(process.cmd_line), lower(' binary:')) AND contains(lower(process.cmd_line), lower(' user:')) AND contains(lower(process.cmd_line), lower(' shellcode:')) AND (contains(lower(process.cmd_line), lower(' technique:createprocessasuserw')) OR contains(lower(process.cmd_line), lower(' technique:impersonateloggedonuser')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of the SharpImpersonation tool. Which can be used to manipulate tokens on a Windows computers remotely (PsExec/WmiExec) or interactively",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://s3cur3th1ssh1t.github.io/SharpImpersonation-Introduction/, https://github.com/S3cur3Th1sSh1t/SharpImpersonation",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1134",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1134",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

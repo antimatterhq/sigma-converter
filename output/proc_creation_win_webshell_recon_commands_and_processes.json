@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "name": "Webshell Detection With Command Line Keywords",
+    "comment": "Detects certain command line parameters often used during reconnaissance activity via web shells",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\w3wp.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\php-cgi.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\nginx.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\httpd.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\caddy.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\ws_tomcatservice.exe')) OR (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\javaw.exe'))) AND (contains(lower(process.parent_process.name), lower('-tomcat-')) OR contains(lower(process.parent_process.name), lower('\\\\tomcat'))) OR (endswith(lower(process.parent_process.name), lower('\\\\java.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\javaw.exe'))) AND (contains(lower(process.cmd_line), lower('catalina.jar')) OR contains(lower(process.cmd_line), lower('catalina_home')))) AND ((lower(LOWER(process.file.name)) in ('net\\.exe', 'net1\\.exe')) AND (contains(lower(process.cmd_line), lower(' user ')) OR contains(lower(process.cmd_line), lower(' use ')) OR contains(lower(process.cmd_line), lower(' group '))) OR lower(process.file.name) = lower('ping.exe') AND contains(lower(process.cmd_line), lower(' -n ')) OR contains(lower(process.cmd_line), lower('&cd&echo')) OR contains(lower(process.cmd_line), lower('cd /d ')) OR lower(process.file.name) = lower('wmic.exe') AND contains(lower(process.cmd_line), lower(' /node:')) OR (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (contains(lower(process.cmd_line), lower(' -enc ')) OR contains(lower(process.cmd_line), lower(' -encodedcommand ')) OR contains(lower(process.cmd_line), lower(' -w hidden ')) OR contains(lower(process.cmd_line), lower(' -windowstyle hidden')) OR contains(lower(process.cmd_line), lower('.webclient).download'))) OR (endswith(lower(process.name), lower('\\\\dsquery.exe')) OR endswith(lower(process.name), lower('\\\\find.exe')) OR endswith(lower(process.name), lower('\\\\findstr.exe')) OR endswith(lower(process.name), lower('\\\\ipconfig.exe')) OR endswith(lower(process.name), lower('\\\\netstat.exe')) OR endswith(lower(process.name), lower('\\\\nslookup.exe')) OR endswith(lower(process.name), lower('\\\\pathping.exe')) OR endswith(lower(process.name), lower('\\\\quser.exe')) OR endswith(lower(process.name), lower('\\\\schtasks.exe')) OR endswith(lower(process.name), lower('\\\\systeminfo.exe')) OR endswith(lower(process.name), lower('\\\\tasklist.exe')) OR endswith(lower(process.name), lower('\\\\tracert.exe')) OR endswith(lower(process.name), lower('\\\\ver.exe')) OR endswith(lower(process.name), lower('\\\\wevtutil.exe')) OR endswith(lower(process.name), lower('\\\\whoami.exe'))) AND (lower(LOWER(process.file.name)) in ('dsquery\\.exe', 'find\\.exe', 'findstr\\.exe', 'ipconfig\\.exe', 'netstat\\.exe', 'nslookup\\.exe', 'pathping\\.exe', 'quser\\.exe', 'schtasks\\.exe', 'sysinfo\\.exe', 'tasklist\\.exe', 'tracert\\.exe', 'ver\\.exe', 'vssadmin\\.exe', 'wevtutil\\.exe', 'whoami\\.exe')) OR contains(lower(process.cmd_line), lower(' test-netconnection ')) OR contains(lower(process.cmd_line), lower('dir \\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects certain command line parameters often used during reconnaissance activity via web shells",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-ii.html, https://unit42.paloaltonetworks.com/bumblebee-webshell-xhunt-campaign/, https://www.huntress.com/blog/threat-advisory-oh-no-cleo-cleo-software-actively-being-exploited-in-the-wild",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1018"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1033"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1087"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

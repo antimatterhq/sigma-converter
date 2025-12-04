@@ -1,20 +1,19 @@
-id: ca621ba5-54ab-4035-9942-d378e6fcde3c
 title: HackTool - HandleKatz LSASS Dumper Execution
+id: ca621ba5-54ab-4035-9942-d378e6fcde3c
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the use of HandleKatz, a tool that demonstrates the usage of
     cloned handles to Lsass in order to create an obfuscated memory dump of the same
-author: Florian Roth (Nextron Systems)
-date: '2022-08-18'
-modified: '2024-11-23'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://github.com/codewhitesec/HandleKatz
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2022-08-18'
+modified: '2024-11-23'
 logsource:
     category: process_creation
     product: windows
@@ -43,21 +42,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:12.980368+00:00'
+            mapped_at: '2025-12-04T01:49:55.431643+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:12.980368+00:00'
+            mapped_at: '2025-12-04T01:49:55.431643+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:12.980390+00:00'
+            mapped_at: '2025-12-04T01:49:55.431663+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:12.980393+00:00'
+            mapped_at: '2025-12-04T01:49:55.431667+00:00'
         -   source_field: Hashes
             target_table: process_activity
             target_field: process.file.hashes.value
-            mapped_at: '2025-11-26T02:36:12.980399+00:00'
+            mapped_at: '2025-12-04T01:49:55.431669+00:00'

@@ -1,22 +1,21 @@
-id: 9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3
 title: Potential Credential Dumping Via WER
+id: 9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3
 status: test
 level: high
+author: '@pbssubhash , Nasreddine Bencherchali'
 description: Detects potential credential dumping via Windows Error Reporting LSASS
     Shtinkering technique which uses the Windows Error Reporting to dump lsass
-author: '@pbssubhash , Nasreddine Bencherchali'
-date: '2022-12-08'
-modified: '2022-12-09'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://github.com/deepinstinct/Lsass-Shtinkering
     - https://media.defcon.org/DEF%20CON%2030/DEF%20CON%2030%20presentations/Asaf%20Gilboa%20-%20LSASS%20Shtinkering%20Abusing%20Windows%20Error%20Reporting%20to%20Dump%20LSASS.pdf
 falsepositives:
     - Windows Error Reporting might produce similar behavior. In that case, check
         the PID associated with the "-p" parameter in the CommandLine.
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2022-12-08'
+modified: '2022-12-09'
 logsource:
     category: process_creation
     product: windows
@@ -45,33 +44,33 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:43.225002+00:00'
+            mapped_at: '2025-12-04T01:47:08.298046+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:43.225002+00:00'
+            mapped_at: '2025-12-04T01:47:08.298046+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:43.225055+00:00'
+            mapped_at: '2025-12-04T01:47:08.298107+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:43.225060+00:00'
+            mapped_at: '2025-12-04T01:47:08.298112+00:00'
         -   source_field: ParentUser
             target_table: process_activity
             target_field: process.parent_process.session.issuer
-            mapped_at: '2025-11-26T02:32:43.225064+00:00'
+            mapped_at: '2025-12-04T01:47:08.298113+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:32:43.225068+00:00'
+            mapped_at: '2025-12-04T01:47:08.298115+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:43.225071+00:00'
+            mapped_at: '2025-12-04T01:47:08.298116+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:43.225074+00:00'
+            mapped_at: '2025-12-04T01:47:08.298117+00:00'

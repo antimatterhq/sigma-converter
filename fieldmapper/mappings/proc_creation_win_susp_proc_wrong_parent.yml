@@ -1,22 +1,21 @@
-id: 96036718-71cc-4027-a538-d1587e0006a7
 title: Windows Processes Suspicious Parent Directory
+id: 96036718-71cc-4027-a538-d1587e0006a7
 status: test
 level: low
-description: Detect suspicious parent processes of well-known Windows processes
 author: vburov
-date: '2019-02-23'
-modified: '2022-02-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.003
-    - attack.t1036.005
+description: Detect suspicious parent processes of well-known Windows processes
 references:
     - https://web.archive.org/web/20180718061628/https://securitybytes.io/blue-team-fundamentals-part-two-windows-processes-759fe15965e2
     - https://www.carbonblack.com/2014/06/10/screenshot-demo-hunt-evil-faster-than-ever-with-carbon-black/
     - https://www.13cubed.com/downloads/windows_process_genealogy_v2.pdf
 falsepositives:
     - Some security products seem to spawn these
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.003
+    - attack.t1036.005
+date: '2019-02-23'
+modified: '2022-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -56,17 +55,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:36.847836+00:00'
+            mapped_at: '2025-12-04T01:49:29.920197+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:36.847836+00:00'
+            mapped_at: '2025-12-04T01:49:29.920197+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:36.847852+00:00'
+            mapped_at: '2025-12-04T01:49:29.920212+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:35:36.847855+00:00'
+            mapped_at: '2025-12-04T01:49:29.920214+00:00'

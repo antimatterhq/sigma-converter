@@ -1,25 +1,22 @@
-id: f89b08d0-77ad-4728-817b-9b16c5a69c7a
 title: HackTool - SharpImpersonation Execution
+id: f89b08d0-77ad-4728-817b-9b16c5a69c7a
 status: test
 level: high
+author: Sai Prashanth Pulisetti @pulisettis, Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of the SharpImpersonation tool. Which can be used to
     manipulate tokens on a Windows computers remotely (PsExec/WmiExec) or interactively
-author: Sai Prashanth Pulisetti @pulisettis, Nasreddine Bencherchali (Nextron Systems)
-date: '2022-12-27'
-modified: '2023-02-13'
-tags:
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1134.001
-    - attack.t1134.003
 references:
     - https://s3cur3th1ssh1t.github.io/SharpImpersonation-Introduction/
     - https://github.com/S3cur3Th1sSh1t/SharpImpersonation
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''cf0c254b-22f1-4b2b-8221-e137b3c0af94''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1134.001
+    - attack.t1134.003
+date: '2022-12-27'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +34,9 @@ detection:
             - ' technique:CreateProcessAsUserW'
             - ' technique:ImpersonateLoggedOnuser'
     condition: 1 of selection_*
+related:
+    -   id: cf0c254b-22f1-4b2b-8221-e137b3c0af94
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:26.251541+00:00'
+            mapped_at: '2025-12-04T01:47:43.134330+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:26.251541+00:00'
+            mapped_at: '2025-12-04T01:47:43.134330+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:26.251556+00:00'
+            mapped_at: '2025-12-04T01:47:43.134343+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:33:26.251559+00:00'
+            mapped_at: '2025-12-04T01:47:43.134345+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:26.251561+00:00'
+            mapped_at: '2025-12-04T01:47:43.134354+00:00'

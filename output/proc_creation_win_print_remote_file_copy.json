@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Abusing Print Executable",
+    "comment": "Attackers can use print.exe for remote file copy",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\print.exe')) AND startswith(lower(process.cmd_line), lower('print')) AND contains(lower(process.cmd_line), lower('/d')) AND contains(lower(process.cmd_line), lower('.exe')) AND NOT contains(lower(process.cmd_line), lower('print.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Attackers can use print.exe for remote file copy",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://lolbas-project.github.io/lolbas/Binaries/Print/, https://twitter.com/Oddvarmoe/status/985518877076541440",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

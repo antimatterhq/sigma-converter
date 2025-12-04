@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Scheduled Task Creation Via Schtasks.EXE",
+    "comment": "Detects the creation of scheduled tasks by user accounts via the \"schtasks\" utility.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\schtasks.exe')) AND contains(lower(process.cmd_line), lower(' /create ')) AND NOT (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of scheduled tasks by user accounts via the \"schtasks\" utility.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Administrative activity 2. Software installation Reference: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

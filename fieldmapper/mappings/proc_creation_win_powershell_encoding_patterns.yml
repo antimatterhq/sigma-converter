@@ -1,24 +1,21 @@
-id: cdf05894-89e7-4ead-b2b0-0a5f97a90f2f
 title: Potential Encoded PowerShell Patterns In CommandLine
+id: cdf05894-89e7-4ead-b2b0-0a5f97a90f2f
 status: test
 level: low
+author: Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton
 description: Detects specific combinations of encoding methods in PowerShell via the
     commandline
-author: Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton
-date: '2020-10-11'
-modified: '2023-01-26'
+references:
+    - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=65
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=65
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''5b572dcf-254b-425c-a8c5-d9af6bea35a6''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2020-10-11'
+modified: '2023-01-26'
 logsource:
     category: process_creation
     product: windows
@@ -52,6 +49,9 @@ detection:
             - split
             - join
     condition: selection_img and (all of selection_to_* or 1 of selection_gen_*)
+related:
+    -   id: 5b572dcf-254b-425c-a8c5-d9af6bea35a6
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -59,21 +59,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:45.416052+00:00'
+            mapped_at: '2025-12-04T01:45:23.319269+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:45.416052+00:00'
+            mapped_at: '2025-12-04T01:45:23.319269+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:45.416067+00:00'
+            mapped_at: '2025-12-04T01:45:23.319284+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:45.416069+00:00'
+            mapped_at: '2025-12-04T01:45:23.319286+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:45.416071+00:00'
+            mapped_at: '2025-12-04T01:45:23.319287+00:00'

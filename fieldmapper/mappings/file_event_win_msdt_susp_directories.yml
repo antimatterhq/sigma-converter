@@ -1,22 +1,21 @@
-id: 318557a5-150c-4c8d-b70e-a9910e199857
 title: File Creation In Suspicious Directory By Msdt.EXE
+id: 318557a5-150c-4c8d-b70e-a9910e199857
 status: test
 level: high
+author: Vadim Varganov, Florian Roth (Nextron Systems)
 description: Detects msdt.exe creating files in suspicious directories which could
     be a sign of exploitation of either Follina or Dogwalk vulnerabilities
-author: Vadim Varganov, Florian Roth (Nextron Systems)
-date: '2022-08-24'
-modified: '2023-02-23'
-tags:
-    - attack.persistence
-    - attack.t1547.001
-    - cve.2022-30190
 references:
     - https://irsl.medium.com/the-trouble-with-microsofts-troubleshooters-6e32fc80b8bd
     - https://msrc-blog.microsoft.com/2022/05/30/guidance-for-cve-2022-30190-microsoft-support-diagnostic-tool-vulnerability/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1547.001
+    - cve.2022-30190
+date: '2022-08-24'
+modified: '2023-02-23'
 logsource:
     category: file_event
     product: windows
@@ -37,17 +36,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:32.152368+00:00'
+            mapped_at: '2025-12-04T01:53:09.534496+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:32.152368+00:00'
+            mapped_at: '2025-12-04T01:53:09.534496+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:32.152382+00:00'
+            mapped_at: '2025-12-04T01:53:09.534514+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:32.152384+00:00'
+            mapped_at: '2025-12-04T01:53:09.534516+00:00'

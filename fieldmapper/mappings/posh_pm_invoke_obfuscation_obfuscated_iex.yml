@@ -1,25 +1,22 @@
-id: 2f211361-7dce-442d-b78a-c04039677378
 title: Invoke-Obfuscation Obfuscated IEX Invocation - PowerShell Module
+id: 2f211361-7dce-442d-b78a-c04039677378
 status: test
 level: high
+author: Daniel Bohannon (@Mandiant/@FireEye), oscd.community
 description: Detects all variations of obfuscated powershell IEX invocation code generated
     by Invoke-Obfuscation framework from the code block cited in the reference section
     below
-author: Daniel Bohannon (@Mandiant/@FireEye), oscd.community
-date: '2019-11-08'
-modified: '2022-12-31'
+references:
+    - https://github.com/danielbohannon/Invoke-Obfuscation/blob/f20e7f843edd0a3a7716736e9eddfa423395dd26/Out-ObfuscatedStringCommand.ps1#L873-L888
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/danielbohannon/Invoke-Obfuscation/blob/f20e7f843edd0a3a7716736e9eddfa423395dd26/Out-ObfuscatedStringCommand.ps1#L873-L888
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1b9dc62e-6e9e-42a3-8990-94d7a10007f7''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2019-11-08'
+modified: '2022-12-31'
 logsource:
     category: ps_module
     product: windows
@@ -35,6 +32,9 @@ detection:
             - \$VerbosePreference\.ToString\(
         Payload|re: \[String\]\s*\$VerbosePreference
     condition: selection_payload
+related:
+    -   id: 1b9dc62e-6e9e-42a3-8990-94d7a10007f7
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

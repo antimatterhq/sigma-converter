@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potential Recon Activity Using DriverQuery.EXE",
+    "comment": "Detect usage of the \"driverquery\" utility to perform reconnaissance on installed drivers",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('driverquery.exe')) AND lower(process.file.name) = lower('drvqry.exe') AND (endswith(lower(process.parent_process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\wscript.exe'))) AND (contains(lower(process.parent_process.name), lower('\\\\appdata\\\\local\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\users\\\\public\\\\')) OR contains(lower(process.parent_process.name), lower('\\\\windows\\\\temp\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detect usage of the \"driverquery\" utility to perform reconnaissance on installed drivers",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage by some scripts might trigger this as well References: https://thedfirreport.com/2023/01/09/unwrapping-ursnifs-gifts/, https://www.vmray.com/cyber-security-blog/analyzing-ursnif-behavior-malware-sandbox/, https://www.fireeye.com/blog/threat-research/2020/01/saigon-mysterious-ursnif-fork.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

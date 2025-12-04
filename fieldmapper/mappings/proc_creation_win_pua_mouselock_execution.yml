@@ -1,17 +1,11 @@
-id: c9192ad9-75e5-43eb-8647-82a0a5b493e3
 title: PUA - Mouse Lock Execution
+id: c9192ad9-75e5-43eb-8647-82a0a5b493e3
 status: test
 level: medium
+author: Cian Heasley
 description: In Kaspersky's 2020 Incident Response Analyst Report they listed legitimate
     tool "Mouse Lock" as being used for both credential access and collection in security
     incidents.
-author: Cian Heasley
-date: '2020-08-13'
-modified: '2023-02-21'
-tags:
-    - attack.credential-access
-    - attack.collection
-    - attack.t1056.002
 references:
     - https://github.com/klsecservices/Publications/blob/657deb6a6eb6e00669afd40173f425fb49682eaa/Incident-Response-Analyst-Report-2020.pdf
     - https://sourceforge.net/projects/mouselock/
@@ -21,7 +15,12 @@ fields:
     - CommandLine
 falsepositives:
     - Legitimate uses of Mouse Lock software
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.collection
+    - attack.t1056.002
+date: '2020-08-13'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:39.757206+00:00'
+            mapped_at: '2025-12-04T01:43:44.280105+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:39.757206+00:00'
+            mapped_at: '2025-12-04T01:43:44.280105+00:00'
     detection_fields:
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:28:39.757224+00:00'
+            mapped_at: '2025-12-04T01:43:44.280124+00:00'
         -   source_field: Company
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:28:39.757226+00:00'
+            mapped_at: '2025-12-04T01:43:44.280126+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:39.757228+00:00'
+            mapped_at: '2025-12-04T01:43:44.280127+00:00'

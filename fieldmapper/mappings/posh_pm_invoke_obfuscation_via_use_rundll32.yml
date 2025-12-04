@@ -1,23 +1,20 @@
-id: 88a22f69-62f9-4b8a-aa00-6b0212f2f05a
 title: Invoke-Obfuscation Via Use Rundll32 - PowerShell Module
+id: 88a22f69-62f9-4b8a-aa00-6b0212f2f05a
 status: test
 level: high
-description: Detects Obfuscated Powershell via use Rundll32 in Scripts
 author: Nikita Nazarov, oscd.community
-date: '2019-10-08'
-modified: '2022-11-29'
+description: Detects Obfuscated Powershell via use Rundll32 in Scripts
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a5a30a6e-75ca-4233-8b8c-42e0f2037d3b''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2019-10-08'
+modified: '2022-11-29'
 logsource:
     category: ps_module
     product: windows
@@ -35,6 +32,9 @@ detection:
             - comspec
             - iex
     condition: selection_4103
+related:
+    -   id: a5a30a6e-75ca-4233-8b8c-42e0f2037d3b
+        type: derived
 ocsf_mapping:
     class_name: null
     activity_id: null

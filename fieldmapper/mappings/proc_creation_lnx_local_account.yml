@@ -1,23 +1,22 @@
-id: b45e3d6f-42c6-47d8-a478-df6bd6cf534c
 title: Local System Accounts Discovery - Linux
+id: b45e3d6f-42c6-47d8-a478-df6bd6cf534c
 status: test
 level: low
+author: Alejandro Ortuno, oscd.community, CheraghiMilad
 description: Detects enumeration of local systeam accounts. This information can help
     adversaries determine which local accounts exist on a system to aid in follow-on
     behavior.
-author: Alejandro Ortuno, oscd.community, CheraghiMilad
-date: '2020-10-08'
-modified: '2024-12-10'
-tags:
-    - attack.discovery
-    - attack.t1087.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1087.001/T1087.001.md
     - https://my.f5.com/manage/s/article/K589
     - https://man.freebsd.org/cgi/man.cgi?pwd_mkdb
 falsepositives:
     - Legitimate administration activities
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1087.001
+date: '2020-10-08'
+modified: '2024-12-10'
 logsource:
     category: process_creation
     product: linux
@@ -60,17 +59,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:30.507360+00:00'
+            mapped_at: '2025-12-04T01:36:36.868432+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:30.507360+00:00'
+            mapped_at: '2025-12-04T01:36:36.868432+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:30.507382+00:00'
+            mapped_at: '2025-12-04T01:36:36.868443+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:30.507385+00:00'
+            mapped_at: '2025-12-04T01:36:36.868445+00:00'

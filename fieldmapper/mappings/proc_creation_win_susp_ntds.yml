@@ -1,14 +1,9 @@
-id: 8bc64091-6875-4881-aaf9-7bd25b5dda08
 title: Suspicious Process Patterns NTDS.DIT Exfil
+id: 8bc64091-6875-4881-aaf9-7bd25b5dda08
 status: test
 level: high
-description: Detects suspicious process patterns used in NTDS.DIT exfiltration
 author: Florian Roth (Nextron Systems)
-date: '2022-03-11'
-modified: '2022-11-10'
-tags:
-    - attack.credential-access
-    - attack.t1003.003
+description: Detects suspicious process patterns used in NTDS.DIT exfiltration
 references:
     - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration
     - https://www.n00py.io/2022/03/manipulating-user-passwords-without-mimikatz/
@@ -19,7 +14,11 @@ references:
     - https://blog.talosintelligence.com/2022/08/recent-cyber-attack.html?m=1
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.003
+date: '2022-03-11'
+modified: '2022-11-10'
 logsource:
     category: process_creation
     product: windows
@@ -73,21 +72,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:59.397956+00:00'
+            mapped_at: '2025-12-04T01:48:57.044980+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:59.397956+00:00'
+            mapped_at: '2025-12-04T01:48:57.044980+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:59.397983+00:00'
+            mapped_at: '2025-12-04T01:48:57.044993+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:59.397987+00:00'
+            mapped_at: '2025-12-04T01:48:57.044996+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:34:59.397990+00:00'
+            mapped_at: '2025-12-04T01:48:57.045005+00:00'

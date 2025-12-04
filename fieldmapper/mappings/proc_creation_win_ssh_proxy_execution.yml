@@ -1,14 +1,9 @@
-id: 7d6d30b8-5b91-4b90-a891-46cccaf29598
 title: Program Executed Using Proxy/Local Command Via SSH.EXE
+id: 7d6d30b8-5b91-4b90-a891-46cccaf29598
 status: test
 level: medium
-description: Detect usage of the "ssh.exe" binary as a proxy to launch other programs.
 author: frack113, Nasreddine Bencherchali
-date: '2022-12-29'
-modified: '2023-01-25'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
+description: Detect usage of the "ssh.exe" binary as a proxy to launch other programs.
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Ssh/
     - https://github.com/LOLBAS-Project/LOLBAS/pull/211/files
@@ -17,7 +12,11 @@ references:
     - https://man.openbsd.org/ssh_config#LocalCommand
 falsepositives:
     - Legitimate usage for administration purposes
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-12-29'
+modified: '2023-01-25'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:52.407967+00:00'
+            mapped_at: '2025-12-04T01:47:15.586006+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:52.407967+00:00'
+            mapped_at: '2025-12-04T01:47:15.586006+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:52.407988+00:00'
+            mapped_at: '2025-12-04T01:47:15.586020+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:52.407991+00:00'
+            mapped_at: '2025-12-04T01:47:15.586022+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:52.407993+00:00'
+            mapped_at: '2025-12-04T01:47:15.586023+00:00'

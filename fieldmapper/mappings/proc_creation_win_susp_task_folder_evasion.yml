@@ -1,7 +1,8 @@
-id: cc4e02ba-9c06-48e2-b09e-2500cace9ae0
 title: Tasks Folder Evasion
+id: cc4e02ba-9c06-48e2-b09e-2500cace9ae0
 status: test
 level: high
+author: Sreeman
 description: 'The Tasks folder in system32 and syswow64 are globally writable paths.
 
     Adversaries can take advantage of this and load or influence any script hosts
@@ -11,14 +12,6 @@ description: 'The Tasks folder in system32 and syswow64 are globally writable pa
     mshta, eventvwr
 
     '
-author: Sreeman
-date: '2020-01-13'
-modified: '2022-12-25'
-tags:
-    - attack.defense-evasion
-    - attack.persistence
-    - attack.execution
-    - attack.t1574.002
 references:
     - https://twitter.com/subTee/status/1216465628946563073
     - https://gist.github.com/am0nsec/8378da08f848424e4ab0cc5b317fdd26
@@ -27,7 +20,13 @@ fields:
     - ParentProcess
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.execution
+    - attack.t1574.002
+date: '2020-01-13'
+modified: '2022-12-25'
 logsource:
     category: process_creation
     product: windows
@@ -50,13 +49,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:24.780862+00:00'
+            mapped_at: '2025-12-04T01:41:46.680865+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:24.780862+00:00'
+            mapped_at: '2025-12-04T01:41:46.680865+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:24.780876+00:00'
+            mapped_at: '2025-12-04T01:41:46.680881+00:00'

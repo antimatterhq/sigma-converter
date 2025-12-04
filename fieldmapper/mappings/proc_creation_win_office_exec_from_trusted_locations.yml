@@ -1,16 +1,11 @@
-id: f99abdf0-6283-4e71-bd2b-b5c048a94743
 title: Potentially Suspicious Office Document Executed From Trusted Location
+id: f99abdf0-6283-4e71-bd2b-b5c048a94743
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of an Office application that points to a document
     that is located in a trusted location. Attackers often used this to avoid macro
     security and execute their malicious code.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-06-21'
-modified: '2023-10-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1202
 references:
     - Internal Research
     - https://twitter.com/Max_Mal_/status/1633863678909874176
@@ -18,7 +13,11 @@ references:
     - https://twitter.com/_JohnHammond/status/1588155401752788994
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1202
+date: '2023-06-21'
+modified: '2023-10-18'
 logsource:
     category: process_creation
     product: windows
@@ -55,25 +54,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:47.784733+00:00'
+            mapped_at: '2025-12-04T01:50:29.204155+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:47.784733+00:00'
+            mapped_at: '2025-12-04T01:50:29.204155+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:36:47.784748+00:00'
+            mapped_at: '2025-12-04T01:50:29.204169+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:47.784751+00:00'
+            mapped_at: '2025-12-04T01:50:29.204171+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:47.784752+00:00'
+            mapped_at: '2025-12-04T01:50:29.204172+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:47.784754+00:00'
+            mapped_at: '2025-12-04T01:50:29.204173+00:00'

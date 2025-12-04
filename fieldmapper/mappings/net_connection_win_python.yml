@@ -1,23 +1,22 @@
-id: bef0bc5a-b9ae-425d-85c6-7b2d705980c6
 title: Python Initiated Connection
+id: bef0bc5a-b9ae-425d-85c6-7b2d705980c6
 status: test
 level: medium
+author: frack113
 description: Detects a Python process initiating a network connection. While this
     often relates to package installation, it can also indicate a potential malicious
     script communicating with a C&C server.
-author: frack113
-date: '2021-12-10'
-modified: '2023-09-07'
-tags:
-    - attack.discovery
-    - attack.t1046
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md#atomic-test-4---port-scan-using-python
     - https://pypi.org/project/scapy/
 falsepositives:
     - Legitimate python scripts using the socket library or similar will trigger this.
         Apply additional filters and perform an initial baseline before deploying.
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1046
+date: '2021-12-10'
+modified: '2023-09-07'
 logsource:
     category: network_connection
     product: windows
@@ -47,33 +46,33 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:14.116968+00:00'
+            mapped_at: '2025-12-04T01:51:34.011089+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:14.116968+00:00'
+            mapped_at: '2025-12-04T01:51:34.011089+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:15.528593+00:00'
+            mapped_at: '2025-12-04T01:51:34.011110+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:15.528615+00:00'
+            mapped_at: '2025-12-04T01:51:34.011113+00:00'
         -   source_field: ParentImage
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:15.528619+00:00'
+            mapped_at: '2025-12-04T01:51:34.011115+00:00'
         -   source_field: CommandLine
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:15.528622+00:00'
+            mapped_at: '2025-12-04T01:51:34.011118+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:15.528625+00:00'
+            mapped_at: '2025-12-04T01:51:34.011120+00:00'
         -   source_field: SourceIp
             target_table: network_activity
             target_field: src_endpoint.ip
-            mapped_at: '2025-11-26T02:38:15.528627+00:00'
+            mapped_at: '2025-12-04T01:51:34.011121+00:00'

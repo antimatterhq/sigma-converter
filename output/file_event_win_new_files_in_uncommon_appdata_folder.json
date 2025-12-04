@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "name": "Suspicious File Creation In Uncommon AppData Folder",
+    "comment": "Detects the creation of suspicious files and folders inside the user's AppData folder but not inside any of the common and well known directories (Local, Romaing, LocalLow). This method could be used as a method to bypass detection who exclude the AppData folder in fear of FPs",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND startswith(lower(file.path), lower('c:\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\')) AND (endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.cmd')) OR endswith(lower(file.path), lower('.cpl')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.hta')) OR endswith(lower(file.path), lower('.iso')) OR endswith(lower(file.path), lower('.lnk')) OR endswith(lower(file.path), lower('.msi')) OR endswith(lower(file.path), lower('.ps1')) OR endswith(lower(file.path), lower('.psm1')) OR endswith(lower(file.path), lower('.scr')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.vbs'))) AND NOT (startswith(lower(file.path), lower('c:\\\\users\\\\')) AND (contains(lower(file.path), lower('\\\\appdata\\\\local\\\\')) OR contains(lower(file.path), lower('\\\\appdata\\\\locallow\\\\')) OR contains(lower(file.path), lower('\\\\appdata\\\\roaming\\\\')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of suspicious files and folders inside the user's AppData folder but not inside any of the common and well known directories (Local, Romaing, LocalLow). This method could be used as a method to bypass detection who exclude the AppData folder in fear of FPs",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

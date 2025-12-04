@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PowerShell Script With File Hostname Resolving Capabilities",
+    "comment": "Detects PowerShell scripts that have capabilities to read files, loop through them and resolve DNS host entries.",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('get-content ')) AND contains(lower(script.script_content.value), lower('foreach')) AND contains(lower(script.script_content.value), lower('[system.net.dns]::gethostentry')) AND contains(lower(script.script_content.value), lower('out-file')))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell scripts that have capabilities to read files, loop through them and resolve DNS host entries.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: The same functionality can be implemented by admin scripts, correlate with name and creator References: https://www.fortypoundhead.com/showcontent.asp?artid=24022, https://labs.withsecure.com/publications/fin7-target-veeam-servers",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration",
+          "techniqueId": "T1020"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

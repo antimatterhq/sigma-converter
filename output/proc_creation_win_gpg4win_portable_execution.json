@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Portable Gpg.EXE Execution",
+    "comment": "Detects the execution of \"gpg.exe\" from uncommon location. Often used by ransomware and loaders to decrypt/encrypt data.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\gpg.exe')) OR endswith(lower(process.name), lower('\\\\gpg2.exe'))) AND lower(process.file.name) = lower('gpg.exe') AND lower(device.desc) = lower('gnupg\u2019s openpgp tool') AND NOT (contains(lower(process.name), lower(':\\\\program files (x86)\\\\gnu\\\\gnupg\\\\bin\\\\')) OR contains(lower(process.name), lower(':\\\\program files (x86)\\\\gnupg vs-desktop\\\\')) OR contains(lower(process.name), lower(':\\\\program files (x86)\\\\gnupg\\\\bin\\\\')) OR contains(lower(process.name), lower(':\\\\program files (x86)\\\\gpg4win\\\\bin\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of \"gpg.exe\" from uncommon location. Often used by ransomware and loaders to decrypt/encrypt data.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "References: https://www.trendmicro.com/vinfo/vn/threat-encyclopedia/malware/ransom.bat.zarlock.a, https://securelist.com/locked-out/68960/, https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1486/T1486.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1486"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

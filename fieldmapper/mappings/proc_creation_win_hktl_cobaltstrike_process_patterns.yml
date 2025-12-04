@@ -1,20 +1,19 @@
-id: f35c5d71-b489-4e22-a115-f003df287317
 title: Potential CobaltStrike Process Patterns
+id: f35c5d71-b489-4e22-a115-f003df287317
 status: test
 level: high
-description: Detects potential process patterns related to Cobalt Strike beacon activity
 author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2021-07-27'
-modified: '2023-03-29'
-tags:
-    - attack.execution
-    - attack.t1059
+description: Detects potential process patterns related to Cobalt Strike beacon activity
 references:
     - https://hausec.com/2021/07/26/cobalt-strike-and-tradecraft/
     - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2021-07-27'
+modified: '2023-03-29'
 logsource:
     category: process_creation
     product: windows
@@ -45,21 +44,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:44.445043+00:00'
+            mapped_at: '2025-12-04T01:45:21.800340+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:44.445043+00:00'
+            mapped_at: '2025-12-04T01:45:21.800340+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:44.445054+00:00'
+            mapped_at: '2025-12-04T01:45:21.800356+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:44.445056+00:00'
+            mapped_at: '2025-12-04T01:45:21.800358+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:30:44.445057+00:00'
+            mapped_at: '2025-12-04T01:45:21.800360+00:00'

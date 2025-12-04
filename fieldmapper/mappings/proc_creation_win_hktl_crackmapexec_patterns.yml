@@ -1,20 +1,19 @@
-id: f26307d8-14cd-47e3-a26b-4b4769f24af6
 title: HackTool - CrackMapExec Process Patterns
+id: f26307d8-14cd-47e3-a26b-4b4769f24af6
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious process patterns found in logs when CrackMapExec is
     used
-author: Florian Roth (Nextron Systems)
-date: '2022-03-12'
-modified: '2023-02-13'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://mpgn.gitbook.io/crackmapexec/smb-protocol/obtaining-credentials/dump-lsass
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2022-03-12'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -51,17 +50,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:20.583813+00:00'
+            mapped_at: '2025-12-04T01:47:38.844588+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:20.583813+00:00'
+            mapped_at: '2025-12-04T01:47:38.844588+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:20.583855+00:00'
+            mapped_at: '2025-12-04T01:47:38.844621+00:00'
         -   source_field: User
             target_table: process_activity
             target_field: actor.user.name
-            mapped_at: '2025-11-26T02:33:20.583860+00:00'
+            mapped_at: '2025-12-04T01:47:38.844624+00:00'

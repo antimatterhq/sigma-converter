@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "User Access Blocked by Azure Conditional Access",
+    "comment": "Detect access has been blocked by Conditional Access policies. The access policy does not allow token issuance which might be sights\u2248 of unauthorizeed login to valid accounts.",
+    "annotations": {
+      "source": "sigma",
+      "product": "azure",
+      "service": "signinlogs",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (status_id = 53003)"
+      }
+    },
+    "output": {
+      "summary": "Detect access has been blocked by Conditional Access policies. The access policy does not allow token issuance which might be sights\u2248 of unauthorizeed login to valid accounts.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1110"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1078",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

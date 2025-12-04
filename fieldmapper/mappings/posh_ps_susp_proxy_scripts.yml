@@ -1,19 +1,18 @@
-id: bd33d2aa-497e-4651-9893-5c5364646595
 title: Suspicious TCP Tunnel Via PowerShell Script
+id: bd33d2aa-497e-4651-9893-5c5364646595
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects powershell scripts that creates sockets/listeners which could
     be indicative of tunneling activity
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-08'
-tags:
-    - attack.command-and-control
-    - attack.t1090
 references:
     - https://github.com/Arno0x/PowerShellScripts/blob/a6b7d5490fbf0b20f91195838f3a11156724b4f7/proxyTunnel.ps1
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1090
+date: '2022-07-08'
 logsource:
     category: ps_script
     product: windows
@@ -32,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:30.266091+00:00'
+            mapped_at: '2025-12-04T01:54:39.608671+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:30.266091+00:00'
+            mapped_at: '2025-12-04T01:54:39.608671+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:30.266104+00:00'
+            mapped_at: '2025-12-04T01:54:39.608703+00:00'

@@ -1,24 +1,21 @@
-id: 02d1d718-dd13-41af-989d-ea85c7fab93f
 title: Rare Remote Thread Creation By Uncommon Source Image
+id: 02d1d718-dd13-41af-989d-ea85c7fab93f
 status: experimental
 level: high
-description: Detects uncommon processes creating remote threads.
 author: Perez Diego (@darkquassar), oscd.community
-date: '2019-10-27'
-modified: '2024-07-15'
-tags:
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1055
+description: Detects uncommon processes creating remote threads.
 references:
     - Personal research, statistical analysis
     - https://lolbas-project.github.io
 falsepositives:
     - This rule is best put in testing first in order to create a baseline that reflects
         the data in your environment.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''66d31e5f-52d6-40a4-9615-002d3789a119''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1055
+date: '2019-10-27'
+modified: '2024-07-15'
 logsource:
     category: create_remote_thread
     product: windows
@@ -67,6 +64,9 @@ detection:
             - \wmic.exe
             - \wscript.exe
     condition: selection
+related:
+    -   id: 66d31e5f-52d6-40a4-9615-002d3789a119
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 4
@@ -74,13 +74,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_remote_thread
-            mapped_at: '2025-11-26T02:25:08.421311+00:00'
+            mapped_at: '2025-12-04T01:40:48.015873+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:08.421311+00:00'
+            mapped_at: '2025-12-04T01:40:48.015873+00:00'
     detection_fields:
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:25:08.421337+00:00'
+            mapped_at: '2025-12-04T01:40:48.015891+00:00'

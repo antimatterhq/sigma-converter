@@ -1,21 +1,20 @@
-id: cb7c4a03-2871-43c0-9bbb-18bbdb079896
 title: Unmount Share Via Net.EXE
+id: cb7c4a03-2871-43c0-9bbb-18bbdb079896
 status: test
 level: low
+author: oscd.community, @redcanary, Zach Stanford @svch0st
 description: Detects when when a mounted share is removed. Adversaries may remove
     share connections that are no longer useful in order to clean up traces of their
     operation
-author: oscd.community, @redcanary, Zach Stanford @svch0st
-date: '2020-10-08'
-modified: '2023-02-21'
-tags:
-    - attack.defense-evasion
-    - attack.t1070.005
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.005/T1070.005.md
 falsepositives:
     - Administrators or Power users may remove their shares via cmd line
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1070.005
+date: '2020-10-08'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:23.738004+00:00'
+            mapped_at: '2025-12-04T01:51:07.301320+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:23.738004+00:00'
+            mapped_at: '2025-12-04T01:51:07.301320+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:23.738035+00:00'
+            mapped_at: '2025-12-04T01:51:07.301336+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:23.738039+00:00'
+            mapped_at: '2025-12-04T01:51:07.301338+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:23.738042+00:00'
+            mapped_at: '2025-12-04T01:51:07.301340+00:00'

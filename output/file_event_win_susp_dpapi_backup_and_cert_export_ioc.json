@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "name": "DPAPI Backup Keys And Certificate Export Activity IOC",
+    "comment": "Detects file names with specific patterns seen generated and used by tools such as Mimikatz and DSInternals related to exported or stolen DPAPI backup keys and certificates.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (contains(lower(file.path), lower('ntds_capi_')) OR contains(lower(file.path), lower('ntds_legacy_')) OR contains(lower(file.path), lower('ntds_unknown_'))) AND (endswith(lower(file.path), lower('.cer')) OR endswith(lower(file.path), lower('.key')) OR endswith(lower(file.path), lower('.pfx')) OR endswith(lower(file.path), lower('.pvk'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects file names with specific patterns seen generated and used by tools such as Mimikatz and DSInternals related to exported or stolen DPAPI backup keys and certificates.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://www.dsinternals.com/en/dpapi-backup-key-theft-auditing/, https://github.com/MichaelGrafnetter/DSInternals/blob/39ee8a69bbdc1cfd12c9afdd7513b4788c4895d4/Src/DSInternals.Common/Data/DPAPI/DPAPIBackupKey.cs#L28-L32",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1555"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "techniqueId": "T1552",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,15 +1,10 @@
-id: 899133d5-4d7c-4a7f-94ee-27355c879d90
 title: Python Inline Command Execution
+id: 899133d5-4d7c-4a7f-94ee-27355c879d90
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of python using the "-c" flag. This is could be used
     as a way to launch a reverse shell or execute live python code.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-02'
-modified: '2023-02-17'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://docs.python.org/3/using/cmdline.html#cmdoption-c
     - https://www.revshells.com/
@@ -17,7 +12,11 @@ references:
 falsepositives:
     - Python libraries that use a flag starting with "-c". Filter according to your
         environment
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2023-01-02'
+modified: '2023-02-17'
 logsource:
     category: process_creation
     product: windows
@@ -44,29 +43,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:34.846600+00:00'
+            mapped_at: '2025-12-04T01:46:06.837876+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:34.846600+00:00'
+            mapped_at: '2025-12-04T01:46:06.837876+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:34.846614+00:00'
+            mapped_at: '2025-12-04T01:46:06.837891+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:34.846615+00:00'
+            mapped_at: '2025-12-04T01:46:06.837893+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:34.846617+00:00'
+            mapped_at: '2025-12-04T01:46:06.837894+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:34.846619+00:00'
+            mapped_at: '2025-12-04T01:46:06.837896+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:31:34.846620+00:00'
+            mapped_at: '2025-12-04T01:46:06.837897+00:00'

@@ -1,25 +1,24 @@
-id: d3adb3ef-b7e7-4003-9092-1924c797db35
 title: AWS Identity Center Identity Provider Change
+id: d3adb3ef-b7e7-4003-9092-1924c797db35
 status: test
 level: high
+author: Michael McIntyre @wtfender
 description: 'Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider.
 
     A change in identity provider allows an attacker to establish persistent access
     or escalate privileges via user impersonation.
 
     '
-author: Michael McIntyre @wtfender
-date: '2023-09-27'
-tags:
-    - attack.persistence
-    - attack.t1556
 references:
     - https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html
     - https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html
     - https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html
 falsepositives:
     - Authorized changes to the AWS account's identity provider
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1556
+date: '2023-09-27'
 logsource:
     product: aws
     service: cloudtrail
@@ -41,17 +40,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:06.921674+00:00'
+            mapped_at: '2025-12-04T01:39:06.305849+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:06.921674+00:00'
+            mapped_at: '2025-12-04T01:39:06.305849+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:06.921702+00:00'
+            target_field: metadata.product.name
+            mapped_at: '2025-12-04T01:39:06.305988+00:00'
         -   source_field: eventName
             target_table: file_activity
-            target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:22:06.921705+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:06.305991+00:00'

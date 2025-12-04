@@ -1,24 +1,23 @@
-id: 5b80a791-ad9b-4b75-bcc1-ad4e1e89c200
 title: File With Suspicious Extension Downloaded Via Bitsadmin
+id: 5b80a791-ad9b-4b75-bcc1-ad4e1e89c200
 status: test
 level: high
-description: Detects usage of bitsadmin downloading a file with a suspicious extension
 author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-28'
-modified: '2023-05-30'
-tags:
-    - attack.defense-evasion
-    - attack.persistence
-    - attack.t1197
-    - attack.s0190
-    - attack.t1036.003
+description: Detects usage of bitsadmin downloading a file with a suspicious extension
 references:
     - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
     - https://isc.sans.edu/diary/22264
     - https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.persistence
+    - attack.t1197
+    - attack.s0190
+    - attack.t1036.003
+date: '2022-06-28'
+modified: '2023-05-30'
 logsource:
     category: process_creation
     product: windows
@@ -73,21 +72,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:47.458539+00:00'
+            mapped_at: '2025-12-04T01:43:52.609736+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:47.458539+00:00'
+            mapped_at: '2025-12-04T01:43:52.609736+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:47.458553+00:00'
+            mapped_at: '2025-12-04T01:43:52.609754+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:47.458554+00:00'
+            mapped_at: '2025-12-04T01:43:52.609756+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:47.458556+00:00'
+            mapped_at: '2025-12-04T01:43:52.609757+00:00'

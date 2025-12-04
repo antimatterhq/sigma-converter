@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "HackTool - SOAPHound Execution",
+    "comment": "Detects the execution of SOAPHound, a .NET tool for collecting Active Directory data, using specific command-line arguments that may indicate an attempt to extract sensitive AD information.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' --buildcache ')) OR contains(lower(process.cmd_line), lower(' --bhdump ')) OR contains(lower(process.cmd_line), lower(' --certdump ')) OR contains(lower(process.cmd_line), lower(' --dnsdump '))) AND (contains(lower(process.cmd_line), lower(' -c ')) OR contains(lower(process.cmd_line), lower(' --cachefilename ')) OR contains(lower(process.cmd_line), lower(' -o ')) OR contains(lower(process.cmd_line), lower(' --outputdirectory'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of SOAPHound, a .NET tool for collecting Active Directory data, using specific command-line arguments that may indicate an attempt to extract sensitive AD information.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/FalconForceTeam/SOAPHound, https://medium.com/falconforce/soaphound-tool-to-collect-active-directory-data-via-adws-165aca78288c",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1087"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

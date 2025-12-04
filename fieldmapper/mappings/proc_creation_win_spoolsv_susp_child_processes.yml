@@ -1,16 +1,9 @@
-id: dcdbc940-0bff-46b2-95f3-2d73f848e33b
 title: Suspicious Spool Service Child Process
+id: dcdbc940-0bff-46b2-95f3-2d73f848e33b
 status: test
 level: high
-description: Detects suspicious print spool service (spoolsv.exe) child processes.
 author: Justin C. (@endisphotic), @dreadphones (detection), Thomas Patzke (Sigma rule)
-date: '2021-07-11'
-modified: '2024-12-01'
-tags:
-    - attack.execution
-    - attack.t1203
-    - attack.privilege-escalation
-    - attack.t1068
+description: Detects suspicious print spool service (spoolsv.exe) child processes.
 references:
     - https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/efa17a600b43c897b4b7463cc8541daa1987eeb4/Exploits/Print%20Spooler%20RCE/Suspicious%20Spoolsv%20Child%20Process.md
 fields:
@@ -18,7 +11,13 @@ fields:
     - CommandLine
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1203
+    - attack.privilege-escalation
+    - attack.t1068
+date: '2021-07-11'
+modified: '2024-12-01'
 logsource:
     category: process_creation
     product: windows
@@ -94,29 +93,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:23.118276+00:00'
+            mapped_at: '2025-12-04T01:46:52.054111+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:23.118276+00:00'
+            mapped_at: '2025-12-04T01:46:52.054111+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:23.118303+00:00'
+            mapped_at: '2025-12-04T01:46:52.054141+00:00'
         -   source_field: IntegrityLevel
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:32:23.118306+00:00'
+            mapped_at: '2025-12-04T01:46:52.054143+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:23.118309+00:00'
+            mapped_at: '2025-12-04T01:46:52.054144+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:23.118311+00:00'
+            mapped_at: '2025-12-04T01:46:52.054146+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:23.118314+00:00'
+            mapped_at: '2025-12-04T01:46:52.054147+00:00'

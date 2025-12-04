@@ -1,20 +1,19 @@
-id: 30d07da2-83ab-45d8-ae75-ec7c0edcaffc
 title: Renamed BOINC Client Execution
+id: 30d07da2-83ab-45d8-ae75-ec7c0edcaffc
 status: experimental
 level: medium
-description: Detects the execution of a renamed BOINC binary.
 author: Matt Anderson (Huntress)
-date: '2024-07-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1553
+description: Detects the execution of a renamed BOINC binary.
 references:
     - https://boinc.berkeley.edu/
     - https://www.virustotal.com/gui/file/91e405e8a527023fb8696624e70498ae83660fe6757cef4871ce9bcc659264d3/details
     - https://www.huntress.com/blog/fake-browser-updates-lead-to-boinc-volunteer-computing-software
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1553
+date: '2024-07-23'
 logsource:
     category: process_creation
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:23.376282+00:00'
+            mapped_at: '2025-12-04T01:45:05.900337+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:23.376282+00:00'
+            mapped_at: '2025-12-04T01:45:05.900337+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:23.376302+00:00'
+            mapped_at: '2025-12-04T01:45:05.900353+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:23.376304+00:00'
+            mapped_at: '2025-12-04T01:45:05.900355+00:00'

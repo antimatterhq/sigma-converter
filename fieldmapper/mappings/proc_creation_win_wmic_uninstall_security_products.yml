@@ -1,15 +1,10 @@
-id: 847d5ff3-8a31-4737-a970-aeae8fe21765
 title: Potential Tampering With Security Products Via WMIC
+id: 847d5ff3-8a31-4737-a970-aeae8fe21765
 status: test
 level: high
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects uninstallation or termination of security products using the
     WMIC utility
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2021-01-30'
-modified: '2023-02-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1562.001
 references:
     - https://twitter.com/cglyer/status/1355171195654709249
     - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
@@ -18,9 +13,11 @@ references:
     - https://www.trendmicro.com/en_us/research/23/a/vice-society-ransomware-group-targets-manufacturing-companies.html
 falsepositives:
     - Legitimate administration
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b53317a0-8acf-4fd1-8de8-a5401e776b96''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562.001
+date: '2021-01-30'
+modified: '2023-02-14'
 logsource:
     category: process_creation
     product: windows
@@ -84,6 +81,9 @@ detection:
             - Webroot SecureAnywhere
             - Windows Defender
     condition: 1 of selection_cli_* and selection_product
+related:
+    -   id: b53317a0-8acf-4fd1-8de8-a5401e776b96
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -91,13 +91,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:52.765454+00:00'
+            mapped_at: '2025-12-04T01:42:13.979648+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:52.765454+00:00'
+            mapped_at: '2025-12-04T01:42:13.979648+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:52.765485+00:00'
+            mapped_at: '2025-12-04T01:42:13.979663+00:00'

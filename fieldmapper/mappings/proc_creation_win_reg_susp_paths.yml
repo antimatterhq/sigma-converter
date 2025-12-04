@@ -1,23 +1,22 @@
-id: b7e2a8d4-74bb-4b78-adc9-3f92af2d4829
 title: Reg Add Suspicious Paths
+id: b7e2a8d4-74bb-4b78-adc9-3f92af2d4829
 status: test
 level: high
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: Detects when an adversary uses the reg.exe utility to add or modify new
     keys or subkeys
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-19'
-modified: '2022-10-10'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
-    - attack.t1562.001
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1112/T1112.md
     - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1562.001/T1562.001.md
     - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
 falsepositives:
     - Rare legitimate add to registry via cli (to these locations)
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+    - attack.t1562.001
+date: '2022-08-19'
+modified: '2022-10-10'
 logsource:
     category: process_creation
     product: windows
@@ -41,21 +40,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:18.777598+00:00'
+            mapped_at: '2025-12-04T01:46:47.280548+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:18.777598+00:00'
+            mapped_at: '2025-12-04T01:46:47.280548+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:18.777616+00:00'
+            mapped_at: '2025-12-04T01:46:47.280562+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:32:18.777618+00:00'
+            mapped_at: '2025-12-04T01:46:47.280564+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:18.777620+00:00'
+            mapped_at: '2025-12-04T01:46:47.280565+00:00'

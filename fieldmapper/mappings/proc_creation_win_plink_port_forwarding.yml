@@ -1,22 +1,21 @@
-id: 48a61b29-389f-4032-b317-b30de6b95314
 title: Suspicious Plink Port Forwarding
+id: 48a61b29-389f-4032-b317-b30de6b95314
 status: test
 level: high
-description: Detects suspicious Plink tunnel port forwarding to a local port
 author: Florian Roth (Nextron Systems)
-date: '2021-01-19'
-modified: '2022-10-09'
-tags:
-    - attack.command-and-control
-    - attack.t1572
-    - attack.lateral-movement
-    - attack.t1021.001
+description: Detects suspicious Plink tunnel port forwarding to a local port
 references:
     - https://www.real-sec.com/2019/04/bypassing-network-restrictions-through-rdp-tunneling/
     - https://medium.com/@informationsecurity/remote-ssh-tunneling-with-plink-exe-7831072b3d7d
 falsepositives:
     - Administrative activity using a remote port forwarding to a local port
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1572
+    - attack.lateral-movement
+    - attack.t1021.001
+date: '2021-01-19'
+modified: '2022-10-09'
 logsource:
     category: process_creation
     product: windows
@@ -32,17 +31,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:05.123382+00:00'
+            mapped_at: '2025-12-04T01:44:52.485500+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:05.123382+00:00'
+            mapped_at: '2025-12-04T01:44:52.485500+00:00'
     detection_fields:
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:30:05.123404+00:00'
+            mapped_at: '2025-12-04T01:44:52.485515+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:05.123405+00:00'
+            mapped_at: '2025-12-04T01:44:52.485517+00:00'

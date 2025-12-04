@@ -1,21 +1,20 @@
-id: 3c1b5fb0-c72f-45ba-abd1-4d4c353144ab
 title: Process Creation Using Sysnative Folder
+id: 3c1b5fb0-c72f-45ba-abd1-4d4c353144ab
 status: test
 level: medium
+author: Max Altgelt (Nextron Systems)
 description: Detects process creation events that use the Sysnative folder (common
     for CobaltStrike spawns)
-author: Max Altgelt (Nextron Systems)
-date: '2022-08-23'
-modified: '2023-12-14'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055
 references:
     - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055
+date: '2022-08-23'
+modified: '2023-12-14'
 logsource:
     category: process_creation
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:18.811250+00:00'
+            mapped_at: '2025-12-04T01:40:54.977403+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:18.811250+00:00'
+            mapped_at: '2025-12-04T01:40:54.977403+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:18.811271+00:00'
+            mapped_at: '2025-12-04T01:40:54.977418+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:18.811274+00:00'
+            mapped_at: '2025-12-04T01:40:54.977420+00:00'

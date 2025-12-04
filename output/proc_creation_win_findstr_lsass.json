@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "LSASS Process Reconnaissance Via Findstr.EXE",
+    "comment": "Detects findstring commands that include the keyword lsass, which indicates recon actviity for the LSASS process PID",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND ((endswith(lower(process.name), lower('\\\\find.exe')) OR endswith(lower(process.name), lower('\\\\findstr.exe'))) AND (lower(LOWER(process.file.name)) in ('find\\.exe', 'findstr\\.exe')) AND contains(lower(process.cmd_line), lower('lsass')) OR contains(lower(process.cmd_line), lower(' -i \"lsass')) OR contains(lower(process.cmd_line), lower(' /i \"lsass')) OR contains(lower(process.cmd_line), lower(' \u2013i \"lsass')) OR contains(lower(process.cmd_line), lower(' \u2014i \"lsass')) OR contains(lower(process.cmd_line), lower(' \u2015i \"lsass')) OR contains(lower(process.cmd_line), lower(' -i lsass.exe')) OR contains(lower(process.cmd_line), lower(' /i lsass.exe')) OR contains(lower(process.cmd_line), lower(' \u2013i lsass.exe')) OR contains(lower(process.cmd_line), lower(' \u2014i lsass.exe')) OR contains(lower(process.cmd_line), lower(' \u2015i lsass.exe')) OR contains(lower(process.cmd_line), lower('findstr \"lsass')) OR contains(lower(process.cmd_line), lower('findstr lsass')) OR contains(lower(process.cmd_line), lower('findstr.exe \"lsass')) OR contains(lower(process.cmd_line), lower('findstr.exe lsass'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects findstring commands that include the keyword lsass, which indicates recon actviity for the LSASS process PID",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://blog.talosintelligence.com/2022/08/recent-cyber-attack.html?m=1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1552",
+          "subTechniqueId": "006"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

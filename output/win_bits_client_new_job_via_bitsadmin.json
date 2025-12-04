@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "New BITS Job Created Via Bitsadmin",
+    "comment": "Detects the creation of a new bits job by Bitsadmin",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "bits-client",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 3 AND endswith(lower(actor.process.name), lower('\\\\bitsadmin.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a new bits job by Bitsadmin",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Low",
+      "fidelity": "Investigative",
+      "objective": "False positive: Many legitimate applications or scripts could leverage \"bitsadmin\". This event is best correlated with EID 16403 via the JobID field Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1197"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

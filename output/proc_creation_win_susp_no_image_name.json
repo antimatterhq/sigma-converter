@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Process Launched Without Image Name",
+    "comment": "Detect the use of processes with no name (\".exe\"), which can be used to evade Image-based detections.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detect the use of processes with no name (\".exe\"), which can be used to evade Image-based detections.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Rare legitimate software. Reference: https://www.huntress.com/blog/fake-browser-updates-lead-to-boinc-volunteer-computing-software",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

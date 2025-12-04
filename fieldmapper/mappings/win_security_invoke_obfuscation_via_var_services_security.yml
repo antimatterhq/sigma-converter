@@ -1,23 +1,20 @@
-id: 4c54ba8f-73d2-4d40-8890-d9cf1dca3d30
 title: Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION - Security
+id: 4c54ba8f-73d2-4d40-8890-d9cf1dca3d30
 status: test
 level: high
-description: Detects Obfuscated Powershell via VAR++ LAUNCHER
 author: Timur Zinniatullin, oscd.community
-date: '2020-10-13'
-modified: '2022-11-29'
+description: Detects Obfuscated Powershell via VAR++ LAUNCHER
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''14bcba49-a428-42d9-b943-e2ce0f0f7ae6''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+date: '2020-10-13'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -39,24 +36,27 @@ detection:
             - '{4}'
             - '{5}'
     condition: selection
+related:
+    -   id: 14bcba49-a428-42d9-b943-e2ce0f0f7ae6
+        type: derived
 ocsf_mapping:
     class_name: process_activity
-    activity_id: <UNMAPPED>
+    activity_id: 1
     logsource:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:35.154459+00:00'
+            mapped_at: '2025-12-04T01:55:55.982450+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:35.154459+00:00'
+            mapped_at: '2025-12-04T01:55:55.982450+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:35.154482+00:00'
+            mapped_at: '2025-12-04T01:55:55.982469+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:35.154485+00:00'
+            mapped_at: '2025-12-04T01:55:55.982479+00:00'

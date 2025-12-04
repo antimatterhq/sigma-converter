@@ -1,21 +1,20 @@
-id: c484e533-ee16-4a93-b6ac-f0ea4868b2f1
 title: HackTool - SharpUp PrivEsc Tool Execution
+id: c484e533-ee16-4a93-b6ac-f0ea4868b2f1
 status: test
 level: critical
-description: Detects the use of SharpUp, a tool for local privilege escalation
 author: Florian Roth (Nextron Systems)
-date: '2022-08-20'
-modified: '2023-02-13'
+description: Detects the use of SharpUp, a tool for local privilege escalation
+references:
+    - https://github.com/GhostPack/SharpUp
+falsepositives:
+    - Unknown
 tags:
     - attack.privilege-escalation
     - attack.t1615
     - attack.t1569.002
     - attack.t1574.005
-references:
-    - https://github.com/GhostPack/SharpUp
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-08-20'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:35:16.139500+00:00'
+            mapped_at: '2025-12-04T01:49:11.279684+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:35:16.139500+00:00'
+            mapped_at: '2025-12-04T01:49:11.279684+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:35:16.139520+00:00'
+            mapped_at: '2025-12-04T01:49:11.279697+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:35:16.139522+00:00'
+            mapped_at: '2025-12-04T01:49:11.279699+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:35:16.139523+00:00'
+            mapped_at: '2025-12-04T01:49:11.279700+00:00'

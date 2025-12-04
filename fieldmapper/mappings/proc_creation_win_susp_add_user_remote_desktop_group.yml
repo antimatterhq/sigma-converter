@@ -1,26 +1,22 @@
-id: ffa28e60-bdb1-46e0-9f82-05f7a61cc06e
 title: User Added to Remote Desktop Users Group
+id: ffa28e60-bdb1-46e0-9f82-05f7a61cc06e
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects addition of users to the local Remote Desktop Users group via
     "Net" or "Add-LocalGroupMember".
-author: Florian Roth (Nextron Systems)
-date: '2021-12-06'
-modified: '2022-09-09'
+references:
+    - https://www.microsoft.com/security/blog/2021/11/16/evolving-trends-in-iranian-threat-actor-activity-mstic-presentation-at-cyberwarcon-2021/
+falsepositives:
+    - Administrative activity
 tags:
     - attack.persistence
     - attack.lateral-movement
     - attack.t1133
     - attack.t1136.001
     - attack.t1021.001
-references:
-    - https://www.microsoft.com/security/blog/2021/11/16/evolving-trends-in-iranian-threat-actor-activity-mstic-presentation-at-cyberwarcon-2021/
-falsepositives:
-    - Administrative activity
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ad720b90-25ad-43ff-9b5e-5c841facc8e5''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''10fb649c-3600-4d37-b1e6-56ea90bb7e09''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2021-12-06'
+modified: '2022-09-09'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +33,11 @@ detection:
             - Utilisateurs du Bureau à distance
             - Usuarios de escritorio remoto
     condition: all of selection_*
+related:
+    -   id: ad720b90-25ad-43ff-9b5e-5c841facc8e5
+        type: similar
+    -   id: 10fb649c-3600-4d37-b1e6-56ea90bb7e09
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,13 +45,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:50.673131+00:00'
+            mapped_at: '2025-12-04T01:45:29.140969+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:50.673131+00:00'
+            mapped_at: '2025-12-04T01:45:29.140969+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:50.673143+00:00'
+            mapped_at: '2025-12-04T01:45:29.140980+00:00'

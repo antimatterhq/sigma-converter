@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "HackTool - Hydra Password Bruteforce Execution",
+    "comment": "Detects command line parameters used by Hydra password guessing hack tool",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('-u ')) AND contains(lower(process.cmd_line), lower('-p ')) AND (contains(lower(process.cmd_line), lower('^user^')) OR contains(lower(process.cmd_line), lower('^pass^'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects command line parameters used by Hydra password guessing hack tool",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Software that uses the caret encased keywords PASS and USER in its command line Reference: https://github.com/vanhauser-thc/thc-hydra",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1110"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1110",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

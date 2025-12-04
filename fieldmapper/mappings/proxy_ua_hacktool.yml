@@ -1,16 +1,9 @@
-id: c42a3073-30fb-48ae-8c99-c23ada84b103
 title: Hack Tool User Agent
+id: c42a3073-30fb-48ae-8c99-c23ada84b103
 status: test
 level: high
-description: Detects suspicious user agent strings user by hack tools in proxy logs
 author: Florian Roth (Nextron Systems)
-date: '2017-07-08'
-modified: '2022-07-07'
-tags:
-    - attack.initial-access
-    - attack.t1190
-    - attack.credential-access
-    - attack.t1110
+description: Detects suspicious user agent strings user by hack tools in proxy logs
 references:
     - https://github.com/fastly/waf_testbed/blob/8bfc406551f3045e418cbaad7596cff8da331dfc/templates/default/scanners-user-agents.data.erb
     - http://rules.emergingthreats.net/open/snort-2.9.0/rules/emerging-user_agents.rules
@@ -20,7 +13,13 @@ fields:
     - c-useragent
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1190
+    - attack.credential-access
+    - attack.t1110
+date: '2017-07-08'
+modified: '2022-07-07'
 logsource:
     category: proxy
 detection:
@@ -81,9 +80,9 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:08.436929+00:00'
+            mapped_at: '2025-12-04T01:34:52.674298+00:00'
     detection_fields:
         -   source_field: c-useragent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:14:08.436962+00:00'
+            mapped_at: '2025-12-04T01:34:52.674319+00:00'

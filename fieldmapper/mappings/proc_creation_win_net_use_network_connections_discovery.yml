@@ -1,21 +1,20 @@
-id: 1c67a717-32ba-409b-a45d-0fb704a73a81
 title: System Network Connections Discovery Via Net.EXE
+id: 1c67a717-32ba-409b-a45d-0fb704a73a81
 status: test
 level: low
+author: frack113
 description: Adversaries may attempt to get a listing of network connections to or
     from the compromised system they are currently accessing or from remote systems
     by querying for information over the network.
-author: frack113
-date: '2021-12-10'
-modified: '2023-02-21'
-tags:
-    - attack.discovery
-    - attack.t1049
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-1---system-network-connections-discovery
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1049
+date: '2021-12-10'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -42,21 +41,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:34:31.548174+00:00'
+            mapped_at: '2025-12-04T01:48:32.468245+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:34:31.548174+00:00'
+            mapped_at: '2025-12-04T01:48:32.468245+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:34:31.548192+00:00'
+            mapped_at: '2025-12-04T01:48:32.468259+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:34:31.548195+00:00'
+            mapped_at: '2025-12-04T01:48:32.468261+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:34:31.548198+00:00'
+            mapped_at: '2025-12-04T01:48:32.468263+00:00'

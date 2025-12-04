@@ -1,7 +1,8 @@
-id: b6f91281-20aa-446a-b986-38a92813a18f
 title: DLL Search Order Hijackig Via Additional Space in Path
+id: b6f91281-20aa-446a-b986-38a92813a18f
 status: test
 level: high
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects when an attacker create a similar folder structure to windows
     system folders such as (Windows, Program Files...)
 
@@ -9,19 +10,17 @@ description: 'Detects when an attacker create a similar folder structure to wind
     Order Hijacking" attack
 
     '
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2022-07-30'
-tags:
-    - attack.persistence
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1574.002
 references:
     - https://twitter.com/cyb3rops/status/1552932770464292864
     - https://www.wietzebeukema.nl/blog/hijacking-dlls-in-windows
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1574.002
+date: '2022-07-30'
 logsource:
     category: file_event
     product: windows
@@ -40,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:33.752789+00:00'
+            mapped_at: '2025-12-04T01:53:10.903313+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:33.752789+00:00'
+            mapped_at: '2025-12-04T01:53:10.903313+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:33.752805+00:00'
+            mapped_at: '2025-12-04T01:53:10.903326+00:00'

@@ -1,20 +1,19 @@
-id: 01c42d3c-242d-4655-85b2-34f1739632f7
 title: Potentially Over Permissive Permissions Granted Using Dsacls.EXE
+id: 01c42d3c-242d-4655-85b2-34f1739632f7
 status: test
 level: medium
-description: Detects usage of Dsacls to grant over permissive permissions
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-20'
-modified: '2023-02-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
+description: Detects usage of Dsacls to grant over permissive permissions
 references:
     - https://ss64.com/nt/dsacls.html
     - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc771151(v=ws.11)
 falsepositives:
     - Legitimate administrators granting over permissive permissions to users
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-06-20'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -40,21 +39,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:54.861528+00:00'
+            mapped_at: '2025-12-04T01:44:42.706719+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:54.861528+00:00'
+            mapped_at: '2025-12-04T01:44:42.706719+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:54.861548+00:00'
+            mapped_at: '2025-12-04T01:44:42.706734+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:54.861551+00:00'
+            mapped_at: '2025-12-04T01:44:42.706736+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:54.861553+00:00'
+            mapped_at: '2025-12-04T01:44:42.706739+00:00'

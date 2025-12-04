@@ -1,22 +1,21 @@
-id: 46123129-1024-423e-9fae-43af4a0fa9a5
 title: File Download Via Windows Defender MpCmpRun.EXE
+id: 46123129-1024-423e-9fae-43af4a0fa9a5
 status: test
 level: high
-description: Detects the use of Windows Defender MpCmdRun.EXE to download files
 author: Matthew Matchen
-date: '2020-09-04'
-modified: '2023-11-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
-    - attack.command-and-control
-    - attack.t1105
+description: Detects the use of Windows Defender MpCmdRun.EXE to download files
 references:
     - https://web.archive.org/web/20200903194959/https://twitter.com/djmtshepana/status/1301608169496612866
     - https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.command-and-control
+    - attack.t1105
+date: '2020-09-04'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -38,25 +37,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:07.826551+00:00'
+            mapped_at: '2025-12-04T01:44:06.759864+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:07.826551+00:00'
+            mapped_at: '2025-12-04T01:44:06.759864+00:00'
     detection_fields:
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:07.826574+00:00'
+            mapped_at: '2025-12-04T01:44:06.759899+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:07.826577+00:00'
+            mapped_at: '2025-12-04T01:44:06.759903+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:07.826579+00:00'
+            mapped_at: '2025-12-04T01:44:06.759906+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:29:07.826581+00:00'
+            mapped_at: '2025-12-04T01:44:06.759909+00:00'

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PUA - Netcat Suspicious Execution",
+    "comment": "Detects execution of Netcat. Adversaries may use a non-application layer protocol for communication between host and C2 server or among infected hosts within a network",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\nc.exe')) OR endswith(lower(process.name), lower('\\\\ncat.exe')) OR endswith(lower(process.name), lower('\\\\netcat.exe')) OR contains(lower(process.cmd_line), lower(' -lvp ')) OR contains(lower(process.cmd_line), lower(' -lvnp')) OR contains(lower(process.cmd_line), lower(' -l -v -p ')) OR contains(lower(process.cmd_line), lower(' -lv -p ')) OR contains(lower(process.cmd_line), lower(' -l --proxy-type http ')) OR contains(lower(process.cmd_line), lower(' -vnl --exec ')) OR contains(lower(process.cmd_line), lower(' -vnl -e ')) OR contains(lower(process.cmd_line), lower(' --lua-exec ')) OR contains(lower(process.cmd_line), lower(' --sh-exec '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of Netcat. Adversaries may use a non-application layer protocol for communication between host and C2 server or among infected hosts within a network",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate ncat use References: https://nmap.org/ncat/, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1095/T1095.md, https://www.revshells.com/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1095"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

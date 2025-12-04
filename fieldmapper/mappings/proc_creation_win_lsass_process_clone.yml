@@ -1,23 +1,22 @@
-id: c8da0dfd-4ed0-4b68-962d-13c9c884384e
 title: Potential Credential Dumping Via LSASS Process Clone
+id: c8da0dfd-4ed0-4b68-962d-13c9c884384e
 status: test
 level: critical
+author: Florian Roth (Nextron Systems), Samir Bousseaden
 description: Detects a suspicious LSASS process process clone that could be a sign
     of credential dumping activity
-author: Florian Roth (Nextron Systems), Samir Bousseaden
-date: '2021-11-27'
-modified: '2023-03-02'
-tags:
-    - attack.credential-access
-    - attack.t1003
-    - attack.t1003.001
 references:
     - https://www.matteomalvica.com/blog/2019/12/02/win-defender-atp-cred-bypass/
     - https://twitter.com/Hexacorn/status/1420053502554951689
     - https://twitter.com/SBousseaden/status/1464566846594691073?s=20
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.t1003.001
+date: '2021-11-27'
+modified: '2023-03-02'
 logsource:
     category: process_creation
     product: windows
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:41.801674+00:00'
+            mapped_at: '2025-12-04T01:43:45.602675+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:41.801674+00:00'
+            mapped_at: '2025-12-04T01:43:45.602675+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:28:41.801686+00:00'
+            mapped_at: '2025-12-04T01:43:45.602687+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:41.801688+00:00'
+            mapped_at: '2025-12-04T01:43:45.602688+00:00'

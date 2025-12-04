@@ -1,23 +1,22 @@
-id: 9fb6b26e-7f9e-4517-a48b-8cac4a1b6c60
 title: Uncommon FileSystem Load Attempt By Format.com
+id: 9fb6b26e-7f9e-4517-a48b-8cac4a1b6c60
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects the execution of format.com with an uncommon filesystem selection
     that could indicate a defense evasion activity in which "format.com" is used to
     load malicious DLL files or other programs.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-01-04'
-modified: '2024-05-13'
-tags:
-    - attack.defense-evasion
 references:
     - https://twitter.com/0gtweet/status/1477925112561209344
     - https://twitter.com/wdormann/status/1478011052130459653?s=20
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-01-04'
+modified: '2024-05-13'
 logsource:
     category: process_creation
     product: windows
@@ -40,17 +39,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:46.532125+00:00'
+            mapped_at: '2025-12-04T01:46:15.419770+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:46.532125+00:00'
+            mapped_at: '2025-12-04T01:46:15.419770+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:46.532135+00:00'
+            mapped_at: '2025-12-04T01:46:15.419785+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:46.532137+00:00'
+            mapped_at: '2025-12-04T01:46:15.419786+00:00'

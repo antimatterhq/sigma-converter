@@ -1,22 +1,21 @@
-id: a24e5861-c6ca-4fde-a93c-ba9256feddf0
 title: Uncommon Process Access Rights For Target Image
+id: a24e5861-c6ca-4fde-a93c-ba9256feddf0
 status: experimental
 level: low
+author: Nasreddine Bencherchali (Nextron Systems), frack113
 description: 'Detects process access request to uncommon target images with a "PROCESS_ALL_ACCESS"
     access mask.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), frack113
-date: '2024-05-27'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055.011
 references:
     - https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055.011
+date: '2024-05-27'
 logsource:
     category: process_access
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:21.126489+00:00'
+            mapped_at: '2025-12-04T01:40:29.789674+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:21.126489+00:00'
+            mapped_at: '2025-12-04T01:40:29.789674+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:21.126514+00:00'
+            mapped_at: '2025-12-04T01:40:29.789751+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:21.126516+00:00'
+            mapped_at: '2025-12-04T01:40:29.789757+00:00'

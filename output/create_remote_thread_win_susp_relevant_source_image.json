@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Rare Remote Thread Creation By Uncommon Source Image",
+    "comment": "Detects uncommon processes creating remote threads.",
+    "annotations": {
+      "source": "sigma",
+      "category": "create_remote_thread",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND (endswith(lower(actor.process.name), lower('\\\\bash.exe')) OR endswith(lower(actor.process.name), lower('\\\\cscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\cvtres.exe')) OR endswith(lower(actor.process.name), lower('\\\\defrag.exe')) OR endswith(lower(actor.process.name), lower('\\\\dialer.exe')) OR endswith(lower(actor.process.name), lower('\\\\dnx.exe')) OR endswith(lower(actor.process.name), lower('\\\\esentutl.exe')) OR endswith(lower(actor.process.name), lower('\\\\excel.exe')) OR endswith(lower(actor.process.name), lower('\\\\expand.exe')) OR endswith(lower(actor.process.name), lower('\\\\find.exe')) OR endswith(lower(actor.process.name), lower('\\\\findstr.exe')) OR endswith(lower(actor.process.name), lower('\\\\forfiles.exe')) OR endswith(lower(actor.process.name), lower('\\\\gpupdate.exe')) OR endswith(lower(actor.process.name), lower('\\\\hh.exe')) OR endswith(lower(actor.process.name), lower('\\\\installutil.exe')) OR endswith(lower(actor.process.name), lower('\\\\lync.exe')) OR endswith(lower(actor.process.name), lower('\\\\makecab.exe')) OR endswith(lower(actor.process.name), lower('\\\\mdnsresponder.exe')) OR endswith(lower(actor.process.name), lower('\\\\monitoringhost.exe')) OR endswith(lower(actor.process.name), lower('\\\\msbuild.exe')) OR endswith(lower(actor.process.name), lower('\\\\mshta.exe')) OR endswith(lower(actor.process.name), lower('\\\\mspaint.exe')) OR endswith(lower(actor.process.name), lower('\\\\outlook.exe')) OR endswith(lower(actor.process.name), lower('\\\\ping.exe')) OR endswith(lower(actor.process.name), lower('\\\\provtool.exe')) OR endswith(lower(actor.process.name), lower('\\\\python.exe')) OR endswith(lower(actor.process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(actor.process.name), lower('\\\\robocopy.exe')) OR endswith(lower(actor.process.name), lower('\\\\runonce.exe')) OR endswith(lower(actor.process.name), lower('\\\\sapcimc.exe')) OR endswith(lower(actor.process.name), lower('\\\\smartscreen.exe')) OR endswith(lower(actor.process.name), lower('\\\\spoolsv.exe')) OR endswith(lower(actor.process.name), lower('\\\\tstheme.exe')) OR endswith(lower(actor.process.name), lower('\\\\userinit.exe')) OR endswith(lower(actor.process.name), lower('\\\\vssadmin.exe')) OR endswith(lower(actor.process.name), lower('\\\\vssvc.exe')) OR endswith(lower(actor.process.name), lower('\\\\w3wp.exe')) OR endswith(lower(actor.process.name), lower('\\\\winscp.exe')) OR endswith(lower(actor.process.name), lower('\\\\winword.exe')) OR endswith(lower(actor.process.name), lower('\\\\wmic.exe')) OR endswith(lower(actor.process.name), lower('\\\\wscript.exe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects uncommon processes creating remote threads.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: This rule is best put in testing first in order to create a baseline that reflects the data in your environment. References: Personal research, statistical analysis, https://lolbas-project.github.io",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1055"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Linux Crypto Mining Indicators",
+    "comment": "Detects command line parameters or strings often used by crypto miners",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' --cpu-priority=')) OR contains(lower(process.cmd_line), lower('--donate-level=0')) OR contains(lower(process.cmd_line), lower(' -o pool.')) OR contains(lower(process.cmd_line), lower(' --nicehash')) OR contains(lower(process.cmd_line), lower(' --algo=rx/0 ')) OR contains(lower(process.cmd_line), lower('stratum+tcp://')) OR contains(lower(process.cmd_line), lower('stratum+udp://')) OR contains(lower(process.cmd_line), lower('sh -c /sbin/modprobe msr allow_writes=on')) OR contains(lower(process.cmd_line), lower('ls1kb25hdgutbgv2zww9')) OR contains(lower(process.cmd_line), lower('0tzg9uyxrllwxldmvsp')) OR contains(lower(process.cmd_line), lower('tlwrvbmf0zs1szxzlbd')) OR contains(lower(process.cmd_line), lower('c3ryyxr1bst0y3a6ly')) OR contains(lower(process.cmd_line), lower('n0cmf0dw0rdgnwoi8v')) OR contains(lower(process.cmd_line), lower('zdhjhdhvtk3rjcdovl')) OR contains(lower(process.cmd_line), lower('c3ryyxr1bst1zha6ly')) OR contains(lower(process.cmd_line), lower('n0cmf0dw0rdwrwoi8v')) OR contains(lower(process.cmd_line), lower('zdhjhdhvtk3vkcdovl'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects command line parameters or strings often used by crypto miners",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use of crypto miners Reference: https://www.poolwatch.io/coin/monero",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Impact",
+          "techniqueId": "T1496"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,26 +1,23 @@
-id: 979baf41-ca44-4540-9d0c-4fcef3b5a3a4
 title: Potential File Extension Spoofing Using Right-to-Left Override
+id: 979baf41-ca44-4540-9d0c-4fcef3b5a3a4
 status: experimental
 level: high
+author: Jonathan Peters (Nextron Systems), Florian Roth (Nextron Systems)
 description: 'Detects suspicious filenames that contain a right-to-left override character
     and a potentially spoofed file extensions.
 
     '
-author: Jonathan Peters (Nextron Systems), Florian Roth (Nextron Systems)
-date: '2024-11-17'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1036.002
 references:
     - https://redcanary.com/blog/right-to-left-override/
     - https://www.malwarebytes.com/blog/news/2014/01/the-rtlo-method
 falsepositives:
     - Filenames that contains scriptures such as arabic or hebrew might make use of
         this character
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ad691d92-15f2-4181-9aa4-723c74f9ddc3''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1036.002
+date: '2024-11-17'
 logsource:
     category: file_event
     product: windows
@@ -35,6 +32,9 @@ detection:
             - xcod.
             - xslx.
     condition: all of selection_*
+related:
+    -   id: ad691d92-15f2-4181-9aa4-723c74f9ddc3
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 3
@@ -42,13 +42,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:22.021081+00:00'
+            mapped_at: '2025-12-04T01:53:00.180543+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:22.021081+00:00'
+            mapped_at: '2025-12-04T01:53:00.180543+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:22.021097+00:00'
+            mapped_at: '2025-12-04T01:53:00.180562+00:00'

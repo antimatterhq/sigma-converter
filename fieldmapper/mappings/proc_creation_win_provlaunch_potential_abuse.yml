@@ -1,24 +1,19 @@
-id: 7f5d1c9a-3e83-48df-95a7-2b98aae6c13c
 title: Potential Provlaunch.EXE Binary Proxy Execution Abuse
+id: 7f5d1c9a-3e83-48df-95a7-2b98aae6c13c
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel
 description: Detects child processes of "provlaunch.exe" which might indicate potential
     abuse to proxy execution.
-author: Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel
-date: '2023-08-08'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Provlaunch/
     - https://twitter.com/0gtweet/status/1674399582162153472
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f9999590-1f94-4a34-a91e-951e47bedefd''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''2a4b3e61-9d22-4e4a-b60f-6e8f0cde6f25''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''7021255e-5db3-4946-a8b9-0ba7a4644a69''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2023-08-08'
 logsource:
     category: process_creation
     product: windows
@@ -46,6 +41,13 @@ detection:
             - \Windows\Tasks\
             - \Windows\Temp\
     condition: selection and not 1 of filter_main_*
+related:
+    -   id: f9999590-1f94-4a34-a91e-951e47bedefd
+        type: similar
+    -   id: 2a4b3e61-9d22-4e4a-b60f-6e8f0cde6f25
+        type: similar
+    -   id: 7021255e-5db3-4946-a8b9-0ba7a4644a69
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -53,17 +55,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:14.507678+00:00'
+            mapped_at: '2025-12-04T01:50:59.060055+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:14.507678+00:00'
+            mapped_at: '2025-12-04T01:50:59.060055+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:37:14.507698+00:00'
+            mapped_at: '2025-12-04T01:50:59.060075+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:14.507701+00:00'
+            mapped_at: '2025-12-04T01:50:59.060077+00:00'

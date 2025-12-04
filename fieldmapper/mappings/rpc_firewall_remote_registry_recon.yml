@@ -1,13 +1,9 @@
-id: d8ffe17e-04be-4886-beb9-c1dd1944b9a8
 title: Remote Registry Recon
+id: d8ffe17e-04be-4886-beb9-c1dd1944b9a8
 status: test
 level: high
-description: Detects remote RPC calls to collect information
 author: Sagie Dulce, Dekel Paz
-date: '2022-01-01'
-modified: '2022-01-01'
-tags:
-    - attack.discovery
+description: Detects remote RPC calls to collect information
 references:
     - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rrp/0fa3191d-bb79-490a-81bd-54c2601b7a78
     - https://github.com/jsecurity101/MSRPC-to-ATTACK/blob/ddd4608fe8684fcf2fcf9b48c5f0b3c28097f8a3/documents/MS-RRP.md
@@ -15,7 +11,10 @@ references:
     - https://zeronetworks.com/blog/stopping-lateral-movement-via-the-rpc-firewall/
 falsepositives:
     - Remote administration of registry values
-taxonomy: sigma
+tags:
+    - attack.discovery
+date: '2022-01-01'
+modified: '2022-01-01'
 logsource:
     category: application
     product: rpc_firewall
@@ -46,25 +45,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: application
-            mapped_at: '2025-11-26T02:23:18.432526+00:00'
+            mapped_at: '2025-12-04T01:39:42.756081+00:00'
         product:
             source_field: product
             source_value: rpc_firewall
-            mapped_at: '2025-11-26T02:23:18.432526+00:00'
+            mapped_at: '2025-12-04T01:39:42.756081+00:00'
     detection_fields:
         -   source_field: EventLog
             target_table: network_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:23:18.432546+00:00'
+            mapped_at: '2025-12-04T01:39:42.756107+00:00'
         -   source_field: EventID
             target_table: network_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:23:18.432549+00:00'
+            mapped_at: '2025-12-04T01:39:42.756109+00:00'
         -   source_field: InterfaceUuid
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:18.432551+00:00'
+            mapped_at: '2025-12-04T01:39:42.756110+00:00'
         -   source_field: OpNum
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:23:18.432553+00:00'
+            mapped_at: '2025-12-04T01:39:42.756112+00:00'

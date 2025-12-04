@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "New Generic Credentials Added Via Cmdkey.EXE",
+    "comment": "Detects usage of \"cmdkey.exe\" to add generic credentials. As an example, this can be used before connecting to an RDP session via command line interface.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmdkey.exe')) AND lower(process.file.name) = lower('cmdkey.exe') AND (contains(lower(process.cmd_line), lower(' -g')) OR contains(lower(process.cmd_line), lower(' /g')) OR contains(lower(process.cmd_line), lower(' \u2013g')) OR contains(lower(process.cmd_line), lower(' \u2014g')) OR contains(lower(process.cmd_line), lower(' \u2015g'))) AND (contains(lower(process.cmd_line), lower(' -u')) OR contains(lower(process.cmd_line), lower(' /u')) OR contains(lower(process.cmd_line), lower(' \u2013u')) OR contains(lower(process.cmd_line), lower(' \u2014u')) OR contains(lower(process.cmd_line), lower(' \u2015u'))) AND (contains(lower(process.cmd_line), lower(' -p')) OR contains(lower(process.cmd_line), lower(' /p')) OR contains(lower(process.cmd_line), lower(' \u2013p')) OR contains(lower(process.cmd_line), lower(' \u2014p')) OR contains(lower(process.cmd_line), lower(' \u2015p'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of \"cmdkey.exe\" to add generic credentials. As an example, this can be used before connecting to an RDP session via command line interface.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage for administration purposes Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md#t1021001---remote-desktop-protocol",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

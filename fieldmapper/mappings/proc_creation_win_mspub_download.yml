@@ -1,21 +1,20 @@
-id: 3b3c7f55-f771-4dd6-8a6e-08d057a17caf
 title: Arbitrary File Download Via MSPUB.EXE
+id: 3b3c7f55-f771-4dd6-8a6e-08d057a17caf
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of "MSPUB" (Microsoft Publisher) to download arbitrary
     files
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-19'
-modified: '2023-02-08'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1218
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/pull/238/files
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1218
+date: '2022-08-19'
+modified: '2023-02-08'
 logsource:
     category: process_creation
     product: windows
@@ -36,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:04.176510+00:00'
+            mapped_at: '2025-12-04T01:42:20.305219+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:04.176510+00:00'
+            mapped_at: '2025-12-04T01:42:20.305219+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:04.176539+00:00'
+            mapped_at: '2025-12-04T01:42:20.305235+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:27:04.176543+00:00'
+            mapped_at: '2025-12-04T01:42:20.305244+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:04.176547+00:00'
+            mapped_at: '2025-12-04T01:42:20.305245+00:00'

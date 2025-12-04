@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Hijack Legit RDP Session to Move Laterally",
+    "comment": "Detects the usage of tsclient share to place a backdoor on the RDP source machine's startup folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND endswith(lower(actor.process.name), lower('\\\\mstsc.exe')) AND contains(lower(file.path), lower('\\\\microsoft\\\\windows\\\\start menu\\\\programs\\\\startup\\\\')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage of tsclient share to place a backdoor on the RDP source machine's startup folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1219"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

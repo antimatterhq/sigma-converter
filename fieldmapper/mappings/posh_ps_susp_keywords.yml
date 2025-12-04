@@ -1,15 +1,10 @@
-id: 1f49f2ab-26bc-48b3-96cc-dcffbc93eadf
 title: Potential Suspicious PowerShell Keywords
+id: 1f49f2ab-26bc-48b3-96cc-dcffbc93eadf
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Perez Diego (@darkquassar), Tuan Le (NCSGroup)
 description: Detects potentially suspicious keywords that could indicate the use of
     a PowerShell exploitation framework
-author: Florian Roth (Nextron Systems), Perez Diego (@darkquassar), Tuan Le (NCSGroup)
-date: '2019-02-11'
-modified: '2023-04-21'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://posts.specterops.io/entering-a-covenant-net-command-and-control-e11038bcf462
     - https://github.com/PowerShellMafia/PowerSploit/blob/d943001a7defb5e0d1657085a77a0e78609be58f/CodeExecution/Invoke-ReflectivePEInjection.ps1
@@ -17,7 +12,11 @@ references:
     - https://gist.github.com/MHaggis/0dbe00ad401daa7137c81c99c268cfb7
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2019-02-11'
+modified: '2023-04-21'
 logsource:
     category: ps_script
     product: windows
@@ -43,13 +42,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:41:29.576444+00:00'
+            mapped_at: '2025-12-04T01:53:47.913173+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:41:29.576444+00:00'
+            mapped_at: '2025-12-04T01:53:47.913173+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:41:29.576458+00:00'
+            mapped_at: '2025-12-04T01:53:47.913189+00:00'

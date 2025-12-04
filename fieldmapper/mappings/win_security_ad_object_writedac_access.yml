@@ -1,21 +1,20 @@
-id: 028c7842-4243-41cd-be6f-12f3cf1a26c7
 title: AD Object WriteDAC Access
+id: 028c7842-4243-41cd-be6f-12f3cf1a26c7
 status: test
 level: critical
-description: Detects WRITE_DAC access to a domain object
 author: Roberto Rodriguez @Cyb3rWard0g
-date: '2019-09-12'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1222.001
+description: Detects WRITE_DAC access to a domain object
 references:
     - https://threathunterplaybook.com/hunts/windows/180815-ADObjectAccessReplication/notebook.html
     - https://threathunterplaybook.com/library/windows/active_directory_replication.html
     - https://threathunterplaybook.com/hunts/windows/190101-ADModDirectoryReplication/notebook.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1222.001
+date: '2019-09-12'
+modified: '2021-11-27'
 logsource:
     product: windows
     service: security
@@ -35,25 +34,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:22.826768+00:00'
+            mapped_at: '2025-12-04T01:55:28.307636+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:22.826768+00:00'
+            mapped_at: '2025-12-04T01:55:28.307636+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: entity_management
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:24.317029+00:00'
+            mapped_at: '2025-12-04T01:55:28.307663+00:00'
         -   source_field: ObjectServer
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:24.317047+00:00'
+            mapped_at: '2025-12-04T01:55:28.307667+00:00'
         -   source_field: AccessMask
             target_table: entity_management
             target_field: access_mask
-            mapped_at: '2025-11-26T02:44:24.317050+00:00'
+            mapped_at: '2025-12-04T01:55:28.307670+00:00'
         -   source_field: ObjectType
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:24.317053+00:00'
+            mapped_at: '2025-12-04T01:55:28.307673+00:00'

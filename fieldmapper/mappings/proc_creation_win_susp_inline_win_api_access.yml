@@ -1,22 +1,19 @@
-id: ba3f5c1b-6272-4119-9dbd-0bc8d21c2702
 title: Potential WinAPI Calls Via CommandLine
+id: ba3f5c1b-6272-4119-9dbd-0bc8d21c2702
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects the use of WinAPI Functions via the commandline. As seen used
     by threat actors via the tool winapiexec
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-09-06'
-modified: '2023-01-09'
-tags:
-    - attack.execution
-    - attack.t1106
 references:
     - https://twitter.com/m417z/status/1566674631788007425
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''03d83090-8cba-44a0-b02f-0b756a050306''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1106
+date: '2022-09-06'
+modified: '2023-01-09'
 logsource:
     category: process_creation
     product: windows
@@ -72,6 +69,9 @@ detection:
         Image|endswith: \MpCmdRun.exe
         CommandLine|contains: GetLoadLibraryWAddress32
     condition: selection and not 1 of filter_optional_*
+related:
+    -   id: 03d83090-8cba-44a0-b02f-0b756a050306
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -79,17 +79,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:33.550070+00:00'
+            mapped_at: '2025-12-04T01:46:58.689188+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:33.550070+00:00'
+            mapped_at: '2025-12-04T01:46:58.689188+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:33.550101+00:00'
+            mapped_at: '2025-12-04T01:46:58.689204+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:33.550105+00:00'
+            mapped_at: '2025-12-04T01:46:58.689206+00:00'

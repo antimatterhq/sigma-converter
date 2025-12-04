@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "HackTool - Default PowerSploit/Empire Scheduled Task Creation",
+    "comment": "Detects the creation of a schtask via PowerSploit or Empire Default Configuration.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.parent_process.name), lower('\\\\pwsh.exe'))) AND endswith(lower(process.name), lower('\\\\schtasks.exe')) AND contains(lower(process.cmd_line), lower('/create')) AND contains(lower(process.cmd_line), lower('powershell.exe -noni')) AND contains(lower(process.cmd_line), lower('/tn updater /tr')) AND (contains(lower(process.cmd_line), lower('/sc onlogon')) OR contains(lower(process.cmd_line), lower('/sc daily /st')) OR contains(lower(process.cmd_line), lower('/sc onidle')) OR contains(lower(process.cmd_line), lower('/sc hourly'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of a schtask via PowerSploit or Empire Default Configuration.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://github.com/0xdeadbeefJERKY/PowerSploit/blob/8690399ef70d2cad10213575ac67e8fa90ddf7c3/Persistence/Persistence.psm1, https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/lib/modules/powershell/persistence/userland/schtasks.py",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

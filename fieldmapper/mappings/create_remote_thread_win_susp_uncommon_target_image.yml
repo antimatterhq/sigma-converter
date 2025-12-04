@@ -1,22 +1,19 @@
-id: a1a144b7-5c9b-4853-a559-2172be8d4a03
 title: Remote Thread Creation In Uncommon Target Image
+id: a1a144b7-5c9b-4853-a559-2172be8d4a03
 status: experimental
 level: medium
-description: Detects uncommon target processes for remote thread creation
 author: Florian Roth (Nextron Systems)
-date: '2022-03-16'
-modified: '2024-07-15'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1055.003
+description: Detects uncommon target processes for remote thread creation
 references:
     - https://web.archive.org/web/20220319032520/https://blog.redbluepurple.io/offensive-research/bypassing-injection-detection
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''f016c716-754a-467f-a39e-63c06f773987''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1055.003
+date: '2022-03-16'
+modified: '2024-07-15'
 logsource:
     category: create_remote_thread
     product: windows
@@ -49,6 +46,9 @@ detection:
         StartFunction: LoadLibraryW
         TargetImage: C:\Windows\System32\spoolsv.exe
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: f016c716-754a-467f-a39e-63c06f773987
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 4
@@ -56,21 +56,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_remote_thread
-            mapped_at: '2025-11-26T02:25:04.484546+00:00'
+            mapped_at: '2025-12-04T01:40:46.737824+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:04.484546+00:00'
+            mapped_at: '2025-12-04T01:40:46.737824+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:25:05.380524+00:00'
+            mapped_at: '2025-12-04T01:40:46.737872+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:25:05.380542+00:00'
+            mapped_at: '2025-12-04T01:40:46.737874+00:00'
         -   source_field: StartFunction
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:25:05.380546+00:00'
+            mapped_at: '2025-12-04T01:40:46.737919+00:00'

@@ -1,18 +1,13 @@
-id: 7b582f1a-b318-4c6a-bf4e-66fe49bf55a5
 title: Remote Access Tool - ScreenConnect Potential Suspicious Remote Command Execution
+id: 7b582f1a-b318-4c6a-bf4e-66fe49bf55a5
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
+    @Kostastsale
 description: 'Detects potentially suspicious child processes launched via the ScreenConnect
     client service.
 
     '
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
-    @Kostastsale
-date: '2022-02-25'
-modified: '2024-02-28'
-tags:
-    - attack.command-and-control
-    - attack.t1219
 references:
     - https://www.mandiant.com/resources/telegram-malware-iranian-espionage
     - https://docs.connectwise.com/ConnectWise_Control_Documentation/Get_started/Host_client/View_menu/Backstage_mode
@@ -21,9 +16,11 @@ references:
 falsepositives:
     - If the script being executed make use of any of the utilities mentioned in the
         detection then they should filtered out or allowed.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d1a401ab-8c47-4e86-a7d8-2460b6a53e4a''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1219
+date: '2022-02-25'
+modified: '2024-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -44,6 +41,9 @@ detection:
             - \rundll32.exe
             - \wevtutil.exe
     condition: selection
+related:
+    -   id: d1a401ab-8c47-4e86-a7d8-2460b6a53e4a
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -51,17 +51,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:16.651543+00:00'
+            mapped_at: '2025-12-04T01:49:58.137249+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:16.651543+00:00'
+            mapped_at: '2025-12-04T01:49:58.137249+00:00'
     detection_fields:
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:36:16.651564+00:00'
+            mapped_at: '2025-12-04T01:49:58.137263+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:16.651568+00:00'
+            mapped_at: '2025-12-04T01:49:58.137265+00:00'

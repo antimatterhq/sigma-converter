@@ -1,22 +1,21 @@
-id: 1327381e-6ab0-4f38-b583-4c1b8346a56b
 title: Potential Command Line Path Traversal Evasion Attempt
+id: 1327381e-6ab0-4f38-b583-4c1b8346a56b
 status: test
 level: medium
+author: Christian Burkard (Nextron Systems)
 description: Detects potential evasion or obfuscation attempts using bogus path traversal
     via the commandline
-author: Christian Burkard (Nextron Systems)
-date: '2021-10-26'
-modified: '2023-03-29'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://twitter.com/hexacorn/status/1448037865435320323
     - https://twitter.com/Gal_B1t/status/1062971006078345217
 falsepositives:
     - Google Drive
     - Citrix
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2021-10-26'
+modified: '2023-03-29'
 logsource:
     category: process_creation
     product: windows
@@ -41,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:00.581657+00:00'
+            mapped_at: '2025-12-04T01:43:15.599497+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:00.581657+00:00'
+            mapped_at: '2025-12-04T01:43:15.599497+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:00.581675+00:00'
+            mapped_at: '2025-12-04T01:43:15.599514+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:00.581677+00:00'
+            mapped_at: '2025-12-04T01:43:15.599516+00:00'

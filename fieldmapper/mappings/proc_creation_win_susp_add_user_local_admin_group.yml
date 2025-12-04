@@ -1,23 +1,19 @@
-id: ad720b90-25ad-43ff-9b5e-5c841facc8e5
 title: User Added to Local Administrators Group
+id: ad720b90-25ad-43ff-9b5e-5c841facc8e5
 status: test
 level: medium
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects addition of users to the local administrator group via "Net"
     or "Add-LocalGroupMember".
-author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-12'
-modified: '2023-03-02'
-tags:
-    - attack.persistence
-    - attack.t1098
 references:
     - https://blog.talosintelligence.com/2022/08/recent-cyber-attack.html?m=1
 falsepositives:
     - Administrative activity
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''ffa28e60-bdb1-46e0-9f82-05f7a61cc06e''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''10fb649c-3600-4d37-b1e6-56ea90bb7e09''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1098
+date: '2022-08-12'
+modified: '2023-03-02'
 logsource:
     category: process_creation
     product: windows
@@ -33,6 +29,11 @@ detection:
             - ' administrators '
             - ' administrateur'
     condition: all of selection_*
+related:
+    -   id: ffa28e60-bdb1-46e0-9f82-05f7a61cc06e
+        type: similar
+    -   id: 10fb649c-3600-4d37-b1e6-56ea90bb7e09
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -40,13 +41,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:48.074902+00:00'
+            mapped_at: '2025-12-04T01:45:25.924696+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:48.074902+00:00'
+            mapped_at: '2025-12-04T01:45:25.924696+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:48.074923+00:00'
+            mapped_at: '2025-12-04T01:45:25.924710+00:00'

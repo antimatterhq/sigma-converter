@@ -1,16 +1,10 @@
-id: fa00b701-44c6-4679-994d-5a18afa8a707
 title: PUA - AdvancedRun Suspicious Execution
+id: fa00b701-44c6-4679-994d-5a18afa8a707
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the execution of AdvancedRun utility in the context of the TrustedInstaller,
     SYSTEM, Local Service or Network Service accounts
-author: Florian Roth (Nextron Systems)
-date: '2022-01-20'
-modified: '2023-02-21'
-tags:
-    - attack.defense-evasion
-    - attack.privilege-escalation
-    - attack.t1134.002
 references:
     - https://twitter.com/splinter_code/status/1483815103279603714
     - https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3
@@ -18,9 +12,12 @@ references:
     - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d2b749ee-4225-417e-b20e-a8d2193cbb84''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.privilege-escalation
+    - attack.t1134.002
+date: '2022-01-20'
+modified: '2023-02-21'
 logsource:
     category: process_creation
     product: windows
@@ -41,6 +38,9 @@ detection:
             - /RunAs 10
             - /RunAs 11
     condition: all of selection*
+related:
+    -   id: d2b749ee-4225-417e-b20e-a8d2193cbb84
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -48,13 +48,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:43.528044+00:00'
+            mapped_at: '2025-12-04T01:50:25.864876+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:43.528044+00:00'
+            mapped_at: '2025-12-04T01:50:25.864876+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:43.528062+00:00'
+            mapped_at: '2025-12-04T01:50:25.864889+00:00'

@@ -1,25 +1,24 @@
-id: b5c7395f-e501-4a08-94d4-57fe7a9da9d2
 title: Potential Binary Proxy Execution Via Cdb.EXE
+id: b5c7395f-e501-4a08-94d4-57fe7a9da9d2
 status: test
 level: medium
+author: Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of "cdb.exe" to launch arbitrary processes or commands
     from a debugger script file
-author: Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)
-date: '2019-10-26'
-modified: '2024-04-22'
-tags:
-    - attack.execution
-    - attack.t1106
-    - attack.defense-evasion
-    - attack.t1218
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Cdb/
     - https://web.archive.org/web/20170715043507/http://www.exploit-monday.com/2016/08/windbg-cdb-shellcode-runner.html
     - https://twitter.com/nas_bench/status/1534957360032120833
 falsepositives:
     - Legitimate use of debugging tools
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1106
+    - attack.defense-evasion
+    - attack.t1218
+    - attack.t1127
+date: '2019-10-26'
+modified: '2024-04-22'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:28.546043+00:00'
+            mapped_at: '2025-12-04T01:45:09.068681+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:28.546043+00:00'
+            mapped_at: '2025-12-04T01:45:09.068681+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:28.546056+00:00'
+            mapped_at: '2025-12-04T01:45:09.068696+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:28.546058+00:00'
+            mapped_at: '2025-12-04T01:45:09.068698+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:28.546060+00:00'
+            mapped_at: '2025-12-04T01:45:09.068700+00:00'

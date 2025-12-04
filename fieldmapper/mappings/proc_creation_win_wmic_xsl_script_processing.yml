@@ -1,7 +1,8 @@
-id: 05c36dd6-79d6-4a9a-97da-3db20298ab2d
 title: XSL Script Execution Via WMIC.EXE
+id: 05c36dd6-79d6-4a9a-97da-3db20298ab2d
 status: test
 level: medium
+author: Timur Zinniatullin, oscd.community, Swachchhanda Shrawan Poudel
 description: 'Detects the execution of WMIC with the "format" flag to potentially
     load XSL files.
 
@@ -12,19 +13,17 @@ description: 'Detects the execution of WMIC with the "format" flag to potentiall
     and rendering of data within XML files.
 
     '
-author: Timur Zinniatullin, oscd.community, Swachchhanda Shrawan Poudel
-date: '2019-10-21'
-modified: '2024-03-05'
-tags:
-    - attack.defense-evasion
-    - attack.t1220
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1220/T1220.md
 falsepositives:
     - WMIC.exe FP depend on scripts and administrative methods used in the monitored
         environment.
     - Static format arguments - https://petri.com/command-line-wmi-part-3
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1220
+date: '2019-10-21'
+modified: '2024-03-05'
 logsource:
     category: process_creation
     product: windows
@@ -51,17 +50,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:19.637144+00:00'
+            mapped_at: '2025-12-04T01:45:51.721966+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:19.637144+00:00'
+            mapped_at: '2025-12-04T01:45:51.721966+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:19.637157+00:00'
+            mapped_at: '2025-12-04T01:45:51.721988+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:19.637158+00:00'
+            mapped_at: '2025-12-04T01:45:51.721991+00:00'

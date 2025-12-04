@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Permission Check Via Accesschk.EXE",
+    "comment": "Detects the usage of the \"Accesschk\" utility, an access and privilege audit tool developed by SysInternal and often being abused by attacker to verify process privileges",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(metadata.product.name), lower('accesschk')) AND contains(lower(device.desc), lower('reports effective permissions')) AND (endswith(lower(process.name), lower('\\\\accesschk.exe')) OR endswith(lower(process.name), lower('\\\\accesschk64.exe'))) AND lower(process.file.name) = lower('accesschk.exe') AND (contains(lower(process.cmd_line), lower('uwcqv ')) OR contains(lower(process.cmd_line), lower('kwsu ')) OR contains(lower(process.cmd_line), lower('qwsu ')) OR contains(lower(process.cmd_line), lower('uwdqs '))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the usage of the \"Accesschk\" utility, an access and privilege audit tool developed by SysInternal and often being abused by attacker to verify process privileges",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: System administrator Usage References: https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment?slide=43, https://www.youtube.com/watch?v=JGs-aKf2OtU&ab_channel=OFFZONEMOSCOW, https://github.com/carlospolop/PEASS-ng/blob/fa0f2e17fbc1d86f1fd66338a40e665e7182501d/winPEAS/winPEASbat/winPEAS.bat, https://github.com/gladiatx0r/Powerless/blob/04f553bbc0c65baf4e57344deff84e3f016e6b51/Powerless.bat",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1069",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

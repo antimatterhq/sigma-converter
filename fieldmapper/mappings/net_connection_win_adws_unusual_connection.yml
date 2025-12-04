@@ -1,16 +1,12 @@
-id: b3ad3c0f-c949-47a1-a30e-b0491ccae876
 title: Uncommon Connection to Active Directory Web Services
+id: b3ad3c0f-c949-47a1-a30e-b0491ccae876
 status: test
 level: medium
+author: '@kostastsale'
 description: 'Detects uncommon network connections to the Active Directory Web Services
     (ADWS) from processes not typically associated with ADWS management.
 
     '
-author: '@kostastsale'
-date: '2024-01-26'
-tags:
-    - attack.discovery
-    - attack.t1087
 references:
     - https://medium.com/falconforce/soaphound-tool-to-collect-active-directory-data-via-adws-165aca78288c
     - https://github.com/FalconForceTeam/FalconFriday/blob/master/Discovery/ADWS_Connection_from_Unexpected_Binary-Win.md
@@ -18,7 +14,10 @@ falsepositives:
     - ADWS is used by a number of legitimate applications that need to interact with
         Active Directory. These applications should be added to the allow-listing
         to avoid false positives.
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1087
+date: '2024-01-26'
 logsource:
     category: network_connection
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:37:54.881761+00:00'
+            mapped_at: '2025-12-04T01:51:24.894245+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:54.881761+00:00'
+            mapped_at: '2025-12-04T01:51:24.894245+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:54.881783+00:00'
+            mapped_at: '2025-12-04T01:51:24.894258+00:00'
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:37:54.881784+00:00'
+            mapped_at: '2025-12-04T01:51:24.894260+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:54.881786+00:00'
+            mapped_at: '2025-12-04T01:51:24.894261+00:00'

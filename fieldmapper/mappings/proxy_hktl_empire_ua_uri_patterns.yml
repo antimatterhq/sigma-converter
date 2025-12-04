@@ -1,20 +1,19 @@
-id: b923f7d6-ac89-4a50-a71a-89fb846b4aa8
 title: HackTool - Empire UserAgent URI Combo
+id: b923f7d6-ac89-4a50-a71a-89fb846b4aa8
 status: test
 level: high
-description: Detects user agent and URI paths used by empire agents
 author: Florian Roth (Nextron Systems)
-date: '2020-07-13'
-modified: '2024-02-26'
-tags:
-    - attack.defense-evasion
-    - attack.command-and-control
-    - attack.t1071.001
+description: Detects user agent and URI paths used by empire agents
 references:
     - https://github.com/BC-SECURITY/Empire
 falsepositives:
     - Valid requests with this exact user agent to server scripts of the defined names
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.command-and-control
+    - attack.t1071.001
+date: '2020-07-13'
+modified: '2024-02-26'
 logsource:
     category: proxy
 detection:
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:22.382577+00:00'
+            mapped_at: '2025-12-04T01:34:59.677754+00:00'
     detection_fields:
         -   source_field: c-useragent
             target_table: http_activity
             target_field: http_request.user_agent
-            mapped_at: '2025-11-26T02:14:22.382602+00:00'
+            mapped_at: '2025-12-04T01:34:59.677774+00:00'
         -   source_field: cs-uri
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:14:22.382605+00:00'
+            mapped_at: '2025-12-04T01:34:59.677776+00:00'
         -   source_field: cs-method
             target_table: http_activity
             target_field: http_request.http_method
-            mapped_at: '2025-11-26T02:14:22.382607+00:00'
+            mapped_at: '2025-12-04T01:34:59.677778+00:00'

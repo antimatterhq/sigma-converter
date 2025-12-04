@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Potential Binary Or Script Dropper Via PowerShell",
+    "comment": "Detects PowerShell creating a binary executable or a script file.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe'))) AND (endswith(lower(file.path), lower('.bat')) OR endswith(lower(file.path), lower('.chm')) OR endswith(lower(file.path), lower('.cmd')) OR endswith(lower(file.path), lower('.com')) OR endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe')) OR endswith(lower(file.path), lower('.hta')) OR endswith(lower(file.path), lower('.jar')) OR endswith(lower(file.path), lower('.js')) OR endswith(lower(file.path), lower('.ocx')) OR endswith(lower(file.path), lower('.scr')) OR endswith(lower(file.path), lower('.sys')) OR endswith(lower(file.path), lower('.vbe')) OR endswith(lower(file.path), lower('.vbs')) OR endswith(lower(file.path), lower('.wsf'))) AND NOT (startswith(lower(file.path), lower('c:\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) AND (endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe'))) OR startswith(lower(file.path), lower('c:\\\\windows\\\\temp\\\\')) AND (endswith(lower(file.path), lower('.dll')) OR endswith(lower(file.path), lower('.exe')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell creating a binary executable or a script file.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: False positives will differ depending on the environment and scripts used. Apply additional filters accordingly. Reference: https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

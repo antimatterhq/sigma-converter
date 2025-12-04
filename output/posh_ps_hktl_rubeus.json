@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "HackTool - Rubeus Execution - ScriptBlock",
+    "comment": "Detects the execution of the hacktool Rubeus using specific command line flags",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('asreproast ')) OR contains(lower(script.script_content.value), lower('dump /service:krbtgt ')) OR contains(lower(script.script_content.value), lower('dump /luid:0x')) OR contains(lower(script.script_content.value), lower('kerberoast ')) OR contains(lower(script.script_content.value), lower('createnetonly /program:')) OR contains(lower(script.script_content.value), lower('ptt /ticket:')) OR contains(lower(script.script_content.value), lower('/impersonateuser:')) OR contains(lower(script.script_content.value), lower('renew /ticket:')) OR contains(lower(script.script_content.value), lower('asktgt /user:')) OR contains(lower(script.script_content.value), lower('harvest /interval:')) OR contains(lower(script.script_content.value), lower('s4u /user:')) OR contains(lower(script.script_content.value), lower('s4u /ticket:')) OR contains(lower(script.script_content.value), lower('hash /password:')) OR contains(lower(script.script_content.value), lower('golden /aes256:')) OR contains(lower(script.script_content.value), lower('silver /user:'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of the hacktool Rubeus using specific command line flags",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://blog.harmj0y.net/redteaming/from-kekeo-to-rubeus, https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html, https://github.com/GhostPack/Rubeus",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1550",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

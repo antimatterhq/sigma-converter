@@ -1,21 +1,20 @@
-id: 6d8a7cf1-8085-423b-b87d-7e880faabbdf
 title: File Download Via Nscurl - MacOS
+id: 6d8a7cf1-8085-423b-b87d-7e880faabbdf
 status: experimental
 level: medium
-description: Detects the execution of the nscurl utility in order to download files.
 author: Daniel Cortez
-date: '2024-06-04'
-tags:
-    - attack.defense-evasion
-    - attack.command-and-control
-    - attack.t1105
+description: Detects the execution of the nscurl utility in order to download files.
 references:
     - https://www.loobins.io/binaries/nscurl/
     - https://www.agnosticdev.com/content/how-diagnose-app-transport-security-issues-using-nscurl-and-openssl
     - https://gist.github.com/nasbench/ca6ef95db04ae04ffd1e0b1ce709cadd
 falsepositives:
     - Legitimate usage of nscurl by administrators and users.
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.command-and-control
+    - attack.t1105
+date: '2024-06-04'
 logsource:
     category: process_creation
     product: macos
@@ -38,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:13:41.436985+00:00'
+            mapped_at: '2025-12-04T01:34:35.890848+00:00'
         product:
             source_field: product
             source_value: macos
-            mapped_at: '2025-11-26T02:13:41.436985+00:00'
+            mapped_at: '2025-12-04T01:34:35.890848+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:13:41.437007+00:00'
+            mapped_at: '2025-12-04T01:34:35.890875+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:13:41.437012+00:00'
+            mapped_at: '2025-12-04T01:34:35.890886+00:00'

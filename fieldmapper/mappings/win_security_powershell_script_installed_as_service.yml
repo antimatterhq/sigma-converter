@@ -1,21 +1,18 @@
-id: 2a926e6a-4b81-4011-8a96-e36cc8c04302
 title: PowerShell Scripts Installed as Services - Security
+id: 2a926e6a-4b81-4011-8a96-e36cc8c04302
 status: test
 level: high
-description: Detects powershell script installed as a Service
 author: oscd.community, Natalia Shornikova
-date: '2020-10-06'
-modified: '2022-11-29'
-tags:
-    - attack.execution
-    - attack.t1569.002
+description: Detects powershell script installed as a Service
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''a2e5019d-a658-4c6a-92bf-7197b54e2cae''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1569.002
+date: '2020-10-06'
+modified: '2022-11-29'
 logsource:
     product: windows
     service: security
@@ -28,6 +25,9 @@ detection:
             - powershell
             - pwsh
     condition: selection
+related:
+    -   id: a2e5019d-a658-4c6a-92bf-7197b54e2cae
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: <UNMAPPED>
@@ -35,17 +35,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:27.546397+00:00'
+            mapped_at: '2025-12-04T01:55:50.959879+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:27.546397+00:00'
+            mapped_at: '2025-12-04T01:55:50.959879+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:27.546424+00:00'
+            mapped_at: '2025-12-04T01:55:50.959913+00:00'
         -   source_field: ServiceFileName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:27.546428+00:00'
+            mapped_at: '2025-12-04T01:55:50.959942+00:00'

@@ -1,21 +1,20 @@
-id: f24bcaea-0cd1-11eb-adc1-0242ac120002
 title: Uncommon  Assistive Technology Applications Execution Via AtBroker.EXE
+id: f24bcaea-0cd1-11eb-adc1-0242ac120002
 status: test
 level: medium
+author: Mateusz Wydra, oscd.community
 description: Detects the start of a non built-in assistive technology applications
     via "Atbroker.EXE".
-author: Mateusz Wydra, oscd.community
-date: '2020-10-12'
-modified: '2024-03-06'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - http://www.hexacorn.com/blog/2016/07/22/beyond-good-ol-run-key-part-42/
     - https://lolbas-project.github.io/lolbas/Binaries/Atbroker/
 falsepositives:
     - Legitimate, non-default assistive technology applications execution
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2020-10-12'
+modified: '2024-03-06'
 logsource:
     category: process_creation
     product: windows
@@ -68,21 +67,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:21.774903+00:00'
+            mapped_at: '2025-12-04T01:44:18.351395+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:21.774903+00:00'
+            mapped_at: '2025-12-04T01:44:18.351395+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:21.774927+00:00'
+            mapped_at: '2025-12-04T01:44:18.351446+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:21.774929+00:00'
+            mapped_at: '2025-12-04T01:44:18.351451+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:21.774931+00:00'
+            mapped_at: '2025-12-04T01:44:18.351452+00:00'

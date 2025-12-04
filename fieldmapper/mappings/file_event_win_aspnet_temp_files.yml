@@ -1,25 +1,20 @@
-id: 4c7f49ee-2638-43bb-b85b-ce676c30b260
 title: Assembly DLL Creation Via AspNetCompiler
+id: 4c7f49ee-2638-43bb-b85b-ce676c30b260
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the creation of new DLL assembly files by "aspnet_compiler.exe",
     which could be a sign of "aspnet_compiler" abuse to proxy execution through a
     build provider.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-08-14'
-tags:
-    - attack.execution
 references:
     - Internal Research
 falsepositives:
     - Legitimate assembly compilation using a build provider
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9ccba514-7cb6-4c5c-b377-700758f2f120''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''9f50fe98-fe5c-4a2d-86c7-fad7f63ed622''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''a01b8329-5953-4f73-ae2d-aa01e1f35f00''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2023-08-14'
 logsource:
     category: file_event
     product: windows
@@ -31,6 +26,13 @@ detection:
             - \assembly\tmp\
             - .dll
     condition: selection
+related:
+    -   id: 9ccba514-7cb6-4c5c-b377-700758f2f120
+        type: similar
+    -   id: 9f50fe98-fe5c-4a2d-86c7-fad7f63ed622
+        type: similar
+    -   id: a01b8329-5953-4f73-ae2d-aa01e1f35f00
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -38,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:40:01.171211+00:00'
+            mapped_at: '2025-12-04T01:52:46.003037+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:01.171211+00:00'
+            mapped_at: '2025-12-04T01:52:46.003037+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:01.171241+00:00'
+            mapped_at: '2025-12-04T01:52:46.003067+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:01.171245+00:00'
+            mapped_at: '2025-12-04T01:52:46.003069+00:00'

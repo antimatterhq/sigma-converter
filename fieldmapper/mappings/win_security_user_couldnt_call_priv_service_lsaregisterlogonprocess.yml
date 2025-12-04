@@ -1,22 +1,21 @@
-id: 6daac7fc-77d1-449a-a71a-e6b4d59a0e54
 title: User Couldn't Call a Privileged Service 'LsaRegisterLogonProcess'
+id: 6daac7fc-77d1-449a-a71a-e6b4d59a0e54
 status: test
 level: high
+author: Roberto Rodriguez (source), Ilyas Ochkov (rule), oscd.community
 description: The 'LsaRegisterLogonProcess' function verifies that the application
     making the function call is a logon process by checking that it has the SeTcbPrivilege
     privilege set. Possible Rubeus tries to get a handle to LSA.
-author: Roberto Rodriguez (source), Ilyas Ochkov (rule), oscd.community
-date: '2019-10-24'
-modified: '2022-12-25'
-tags:
-    - attack.lateral-movement
-    - attack.privilege-escalation
-    - attack.t1558.003
 references:
     - https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.privilege-escalation
+    - attack.t1558.003
+date: '2019-10-24'
+modified: '2022-12-25'
 logsource:
     product: windows
     service: security
@@ -33,21 +32,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:56.152289+00:00'
+            mapped_at: '2025-12-04T01:56:05.254078+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:56.152289+00:00'
+            mapped_at: '2025-12-04T01:56:05.254078+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: user_access
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:57.501198+00:00'
+            mapped_at: '2025-12-04T01:56:05.254133+00:00'
         -   source_field: Service
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:57.501209+00:00'
+            mapped_at: '2025-12-04T01:56:05.254137+00:00'
         -   source_field: Keywords
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:45:57.501211+00:00'
+            mapped_at: '2025-12-04T01:56:05.254140+00:00'

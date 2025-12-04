@@ -1,18 +1,14 @@
-id: f26eb764-fd89-464b-85e2-dc4a8e6e77b8
 title: Suspicious Electron Application Child Processes
+id: f26eb764-fd89-464b-85e2-dc4a8e6e77b8
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects suspicious child processes of electron apps (teams, discord,
     slack, etc.). This could be a potential sign of ".asar" file tampering (See reference
     section for more information) or binary execution proxy through specific CLI arguments
     (see related rule)
 
     '
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-10-21'
-modified: '2024-07-12'
-tags:
-    - attack.execution
 references:
     - https://taggart-tech.com/quasar-electron/
     - https://github.com/mttaggart/quasar
@@ -23,9 +19,10 @@ references:
     - https://medium.com/@MalFuzzer/one-electron-to-rule-them-all-dc2e9b263daf
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''378a05d8-963c-46c9-bcce-13c7657eac99''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+date: '2022-10-21'
+modified: '2024-07-12'
 logsource:
     category: process_creation
     product: windows
@@ -63,6 +60,9 @@ detection:
         Image|endswith: \cmd.exe
         CommandLine|contains: \NVSMI\nvidia-smi.exe
     condition: selection_parent and 1 of selection_child_* and not 1 of filter_optional_*
+related:
+    -   id: 378a05d8-963c-46c9-bcce-13c7657eac99
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -70,21 +70,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:20.182330+00:00'
+            mapped_at: '2025-12-04T01:45:52.271409+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:20.182330+00:00'
+            mapped_at: '2025-12-04T01:45:52.271409+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:20.182346+00:00'
+            mapped_at: '2025-12-04T01:45:52.271426+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:20.182348+00:00'
+            mapped_at: '2025-12-04T01:45:52.271428+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:20.182350+00:00'
+            mapped_at: '2025-12-04T01:45:52.271429+00:00'

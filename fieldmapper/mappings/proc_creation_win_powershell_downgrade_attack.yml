@@ -1,24 +1,21 @@
-id: b3512211-c67e-4707-bedc-66efc7848863
 title: Potential PowerShell Downgrade Attack
+id: b3512211-c67e-4707-bedc-66efc7848863
 status: test
 level: medium
+author: Harish Segar (rule)
 description: Detects PowerShell downgrade attack by comparing the host versions with
     the actually used engine version 2.0
-author: Harish Segar (rule)
-date: '2020-03-20'
-modified: '2023-01-04'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1059.001
 references:
     - http://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
     - https://github.com/r00t-3xp10it/hacking-material-books/blob/43cb1e1932c16ff1f58b755bc9ab6b096046853f/obfuscation/simple_obfuscation.md#bypass-or-avoid-amsi-by-version-downgrade-
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''6331d09b-4785-4c13-980f-f96661356249''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1059.001
+date: '2020-03-20'
+modified: '2023-01-04'
 logsource:
     category: process_creation
     product: windows
@@ -34,6 +31,9 @@ detection:
             - ' -ve 2 '
             - ' -v 2 '
     condition: selection
+related:
+    -   id: 6331d09b-4785-4c13-980f-f96661356249
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -41,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:49.018103+00:00'
+            mapped_at: '2025-12-04T01:48:02.505901+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:49.018103+00:00'
+            mapped_at: '2025-12-04T01:48:02.505901+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:49.018124+00:00'
+            mapped_at: '2025-12-04T01:48:02.505916+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:49.018127+00:00'
+            mapped_at: '2025-12-04T01:48:02.505918+00:00'

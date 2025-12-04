@@ -1,16 +1,10 @@
-id: f3d39c45-de1a-4486-a687-ab126124f744
 title: Sdiagnhost Calling Suspicious Child Process
+id: f3d39c45-de1a-4486-a687-ab126124f744
 status: test
 level: high
+author: Nextron Systems, @Kostastsale
 description: Detects sdiagnhost.exe calling a suspicious child process (e.g. used
     in exploits for Follina / CVE-2022-30190)
-author: Nextron Systems, @Kostastsale
-date: '2022-06-01'
-modified: '2024-08-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
-    - attack.t1218
 references:
     - https://twitter.com/nao_sec/status/1530196847679401984
     - https://doublepulsar.com/follina-a-microsoft-office-code-execution-vulnerability-1a47fce5629e
@@ -19,7 +13,12 @@ references:
     - https://app.any.run/tasks/c4117d9a-f463-461a-b90f-4cd258746798/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+    - attack.t1218
+date: '2022-06-01'
+modified: '2024-08-23'
 logsource:
     category: process_creation
     product: windows
@@ -53,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:57.287080+00:00'
+            mapped_at: '2025-12-04T01:42:16.914167+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:57.287080+00:00'
+            mapped_at: '2025-12-04T01:42:16.914167+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:26:57.287096+00:00'
+            mapped_at: '2025-12-04T01:42:16.914186+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:57.287098+00:00'
+            mapped_at: '2025-12-04T01:42:16.914188+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:57.287100+00:00'
+            mapped_at: '2025-12-04T01:42:16.914189+00:00'

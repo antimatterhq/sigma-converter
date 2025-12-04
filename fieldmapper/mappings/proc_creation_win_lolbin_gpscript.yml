@@ -1,21 +1,20 @@
-id: 1e59c230-6670-45bf-83b0-98903780607e
 title: Gpscript Execution
+id: 1e59c230-6670-45bf-83b0-98903780607e
 status: test
 level: medium
+author: frack113
 description: Detects the execution of the LOLBIN gpscript, which executes logon or
     startup scripts configured in Group Policy
-author: frack113
-date: '2022-05-16'
-modified: '2023-06-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/
     - https://lolbas-project.github.io/lolbas/Binaries/Gpscript/
 falsepositives:
     - Legitimate uses of logon scripts distributed via group policy
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-05-16'
+modified: '2023-06-14'
 logsource:
     category: process_creation
     product: windows
@@ -37,25 +36,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:52.962087+00:00'
+            mapped_at: '2025-12-04T01:46:22.886958+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:52.962087+00:00'
+            mapped_at: '2025-12-04T01:46:22.886958+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:52.962100+00:00'
+            mapped_at: '2025-12-04T01:46:22.886977+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:52.962102+00:00'
+            mapped_at: '2025-12-04T01:46:22.886979+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:52.962104+00:00'
+            mapped_at: '2025-12-04T01:46:22.886980+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:31:52.962105+00:00'
+            mapped_at: '2025-12-04T01:46:22.886981+00:00'

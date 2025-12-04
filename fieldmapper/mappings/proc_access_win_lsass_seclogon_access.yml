@@ -1,22 +1,21 @@
-id: 472159c5-31b9-4f56-b794-b766faa8b0a7
 title: Suspicious LSASS Access Via MalSecLogon
+id: 472159c5-31b9-4f56-b794-b766faa8b0a7
 status: test
 level: high
-description: Detects suspicious access to LSASS handle via a call trace to "seclogon.dll"
-    with a suspicious access right.
 author: Samir Bousseaden (original elastic rule), Nasreddine Bencherchali (Nextron
     Systems)
-date: '2022-06-29'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
+description: Detects suspicious access to LSASS handle via a call trace to "seclogon.dll"
+    with a suspicious access right.
 references:
     - https://twitter.com/SBousseaden/status/1541920424635912196
     - https://github.com/elastic/detection-rules/blob/2bc1795f3d7bcc3946452eb4f07ae799a756d94e/rules/windows/credential_access_lsass_handle_via_malseclogon.toml
     - https://splintercod3.blogspot.com/p/the-hidden-side-of-seclogon-part-3.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2022-06-29'
 logsource:
     category: process_access
     product: windows
@@ -34,25 +33,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_access
-            mapped_at: '2025-11-26T02:24:15.242493+00:00'
+            mapped_at: '2025-12-04T01:40:25.566278+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:24:15.242493+00:00'
+            mapped_at: '2025-12-04T01:40:25.566278+00:00'
     detection_fields:
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:24:15.242527+00:00'
+            mapped_at: '2025-12-04T01:40:25.566294+00:00'
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:24:15.242532+00:00'
+            mapped_at: '2025-12-04T01:40:25.566296+00:00'
         -   source_field: GrantedAccess
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:15.242535+00:00'
+            mapped_at: '2025-12-04T01:40:25.566298+00:00'
         -   source_field: CallTrace
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:24:15.242538+00:00'
+            mapped_at: '2025-12-04T01:40:25.566299+00:00'

@@ -1,21 +1,18 @@
-id: 754ed792-634f-40ae-b3bc-e0448d33f695
 title: Suspicious PowerShell Parent Process
+id: 754ed792-634f-40ae-b3bc-e0448d33f695
 status: test
 level: high
-description: Detects a suspicious or uncommon parent processes of PowerShell
 author: Teymur Kheirkhabarov, Harish Segar
-date: '2020-03-20'
-modified: '2023-02-04'
-tags:
-    - attack.execution
-    - attack.t1059.001
+description: Detects a suspicious or uncommon parent processes of PowerShell
 references:
     - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=26
 falsepositives:
     - Other scripts
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''692f0bec-83ba-4d04-af7e-e884a96059b6''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2020-03-20'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -59,6 +56,9 @@ detection:
             - PowerShell.EXE
             - pwsh.dll
     condition: all of selection_*
+related:
+    -   id: 692f0bec-83ba-4d04-af7e-e884a96059b6
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -66,33 +66,33 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:55.653393+00:00'
+            mapped_at: '2025-12-04T01:41:24.927100+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:55.653393+00:00'
+            mapped_at: '2025-12-04T01:41:24.927100+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:25:55.653439+00:00'
+            mapped_at: '2025-12-04T01:41:24.927116+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:55.653443+00:00'
+            mapped_at: '2025-12-04T01:41:24.927118+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:55.653446+00:00'
+            mapped_at: '2025-12-04T01:41:24.927119+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:25:55.653449+00:00'
+            mapped_at: '2025-12-04T01:41:24.927120+00:00'
         -   source_field: Product
             target_table: process_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:25:55.653452+00:00'
+            mapped_at: '2025-12-04T01:41:24.927122+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:55.653454+00:00'
+            mapped_at: '2025-12-04T01:41:24.927123+00:00'

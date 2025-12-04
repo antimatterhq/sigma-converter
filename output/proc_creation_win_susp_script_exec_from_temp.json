@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious Script Execution From Temp Folder",
+    "comment": "Detects a suspicious script executions from temporary folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe'))) AND (contains(lower(process.cmd_line), lower('\\\\windows\\\\temp')) OR contains(lower(process.cmd_line), lower('\\\\temporary internet')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\roaming\\\\temp')) OR contains(lower(process.cmd_line), lower('%temp%')) OR contains(lower(process.cmd_line), lower('%tmp%')) OR contains(lower(process.cmd_line), lower('%localappdata%\\\\temp'))) AND NOT (contains(lower(process.cmd_line), lower(' >')) OR contains(lower(process.cmd_line), lower('out-file')) OR contains(lower(process.cmd_line), lower('convertto-json')) OR contains(lower(process.cmd_line), lower('-windowstyle hidden -verb runas')) OR contains(lower(process.cmd_line), lower('\\\\windows\\\\system32\\\\config\\\\systemprofile\\\\appdata\\\\local\\\\temp\\\\amazon\\\\ec2-windows\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a suspicious script executions from temporary folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrative scripts Reference: https://www.microsoft.com/security/blog/2021/07/13/microsoft-discovers-threat-actor-targeting-solarwinds-serv-u-software-with-0-day-exploit/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

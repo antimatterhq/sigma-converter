@@ -1,20 +1,19 @@
-id: 214641c2-c579-4ecb-8427-0cf19df6842e
 title: Remote File Download Via Desktopimgdownldr Utility
+id: 214641c2-c579-4ecb-8427-0cf19df6842e
 status: test
 level: medium
+author: Tim Rauch, Elastic (idea)
 description: Detects the desktopimgdownldr utility being used to download a remote
     file. An adversary may use desktopimgdownldr to download arbitrary files as an
     alternative to certutil.
-author: Tim Rauch, Elastic (idea)
-date: '2022-09-27'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://www.elastic.co/guide/en/security/current/remote-file-download-via-desktopimgdownldr-utility.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-09-27'
 logsource:
     category: process_creation
     product: windows
@@ -31,21 +30,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:01.287578+00:00'
+            mapped_at: '2025-12-04T01:45:38.024335+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:01.287578+00:00'
+            mapped_at: '2025-12-04T01:45:38.024335+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:01.287600+00:00'
+            mapped_at: '2025-12-04T01:45:38.024358+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:31:01.287603+00:00'
+            mapped_at: '2025-12-04T01:45:38.024360+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:01.287605+00:00'
+            mapped_at: '2025-12-04T01:45:38.024361+00:00'

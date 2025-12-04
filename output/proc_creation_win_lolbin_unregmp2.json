@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Lolbin Unregmp2.exe Use As Proxy",
+    "comment": "Detect usage of the \"unregmp2.exe\" binary as a proxy to launch a custom version of \"wmpnscfg.exe\"",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\unregmp2.exe')) AND lower(process.file.name) = lower('unregmp2.exe') AND (contains(lower(process.cmd_line), lower(' -hidewmp')) OR contains(lower(process.cmd_line), lower(' /hidewmp')) OR contains(lower(process.cmd_line), lower(' \u2013hidewmp')) OR contains(lower(process.cmd_line), lower(' \u2014hidewmp')) OR contains(lower(process.cmd_line), lower(' \u2015hidewmp'))))"
+      }
+    },
+    "output": {
+      "summary": "Detect usage of the \"unregmp2.exe\" binary as a proxy to launch a custom version of \"wmpnscfg.exe\"",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://lolbas-project.github.io/lolbas/Binaries/Unregmp2/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

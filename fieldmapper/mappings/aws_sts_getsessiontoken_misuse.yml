@@ -1,18 +1,10 @@
-id: b45ab1d2-712f-4f01-a751-df3826969807
 title: AWS STS GetSessionToken Misuse
+id: b45ab1d2-712f-4f01-a751-df3826969807
 status: test
 level: low
+author: Austin Songer @austinsonger
 description: Identifies the suspicious use of GetSessionToken. Tokens could be created
     and used by attackers to move laterally and escalate privileges.
-author: Austin Songer @austinsonger
-date: '2021-07-24'
-modified: '2022-10-09'
-tags:
-    - attack.lateral-movement
-    - attack.privilege-escalation
-    - attack.t1548
-    - attack.t1550
-    - attack.t1550.001
 references:
     - https://github.com/elastic/detection-rules/pull/1213
     - https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html
@@ -22,7 +14,14 @@ falsepositives:
         your environment. GetSessionToken from unfamiliar users or hosts should be
         investigated. If known behavior is causing false positives, it can be exempted
         from the rule.
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.privilege-escalation
+    - attack.t1548
+    - attack.t1550
+    - attack.t1550.001
+date: '2021-07-24'
+modified: '2022-10-09'
 logsource:
     product: aws
     service: cloudtrail
@@ -39,21 +38,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: aws
-            mapped_at: '2025-11-26T02:22:47.973446+00:00'
+            mapped_at: '2025-12-04T01:39:24.568789+00:00'
         service:
             source_field: service
             source_value: cloudtrail
-            mapped_at: '2025-11-26T02:22:47.973446+00:00'
+            mapped_at: '2025-12-04T01:39:24.568789+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: datastore_activity
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:22:47.973561+00:00'
+            mapped_at: '2025-12-04T01:39:24.568817+00:00'
         -   source_field: eventName
             target_table: datastore_activity
             target_field: api.operation
-            mapped_at: '2025-11-26T02:22:47.973567+00:00'
+            mapped_at: '2025-12-04T01:39:24.568819+00:00'
         -   source_field: userIdentity.type
             target_table: datastore_activity
             target_field: actor.user.type
-            mapped_at: '2025-11-26T02:22:47.973568+00:00'
+            mapped_at: '2025-12-04T01:39:24.568820+00:00'

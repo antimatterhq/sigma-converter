@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PowerShell Set-Acl On Windows Folder - PsScript",
+    "comment": "Detects PowerShell scripts to set the ACL to a file in the Windows folder",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('set-acl ')) AND contains(lower(script.script_content.value), lower('-aclobject ')) AND (contains(lower(script.script_content.value), lower('-path \"c:\\\\windows')) OR contains(lower(script.script_content.value), lower('-path \"c:/windows')) OR contains(lower(script.script_content.value), lower('-path \\'c:\\\\windows')) OR contains(lower(script.script_content.value), lower('-path \\'c:/windows')) OR contains(lower(script.script_content.value), lower('-path c:\\\\windows')) OR contains(lower(script.script_content.value), lower('-path c:/windows')) OR contains(lower(script.script_content.value), lower('-path $env:windir')) OR contains(lower(script.script_content.value), lower('-path \"$env:windir')) OR contains(lower(script.script_content.value), lower('-path \\'$env:windir'))) AND (contains(lower(script.script_content.value), lower('fullcontrol')) OR contains(lower(script.script_content.value), lower('allow'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects PowerShell scripts to set the ACL to a file in the Windows folder",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://github.com/redcanaryco/atomic-red-team/blob/74438b0237d141ee9c99747976447dc884cb1a39/atomics/T1505.005/T1505.005.md, https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-acl?view=powershell-5.1",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1222"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious TSCON Start as SYSTEM",
+    "comment": "Detects a tscon.exe start as LOCAL SYSTEM",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))) AND endswith(lower(process.name), lower('\\\\tscon.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects a tscon.exe start as LOCAL SYSTEM",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: http://www.korznikov.com/2017/03/0-day-or-feature-privilege-escalation.html, https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6, https://www.ired.team/offensive-security/lateral-movement/t1076-rdp-hijacking-for-lateral-movement",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1219"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

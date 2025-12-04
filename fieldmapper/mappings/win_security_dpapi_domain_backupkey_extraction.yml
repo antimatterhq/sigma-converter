@@ -1,20 +1,19 @@
-id: 4ac1f50b-3bd0-4968-902d-868b4647937e
 title: DPAPI Domain Backup Key Extraction
+id: 4ac1f50b-3bd0-4968-902d-868b4647937e
 status: test
 level: high
+author: Roberto Rodriguez @Cyb3rWard0g
 description: Detects tools extracting LSA secret DPAPI domain backup key from Domain
     Controllers
-author: Roberto Rodriguez @Cyb3rWard0g
-date: '2019-06-20'
-modified: '2022-02-24'
-tags:
-    - attack.credential-access
-    - attack.t1003.004
 references:
     - https://threathunterplaybook.com/hunts/windows/190620-DomainDPAPIBackupKeyExtraction/notebook.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.004
+date: '2019-06-20'
+modified: '2022-02-24'
 logsource:
     product: windows
     service: security
@@ -32,25 +31,25 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:44:16.203771+00:00'
+            mapped_at: '2025-12-04T01:55:25.846022+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:44:16.203771+00:00'
+            mapped_at: '2025-12-04T01:55:25.846022+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:44:17.259072+00:00'
+            mapped_at: '2025-12-04T01:55:25.846043+00:00'
         -   source_field: ObjectType
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:17.259088+00:00'
+            mapped_at: '2025-12-04T01:55:25.846046+00:00'
         -   source_field: AccessMask
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:17.259091+00:00'
+            mapped_at: '2025-12-04T01:55:25.846049+00:00'
         -   source_field: ObjectName
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:44:17.259094+00:00'
+            mapped_at: '2025-12-04T01:55:25.846051+00:00'

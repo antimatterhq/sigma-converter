@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "PUA - Ngrok Execution",
+    "comment": "Detects the use of Ngrok, a utility used for port forwarding and tunneling, often used by threat actors to make local protected services publicly available. Involved domains are bin.equinox.io for download and *.ngrok.io for connections.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower(' tcp 139')) OR contains(lower(process.cmd_line), lower(' tcp 445')) OR contains(lower(process.cmd_line), lower(' tcp 3389')) OR contains(lower(process.cmd_line), lower(' tcp 5985')) OR contains(lower(process.cmd_line), lower(' tcp 5986')) OR contains(lower(process.cmd_line), lower(' start ')) AND contains(lower(process.cmd_line), lower('--all')) AND contains(lower(process.cmd_line), lower('--config')) AND contains(lower(process.cmd_line), lower('.yml')) OR endswith(lower(process.name), lower('ngrok.exe')) AND (contains(lower(process.cmd_line), lower(' tcp ')) OR contains(lower(process.cmd_line), lower(' http ')) OR contains(lower(process.cmd_line), lower(' authtoken '))) OR contains(lower(process.cmd_line), lower('.exe authtoken ')) OR contains(lower(process.cmd_line), lower('.exe start --all'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of Ngrok, a utility used for port forwarding and tunneling, often used by threat actors to make local protected services publicly available. Involved domains are bin.equinox.io for download and *.ngrok.io for connections.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Another tool that uses the command line switches of Ngrok 2. Ngrok http 3978 (https://learn.microsoft.com/en-us/azure/bot-service/bot-service-debug-channel-ngrok?view=azure-bot-service-4.0) References: https://ngrok.com/docs, https://www.fireeye.com/blog/threat-research/2021/05/shining-a-light-on-darkside-ransomware-operations.html, https://stackoverflow.com/questions/42442320/ssh-tunnel-to-ngrok-and-initiate-rdp, https://www.virustotal.com/gui/file/58d21840d915aaf4040ceb89522396124c82f325282f805d1085527e1e2ccfa1/detection, https://cybleinc.com/2021/02/15/ngrok-platform-abused-by-hackers-to-deliver-a-new-wave-of-phishing-attacks/, https://twitter.com/xorJosh/status/1598646907802451969, https://www.softwaretestinghelp.com/how-to-use-ngrok/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1572"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

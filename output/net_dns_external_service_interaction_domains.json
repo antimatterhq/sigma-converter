@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "DNS Query to External Service Interaction Domains",
+    "comment": "Detects suspicious DNS queries to external service interaction domains often used for out-of-band interactions after successful RCE",
+    "annotations": {
+      "source": "sigma",
+      "category": "dns",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(query.hostname), lower('.interact.sh')) OR contains(lower(query.hostname), lower('.oast.pro')) OR contains(lower(query.hostname), lower('.oast.live')) OR contains(lower(query.hostname), lower('.oast.site')) OR contains(lower(query.hostname), lower('.oast.online')) OR contains(lower(query.hostname), lower('.oast.fun')) OR contains(lower(query.hostname), lower('.oast.me')) OR contains(lower(query.hostname), lower('.burpcollaborator.net')) OR contains(lower(query.hostname), lower('.oastify.com')) OR contains(lower(query.hostname), lower('.canarytokens.com')) OR contains(lower(query.hostname), lower('.requestbin.net')) OR contains(lower(query.hostname), lower('.dnslog.cn'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious DNS queries to external service interaction domains often used for out-of-band interactions after successful RCE",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://twitter.com/breakersall/status/1533493587828260866",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1190"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Initial-Access",
+          "techniqueId": "T1595",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

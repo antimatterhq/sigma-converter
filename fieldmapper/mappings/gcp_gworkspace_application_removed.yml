@@ -1,20 +1,19 @@
-id: ee2803f0-71c8-4831-b48b-a1fc57601ee4
 title: Google Workspace Application Removed
+id: ee2803f0-71c8-4831-b48b-a1fc57601ee4
 status: test
 level: medium
-description: Detects when an an application is removed from Google Workspace.
 author: Austin Songer
-date: '2021-08-26'
-modified: '2023-10-11'
-tags:
-    - attack.impact
+description: Detects when an an application is removed from Google Workspace.
 references:
     - https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3
     - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-domain-settings?hl=en#REMOVE_APPLICATION
     - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-domain-settings?hl=en#REMOVE_APPLICATION_FROM_WHITELIST
 falsepositives:
     - Application being removed may be performed by a System Administrator.
-taxonomy: sigma
+tags:
+    - attack.impact
+date: '2021-08-26'
+modified: '2023-10-11'
 logsource:
     product: gcp
     service: google_workspace.admin
@@ -32,17 +31,17 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: gcp
-            mapped_at: '2025-11-26T02:21:38.265885+00:00'
+            mapped_at: '2025-12-04T01:38:51.848299+00:00'
         service:
             source_field: service
             source_value: google_workspace.admin
-            mapped_at: '2025-11-26T02:21:38.265885+00:00'
+            mapped_at: '2025-12-04T01:38:51.848299+00:00'
     detection_fields:
         -   source_field: eventService
             target_table: entity_management
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:21:40.587020+00:00'
+            mapped_at: '2025-12-04T01:38:51.848398+00:00'
         -   source_field: eventName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:40.587047+00:00'
+            mapped_at: '2025-12-04T01:38:51.848403+00:00'

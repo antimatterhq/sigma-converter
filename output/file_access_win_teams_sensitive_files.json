@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Microsoft Teams Sensitive File Access By Uncommon Applications",
+    "comment": "Detects file access attempts to sensitive Microsoft teams files (leveldb, cookies) by an uncommon process.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_access",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND (contains(lower(file.name), lower('\\\\microsoft\\\\teams\\\\cookies')) OR contains(lower(file.name), lower('\\\\microsoft\\\\teams\\\\local storage\\\\leveldb'))) AND NOT endswith(lower(actor.process.name), lower('\\\\microsoft\\\\teams\\\\current\\\\teams.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects file access attempts to sensitive Microsoft teams files (leveldb, cookies) by an uncommon process.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/, https://www.vectra.ai/blog/undermining-microsoft-teams-security-by-mining-tokens",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1528"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

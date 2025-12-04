@@ -1,24 +1,21 @@
-id: 66d31e5f-52d6-40a4-9615-002d3789a119
 title: Remote Thread Creation By Uncommon Source Image
+id: 66d31e5f-52d6-40a4-9615-002d3789a119
 status: experimental
 level: medium
-description: Detects uncommon processes creating remote threads.
 author: Perez Diego (@darkquassar), oscd.community
-date: '2019-10-27'
-modified: '2024-07-15'
-tags:
-    - attack.privilege-escalation
-    - attack.defense-evasion
-    - attack.t1055
+description: Detects uncommon processes creating remote threads.
 references:
     - Personal research, statistical analysis
     - https://lolbas-project.github.io
 falsepositives:
     - This rule is best put in testing first in order to create a baseline that reflects
         the data in your environment.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''02d1d718-dd13-41af-989d-ea85c7fab93f''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.privilege-escalation
+    - attack.defense-evasion
+    - attack.t1055
+date: '2019-10-27'
+modified: '2024-07-15'
 logsource:
     category: create_remote_thread
     product: windows
@@ -85,6 +82,9 @@ detection:
     filter_main_empty:
         TargetImage: ''
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: 02d1d718-dd13-41af-989d-ea85c7fab93f
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 4
@@ -92,29 +92,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: create_remote_thread
-            mapped_at: '2025-11-26T02:25:06.502711+00:00'
+            mapped_at: '2025-12-04T01:40:47.532526+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:06.502711+00:00'
+            mapped_at: '2025-12-04T01:40:47.532526+00:00'
     detection_fields:
         -   source_field: SourceImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:25:07.780523+00:00'
+            mapped_at: '2025-12-04T01:40:47.532543+00:00'
         -   source_field: TargetImage
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:25:07.780534+00:00'
+            mapped_at: '2025-12-04T01:40:47.532545+00:00'
         -   source_field: TargetParentProcessId
             target_table: process_activity
             target_field: process.parent_process.pid
-            mapped_at: '2025-11-26T02:25:07.780537+00:00'
+            mapped_at: '2025-12-04T01:40:47.532546+00:00'
         -   source_field: SourceCommandLine
             target_table: process_activity
             target_field: actor.process.cmd_line
-            mapped_at: '2025-11-26T02:25:07.780539+00:00'
+            mapped_at: '2025-12-04T01:40:47.532547+00:00'
         -   source_field: SourceParentImage
             target_table: process_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:25:07.780541+00:00'
+            mapped_at: '2025-12-04T01:40:47.532554+00:00'

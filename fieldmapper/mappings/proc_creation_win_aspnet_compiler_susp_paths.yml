@@ -1,24 +1,19 @@
-id: 9f50fe98-fe5c-4a2d-86c7-fad7f63ed622
 title: Potentially Suspicious ASP.NET Compilation Via AspNetCompiler
+id: 9f50fe98-fe5c-4a2d-86c7-fad7f63ed622
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of "aspnet_compiler.exe" with potentially suspicious
     paths for compilation.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-08-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1127
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Aspnet_Compiler/
     - https://ijustwannared.team/2020/08/01/the-curious-case-of-aspnet_compiler-exe/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9ccba514-7cb6-4c5c-b377-700758f2f120''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''4c7f49ee-2638-43bb-b85b-ce676c30b260''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''a01b8329-5953-4f73-ae2d-aa01e1f35f00''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1127
+date: '2023-08-14'
 logsource:
     category: process_creation
     product: windows
@@ -37,6 +32,13 @@ detection:
             - :\Windows\System32\Tasks\
             - :\Windows\Tasks\
     condition: selection
+related:
+    -   id: 9ccba514-7cb6-4c5c-b377-700758f2f120
+        type: similar
+    -   id: 4c7f49ee-2638-43bb-b85b-ce676c30b260
+        type: similar
+    -   id: a01b8329-5953-4f73-ae2d-aa01e1f35f00
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -44,17 +46,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:33.777436+00:00'
+            mapped_at: '2025-12-04T01:44:27.654768+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:33.777436+00:00'
+            mapped_at: '2025-12-04T01:44:27.654768+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:33.777454+00:00'
+            mapped_at: '2025-12-04T01:44:27.654787+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:29:33.777456+00:00'
+            mapped_at: '2025-12-04T01:44:27.654788+00:00'

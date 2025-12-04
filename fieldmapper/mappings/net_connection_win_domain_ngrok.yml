@@ -1,7 +1,8 @@
-id: 18249279-932f-45e2-b37a-8925f2597670
 title: Process Initiated Network  Connection To Ngrok Domain
+id: 18249279-932f-45e2-b37a-8925f2597670
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects an executable initiating a network connection to "ngrok" domains.
 
     Attackers were seen using this "ngrok" in order to store their second stage payloads
@@ -11,12 +12,6 @@ description: 'Detects an executable initiating a network connection to "ngrok" d
     of either data exfiltration by malicious actors or additional download.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-07-16'
-modified: '2023-11-17'
-tags:
-    - attack.exfiltration
-    - attack.t1567.001
 references:
     - https://ngrok.com/
     - https://ngrok.com/blog-post/new-ngrok-domains
@@ -24,9 +19,11 @@ references:
     - https://www.rnbo.gov.ua/files/2023_YEAR/CYBERCENTER/november/APT29%20attacks%20Embassies%20using%20CVE-2023-38831%20-%20report%20en.pdf
 falsepositives:
     - Legitimate use of the ngrok service.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''1d08ac94-400d-4469-a82f-daee9a908849''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1567.001
+date: '2022-07-16'
+modified: '2023-11-17'
 logsource:
     category: network_connection
     product: windows
@@ -40,6 +37,9 @@ detection:
             - .ngrok.dev
             - .ngrok.io
     condition: selection
+related:
+    -   id: 1d08ac94-400d-4469-a82f-daee9a908849
+        type: similar
 ocsf_mapping:
     class_name: network_activity
     activity_id: 1
@@ -47,17 +47,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:45.714998+00:00'
+            mapped_at: '2025-12-04T01:51:45.273452+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:45.714998+00:00'
+            mapped_at: '2025-12-04T01:51:45.273452+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:45.715031+00:00'
+            mapped_at: '2025-12-04T01:51:45.273477+00:00'
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:45.715035+00:00'
+            mapped_at: '2025-12-04T01:51:45.273481+00:00'

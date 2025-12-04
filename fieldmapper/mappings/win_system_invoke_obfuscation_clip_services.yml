@@ -1,21 +1,20 @@
-id: f7385ee2-0e0c-11eb-adc1-0242ac120002
 title: Invoke-Obfuscation CLIP+ Launcher - System
+id: f7385ee2-0e0c-11eb-adc1-0242ac120002
 status: test
 level: high
-description: Detects Obfuscated use of Clip.exe to execute PowerShell
 author: Jonathan Cheong, oscd.community
-date: '2020-10-13'
-modified: '2023-02-20'
+description: Detects Obfuscated use of Clip.exe to execute PowerShell
+references:
+    - https://github.com/SigmaHQ/sigma/issues/1009
+falsepositives:
+    - Unknown
 tags:
     - attack.defense-evasion
     - attack.t1027
     - attack.execution
     - attack.t1059.001
-references:
-    - https://github.com/SigmaHQ/sigma/issues/1009
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2020-10-13'
+modified: '2023-02-20'
 logsource:
     product: windows
     service: system
@@ -35,21 +34,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:12.730031+00:00'
+            mapped_at: '2025-12-04T01:57:08.999111+00:00'
         service:
             source_field: service
             source_value: system
-            mapped_at: '2025-11-26T02:48:12.730031+00:00'
+            mapped_at: '2025-12-04T01:57:08.999111+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:12.730045+00:00'
+            mapped_at: '2025-12-04T01:57:08.999125+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:12.730047+00:00'
+            mapped_at: '2025-12-04T01:57:08.999127+00:00'
         -   source_field: ImagePath
             target_table: process_activity
             target_field: process.file.path
-            mapped_at: '2025-11-26T02:48:12.730048+00:00'
+            mapped_at: '2025-12-04T01:57:08.999128+00:00'

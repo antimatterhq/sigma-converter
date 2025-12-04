@@ -1,21 +1,20 @@
-id: d81871ef-5738-47ab-9797-7a9c90cd4bfb
 title: Php Inline Command Execution
+id: d81871ef-5738-47ab-9797-7a9c90cd4bfb
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects execution of php using the "-r" flag. This is could be used as
     a way to launch a reverse shell or execute live php code.
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-01-02'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://www.php.net/manual/en/features.commandline.php
     - https://www.revshells.com/
     - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2023-01-02'
 logsource:
     category: process_creation
     product: windows
@@ -33,21 +32,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:25:39.449280+00:00'
+            mapped_at: '2025-12-04T01:41:10.918063+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:25:39.449280+00:00'
+            mapped_at: '2025-12-04T01:41:10.918063+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:25:39.449299+00:00'
+            mapped_at: '2025-12-04T01:41:10.918078+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:25:39.449302+00:00'
+            mapped_at: '2025-12-04T01:41:10.918086+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:25:39.449304+00:00'
+            mapped_at: '2025-12-04T01:41:10.918088+00:00'

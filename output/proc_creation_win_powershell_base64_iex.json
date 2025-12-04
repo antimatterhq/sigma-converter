@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "PowerShell Base64 Encoded IEX Cmdlet",
+    "comment": "Detects usage of a base64 encoded \"IEX\" cmdlet in a process command line",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('suvyichb')) OR contains(lower(process.cmd_line), lower('lfwcaow')) OR contains(lower(process.cmd_line), lower('jrvggkf')) OR contains(lower(process.cmd_line), lower('awv4ichb')) OR contains(lower(process.cmd_line), lower('llecaow')) OR contains(lower(process.cmd_line), lower('pzxggkf')) OR contains(lower(process.cmd_line), lower('awv4ichozx')) OR contains(lower(process.cmd_line), lower('llecaotmv3')) OR contains(lower(process.cmd_line), lower('pzxggke5ld')) OR contains(lower(process.cmd_line), lower('suvyichozx')) OR contains(lower(process.cmd_line), lower('lfwcaotmv3')) OR contains(lower(process.cmd_line), lower('jrvggke5ld')) OR contains(lower(process.cmd_line), lower('suvykf')) OR contains(lower(process.cmd_line), lower('lfwchb')) OR contains(lower(process.cmd_line), lower('jrvgow')) OR contains(lower(process.cmd_line), lower('awv4kf')) OR contains(lower(process.cmd_line), lower('llechb')) OR contains(lower(process.cmd_line), lower('pzxgow')) OR contains(lower(process.cmd_line), lower('awv4ke5ld')) OR contains(lower(process.cmd_line), lower('llechozx')) OR contains(lower(process.cmd_line), lower('pzxgotmv3')) OR contains(lower(process.cmd_line), lower('suvyke5ld')) OR contains(lower(process.cmd_line), lower('lfwchozx')) OR contains(lower(process.cmd_line), lower('jrvgotmv3')) OR contains(lower(process.cmd_line), lower('suvykcgn')) OR contains(lower(process.cmd_line), lower('lfwcgoj')) OR contains(lower(process.cmd_line), lower('jrvgokc')) OR contains(lower(process.cmd_line), lower('awv4kcgn')) OR contains(lower(process.cmd_line), lower('llecgoj')) OR contains(lower(process.cmd_line), lower('pzxgokc'))) AND (contains(lower(process.cmd_line), lower('sqbfafgaiaaoafsa')) OR contains(lower(process.cmd_line), lower('karqbyacaakabba')) OR contains(lower(process.cmd_line), lower('jaeuawaagacgaww')) OR contains(lower(process.cmd_line), lower('aqblahgaiaaoafsa')) OR contains(lower(process.cmd_line), lower('kazqb4acaakabba')) OR contains(lower(process.cmd_line), lower('paguaeaagacgaww')) OR contains(lower(process.cmd_line), lower('aqblahgaiaaoae4azqb3a')) OR contains(lower(process.cmd_line), lower('kazqb4acaakaboaguadw')) OR contains(lower(process.cmd_line), lower('paguaeaagacgatgblahca')) OR contains(lower(process.cmd_line), lower('sqbfafgaiaaoae4azqb3a')) OR contains(lower(process.cmd_line), lower('karqbyacaakaboaguadw')) OR contains(lower(process.cmd_line), lower('jaeuawaagacgatgblahca'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of a base64 encoded \"IEX\" cmdlet in a process command line",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: Internal Research",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

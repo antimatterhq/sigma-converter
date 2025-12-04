@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "Active Directory Structure Export Via Ldifde.EXE",
+    "comment": "Detects the execution of \"ldifde.exe\" in order to export organizational Active Directory structure.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\ldifde.exe')) AND lower(process.file.name) = lower('ldifde.exe') AND contains(lower(process.cmd_line), lower('-f')) AND NOT contains(lower(process.cmd_line), lower(' -i')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of \"ldifde.exe\" in order to export organizational Active Directory structure.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://businessinsights.bitdefender.com/deep-dive-into-a-backdoordiplomacy-attack-a-study-of-an-attackers-toolkit, https://www.documentcloud.org/documents/5743766-Global-Threat-Report-2019.html, https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731033(v=ws.11)",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Exfiltration"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

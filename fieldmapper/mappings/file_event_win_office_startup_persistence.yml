@@ -1,22 +1,21 @@
-id: 0e20c89d-2264-44ae-8238-aeeaba609ece
 title: Potential Persistence Via Microsoft Office Startup Folder
+id: 0e20c89d-2264-44ae-8238-aeeaba609ece
 status: test
 level: high
+author: Max Altgelt (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
 description: Detects creation of Microsoft Office files inside of one of the default
     startup folders in order to achieve persistence.
-author: Max Altgelt (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
-date: '2022-06-02'
-modified: '2023-06-22'
-tags:
-    - attack.persistence
-    - attack.t1137
 references:
     - https://insight-jp.nttsecurity.com/post/102hojk/operation-restylink-apt-campaign-targeting-japanese-companies
     - https://learn.microsoft.com/en-us/office/troubleshoot/excel/use-startup-folders
 falsepositives:
     - Loading a user environment from a backup or a domain controller
     - Synchronization of templates
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1137
+date: '2022-06-02'
+modified: '2023-06-22'
 logsource:
     category: file_event
     product: windows
@@ -60,17 +59,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:44.902286+00:00'
+            mapped_at: '2025-12-04T01:52:36.056420+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:44.902286+00:00'
+            mapped_at: '2025-12-04T01:52:36.056420+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:44.902316+00:00'
+            mapped_at: '2025-12-04T01:52:36.056444+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:44.902321+00:00'
+            mapped_at: '2025-12-04T01:52:36.056447+00:00'

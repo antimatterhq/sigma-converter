@@ -1,22 +1,21 @@
-id: fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4
 title: Execution of Powershell Script in Public Folder
+id: fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4
 status: test
 level: high
+author: Max Altgelt (Nextron Systems)
 description: This rule detects execution of PowerShell scripts located in the "C:\Users\Public"
     folder
-author: Max Altgelt (Nextron Systems)
-date: '2022-04-06'
-modified: '2022-07-14'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://www.mandiant.com/resources/evolution-of-fin7
 fields:
     - CommandLine
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2022-04-06'
+modified: '2022-07-14'
 logsource:
     category: process_creation
     product: windows
@@ -46,17 +45,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:56.542593+00:00'
+            mapped_at: '2025-12-04T01:50:37.995177+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:56.542593+00:00'
+            mapped_at: '2025-12-04T01:50:37.995177+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:56.542610+00:00'
+            mapped_at: '2025-12-04T01:50:37.995196+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:56.542613+00:00'
+            mapped_at: '2025-12-04T01:50:37.995197+00:00'

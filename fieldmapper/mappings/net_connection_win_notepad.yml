@@ -1,7 +1,8 @@
-id: e81528db-fc02-45e8-8e98-4e84aba1f10b
 title: Network Connection Initiated Via Notepad.EXE
+id: e81528db-fc02-45e8-8e98-4e84aba1f10b
 status: test
 level: high
+author: EagleEye Team
 description: 'Detects a network connection that is initiated by the "notepad.exe"
     process.
 
@@ -11,21 +12,19 @@ description: 'Detects a network connection that is initiated by the "notepad.exe
     for example.
 
     '
-author: EagleEye Team
-date: '2020-05-14'
-modified: '2024-02-02'
-tags:
-    - attack.command-and-control
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1055
 references:
     - https://web.archive.org/web/20200219102749/https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1492186586.pdf
     - https://www.cobaltstrike.com/blog/why-is-notepad-exe-connecting-to-the-internet
 falsepositives:
     - Printing documents via notepad might cause communication with the printer via
         port 9100 or similar.
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1055
+date: '2020-05-14'
+modified: '2024-02-02'
 logsource:
     category: network_connection
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:35.457916+00:00'
+            mapped_at: '2025-12-04T01:51:39.451345+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:35.457916+00:00'
+            mapped_at: '2025-12-04T01:51:39.451345+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:35.457930+00:00'
+            mapped_at: '2025-12-04T01:51:39.451362+00:00'
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:38:35.457932+00:00'
+            mapped_at: '2025-12-04T01:51:39.451364+00:00'

@@ -1,7 +1,8 @@
-id: a3501e8e-af9e-43c6-8cd6-9360bdaae498
 title: Activity from Suspicious IP Addresses
+id: a3501e8e-af9e-43c6-8cd6-9360bdaae498
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: 'Detects when a Microsoft Cloud App Security reported users were active
     from an IP address identified as risky by Microsoft Threat Intelligence.
 
@@ -9,18 +10,16 @@ description: 'Detects when a Microsoft Cloud App Security reported users were ac
     may indicate compromised account.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-08-23'
-modified: '2022-10-09'
-tags:
-    - attack.command-and-control
-    - attack.t1573
 references:
     - https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy
     - https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1573
+date: '2021-08-23'
+modified: '2022-10-09'
 logsource:
     product: m365
     service: threat_detection
@@ -37,21 +36,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: m365
-            mapped_at: '2025-11-26T02:22:01.687523+00:00'
+            mapped_at: '2025-12-04T01:39:03.688274+00:00'
         service:
             source_field: service
             source_value: threat_detection
-            mapped_at: '2025-11-26T02:22:01.687523+00:00'
+            mapped_at: '2025-12-04T01:39:03.688274+00:00'
     detection_fields:
         -   source_field: eventSource
             target_table: authentication
             target_field: metadata.product.name
-            mapped_at: '2025-11-26T02:22:01.687551+00:00'
+            mapped_at: '2025-12-04T01:39:03.688309+00:00'
         -   source_field: eventName
             target_table: authentication
-            target_field: action
-            mapped_at: '2025-11-26T02:22:01.687555+00:00'
+            target_field: metadata.event_code
+            mapped_at: '2025-12-04T01:39:03.688319+00:00'
         -   source_field: status
             target_table: authentication
             target_field: actor.authorizations.decision
-            mapped_at: '2025-11-26T02:22:01.687558+00:00'
+            mapped_at: '2025-12-04T01:39:03.688323+00:00'

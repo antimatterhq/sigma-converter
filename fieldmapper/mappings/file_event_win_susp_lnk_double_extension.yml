@@ -1,18 +1,13 @@
-id: 3215aa19-f060-4332-86d5-5602511f3ca8
 title: Suspicious LNK Double Extension File Created
+id: 3215aa19-f060-4332-86d5-5602511f3ca8
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems), frack113
 description: 'Detects the creation of files with an "LNK" as a second extension. This
     is sometimes used by malware as a method to abuse the fact that Windows hides
     the "LNK" extension by default.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), frack113
-date: '2022-11-07'
-modified: '2023-10-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1036.007
 references:
     - https://www.crowdstrike.com/blog/meet-crowdstrikes-adversary-of-the-month-for-june-mustang-panda/
     - https://www.anomali.com/blog/china-based-apt-mustang-panda-targets-minority-groups-public-and-private-sector-organizations
@@ -22,9 +17,11 @@ references:
 falsepositives:
     - Some tuning is required for other general purpose directories of third party
         apps
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''b4926b47-a9d7-434c-b3a0-adc3fa0bd13e''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036.007
+date: '2022-11-07'
+modified: '2023-10-18'
 logsource:
     category: file_event
     product: windows
@@ -58,6 +55,9 @@ detection:
         Image|endswith: \winword.exe
         TargetFilename|contains: \AppData\Roaming\Microsoft\Word
     condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+related:
+    -   id: b4926b47-a9d7-434c-b3a0-adc3fa0bd13e
+        type: derived
 ocsf_mapping:
     class_name: file_activity
     activity_id: 1
@@ -65,17 +65,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:45.546808+00:00'
+            mapped_at: '2025-12-04T01:52:36.414531+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:45.546808+00:00'
+            mapped_at: '2025-12-04T01:52:36.414531+00:00'
     detection_fields:
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:45.546823+00:00'
+            mapped_at: '2025-12-04T01:52:36.414544+00:00'
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:45.546844+00:00'
+            mapped_at: '2025-12-04T01:52:36.414546+00:00'

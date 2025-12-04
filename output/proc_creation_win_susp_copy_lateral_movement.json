@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "name": "Copy From Or To Admin Share Or Sysvol Folder",
+    "comment": "Detects a copy command or a copy utility execution to or from an Admin share or remote",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(process.cmd_line) regexp '.*\\\\.*$.*' OR contains(lower(process.cmd_line), lower('\\\\sysvol\\\\'))) AND ((endswith(lower(process.name), lower('\\\\robocopy.exe')) OR endswith(lower(process.name), lower('\\\\xcopy.exe'))) AND (lower(LOWER(process.file.name)) in ('robocopy\\.exe', 'xcopy\\.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND contains(lower(process.cmd_line), lower('copy')) OR (contains(lower(process.name), lower('\\\\powershell.exe')) OR contains(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (contains(lower(process.cmd_line), lower('copy-item')) OR contains(lower(process.cmd_line), lower('copy ')) OR contains(lower(process.cmd_line), lower('cpi ')) OR contains(lower(process.cmd_line), lower(' cp ')) OR contains(lower(process.cmd_line), lower('move ')) OR contains(lower(process.cmd_line), lower('move-item')) OR contains(lower(process.cmd_line), lower(' mi ')) OR contains(lower(process.cmd_line), lower(' mv ')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects a copy command or a copy utility execution to or from an Admin share or remote",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Administrative scripts References: https://twitter.com/SBousseaden/status/1211636381086339073, https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view, https://www.elastic.co/guide/en/security/current/remote-file-copy-to-a-hidden-share.html, https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1039"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1048"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Lateral-Movement",
+          "techniqueId": "T1021",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "File Creation In Suspicious Directory By Msdt.EXE",
+    "comment": "Detects msdt.exe creating files in suspicious directories which could be a sign of exploitation of either Follina or Dogwalk vulnerabilities",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(actor.process.name), lower('\\\\msdt.exe')) AND (contains(lower(file.path), lower('\\\\desktop\\\\')) OR contains(lower(file.path), lower('\\\\start menu\\\\programs\\\\startup\\\\')) OR contains(lower(file.path), lower('c:\\\\perflogs\\\\')) OR contains(lower(file.path), lower('c:\\\\programdata\\\\')) OR contains(lower(file.path), lower('c:\\\\users\\\\public\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects msdt.exe creating files in suspicious directories which could be a sign of exploitation of either Follina or Dogwalk vulnerabilities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://irsl.medium.com/the-trouble-with-microsofts-troubleshooters-6e32fc80b8bd, https://msrc-blog.microsoft.com/2022/05/30/guidance-for-cve-2022-30190-microsoft-support-diagnostic-tool-vulnerability/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1547",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,23 +1,22 @@
-id: 737e618a-a410-49b5-bec3-9e55ff7fbc15
 title: Suspicious Calculator Usage
+id: 737e618a-a410-49b5-bec3-9e55ff7fbc15
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects suspicious use of ''calc.exe'' with command line parameters
     or in a suspicious directory, which is likely caused by some PoC or detection
     evasion.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2019-02-09'
-modified: '2023-11-09'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://twitter.com/ItsReallyNick/status/1094080242686312448
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2019-02-09'
+modified: '2023-11-09'
 logsource:
     category: process_creation
     product: windows
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:30.888744+00:00'
+            mapped_at: '2025-12-04T01:46:56.488500+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:30.888744+00:00'
+            mapped_at: '2025-12-04T01:46:56.488500+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:30.888757+00:00'
+            mapped_at: '2025-12-04T01:46:56.488517+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:30.888759+00:00'
+            mapped_at: '2025-12-04T01:46:56.488519+00:00'

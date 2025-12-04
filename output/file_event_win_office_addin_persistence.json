@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Potential Persistence Via Microsoft Office Add-In",
+    "comment": "Detects potential persistence activity via startup add-ins that load when Microsoft Office starts (.wll/.xll are simply .dll fit for Word or Excel).",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (contains(lower(file.path), lower('\\\\microsoft\\\\word\\\\startup\\\\')) AND endswith(lower(file.path), lower('.wll')) OR contains(lower(file.path), lower('\\\\microsoft\\\\excel\\\\startup\\\\')) AND endswith(lower(file.path), lower('.xll')) OR contains(lower(file.path), lower('microsoft\\\\excel\\\\xlstart\\\\')) AND endswith(lower(file.path), lower('.xlam')) OR contains(lower(file.path), lower('\\\\microsoft\\\\addins\\\\')) AND (endswith(lower(file.path), lower('.xlam')) OR endswith(lower(file.path), lower('.xla')) OR endswith(lower(file.path), lower('.ppam')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects potential persistence activity via startup add-ins that load when Microsoft Office starts (.wll/.xll are simply .dll fit for Word or Excel).",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate add-ins References: Internal Research, https://labs.withsecure.com/publications/add-in-opportunities-for-office-persistence, https://github.com/redcanaryco/atomic-red-team/blob/4ae9580a1a8772db87a1b6cdb0d03e5af231e966/atomics/T1137.006/T1137.006.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1137",
+          "subTechniqueId": "006"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

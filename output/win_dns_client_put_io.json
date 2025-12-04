@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "DNS Query To Put.io - DNS Client",
+    "comment": "Detects DNS queries for subdomains related to \"Put.io\" sharing website.",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "dns-client",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 3008 AND (contains(lower(query.hostname), lower('api.put.io')) OR contains(lower(query.hostname), lower('upload.put.io'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects DNS queries for subdomains related to \"Put.io\" sharing website.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate DNS queries and usage of Put.io Reference: https://darkatlas.io/blog/medusa-ransomware-group-opsec-failure",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

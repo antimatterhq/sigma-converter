@@ -1,21 +1,20 @@
-id: f0ca6c24-3225-47d5-b1f5-352bf07ecfa7
 title: PUA - DefenderCheck Execution
+id: f0ca6c24-3225-47d5-b1f5-352bf07ecfa7
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects the use of DefenderCheck, a tool to evaluate the signatures used
     in Microsoft Defender. It can be used to figure out the strings / byte chains
     used in Microsoft Defender to detect a tool and thus used for AV evasion.
-author: Florian Roth (Nextron Systems)
-date: '2022-08-30'
-modified: '2023-02-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1027.005
 references:
     - https://github.com/matterpreter/DefenderCheck
 falsepositives:
     - Unlikely
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027.005
+date: '2022-08-30'
+modified: '2023-02-04'
 logsource:
     category: process_creation
     product: windows
@@ -31,17 +30,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:32.945704+00:00'
+            mapped_at: '2025-12-04T01:44:26.882242+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:32.945704+00:00'
+            mapped_at: '2025-12-04T01:44:26.882242+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:32.945723+00:00'
+            mapped_at: '2025-12-04T01:44:26.882257+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:29:32.945726+00:00'
+            mapped_at: '2025-12-04T01:44:26.882259+00:00'

@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Potential PowerShell Command Line Obfuscation",
+    "comment": "Detects the PowerShell command lines with special characters",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND process.cmd_line rlike '\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+.*\\\\\\+' AND process.cmd_line rlike '\\\\\\{.*\\\\\\{.*\\\\\\{.*\\\\\\{.*\\\\\\{.*\\\\\\{.*\\\\\\{.*\\\\\\{.*\\\\\\{.*\\\\\\{' AND process.cmd_line rlike '\\\\^.*\\\\^.*\\\\^.*\\\\^.*\\\\^' AND process.cmd_line rlike '`.*`.*`.*`.*`' AND NOT (lower(process.parent_process.name) = lower('c:\\\\program files\\\\amazon\\\\ssm\\\\ssm-document-worker.exe') OR contains(lower(process.cmd_line), lower('new eventsource(\"microsoft.windows.sense.client.management\"')) OR contains(lower(process.cmd_line), lower('public static extern bool installelamcertificateinfo(safefilehandle handle);'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the PowerShell command lines with special characters",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positives: 1. Amazon SSM Document Worker 2. Windows Defender ATP Reference: https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=64",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1027"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

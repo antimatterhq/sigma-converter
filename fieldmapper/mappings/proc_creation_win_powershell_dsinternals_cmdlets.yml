@@ -1,7 +1,8 @@
-id: 43d91656-a9b2-4541-b7e2-6a9bd3a13f4e
 title: DSInternals Suspicious PowerShell Cmdlets
+id: 43d91656-a9b2-4541-b7e2-6a9bd3a13f4e
 status: experimental
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), Nounou Mbeiri
 description: 'Detects execution and usage of the DSInternals PowerShell module. Which
     can be used to perform what might be considered as suspicious activity such as
     dumping DPAPI backup keys or manipulating NTDS.DIT files.
@@ -12,18 +13,14 @@ description: 'Detects execution and usage of the DSInternals PowerShell module. 
     and password hash calculation.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Nounou Mbeiri
-date: '2024-06-26'
-tags:
-    - attack.execution
-    - attack.t1059.001
 references:
     - https://github.com/MichaelGrafnetter/DSInternals/blob/39ee8a69bbdc1cfd12c9afdd7513b4788c4895d4/Src/DSInternals.PowerShell/DSInternals.psd1
 falsepositives:
     - Legitimate usage of DSInternals for administration or audit purpose.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''846c7a87-8e14-4569-9d49-ecfd4276a01c''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059.001
+date: '2024-06-26'
 logsource:
     category: process_creation
     product: windows
@@ -94,6 +91,9 @@ detection:
             - Write-ADNgcKey
             - Write-ADReplNgcKey
     condition: selection
+related:
+    -   id: 846c7a87-8e14-4569-9d49-ecfd4276a01c
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -101,13 +101,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:13.076263+00:00'
+            mapped_at: '2025-12-04T01:44:58.738351+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:13.076263+00:00'
+            mapped_at: '2025-12-04T01:44:58.738351+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:13.076276+00:00'
+            mapped_at: '2025-12-04T01:44:58.738366+00:00'

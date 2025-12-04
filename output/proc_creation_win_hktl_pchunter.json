@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "name": "HackTool - PCHunter Execution",
+    "comment": "Detects suspicious use of PCHunter, a tool like Process Hacker to view and manipulate processes, kernel options and other low level stuff",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\pchunter64.exe')) OR endswith(lower(process.name), lower('\\\\pchunter32.exe')) OR lower(process.file.name) = lower('pchunter.exe') AND lower(device.desc) = lower('epoolsoft windows information view tools') OR contains(lower(process.file.hashes.value), lower('sha1=5f1cbc3d99558307bc1250d084fa968521482025')) OR contains(lower(process.file.hashes.value), lower('md5=987b65cd9b9f4e9a1afd8f8b48cf64a7')) OR contains(lower(process.file.hashes.value), lower('sha256=2b214bddaab130c274de6204af6dba5aeec7433da99aa950022fa306421a6d32')) OR contains(lower(process.file.hashes.value), lower('imphash=444d210cea1ff8112f256a4997eed7ff')) OR contains(lower(process.file.hashes.value), lower('sha1=3fb89787cb97d902780da080545584d97fb1c2eb')) OR contains(lower(process.file.hashes.value), lower('md5=228dd0c2e6287547e26ffbd973a40f14')) OR contains(lower(process.file.hashes.value), lower('sha256=55f041bf4e78e9bfa6d4ee68be40e496ce3a1353e1ca4306598589e19802522c')) OR contains(lower(process.file.hashes.value), lower('imphash=0479f44df47cfa2ef1ccc4416a538663'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious use of PCHunter, a tool like Process Hacker to view and manipulate processes, kernel options and other low level stuff",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://web.archive.org/web/20231210115125/http://www.xuetr.com/, https://www.crowdstrike.com/blog/falcon-overwatch-report-finds-increase-in-ecrime/, https://www.hexacorn.com/blog/2018/04/20/kernel-hacking-tool-you-might-have-never-heard-of-xuetr-pchunter/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1082"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1057"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1012"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1083"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

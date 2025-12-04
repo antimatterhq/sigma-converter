@@ -1,21 +1,20 @@
-id: c83bf4b5-cdf0-437c-90fa-43d734f7c476
 title: Run PowerShell Script from Redirected Input Stream
+id: c83bf4b5-cdf0-437c-90fa-43d734f7c476
 status: test
 level: high
-description: Detects PowerShell script execution via input stream redirect
 author: Moriarty Meng (idea), Anton Kutepov (rule), oscd.community
-date: '2020-10-17'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.execution
-    - attack.t1059
+description: Detects PowerShell script execution via input stream redirect
 references:
     - https://github.com/LOLBAS-Project/LOLBAS/blob/4db780e0f0b2e2bb8cb1fa13e09196da9b9f1834/yml/LOLUtilz/OSBinaries/Powershell.yml
     - https://twitter.com/Moriarty_Meng/status/984380793383370752
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.execution
+    - attack.t1059
+date: '2020-10-17'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -33,17 +32,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:28.377452+00:00'
+            mapped_at: '2025-12-04T01:50:10.534031+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:28.377452+00:00'
+            mapped_at: '2025-12-04T01:50:10.534031+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:28.377482+00:00'
+            mapped_at: '2025-12-04T01:50:10.534043+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:28.377485+00:00'
+            mapped_at: '2025-12-04T01:50:10.534045+00:00'

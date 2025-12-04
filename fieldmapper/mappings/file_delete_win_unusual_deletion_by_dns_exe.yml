@@ -1,23 +1,20 @@
-id: 8f0b1fb1-9bd4-4e74-8cdf-a8de4d2adfd0
 title: Unusual File Deletion by Dns.exe
+id: 8f0b1fb1-9bd4-4e74-8cdf-a8de4d2adfd0
 status: test
 level: high
+author: Tim Rauch (Nextron Systems), Elastic (idea)
 description: Detects an unexpected file being deleted by dns.exe which my indicate
     activity related to remote code execution or other forms of exploitation as seen
     in CVE-2020-1350 (SigRed)
-author: Tim Rauch (Nextron Systems), Elastic (idea)
-date: '2022-09-27'
-modified: '2023-02-15'
-tags:
-    - attack.initial-access
-    - attack.t1133
 references:
     - https://www.elastic.co/guide/en/security/current/unusual-file-modification-by-dns-exe.html
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''9f383dc0-fdeb-4d56-acbc-9f9f4f8f20f3''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1133
+date: '2022-09-27'
+modified: '2023-02-15'
 logsource:
     category: file_delete
     product: windows
@@ -27,6 +24,9 @@ detection:
     filter:
         TargetFilename|endswith: \dns.log
     condition: selection and not filter
+related:
+    -   id: 9f383dc0-fdeb-4d56-acbc-9f9f4f8f20f3
+        type: similar
 ocsf_mapping:
     class_name: file_activity
     activity_id: 4
@@ -34,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_delete
-            mapped_at: '2025-11-26T02:40:50.147187+00:00'
+            mapped_at: '2025-12-04T01:53:23.509352+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:40:50.147187+00:00'
+            mapped_at: '2025-12-04T01:53:23.509352+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:40:50.147201+00:00'
+            mapped_at: '2025-12-04T01:53:23.509366+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:40:50.147203+00:00'
+            mapped_at: '2025-12-04T01:53:23.509367+00:00'

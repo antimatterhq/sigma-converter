@@ -1,22 +1,19 @@
-id: b9aeac14-2ffd-4ad3-b967-1354a4e628c3
 title: PowerShell Get-Clipboard Cmdlet Via CLI
+id: b9aeac14-2ffd-4ad3-b967-1354a4e628c3
 status: test
 level: medium
-description: Detects usage of the 'Get-Clipboard' cmdlet via CLI
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2020-05-02'
-modified: '2022-12-25'
-tags:
-    - attack.collection
-    - attack.t1115
+description: Detects usage of the 'Get-Clipboard' cmdlet via CLI
 references:
     - https://github.com/OTRF/detection-hackathon-apt29/issues/16
     - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/3.B.2_C36B49B5-DF58-4A34-9FE9-56189B9DEFEA.md
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''4cbd4f12-2e22-43e3-882f-bff3247ffb78''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.collection
+    - attack.t1115
+date: '2020-05-02'
+modified: '2022-12-25'
 logsource:
     category: process_creation
     product: windows
@@ -24,6 +21,9 @@ detection:
     selection:
         CommandLine|contains: Get-Clipboard
     condition: selection
+related:
+    -   id: 4cbd4f12-2e22-43e3-882f-bff3247ffb78
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -31,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:43.167932+00:00'
+            mapped_at: '2025-12-04T01:43:01.829651+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:43.167932+00:00'
+            mapped_at: '2025-12-04T01:43:01.829651+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:43.167953+00:00'
+            mapped_at: '2025-12-04T01:43:01.829668+00:00'

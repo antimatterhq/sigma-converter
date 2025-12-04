@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Malicious Nishang PowerShell Commandlets",
+    "comment": "Detects Commandlet names and arguments from the Nishang exploitation framework",
+    "annotations": {
+      "source": "sigma",
+      "category": "ps_script",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('add-constraineddelegationbackdoor')) OR contains(lower(script.script_content.value), lower('copy-vss')) OR contains(lower(script.script_content.value), lower('create-multiplesessions')) OR contains(lower(script.script_content.value), lower('datatoencode')) OR contains(lower(script.script_content.value), lower('dns_txt_pwnage')) OR contains(lower(script.script_content.value), lower('do-exfiltration-dns')) OR contains(lower(script.script_content.value), lower('download_execute')) OR contains(lower(script.script_content.value), lower('download-execute-ps')) OR contains(lower(script.script_content.value), lower('downloadandextractfromremoteregistry')) OR contains(lower(script.script_content.value), lower('dumpcerts')) OR contains(lower(script.script_content.value), lower('dumpcreds')) OR contains(lower(script.script_content.value), lower('dumphashes')) OR contains(lower(script.script_content.value), lower('enable-duplicatetoken')) OR contains(lower(script.script_content.value), lower('enable-duplication')) OR contains(lower(script.script_content.value), lower('execute-command-mssql')) OR contains(lower(script.script_content.value), lower('execute-dnstxt-code')) OR contains(lower(script.script_content.value), lower('execute-ontime')) OR contains(lower(script.script_content.value), lower('exetotext')) OR contains(lower(script.script_content.value), lower('exfill')) OR contains(lower(script.script_content.value), lower('exfiloption')) OR contains(lower(script.script_content.value), lower('fakedc')) OR contains(lower(script.script_content.value), lower('firebuster')) OR contains(lower(script.script_content.value), lower('firelistener')) OR contains(lower(script.script_content.value), lower('get-information ')) OR contains(lower(script.script_content.value), lower('get-passhints')) OR contains(lower(script.script_content.value), lower('get-web-credentials')) OR contains(lower(script.script_content.value), lower('get-webcredentials')) OR contains(lower(script.script_content.value), lower('get-wlan-keys')) OR contains(lower(script.script_content.value), lower('http-backdoor')) OR contains(lower(script.script_content.value), lower('invoke-amsibypass')) OR contains(lower(script.script_content.value), lower('invoke-bruteforce')) OR contains(lower(script.script_content.value), lower('invoke-credentialsphish')) OR contains(lower(script.script_content.value), lower('invoke-decode')) OR contains(lower(script.script_content.value), lower('invoke-encode')) OR contains(lower(script.script_content.value), lower('invoke-interceptor')) OR contains(lower(script.script_content.value), lower('invoke-jsratregsvr')) OR contains(lower(script.script_content.value), lower('invoke-jsratrundll')) OR contains(lower(script.script_content.value), lower('invoke-mimikatzwdigestdowngrade')) OR contains(lower(script.script_content.value), lower('invoke-networkrelay')) OR contains(lower(script.script_content.value), lower('invoke-powershellicmp')) OR contains(lower(script.script_content.value), lower('invoke-powershelludp')) OR contains(lower(script.script_content.value), lower('invoke-prasadhak')) OR contains(lower(script.script_content.value), lower('invoke-psgcat')) OR contains(lower(script.script_content.value), lower('invoke-psgcatagent')) OR contains(lower(script.script_content.value), lower('invoke-sessiongopher')) OR contains(lower(script.script_content.value), lower('invoke-ssidexfil')) OR contains(lower(script.script_content.value), lower('loggedkeys')) OR contains(lower(script.script_content.value), lower('nishang')) OR contains(lower(script.script_content.value), lower('notallnamespaces')) OR contains(lower(script.script_content.value), lower('out-chm')) OR contains(lower(script.script_content.value), lower('out-dnstxt')) OR contains(lower(script.script_content.value), lower('out-hta')) OR contains(lower(script.script_content.value), lower('out-rundllcommand')) OR contains(lower(script.script_content.value), lower('out-scf')) OR contains(lower(script.script_content.value), lower('out-sct')) OR contains(lower(script.script_content.value), lower('out-shortcut')) OR contains(lower(script.script_content.value), lower('out-webquery')) OR contains(lower(script.script_content.value), lower('out-word')) OR contains(lower(script.script_content.value), lower('parse_keys')) OR contains(lower(script.script_content.value), lower('password-list')) OR contains(lower(script.script_content.value), lower('powerpreter')) OR contains(lower(script.script_content.value), lower('remove-persistence')) OR contains(lower(script.script_content.value), lower('remove-poshrat')) OR contains(lower(script.script_content.value), lower('remove-update')) OR contains(lower(script.script_content.value), lower('run-exeonremote')) OR contains(lower(script.script_content.value), lower('set-dcshadowpermissions')) OR contains(lower(script.script_content.value), lower('set-remotepsremoting')) OR contains(lower(script.script_content.value), lower('set-remotewmi')) OR contains(lower(script.script_content.value), lower('shellcode32')) OR contains(lower(script.script_content.value), lower('shellcode64')) OR contains(lower(script.script_content.value), lower('stringtobase64')) OR contains(lower(script.script_content.value), lower('texttoexe'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Commandlet names and arguments from the Nishang exploitation framework",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/samratashok/nishang",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "001"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

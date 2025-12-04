@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Suspicious File Downloaded From Direct IP Via Certutil.EXE",
+    "comment": "Detects the execution of certutil with certain flags that allow the utility to download files from direct IPs.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\certutil.exe')) AND lower(process.file.name) = lower('certutil.exe') AND (contains(lower(process.cmd_line), lower('urlcache ')) OR contains(lower(process.cmd_line), lower('verifyctl '))) AND (contains(lower(process.cmd_line), lower('://1')) OR contains(lower(process.cmd_line), lower('://2')) OR contains(lower(process.cmd_line), lower('://3')) OR contains(lower(process.cmd_line), lower('://4')) OR contains(lower(process.cmd_line), lower('://5')) OR contains(lower(process.cmd_line), lower('://6')) OR contains(lower(process.cmd_line), lower('://7')) OR contains(lower(process.cmd_line), lower('://8')) OR contains(lower(process.cmd_line), lower('://9'))) AND NOT contains(lower(process.cmd_line), lower('://7-')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of certutil with certain flags that allow the utility to download files from direct IPs.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil, https://forensicitguy.github.io/agenttesla-vba-certutil-download/, https://news.sophos.com/en-us/2021/04/13/compromised-exchange-server-hosting-cryptojacker-targeting-other-exchange-servers/, https://twitter.com/egre55/status/1087685529016193025, https://lolbas-project.github.io/lolbas/Binaries/Certutil/, https://twitter.com/_JohnHammond/status/1708910264261980634",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1027"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "HackTool - RemoteKrbRelay SMB Relay Secrets Dump Module Indicators",
+    "comment": "Detects the creation of file with specific names used by RemoteKrbRelay SMB Relay attack module.",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(file.path), lower(':\\\\windows\\\\temp\\\\sam.tmp')) OR endswith(lower(file.path), lower(':\\\\windows\\\\temp\\\\sec.tmp')) OR endswith(lower(file.path), lower(':\\\\windows\\\\temp\\\\sys.tmp'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the creation of file with specific names used by RemoteKrbRelay SMB Relay attack module.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely Reference: https://github.com/CICADA8-Research/RemoteKrbRelay/blob/19ec76ba7aa50c2722b23359bc4541c0a9b2611c/Exploit/RemoteKrbRelay/Relay/Attacks/RemoteRegistry.cs#L31-L40",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1219"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

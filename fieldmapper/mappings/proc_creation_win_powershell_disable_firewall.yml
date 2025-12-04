@@ -1,21 +1,18 @@
-id: 12f6b752-042d-483e-bf9c-915a6d06ad75
 title: Windows Firewall Disabled via PowerShell
+id: 12f6b752-042d-483e-bf9c-915a6d06ad75
 status: test
 level: medium
-description: Detects attempts to disable the Windows Firewall using PowerShell
 author: Tim Rauch, Elastic (idea)
-date: '2022-09-14'
-modified: '2023-02-13'
-tags:
-    - attack.defense-evasion
-    - attack.t1562
+description: Detects attempts to disable the Windows Firewall using PowerShell
 references:
     - https://www.elastic.co/guide/en/security/current/windows-firewall-disabled-via-powershell.html
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''488b44e7-3781-4a71-888d-c95abfacf44d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1562
+date: '2022-09-14'
+modified: '2023-02-13'
 logsource:
     category: process_creation
     product: windows
@@ -40,6 +37,9 @@ detection:
             - Domain
             - Private
     condition: all of selection_*
+related:
+    -   id: 488b44e7-3781-4a71-888d-c95abfacf44d
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -47,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:50.120796+00:00'
+            mapped_at: '2025-12-04T01:50:31.192008+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:50.120796+00:00'
+            mapped_at: '2025-12-04T01:50:31.192008+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:50.120807+00:00'
+            mapped_at: '2025-12-04T01:50:31.192044+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:36:50.120809+00:00'
+            mapped_at: '2025-12-04T01:50:31.192048+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:50.120810+00:00'
+            mapped_at: '2025-12-04T01:50:31.192051+00:00'

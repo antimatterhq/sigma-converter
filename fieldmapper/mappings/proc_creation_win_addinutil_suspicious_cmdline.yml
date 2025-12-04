@@ -1,24 +1,23 @@
-id: 631b22a4-70f4-4e2f-9ea8-42f84d9df6d8
 title: Suspicious AddinUtil.EXE CommandLine Execution
+id: 631b22a4-70f4-4e2f-9ea8-42f84d9df6d8
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), Michael McKinley (@McKinleyMike),
+    Tony Latteri (@TheLatteri)
 description: 'Detects execution of the Add-In deployment cache updating utility (AddInutil.exe)
     with suspicious Addinroot or Pipelineroot paths. An adversary may execute AddinUtil.exe
     with uncommon Addinroot/Pipelineroot paths that point to the adversaries Addins.Store
     payload.
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Michael McKinley (@McKinleyMike),
-    Tony Latteri (@TheLatteri)
-date: '2023-09-18'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2023-09-18'
 logsource:
     category: process_creation
     product: windows
@@ -57,25 +56,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:16.691867+00:00'
+            mapped_at: '2025-12-04T01:45:01.785725+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:16.691867+00:00'
+            mapped_at: '2025-12-04T01:45:01.785725+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:16.691900+00:00'
+            mapped_at: '2025-12-04T01:45:01.785776+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:16.691903+00:00'
+            mapped_at: '2025-12-04T01:45:01.785778+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:16.691904+00:00'
+            mapped_at: '2025-12-04T01:45:01.785779+00:00'
         -   source_field: CurrentDirectory
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:30:16.691906+00:00'
+            mapped_at: '2025-12-04T01:45:01.785781+00:00'

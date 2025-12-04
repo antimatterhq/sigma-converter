@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "HackTool - Certipy Execution",
+    "comment": "Detects Certipy execution, a tool for Active Directory Certificate Services enumeration and abuse based on PE metadata characteristics and common command line arguments.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\certipy.exe')) AND lower(process.file.name) = lower('certipy.exe') AND contains(lower(device.desc), lower('certipy')) OR (contains(lower(process.cmd_line), lower(' account ')) OR contains(lower(process.cmd_line), lower(' auth ')) OR contains(lower(process.cmd_line), lower(' cert ')) OR contains(lower(process.cmd_line), lower(' find ')) OR contains(lower(process.cmd_line), lower(' forge ')) OR contains(lower(process.cmd_line), lower(' ptt ')) OR contains(lower(process.cmd_line), lower(' relay ')) OR contains(lower(process.cmd_line), lower(' req ')) OR contains(lower(process.cmd_line), lower(' shadow ')) OR contains(lower(process.cmd_line), lower(' template '))) AND (contains(lower(process.cmd_line), lower(' -bloodhound')) OR contains(lower(process.cmd_line), lower(' -ca-pfx ')) OR contains(lower(process.cmd_line), lower(' -dc-ip ')) OR contains(lower(process.cmd_line), lower(' -kirbi')) OR contains(lower(process.cmd_line), lower(' -old-bloodhound')) OR contains(lower(process.cmd_line), lower(' -pfx ')) OR contains(lower(process.cmd_line), lower(' -target')) OR contains(lower(process.cmd_line), lower(' -template')) OR contains(lower(process.cmd_line), lower(' -username ')) OR contains(lower(process.cmd_line), lower(' -vulnerable')) OR contains(lower(process.cmd_line), lower('auth -pfx')) OR contains(lower(process.cmd_line), lower('shadow auto')) OR contains(lower(process.cmd_line), lower('shadow list')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects Certipy execution, a tool for Active Directory Certificate Services enumeration and abuse based on PE metadata characteristics and common command line arguments.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://github.com/ly4k/Certipy, https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1649"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

@@ -1,20 +1,19 @@
-id: 35f41cd7-c98e-469f-8a02-ec4ba0cc7a7e
 title: PowerShell Write-EventLog Usage
+id: 35f41cd7-c98e-469f-8a02-ec4ba0cc7a7e
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects usage of the "Write-EventLog" cmdlet with 'RawData' flag. The
     cmdlet can be levreage to write malicious payloads to the EventLog and then retrieve
     them later for later use
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2022-08-16'
-tags:
-    - attack.defense-evasion
 references:
     - https://www.blackhillsinfosec.com/windows-event-logs-for-red-teams/
 falsepositives:
     - Legitimate applications writing events via this cmdlet. Investigate alerts to
         determine if the action is benign
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+date: '2022-08-16'
 logsource:
     category: ps_script
     product: windows
@@ -32,13 +31,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:36.510881+00:00'
+            mapped_at: '2025-12-04T01:54:49.904961+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:36.510881+00:00'
+            mapped_at: '2025-12-04T01:54:49.904961+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:36.510904+00:00'
+            mapped_at: '2025-12-04T01:54:49.904977+00:00'

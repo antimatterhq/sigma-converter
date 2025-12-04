@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "F5 BIG-IP iControl Rest API Command Execution - Webserver",
+    "comment": "Detects POST requests to the F5 BIG-IP iControl Rest API \"bash\" endpoint, which allows the execution of commands on the BIG-IP",
+    "annotations": {
+      "source": "sigma",
+      "category": "webserver",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('6') AND lower(http_request.http_method) = lower('post') AND endswith(lower(http_request.args), lower('/mgmt/tm/util/bash')))"
+      }
+    },
+    "output": {
+      "summary": "Detects POST requests to the F5 BIG-IP iControl Rest API \"bash\" endpoint, which allows the execution of commands on the BIG-IP",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate usage of the BIG IP REST API to execute command for administration purposes References: https://f5-sdk.readthedocs.io/en/latest/apidoc/f5.bigip.tm.util.html#module-f5.bigip.tm.util.bash, https://community.f5.com/t5/technical-forum/icontrolrest-11-5-execute-bash-command/td-p/203029, https://community.f5.com/t5/technical-forum/running-bash-commands-via-rest-api/td-p/272516",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1190"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

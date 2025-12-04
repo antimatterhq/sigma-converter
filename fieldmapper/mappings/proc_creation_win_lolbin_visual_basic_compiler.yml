@@ -1,20 +1,19 @@
-id: 7b10f171-7f04-47c7-9fa2-5be43c76e535
 title: Visual Basic Command Line Compiler Usage
+id: 7b10f171-7f04-47c7-9fa2-5be43c76e535
 status: test
 level: high
+author: Ensar Şamil, @sblmsrsn, @oscd_initiative
 description: Detects successful code compilation via Visual Basic Command Line Compiler
     that utilizes Windows Resource to Object Converter.
-author: Ensar Şamil, @sblmsrsn, @oscd_initiative
-date: '2020-10-07'
-modified: '2021-11-27'
-tags:
-    - attack.defense-evasion
-    - attack.t1027.004
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Vbc/
 falsepositives:
     - Utilization of this tool should not be seen in enterprise environment
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1027.004
+date: '2020-10-07'
+modified: '2021-11-27'
 logsource:
     category: process_creation
     product: windows
@@ -30,17 +29,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:28.470533+00:00'
+            mapped_at: '2025-12-04T01:42:44.309785+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:28.470533+00:00'
+            mapped_at: '2025-12-04T01:42:44.309785+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:28.470559+00:00'
+            mapped_at: '2025-12-04T01:42:44.309798+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:28.470563+00:00'
+            mapped_at: '2025-12-04T01:42:44.309800+00:00'

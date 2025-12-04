@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Suspicious MsiExec Embedding Parent",
+    "comment": "Adversaries may abuse msiexec.exe to proxy the execution of malicious payloads",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe'))) AND contains(lower(process.parent_process.cmd_line), lower('msiexec.exe')) AND contains(lower(process.parent_process.cmd_line), lower('-embedding ')) AND NOT (endswith(lower(process.name), lower(':\\\\windows\\\\system32\\\\cmd.exe')) AND contains(lower(process.cmd_line), lower('c:\\\\program files\\\\splunkuniversalforwarder\\\\bin\\\\')) OR contains(lower(process.cmd_line), lower('\\\\dismfodinstall.cmd')) AND contains(lower(process.parent_process.cmd_line), lower('\\\\msiexec.exe -embedding ')) AND contains(lower(process.parent_process.cmd_line), lower('global\\\\msi0000'))))"
+      }
+    },
+    "output": {
+      "summary": "Adversaries may abuse msiexec.exe to proxy the execution of malicious payloads",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1218",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

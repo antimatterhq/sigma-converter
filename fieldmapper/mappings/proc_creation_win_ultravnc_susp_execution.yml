@@ -1,17 +1,11 @@
-id: 871b9555-69ca-4993-99d3-35a59f9f3599
 title: Suspicious UltraVNC Execution
+id: 871b9555-69ca-4993-99d3-35a59f9f3599
 status: test
 level: high
+author: Bhabesh Raj
 description: Detects suspicious UltraVNC command line flag combination that indicate
     a auto reconnect upon execution, e.g. startup (as seen being used by Gamaredon
     threat group)
-author: Bhabesh Raj
-date: '2022-03-04'
-modified: '2022-03-09'
-tags:
-    - attack.lateral-movement
-    - attack.g0047
-    - attack.t1021.005
 references:
     - https://web.archive.org/web/20220224045756/https://www.ria.ee/sites/default/files/content-editors/kuberturve/tale_of_gamaredon_infection.pdf
     - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-gamaredon-espionage-ukraine
@@ -19,7 +13,12 @@ references:
     - https://uvnc.com/docs/uvnc-viewer/52-ultravnc-viewer-commandline-parameters.html
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.g0047
+    - attack.t1021.005
+date: '2022-03-04'
+modified: '2022-03-09'
 logsource:
     category: process_creation
     product: windows
@@ -37,13 +36,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:02.273434+00:00'
+            mapped_at: '2025-12-04T01:44:49.308618+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:02.273434+00:00'
+            mapped_at: '2025-12-04T01:44:49.308618+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:02.273449+00:00'
+            mapped_at: '2025-12-04T01:44:49.308636+00:00'

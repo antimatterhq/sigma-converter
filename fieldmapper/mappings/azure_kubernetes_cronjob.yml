@@ -1,7 +1,8 @@
-id: 1c71e254-6655-42c1-b2d6-5e4718d7fc0a
 title: Azure Kubernetes CronJob
+id: 1c71e254-6655-42c1-b2d6-5e4718d7fc0a
 status: test
 level: medium
+author: Austin Songer @austinsonger
 description: 'Identifies when a Azure Kubernetes CronJob runs in Azure Cloud. Kubernetes
     Job is a controller that creates one or more pods and ensures that a specified
     number of them successfully terminate.
@@ -13,14 +14,6 @@ description: 'Identifies when a Azure Kubernetes CronJob runs in Azure Cloud. Ku
     code that would run as a container in the cluster.
 
     '
-author: Austin Songer @austinsonger
-date: '2021-11-22'
-modified: '2022-12-18'
-tags:
-    - attack.persistence
-    - attack.t1053.003
-    - attack.privilege-escalation
-    - attack.execution
 references:
     - https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
     - https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
@@ -29,7 +22,13 @@ references:
 falsepositives:
     - Azure Kubernetes CronJob/Job may be done by a system administrator.
     - If known behavior is causing false positives, it can be exempted from the rule.
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1053.003
+    - attack.privilege-escalation
+    - attack.execution
+date: '2021-11-22'
+modified: '2022-12-18'
 logsource:
     product: azure
     service: activitylogs
@@ -49,13 +48,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:21:00.394350+00:00'
+            mapped_at: '2025-12-04T01:38:26.022748+00:00'
         service:
             source_field: service
             source_value: activitylogs
-            mapped_at: '2025-11-26T02:21:00.394350+00:00'
+            mapped_at: '2025-12-04T01:38:26.022748+00:00'
     detection_fields:
         -   source_field: operationName
             target_table: entity_management
             target_field: api.operation
-            mapped_at: '2025-11-26T02:21:00.394367+00:00'
+            mapped_at: '2025-12-04T01:38:26.022766+00:00'

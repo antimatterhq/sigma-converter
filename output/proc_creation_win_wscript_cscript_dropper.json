@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Potential Dropper Script Execution Via WScript/CScript",
+    "comment": "Detects wscript/cscript executions of scripts located in user directories",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\wscript.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe'))) AND (contains(lower(process.cmd_line), lower(':\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\tmp\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\users\\\\public\\\\')) OR contains(lower(process.cmd_line), lower(':\\\\windows\\\\temp\\\\')) OR contains(lower(process.cmd_line), lower('\\\\appdata\\\\local\\\\temp\\\\'))) AND (contains(lower(process.cmd_line), lower('.js')) OR contains(lower(process.cmd_line), lower('.jse')) OR contains(lower(process.cmd_line), lower('.vba')) OR contains(lower(process.cmd_line), lower('.vbe')) OR contains(lower(process.cmd_line), lower('.vbs')) OR contains(lower(process.cmd_line), lower('.wsf'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects wscript/cscript executions of scripts located in user directories",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Some installers might generate a similar behavior. An initial baseline is required References: https://thedfirreport.com/2023/10/30/netsupport-intrusion-results-in-domain-compromise/, https://redcanary.com/blog/gootloader/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "005"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

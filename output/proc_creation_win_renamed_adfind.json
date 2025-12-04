@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "name": "Renamed AdFind Execution",
+    "comment": "Detects the use of a renamed Adfind.exe. AdFind continues to be seen across majority of breaches. It is used to domain trust discovery to plan out subsequent steps in the attack chain.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('domainlist')) OR contains(lower(process.cmd_line), lower('trustdmp')) OR contains(lower(process.cmd_line), lower('dcmodes')) OR contains(lower(process.cmd_line), lower('adinfo')) OR contains(lower(process.cmd_line), lower(' dclist ')) OR contains(lower(process.cmd_line), lower('computer_pwdnotreqd')) OR contains(lower(process.cmd_line), lower('objectcategory=')) OR contains(lower(process.cmd_line), lower('-subnets -f')) OR contains(lower(process.cmd_line), lower('name=\"domain admins\"')) OR contains(lower(process.cmd_line), lower('-sc u:')) OR contains(lower(process.cmd_line), lower('domainncs')) OR contains(lower(process.cmd_line), lower('dompol')) OR contains(lower(process.cmd_line), lower(' oudmp ')) OR contains(lower(process.cmd_line), lower('subnetdmp')) OR contains(lower(process.cmd_line), lower('gpodmp')) OR contains(lower(process.cmd_line), lower('fspdmp')) OR contains(lower(process.cmd_line), lower('users_noexpire')) OR contains(lower(process.cmd_line), lower('computers_active')) OR contains(lower(process.cmd_line), lower('computers_pwdnotreqd')) OR contains(lower(process.file.hashes.value), lower('imphash=bca5675746d13a1f246e2da3c2217492')) OR contains(lower(process.file.hashes.value), lower('imphash=53e117a96057eaf19c41380d0e87f1c2')) OR lower(process.file.name) = lower('adfind.exe')) AND NOT endswith(lower(process.name), lower('\\\\adfind.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of a renamed Adfind.exe. AdFind continues to be seen across majority of breaches. It is used to domain trust discovery to plan out subsequent steps in the attack chain.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.joeware.net/freetools/tools/adfind/, https://thedfirreport.com/2020/05/08/adfind-recon/, https://thedfirreport.com/2021/01/11/trickbot-still-alive-and-well/, https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx, https://github.com/center-for-threat-informed-defense/adversary_emulation_library/blob/bf62ece1c679b07b5fb49c4bae947fe24c81811f/fin6/Emulation_Plan/Phase1.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1018"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1069",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1482"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

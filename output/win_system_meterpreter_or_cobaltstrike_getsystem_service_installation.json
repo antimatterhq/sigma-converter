@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "Meterpreter or Cobalt Strike Getsystem Service Installation - System",
+    "comment": "Detects the use of getsystem Meterpreter/Cobalt Strike command by detecting a specific service installation",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "system",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND (contains(lower(process.file.path), lower('/c')) AND contains(lower(process.file.path), lower('echo')) AND contains(lower(process.file.path), lower('\\\\pipe\\\\')) AND (contains(lower(process.file.path), lower('cmd')) OR contains(lower(process.file.path), lower('%comspec%'))) OR contains(lower(process.file.path), lower('rundll32')) AND contains(lower(process.file.path), lower('.dll,a')) AND contains(lower(process.file.path), lower('/p:')) OR startswith(lower(process.file.path), lower('\\\\127.0.0.1\\\\admin$\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects the use of getsystem Meterpreter/Cobalt Strike command by detecting a specific service installation",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unlikely References: https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment, https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1134",
+          "subTechniqueId": "001"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1134",
+          "subTechniqueId": "002"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

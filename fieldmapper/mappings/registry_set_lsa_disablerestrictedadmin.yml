@@ -1,7 +1,8 @@
-id: d6ce7ebd-260b-4323-9768-a9631c8d4db2
 title: RestrictedAdminMode Registry Value Tampering
+id: d6ce7ebd-260b-4323-9768-a9631c8d4db2
 status: test
 level: high
+author: frack113
 description: 'Detects changes to the "DisableRestrictedAdmin" registry value in order
     to disable or enable RestrictedAdmin mode.
 
@@ -12,20 +13,16 @@ description: 'Detects changes to the "DisableRestrictedAdmin" registry value in 
     process if the remote server has been compromise
 
     '
-author: frack113
-date: '2023-01-13'
-modified: '2024-08-23'
-tags:
-    - attack.defense-evasion
-    - attack.t1112
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/a8e3cf63e97b973a25903d3df9fd55da6252e564/atomics/T1112/T1112.md
     - https://social.technet.microsoft.com/wiki/contents/articles/32905.remote-desktop-services-enable-restricted-admin-mode.aspx
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''28ac00d6-22d9-4a3c-927f-bbd770104573''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1112
+date: '2023-01-13'
+modified: '2024-08-23'
 logsource:
     category: registry_set
     product: windows
@@ -33,6 +30,9 @@ detection:
     selection:
         TargetObject|endswith: System\CurrentControlSet\Control\Lsa\DisableRestrictedAdmin
     condition: selection
+related:
+    -   id: 28ac00d6-22d9-4a3c-927f-bbd770104573
+        type: similar
 ocsf_mapping:
     class_name: null
     activity_id: null

@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "name": "NTDS.DIT Creation By Uncommon Process",
+    "comment": "Detects creation of a file named \"ntds.dit\" (Active Directory Database) by an uncommon process or a process located in a suspicious directory",
+    "annotations": {
+      "source": "sigma",
+      "category": "file_event",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(file.path), lower('\\\\ntds.dit')) AND (endswith(lower(actor.process.name), lower('\\\\cmd.exe')) OR endswith(lower(actor.process.name), lower('\\\\cscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\mshta.exe')) OR endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe')) OR endswith(lower(actor.process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(actor.process.name), lower('\\\\rundll32.exe')) OR endswith(lower(actor.process.name), lower('\\\\wscript.exe')) OR endswith(lower(actor.process.name), lower('\\\\wsl.exe')) OR endswith(lower(actor.process.name), lower('\\\\wt.exe')) OR contains(lower(actor.process.name), lower('\\\\appdata\\\\')) OR contains(lower(actor.process.name), lower('\\\\temp\\\\')) OR contains(lower(actor.process.name), lower('\\\\public\\\\')) OR contains(lower(actor.process.name), lower('\\\\perflogs\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects creation of a file named \"ntds.dit\" (Active Directory Database) by an uncommon process or a process located in a suspicious directory",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://stealthbits.com/blog/extracting-password-hashes-from-the-ntds-dit-file/, https://adsecurity.org/?p=2398",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "002"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Credential-Access",
+          "techniqueId": "T1003",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

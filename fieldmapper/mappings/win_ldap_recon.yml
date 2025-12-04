@@ -1,16 +1,9 @@
-id: 31d68132-4038-47c7-8f8e-635a39a7c174
 title: Potential Active Directory Reconnaissance/Enumeration Via LDAP
+id: 31d68132-4038-47c7-8f8e-635a39a7c174
 status: test
 level: medium
-description: Detects potential Active Directory enumeration via LDAP
 author: Adeem Mawani
-date: '2021-06-22'
-modified: '2024-08-27'
-tags:
-    - attack.discovery
-    - attack.t1069.002
-    - attack.t1087.002
-    - attack.t1482
+description: Detects potential Active Directory enumeration via LDAP
 references:
     - https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/hunting-for-reconnaissance-activities-using-ldap-search-filters/ba-p/824726
     - https://github.com/PowerShellMafia/PowerSploit/blob/d943001a7defb5e0d1657085a77a0e78609be58f/Recon/PowerView.ps1
@@ -18,7 +11,13 @@ references:
     - https://medium.com/falconforce/falconfriday-detecting-active-directory-data-collection-0xff21-c22d1a57494c
     - https://github.com/fox-it/BloodHound.py/blob/d65eb614831cd30f26028ccb072f5e77ca287e0b/bloodhound/ad/domain.py#L427
     - https://ipurple.team/2024/07/15/sharphound-detection/
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1069.002
+    - attack.t1087.002
+    - attack.t1482
+date: '2021-06-22'
+modified: '2024-08-27'
 logsource:
     product: windows
     service: ldap
@@ -97,21 +96,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:46:48.136221+00:00'
+            mapped_at: '2025-12-04T01:56:25.744460+00:00'
         service:
             source_field: service
             source_value: ldap
-            mapped_at: '2025-11-26T02:46:48.136221+00:00'
+            mapped_at: '2025-12-04T01:56:25.744460+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: entity_management
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:46:49.284727+00:00'
+            mapped_at: '2025-12-04T01:56:25.744479+00:00'
         -   source_field: SearchFilter
             target_table: entity_management
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:46:49.284741+00:00'
+            mapped_at: '2025-12-04T01:56:25.744481+00:00'
         -   source_field: DistinguishedName
             target_table: entity_management
             target_field: entity.name
-            mapped_at: '2025-11-26T02:46:49.284744+00:00'
+            mapped_at: '2025-12-04T01:56:25.744515+00:00'

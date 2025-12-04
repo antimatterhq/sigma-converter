@@ -1,17 +1,9 @@
-id: b5de2919-b74a-4805-91a7-5049accbaefe
 title: Download From Suspicious TLD - Whitelist
+id: b5de2919-b74a-4805-91a7-5049accbaefe
 status: test
 level: low
-description: Detects executable downloads from suspicious remote systems
 author: Florian Roth (Nextron Systems)
-date: '2017-03-13'
-modified: '2023-05-18'
-tags:
-    - attack.initial-access
-    - attack.t1566
-    - attack.execution
-    - attack.t1203
-    - attack.t1204.002
+description: Detects executable downloads from suspicious remote systems
 references:
     - Internal Research
 fields:
@@ -19,9 +11,14 @@ fields:
     - c-uri
 falsepositives:
     - All kind of software downloads
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''00d0b5ab-1f55-4120-8e83-487c0a7baf19''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.initial-access
+    - attack.t1566
+    - attack.execution
+    - attack.t1203
+    - attack.t1204.002
+date: '2017-03-13'
+modified: '2023-05-18'
 logsource:
     category: proxy
 detection:
@@ -65,6 +62,9 @@ detection:
             - .no
             - .es
     condition: selection and not filter
+related:
+    -   id: 00d0b5ab-1f55-4120-8e83-487c0a7baf19
+        type: similar
 ocsf_mapping:
     class_name: http_activity
     activity_id: 3
@@ -72,13 +72,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: proxy
-            mapped_at: '2025-11-26T02:14:05.845563+00:00'
+            mapped_at: '2025-12-04T01:34:50.824817+00:00'
     detection_fields:
         -   source_field: c-uri-extension
             target_table: http_activity
             target_field: http_request.url
-            mapped_at: '2025-11-26T02:14:06.629853+00:00'
+            mapped_at: '2025-12-04T01:34:50.824834+00:00'
         -   source_field: cs-host
             target_table: http_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:14:06.629879+00:00'
+            mapped_at: '2025-12-04T01:34:50.824836+00:00'

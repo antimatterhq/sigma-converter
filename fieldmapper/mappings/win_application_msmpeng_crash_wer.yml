@@ -1,22 +1,21 @@
-id: 6c82cf5c-090d-4d57-9188-533577631108
 title: Microsoft Malware Protection Engine Crash - WER
+id: 6c82cf5c-090d-4d57-9188-533577631108
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: This rule detects a suspicious crash of the Microsoft Malware Protection
     Engine
-author: Florian Roth (Nextron Systems)
-date: '2017-05-09'
-modified: '2023-04-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1211
-    - attack.t1562.001
 references:
     - https://bugs.chromium.org/p/project-zero/issues/detail?id=1252&desc=5
     - https://technet.microsoft.com/en-us/library/security/4022344
 falsepositives:
     - MsMpEng might crash if the "C:\" partition is full
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1211
+    - attack.t1562.001
+date: '2017-05-09'
+modified: '2023-04-14'
 logsource:
     product: windows
     service: application
@@ -35,21 +34,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:48:59.795989+00:00'
+            mapped_at: '2025-12-04T01:57:36.825444+00:00'
         service:
             source_field: service
             source_value: application
-            mapped_at: '2025-11-26T02:48:59.795989+00:00'
+            mapped_at: '2025-12-04T01:57:36.825444+00:00'
     detection_fields:
         -   source_field: Provider_Name
             target_table: process_activity
             target_field: metadata.log_provider
-            mapped_at: '2025-11-26T02:48:59.796012+00:00'
+            mapped_at: '2025-12-04T01:57:36.825464+00:00'
         -   source_field: EventID
             target_table: process_activity
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:48:59.796014+00:00'
+            mapped_at: '2025-12-04T01:57:36.825467+00:00'
         -   source_field: Data
             target_table: process_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:48:59.796016+00:00'
+            mapped_at: '2025-12-04T01:57:36.825470+00:00'

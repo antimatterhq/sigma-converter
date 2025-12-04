@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Important Scheduled Task Deleted/Disabled",
+    "comment": "Detects when adversaries stop services or processes by deleting or disabling their respective scheduled tasks in order to conduct data destructive activities",
+    "annotations": {
+      "source": "sigma",
+      "product": "windows",
+      "service": "security",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND (lower(LOWER(metadata.event_code)) in (4699, 4701)) AND (contains(lower(job.name), lower('\\\\windows\\\\systemrestore\\\\sr')) OR contains(lower(job.name), lower('\\\\windows\\\\windows defender\\\\')) OR contains(lower(job.name), lower('\\\\windows\\\\bitlocker')) OR contains(lower(job.name), lower('\\\\windows\\\\windowsbackup\\\\')) OR contains(lower(job.name), lower('\\\\windows\\\\windowsupdate\\\\')) OR contains(lower(job.name), lower('\\\\windows\\\\updateorchestrator\\\\schedule')) OR contains(lower(job.name), lower('\\\\windows\\\\exploitguard'))) AND NOT (metadata.event_code = 4699 AND endswith(lower(job.user.name), lower('$')) AND contains(lower(job.name), lower('\\\\windows\\\\windows defender\\\\'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects when adversaries stop services or processes by deleting or disabling their respective scheduled tasks in order to conduct data destructive activities",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4699, https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4701",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1053",
+          "subTechniqueId": "005"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

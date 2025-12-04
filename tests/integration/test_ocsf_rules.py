@@ -1,7 +1,6 @@
 import pytest
 from pathlib import Path
 import tempfile
-import os
 from sigma.rule import SigmaRule
 
 from fieldmapper.ocsf.rules import OCSFLite, SigmaRuleOCSFLite, load_sigma_rules
@@ -662,7 +661,7 @@ class TestMappingCache:
         # Set mapping for Image in process_activity context
         cache.set_detection_field_mapping("process_activity", "Image", {"target_field": "process.name"})
         
-
+        
         # Set mapping for Image in file_activity context (different target!)
         cache.set_detection_field_mapping("file_activity", "Image", {"target_field": "actor.process.name"})
         
@@ -1219,22 +1218,31 @@ ocsf_mapping:
         
         # Build pipeline mappings
         mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
-        result = mappings.field_mappings
         
-        # Assertions
-        assert "EventID" in result
-        assert "event_id" in result["EventID"]
+        # Both rules have same logsource (windows, security) but different tables, so they're conflicted
+        # Check conflicted_rule_field_mappings for both rules
+        rule1_id = "12345678-1234-1234-1234-123456789012"
+        rule2_id = "22345678-1234-1234-1234-123456789012"
         
-        assert "Image" in result
-        assert len(result["Image"]) == 2
-        assert "process.name" in result["Image"]
-        assert "actor.process.name" in result["Image"]
+        # Rule 1 mappings (process_activity)
+        assert rule1_id in mappings.conflicted_rule_field_mappings
+        rule1_mappings = mappings.conflicted_rule_field_mappings[rule1_id]
+        assert "EventID" in rule1_mappings
+        assert rule1_mappings["EventID"] == "event_id"
+        assert "Image" in rule1_mappings
+        assert rule1_mappings["Image"] == "process.name"
+        assert "CommandLine" in rule1_mappings
+        assert rule1_mappings["CommandLine"] == "process.cmd_line"
         
-        assert "CommandLine" in result
-        assert result["CommandLine"] == ["process.cmd_line"]
-        
-        assert "DestinationIp" in result
-        assert result["DestinationIp"] == ["dst_endpoint.ip"]
+        # Rule 2 mappings (network_activity)
+        assert rule2_id in mappings.conflicted_rule_field_mappings
+        rule2_mappings = mappings.conflicted_rule_field_mappings[rule2_id]
+        assert "EventID" in rule2_mappings
+        assert rule2_mappings["EventID"] == "event_id"
+        assert "Image" in rule2_mappings
+        assert rule2_mappings["Image"] == "actor.process.name"
+        assert "DestinationIp" in rule2_mappings
+        assert rule2_mappings["DestinationIp"] == "dst_endpoint.ip"
     
     def test_build_skips_unmapped_fields(self, tmp_path):
         """Test that unmapped fields are excluded."""
@@ -1266,9 +1274,15 @@ ocsf_mapping:
 """)
         
         mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
-        result = mappings.field_mappings
         
+        # Rule has logsource (None, windows, None) - check logsource_field_mappings
+        # Since there's only one rule with this logsource, it's non-conflicted
+        logsource_key = (None, "windows", None)
+        assert logsource_key in mappings.logsource_field_mappings
+        result = mappings.logsource_field_mappings[logsource_key]
         assert "EventID" in result
+        assert result["EventID"] == "event_id"
+        # Check unmapped field is not in mappings
         assert "UnmappedField" not in result
     
     def test_build_empty_directory(self, tmp_path):
@@ -1277,22 +1291,23 @@ ocsf_mapping:
         mappings_dir.mkdir()
         
         mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
-        result = mappings.field_mappings
         
-        assert result == {}
+        # Empty directory should result in empty mappings
+        assert mappings.logsource_field_mappings == {}
+        assert mappings.conflicted_rule_field_mappings == {}
     
     def test_build_nonexistent_directory(self):
         """Test with non-existent directory."""
         with pytest.raises(FileNotFoundError):
             SigmaRuleOCSFLite.build_pipeline_mappings("/nonexistent/path")
     
-    def test_build_returns_sorted_lists(self, tmp_path):
-        """Test that results are sorted for consistency."""
+    def test_build_returns_table_specific_mappings(self, tmp_path):
+        """Test that results are table-specific with consistent structure."""
         mappings_dir = tmp_path / "mappings"
         mappings_dir.mkdir()
         
-        # Create rules that would produce unsorted results
-        for i, target in enumerate(["zzz.field", "aaa.field", "mmm.field"]):
+        # Create rules with different tables
+        for i, (table, field) in enumerate([("table_a", "FieldA"), ("table_b", "FieldB"), ("table_a", "FieldC")]):
             rule = mappings_dir / f"rule{i}.yml"
             rule.write_text(f"""
 title: Test Rule {i}
@@ -1303,18 +1318,35 @@ logsource:
     product: test
 detection:
     selection:
-        TestField: value
+        {field}: value
     condition: selection
 ocsf_mapping:
-    event_class: test
+    event_class: {table}
     detection_fields:
-        - source_field: TestField
-          target_table: test
-          target_field: {target}
+        - source_field: {field}
+          target_table: {table}
+          target_field: target.{field.lower()}
 """)
         
         mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
-        result = mappings.field_mappings
         
-        # Should be sorted
-        assert result["TestField"] == ["aaa.field", "mmm.field", "zzz.field"]
+        # All rules have same logsource (test, None, None) but different tables, so they're conflicted
+        # Check conflicted_rule_field_mappings for each rule
+        rule0_id = "02345678-1234-1234-1234-123456789012"
+        rule1_id = "12345678-1234-1234-1234-123456789012"
+        rule2_id = "22345678-1234-1234-1234-123456789012"
+        
+        # Rule 0: table_a, FieldA
+        assert rule0_id in mappings.conflicted_rule_field_mappings
+        assert "FieldA" in mappings.conflicted_rule_field_mappings[rule0_id]
+        assert mappings.conflicted_rule_field_mappings[rule0_id]["FieldA"] == "target.fielda"
+        
+        # Rule 1: table_b, FieldB
+        assert rule1_id in mappings.conflicted_rule_field_mappings
+        assert "FieldB" in mappings.conflicted_rule_field_mappings[rule1_id]
+        assert mappings.conflicted_rule_field_mappings[rule1_id]["FieldB"] == "target.fieldb"
+        
+        # Rule 2: table_a, FieldC
+        assert rule2_id in mappings.conflicted_rule_field_mappings
+        assert "FieldC" in mappings.conflicted_rule_field_mappings[rule2_id]
+        assert mappings.conflicted_rule_field_mappings[rule2_id]["FieldC"] == "target.fieldc"

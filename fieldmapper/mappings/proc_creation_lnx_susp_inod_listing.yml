@@ -1,14 +1,10 @@
-id: 43e26eb5-cd58-48d1-8ce9-a273f5d298d8
 title: Potential Container Discovery Via Inodes Listing
+id: 43e26eb5-cd58-48d1-8ce9-a273f5d298d8
 status: test
 level: low
+author: Seth Hanford
 description: Detects listing of the inodes of the "/" directory to determine if the
     we are running inside of a container.
-author: Seth Hanford
-date: '2023-08-23'
-tags:
-    - attack.discovery
-    - attack.t1082
 references:
     - https://blog.skyplabs.net/posts/container-detection/
     - https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker
@@ -16,7 +12,10 @@ falsepositives:
     - Legitimate system administrator usage of these commands
     - Some container tools or deployments may use these techniques natively to determine
         how they proceed with execution, and will need to be filtered
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1082
+date: '2023-08-23'
 logsource:
     category: process_creation
     product: linux
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:02.243824+00:00'
+            mapped_at: '2025-12-04T01:36:14.976830+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:02.243824+00:00'
+            mapped_at: '2025-12-04T01:36:14.976830+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:02.243857+00:00'
+            mapped_at: '2025-12-04T01:36:14.976842+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:02.243861+00:00'
+            mapped_at: '2025-12-04T01:36:14.976844+00:00'

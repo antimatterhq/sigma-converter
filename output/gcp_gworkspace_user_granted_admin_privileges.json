@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Google Workspace User Granted Admin Privileges",
+    "comment": "Detects when an Google Workspace user is granted admin privileges.",
+    "annotations": {
+      "source": "sigma",
+      "product": "gcp",
+      "service": "google_workspace.admin",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('3') AND lower(metadata.product.name) = lower('admin.googleapis.com') AND (lower(LOWER(api.operation)) in ('grant_delegated_admin_privileges', 'grant_admin_privilege')))"
+      }
+    },
+    "output": {
+      "summary": "Detects when an Google Workspace user is granted admin privileges.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Google Workspace admin role privileges, may be modified by system administrators. References: https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3, https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-user-settings#GRANT_ADMIN_PRIVILEGE",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1098"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

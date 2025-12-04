@@ -1,15 +1,10 @@
-id: 88d6e60c-759d-4ac1-a447-c0f1466c2d21
 title: Chromium Browser Instance Executed With Custom Extension
+id: 88d6e60c-759d-4ac1-a447-c0f1466c2d21
 status: test
 level: medium
+author: Aedan Russell, frack113, X__Junior (Nextron Systems)
 description: Detects a Chromium based browser process with the 'load-extension' flag
     to start a instance with a custom extension
-author: Aedan Russell, frack113, X__Junior (Nextron Systems)
-date: '2022-06-19'
-modified: '2023-11-28'
-tags:
-    - attack.persistence
-    - attack.t1176
 references:
     - https://redcanary.com/blog/chromeloader/
     - https://emkc.org/s/RJjuLa
@@ -17,9 +12,11 @@ references:
 falsepositives:
     - Usage of Chrome Extensions in testing tools such as BurpSuite will trigger this
         alert
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''27ba3207-dd30-4812-abbf-5d20c57d474e''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.persistence
+    - attack.t1176
+date: '2022-06-19'
+modified: '2023-11-28'
 logsource:
     category: process_creation
     product: windows
@@ -33,6 +30,9 @@ detection:
             - \vivaldi.exe
         CommandLine|contains: --load-extension=
     condition: selection
+related:
+    -   id: 27ba3207-dd30-4812-abbf-5d20c57d474e
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -40,17 +40,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:50.529787+00:00'
+            mapped_at: '2025-12-04T01:43:07.097426+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:50.529787+00:00'
+            mapped_at: '2025-12-04T01:43:07.097426+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:50.529815+00:00'
+            mapped_at: '2025-12-04T01:43:07.097440+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:50.529819+00:00'
+            mapped_at: '2025-12-04T01:43:07.097441+00:00'

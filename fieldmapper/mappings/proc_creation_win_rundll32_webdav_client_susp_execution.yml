@@ -1,20 +1,14 @@
-id: 982e9f2d-1a85-4d5b-aea4-31f5e97c6555
 title: Suspicious WebDav Client Execution Via Rundll32.EXE
+id: 982e9f2d-1a85-4d5b-aea4-31f5e97c6555
 status: test
 level: high
+author: Nasreddine Bencherchali (Nextron Systems), Florian Roth (Nextron Systems)
 description: 'Detects "svchost.exe" spawning "rundll32.exe" with command arguments
     like C:\windows\system32\davclnt.dll,DavSetCookie. This could be an indicator
     of exfiltration or use of WebDav to launch code (hosted on WebDav Server) or potentially
     a sign of exploitation of CVE-2023-23397
 
     '
-author: Nasreddine Bencherchali (Nextron Systems), Florian Roth (Nextron Systems)
-date: '2023-03-16'
-modified: '2023-09-18'
-tags:
-    - attack.exfiltration
-    - attack.t1048.003
-    - cve.2023-23397
 references:
     - https://twitter.com/aceresponder/status/1636116096506818562
     - https://www.mdsec.co.uk/2023/03/exploiting-cve-2023-23397-microsoft-outlook-elevation-of-privilege-vulnerability/
@@ -23,7 +17,12 @@ references:
     - https://www.microsoft.com/en-us/security/blog/2023/03/24/guidance-for-investigating-attacks-using-cve-2023-23397/
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+    - cve.2023-23397
+date: '2023-03-16'
+modified: '2023-09-18'
 logsource:
     category: process_creation
     product: windows
@@ -64,25 +63,25 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:32:41.695586+00:00'
+            mapped_at: '2025-12-04T01:47:07.897416+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:32:41.695586+00:00'
+            mapped_at: '2025-12-04T01:47:07.897416+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:32:41.695614+00:00'
+            mapped_at: '2025-12-04T01:47:07.897432+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:32:41.695618+00:00'
+            mapped_at: '2025-12-04T01:47:07.897433+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:32:41.695621+00:00'
+            mapped_at: '2025-12-04T01:47:07.897435+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:32:41.695623+00:00'
+            mapped_at: '2025-12-04T01:47:07.897436+00:00'

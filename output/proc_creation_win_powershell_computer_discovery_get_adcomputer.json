@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Computer Discovery And Export Via Get-ADComputer Cmdlet",
+    "comment": "Detects usage of the Get-ADComputer cmdlet to collect computer information and output it to a file",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND contains(lower(process.cmd_line), lower('get-adcomputer ')) AND contains(lower(process.cmd_line), lower(' -filter *')) AND (contains(lower(process.cmd_line), lower(' > ')) OR contains(lower(process.cmd_line), lower(' | select ')) OR contains(lower(process.cmd_line), lower('out-file')) OR contains(lower(process.cmd_line), lower('set-content')) OR contains(lower(process.cmd_line), lower('add-content'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects usage of the Get-ADComputer cmdlet to collect computer information and output it to a file",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate admin scripts may use the same technique, it's better to exclude specific computers or users who execute these commands or scripts often References: http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html, https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/, https://www.cisa.gov/uscert/sites/default/files/publications/aa22-320a_joint_csa_iranian_government-sponsored_apt_actors_compromise_federal%20network_deploy_crypto%20miner_credential_harvester.pdf",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Discovery",
+          "techniqueId": "T1033"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

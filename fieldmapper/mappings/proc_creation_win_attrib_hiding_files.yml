@@ -1,14 +1,9 @@
-id: 4281cb20-2994-4580-aa63-c8b86d019934
 title: Hiding Files with Attrib.exe
+id: 4281cb20-2994-4580-aa63-c8b86d019934
 status: test
 level: medium
-description: Detects usage of attrib.exe to hide files from users.
 author: Sami Ruohonen
-date: '2019-01-16'
-modified: '2023-03-14'
-tags:
-    - attack.defense-evasion
-    - attack.t1564.001
+description: Detects usage of attrib.exe to hide files from users.
 references:
     - https://unit42.paloaltonetworks.com/unit42-sure-ill-take-new-combojack-malware-alters-clipboards-steal-cryptocurrency/
     - https://www.uptycs.com/blog/lolbins-are-no-laughing-matter
@@ -16,7 +11,11 @@ falsepositives:
     - IgfxCUIService.exe hiding *.cui files via .bat script (attrib.exe a child of
         cmd.exe and igfxCUIService.exe is the parent of the cmd.exe)
     - Msiexec.exe hiding desktop.ini
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1564.001
+date: '2019-01-16'
+modified: '2023-03-14'
 logsource:
     category: process_creation
     product: windows
@@ -40,29 +39,29 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:00.859732+00:00'
+            mapped_at: '2025-12-04T01:44:48.378706+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:00.859732+00:00'
+            mapped_at: '2025-12-04T01:44:48.378706+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:00.859753+00:00'
+            mapped_at: '2025-12-04T01:44:48.378733+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:00.859757+00:00'
+            mapped_at: '2025-12-04T01:44:48.378735+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:00.859759+00:00'
+            mapped_at: '2025-12-04T01:44:48.378736+00:00'
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:30:00.859761+00:00'
+            mapped_at: '2025-12-04T01:44:48.378738+00:00'
         -   source_field: ParentCommandLine
             target_table: process_activity
             target_field: process.parent_process.cmd_line
-            mapped_at: '2025-11-26T02:30:00.859764+00:00'
+            mapped_at: '2025-12-04T01:44:48.378739+00:00'

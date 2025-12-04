@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Linux Webshell Indicators",
+    "comment": "Detects suspicious sub processes of web server processes",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "linux",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('/httpd')) OR endswith(lower(process.parent_process.name), lower('/lighttpd')) OR endswith(lower(process.parent_process.name), lower('/nginx')) OR endswith(lower(process.parent_process.name), lower('/apache2')) OR endswith(lower(process.parent_process.name), lower('/node')) OR endswith(lower(process.parent_process.name), lower('/caddy')) OR contains(lower(process.parent_process.cmd_line), lower('/bin/java')) AND contains(lower(process.parent_process.cmd_line), lower('tomcat')) OR contains(lower(process.parent_process.cmd_line), lower('/bin/java')) AND contains(lower(process.parent_process.cmd_line), lower('websphere'))) AND (endswith(lower(process.name), lower('/whoami')) OR endswith(lower(process.name), lower('/ifconfig')) OR endswith(lower(process.name), lower('/ip')) OR endswith(lower(process.name), lower('/bin/uname')) OR endswith(lower(process.name), lower('/bin/cat')) OR endswith(lower(process.name), lower('/bin/crontab')) OR endswith(lower(process.name), lower('/hostname')) OR endswith(lower(process.name), lower('/iptables')) OR endswith(lower(process.name), lower('/netstat')) OR endswith(lower(process.name), lower('/pwd')) OR endswith(lower(process.name), lower('/route'))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious sub processes of web server processes",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Web applications that invoke Linux command line tools References: https://www.acunetix.com/blog/articles/web-shells-101-using-php-introduction-web-shells-part-2/, https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Persistence",
+          "techniqueId": "T1505",
+          "subTechniqueId": "003"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

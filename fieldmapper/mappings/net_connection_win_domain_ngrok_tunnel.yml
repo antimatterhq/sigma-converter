@@ -1,7 +1,8 @@
-id: 1d08ac94-400d-4469-a82f-daee9a908849
 title: Communication To Ngrok Tunneling Service Initiated
+id: 1d08ac94-400d-4469-a82f-daee9a908849
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: 'Detects an executable initiating a network connection to "ngrok" tunneling
     domains.
 
@@ -12,9 +13,11 @@ description: 'Detects an executable initiating a network connection to "ngrok" t
     of either data exfiltration by malicious actors or additional download.
 
     '
-author: Florian Roth (Nextron Systems)
-date: '2022-11-03'
-modified: '2024-02-02'
+references:
+    - https://twitter.com/hakluke/status/1587733971814977537/photo/1
+    - https://ngrok.com/docs/secure-tunnels/tunnels/ssh-reverse-tunnel-agent
+falsepositives:
+    - Legitimate use of the ngrok service.
 tags:
     - attack.exfiltration
     - attack.command-and-control
@@ -24,14 +27,8 @@ tags:
     - attack.t1090
     - attack.t1102
     - attack.s0508
-references:
-    - https://twitter.com/hakluke/status/1587733971814977537/photo/1
-    - https://ngrok.com/docs/secure-tunnels/tunnels/ssh-reverse-tunnel-agent
-falsepositives:
-    - Legitimate use of the ngrok service.
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''18249279-932f-45e2-b37a-8925f2597670''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+date: '2022-11-03'
+modified: '2024-02-02'
 logsource:
     category: network_connection
     product: windows
@@ -46,6 +43,9 @@ detection:
             - tunnel.jp.ngrok.com
             - tunnel.in.ngrok.com
     condition: selection
+related:
+    -   id: 18249279-932f-45e2-b37a-8925f2597670
+        type: similar
 ocsf_mapping:
     class_name: network_activity
     activity_id: 1
@@ -53,13 +53,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:02.530000+00:00'
+            mapped_at: '2025-12-04T01:51:29.383294+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:02.530000+00:00'
+            mapped_at: '2025-12-04T01:51:29.383294+00:00'
     detection_fields:
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:02.530014+00:00'
+            mapped_at: '2025-12-04T01:51:29.383309+00:00'

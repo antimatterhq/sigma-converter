@@ -1,24 +1,23 @@
-id: 9eb99343-d336-4020-a3cd-67f3819e68ee
 title: Account Tampering - Suspicious Failed Logon Reasons
+id: 9eb99343-d336-4020-a3cd-67f3819e68ee
 status: test
 level: medium
+author: Florian Roth (Nextron Systems)
 description: This method uses uncommon error codes on failed logons to determine suspicious
     activity and tampering with accounts that have been disabled or somehow restricted.
-author: Florian Roth (Nextron Systems)
-date: '2017-02-19'
-modified: '2022-06-29'
+references:
+    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625
+    - https://twitter.com/SBousseaden/status/1101431884540710913
+falsepositives:
+    - User using a disabled account
 tags:
     - attack.persistence
     - attack.defense-evasion
     - attack.privilege-escalation
     - attack.initial-access
     - attack.t1078
-references:
-    - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625
-    - https://twitter.com/SBousseaden/status/1101431884540710913
-falsepositives:
-    - User using a disabled account
-taxonomy: sigma
+date: '2017-02-19'
+modified: '2022-06-29'
 logsource:
     product: windows
     service: security
@@ -44,21 +43,21 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:45:09.706549+00:00'
+            mapped_at: '2025-12-04T01:55:43.986502+00:00'
         service:
             source_field: service
             source_value: security
-            mapped_at: '2025-11-26T02:45:09.706549+00:00'
+            mapped_at: '2025-12-04T01:55:43.986502+00:00'
     detection_fields:
         -   source_field: EventID
             target_table: authentication
             target_field: metadata.event_code
-            mapped_at: '2025-11-26T02:45:10.913731+00:00'
+            mapped_at: '2025-12-04T01:55:43.986517+00:00'
         -   source_field: Status
             target_table: authentication
             target_field: status_code
-            mapped_at: '2025-11-26T02:45:10.913755+00:00'
+            mapped_at: '2025-12-04T01:55:43.986519+00:00'
         -   source_field: SubjectUserSid
             target_table: authentication
             target_field: actor.user.uid
-            mapped_at: '2025-11-26T02:45:10.913760+00:00'
+            mapped_at: '2025-12-04T01:55:43.986520+00:00'

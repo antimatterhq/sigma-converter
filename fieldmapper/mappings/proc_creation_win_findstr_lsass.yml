@@ -1,20 +1,19 @@
-id: fe63010f-8823-4864-a96b-a7b4a0f7b929
 title: LSASS Process Reconnaissance Via Findstr.EXE
+id: fe63010f-8823-4864-a96b-a7b4a0f7b929
 status: experimental
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects findstring commands that include the keyword lsass, which indicates
     recon actviity for the LSASS process PID
-author: Florian Roth (Nextron Systems)
-date: '2022-08-12'
-modified: '2024-06-04'
-tags:
-    - attack.credential-access
-    - attack.t1552.006
 references:
     - https://blog.talosintelligence.com/2022/08/recent-cyber-attack.html?m=1
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1552.006
+date: '2022-08-12'
+modified: '2024-06-04'
 logsource:
     category: process_creation
     product: windows
@@ -44,21 +43,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:26:07.518886+00:00'
+            mapped_at: '2025-12-04T01:41:34.360969+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:26:07.518886+00:00'
+            mapped_at: '2025-12-04T01:41:34.360969+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:26:07.518916+00:00'
+            mapped_at: '2025-12-04T01:41:34.360999+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:26:07.518921+00:00'
+            mapped_at: '2025-12-04T01:41:34.361001+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:26:07.518925+00:00'
+            mapped_at: '2025-12-04T01:41:34.361003+00:00'

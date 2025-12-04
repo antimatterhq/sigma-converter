@@ -1,20 +1,19 @@
-id: c3dbbc9f-ef1d-470a-a90a-d343448d5875
 title: Suspicious Non-Browser Network Communication With Telegram API
+id: c3dbbc9f-ef1d-470a-a90a-d343448d5875
 status: test
 level: medium
+author: Nasreddine Bencherchali (Nextron Systems)
 description: Detects an a non-browser process interacting with the Telegram API which
     could indicate use of a covert C2
-author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-05-19'
-tags:
-    - attack.command-and-control
-    - attack.t1102
 references:
     - https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/small-sieve/NCSC-MAR-Small-Sieve.pdf
 falsepositives:
     - Legitimate applications communicating with the Telegram API e.g. web browsers
         not in the exclusion list, app with an RSS  etc.
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1102
+date: '2023-05-19'
 logsource:
     category: network_connection
     product: windows
@@ -68,17 +67,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:36.584175+00:00'
+            mapped_at: '2025-12-04T01:51:39.993451+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:36.584175+00:00'
+            mapped_at: '2025-12-04T01:51:39.993451+00:00'
     detection_fields:
         -   source_field: DestinationHostname
             target_table: network_activity
             target_field: dst_endpoint.hostname
-            mapped_at: '2025-11-26T02:38:36.584189+00:00'
+            mapped_at: '2025-12-04T01:51:39.993473+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:36.584191+00:00'
+            mapped_at: '2025-12-04T01:51:39.993476+00:00'

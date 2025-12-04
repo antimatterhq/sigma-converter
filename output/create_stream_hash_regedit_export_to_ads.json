@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Exports Registry Key To an Alternate Data Stream",
+    "comment": "Exports the target Registry key and hides it in the specified alternate data stream.",
+    "annotations": {
+      "source": "sigma",
+      "category": "create_stream_hash",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (endswith(lower(process.name), lower('\\\\regedit.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Exports the target Registry key and hides it in the specified alternate data stream.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: TargetFilename False positive: Unknown References: https://lolbas-project.github.io/lolbas/Binaries/Regedit/, https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1564",
+          "subTechniqueId": "004"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

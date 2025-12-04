@@ -1,17 +1,9 @@
-id: 8a582fe2-0882-4b89-a82a-da6b2dc32937
 title: Suspicious WmiPrvSE Child Process
+id: 8a582fe2-0882-4b89-a82a-da6b2dc32937
 status: test
 level: high
-description: Detects suspicious and uncommon child processes of WmiPrvSE
 author: Vadim Khrykov (ThreatIntel), Cyb3rEng, Florian Roth (Nextron Systems)
-date: '2021-08-23'
-modified: '2023-11-10'
-tags:
-    - attack.execution
-    - attack.defense-evasion
-    - attack.t1047
-    - attack.t1204.002
-    - attack.t1218.010
+description: Detects suspicious and uncommon child processes of WmiPrvSE
 references:
     - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
     - https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml
@@ -19,11 +11,14 @@ references:
     - https://twitter.com/ForensicITGuy/status/1334734244120309760
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''692f0bec-83ba-4d04-af7e-e884a96059b6''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''d21374ff-f574-44a7-9998-4a8c8bf33d7d''),
-    type=<SigmaRelatedType.SIMILAR: 6>), SigmaRelatedItem(id=UUID(''18cf6cf0-39b0-4c22-9593-e244bdc9a2d4''),
-    type=<SigmaRelatedType.OBSOLETE: 4>)])'
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.defense-evasion
+    - attack.t1047
+    - attack.t1204.002
+    - attack.t1218.010
+date: '2021-08-23'
+modified: '2023-11-10'
 logsource:
     category: process_creation
     product: windows
@@ -58,6 +53,13 @@ detection:
         Image|endswith: \msiexec.exe
         CommandLine|contains: '/i '
     condition: selection_parent and 1 of selection_children_* and not 1 of filter_main_*
+related:
+    -   id: 692f0bec-83ba-4d04-af7e-e884a96059b6
+        type: similar
+    -   id: d21374ff-f574-44a7-9998-4a8c8bf33d7d
+        type: similar
+    -   id: 18cf6cf0-39b0-4c22-9593-e244bdc9a2d4
+        type: obsolete
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -65,21 +67,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:27:55.727160+00:00'
+            mapped_at: '2025-12-04T01:43:12.087286+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:27:55.727160+00:00'
+            mapped_at: '2025-12-04T01:43:12.087286+00:00'
     detection_fields:
         -   source_field: ParentImage
             target_table: process_activity
             target_field: process.parent_process.name
-            mapped_at: '2025-11-26T02:27:55.727188+00:00'
+            mapped_at: '2025-12-04T01:43:12.087302+00:00'
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:27:55.727192+00:00'
+            mapped_at: '2025-12-04T01:43:12.087304+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:27:55.727195+00:00'
+            mapped_at: '2025-12-04T01:43:12.087305+00:00'

@@ -1,18 +1,14 @@
-id: 12fbff88-16b5-4b42-9754-cd001a789fb3
 title: CodePage Modification Via MODE.COM To Russian Language
+id: 12fbff88-16b5-4b42-9754-cd001a789fb3
 status: test
 level: medium
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
 description: 'Detects a CodePage modification using the "mode.com" utility to Russian
     language.
 
     This behavior has been used by threat actors behind Dharma ransomware.
 
     '
-author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2024-01-17'
-tags:
-    - attack.defense-evasion
-    - attack.t1036
 references:
     - https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mode
@@ -20,9 +16,10 @@ references:
     - https://www.virustotal.com/gui/file/5e75ef02517afd6e8ba6462b19217dc4a5a574abb33d10eb0f2bab49d8d48c22/behavior
 falsepositives:
     - Russian speaking people changing the CodePage
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''d48c5ffa-3b02-4c0f-9a9e-3c275650dd0e''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1036
+date: '2024-01-17'
 logsource:
     category: process_creation
     product: windows
@@ -39,6 +36,9 @@ detection:
             - =1251
             - =866
     condition: all of selection_*
+related:
+    -   id: d48c5ffa-3b02-4c0f-9a9e-3c275650dd0e
+        type: derived
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -46,21 +46,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:30:30.724573+00:00'
+            mapped_at: '2025-12-04T01:45:10.811295+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:30:30.724573+00:00'
+            mapped_at: '2025-12-04T01:45:10.811295+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:30:30.724586+00:00'
+            mapped_at: '2025-12-04T01:45:10.811310+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:30:30.724589+00:00'
+            mapped_at: '2025-12-04T01:45:10.811312+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:30:30.724590+00:00'
+            mapped_at: '2025-12-04T01:45:10.811314+00:00'

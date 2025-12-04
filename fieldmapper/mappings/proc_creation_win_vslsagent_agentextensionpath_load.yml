@@ -1,14 +1,10 @@
-id: 43103702-5886-11ed-9b6a-0242ac120002
 title: Suspicious Vsls-Agent Command With AgentExtensionPath Load
+id: 43103702-5886-11ed-9b6a-0242ac120002
 status: test
 level: medium
+author: bohops
 description: Detects Microsoft Visual Studio vsls-agent.exe lolbin execution with
     a suspicious library load using the --agentExtensionPath parameter
-author: bohops
-date: '2022-10-30'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://twitter.com/bohops/status/1583916360404729857
 fields:
@@ -16,7 +12,10 @@ fields:
     - ParentCommandLine
 falsepositives:
     - False positives depend on custom use of vsls-agent.exe
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2022-10-30'
 logsource:
     category: process_creation
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:36:12.353396+00:00'
+            mapped_at: '2025-12-04T01:49:54.971125+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:36:12.353396+00:00'
+            mapped_at: '2025-12-04T01:49:54.971125+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:36:12.353409+00:00'
+            mapped_at: '2025-12-04T01:49:54.971141+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:36:12.353411+00:00'
+            mapped_at: '2025-12-04T01:49:54.971142+00:00'

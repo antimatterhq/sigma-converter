@@ -1,20 +1,19 @@
-id: ceb55fd0-726e-4656-bf4e-b585b7f7d572
 title: Suspicious Inbox Manipulation Rules
+id: ceb55fd0-726e-4656-bf4e-b585b7f7d572
 status: test
 level: high
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
 description: Detects suspicious rules that delete or move messages or folders are
     set on a user's inbox.
-author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
-date: '2023-09-03'
-tags:
-    - attack.t1140
-    - attack.defense-evasion
 references:
     - https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#suspicious-inbox-manipulation-rules
     - https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins
 falsepositives:
     - Actual mailbox rules that are moving items based on their workflow.
-taxonomy: sigma
+tags:
+    - attack.t1140
+    - attack.defense-evasion
+date: '2023-09-03'
 logsource:
     product: azure
     service: riskdetection
@@ -29,13 +28,13 @@ ocsf_mapping:
         product:
             source_field: product
             source_value: azure
-            mapped_at: '2025-11-26T02:19:00.083996+00:00'
+            mapped_at: '2025-12-04T01:37:29.665951+00:00'
         service:
             source_field: service
             source_value: riskdetection
-            mapped_at: '2025-11-26T02:19:00.083996+00:00'
+            mapped_at: '2025-12-04T01:37:29.665951+00:00'
     detection_fields:
         -   source_field: riskEventType
             target_table: user_access
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:19:00.084019+00:00'
+            mapped_at: '2025-12-04T01:37:29.665978+00:00'

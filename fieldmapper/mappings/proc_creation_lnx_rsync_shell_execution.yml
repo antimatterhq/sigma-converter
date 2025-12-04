@@ -1,22 +1,21 @@
-id: e2326866-609f-4015-aea9-7ec634e8aa04
 title: Shell Execution via Rsync - Linux
+id: e2326866-609f-4015-aea9-7ec634e8aa04
 status: experimental
 level: high
+author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
 description: 'Detects the use of the "gcc" utility to execute a shell. Such behavior
     may be associated with privilege escalation, unauthorized command execution, or
     to break out from restricted environments.
 
     '
-author: Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)
-date: '2024-09-02'
-tags:
-    - attack.execution
-    - attack.t1059
 references:
     - https://gtfobins.github.io/gtfobins/rsync/#shell
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.execution
+    - attack.t1059
+date: '2024-09-02'
 logsource:
     category: process_creation
     product: linux
@@ -38,17 +37,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:23.883954+00:00'
+            mapped_at: '2025-12-04T01:36:30.591472+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:23.883954+00:00'
+            mapped_at: '2025-12-04T01:36:30.591472+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:23.883977+00:00'
+            mapped_at: '2025-12-04T01:36:30.591493+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:23.883980+00:00'
+            mapped_at: '2025-12-04T01:36:30.591497+00:00'

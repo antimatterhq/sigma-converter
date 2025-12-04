@@ -1,21 +1,20 @@
-id: 84c174ab-d3ef-481f-9c86-a50d0b8e3edb
 title: PowerShell Get-Process LSASS in ScriptBlock
+id: 84c174ab-d3ef-481f-9c86-a50d0b8e3edb
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects a Get-Process command on lsass process, which is in almost all
     cases a sign of malicious activity
-author: Florian Roth (Nextron Systems)
-date: '2021-04-23'
-modified: '2022-12-25'
-tags:
-    - attack.credential-access
-    - attack.t1003.001
 references:
     - https://web.archive.org/web/20220205033028/https://twitter.com/PythonResponder/status/1385064506049630211
 falsepositives:
     - Legitimate certificate exports invoked by administrators or users (depends on
         processes in the environment - filter if unusable)
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+date: '2021-04-23'
+modified: '2022-12-25'
 logsource:
     category: ps_script
     product: windows
@@ -31,13 +30,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: ps_script
-            mapped_at: '2025-11-26T02:42:24.285744+00:00'
+            mapped_at: '2025-12-04T01:54:34.055430+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:42:24.285744+00:00'
+            mapped_at: '2025-12-04T01:54:34.055430+00:00'
     detection_fields:
         -   source_field: ScriptBlockText
             target_table: script_activity
             target_field: script.script_content.value
-            mapped_at: '2025-11-26T02:42:24.285756+00:00'
+            mapped_at: '2025-12-04T01:54:34.055512+00:00'

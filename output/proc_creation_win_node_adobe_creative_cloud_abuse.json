@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "name": "Node Process Executions",
+    "comment": "Detects the execution of other scripts using the Node executable packaged with Adobe Creative Cloud",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\adobe creative cloud experience\\\\libs\\\\node.exe')) AND NOT contains(lower(process.cmd_line), lower('adobe creative cloud experience\\\\js')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of other scripts using the Node executable packaged with Adobe Creative Cloud",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "Examine fields: process.name, process.cmd_line, process.parent_process.cmd_line False positive: Unknown Reference: https://twitter.com/mttaggart/status/1511804863293784064",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1127"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1059",
+          "subTechniqueId": "007"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

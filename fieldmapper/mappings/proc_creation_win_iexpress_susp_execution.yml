@@ -1,20 +1,15 @@
-id: b2b048b0-7857-4380-b0fb-d3f0ab820b71
 title: Self Extracting Package Creation Via Iexpress.EXE From Potentially Suspicious
     Location
+id: b2b048b0-7857-4380-b0fb-d3f0ab820b71
 status: experimental
 level: high
+author: Joseliyo Sanchez, @Joseliyo_Jstnk, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects the use of iexpress.exe to create binaries via Self Extraction
     Directive (SED) files located in potentially suspicious locations.
 
     This behavior has been observed in-the-wild by different threat actors.
 
     '
-author: Joseliyo Sanchez, @Joseliyo_Jstnk, Nasreddine Bencherchali (Nextron Systems)
-date: '2024-02-05'
-modified: '2024-06-04'
-tags:
-    - attack.defense-evasion
-    - attack.t1218
 references:
     - https://strontic.github.io/xcyclopedia/library/iexpress.exe-D594B2A33EFAFD0EABF09E3FDC05FCEA.html
     - https://en.wikipedia.org/wiki/IExpress
@@ -22,7 +17,11 @@ references:
     - https://www.virustotal.com/gui/file/602f4ae507fa8de57ada079adff25a6c2a899bd25cd092d0af7e62cdb619c93c/behavior
 falsepositives:
     - Administrators building packages using iexpress.exe
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218
+date: '2024-02-05'
+modified: '2024-06-04'
 logsource:
     category: process_creation
     product: windows
@@ -48,21 +47,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:53.032290+00:00'
+            mapped_at: '2025-12-04T01:43:56.018642+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:53.032290+00:00'
+            mapped_at: '2025-12-04T01:43:56.018642+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:28:53.032320+00:00'
+            mapped_at: '2025-12-04T01:43:56.018656+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:28:53.032324+00:00'
+            mapped_at: '2025-12-04T01:43:56.018658+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:53.032328+00:00'
+            mapped_at: '2025-12-04T01:43:56.018659+00:00'

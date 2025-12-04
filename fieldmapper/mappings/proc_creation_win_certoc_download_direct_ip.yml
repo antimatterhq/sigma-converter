@@ -1,21 +1,18 @@
-id: b86f6dea-0b2f-41f5-bdcc-a057bd19cd6a
 title: File Download From IP Based URL Via CertOC.EXE
+id: b86f6dea-0b2f-41f5-bdcc-a057bd19cd6a
 status: test
 level: high
-description: Detects when a user downloads a file from an IP based URL using CertOC.exe
 author: Nasreddine Bencherchali (Nextron Systems)
-date: '2023-10-18'
-tags:
-    - attack.command-and-control
-    - attack.execution
-    - attack.t1105
+description: Detects when a user downloads a file from an IP based URL using CertOC.exe
 references:
     - https://lolbas-project.github.io/lolbas/Binaries/Certoc/
 falsepositives:
     - Unknown
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''70ad0861-d1fe-491c-a45f-fa48148a300d''),
-    type=<SigmaRelatedType.SIMILAR: 6>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.execution
+    - attack.t1105
+date: '2023-10-18'
 logsource:
     category: process_creation
     product: windows
@@ -28,6 +25,9 @@ detection:
     selection_cli:
         CommandLine|contains: -GetCACAPS
     condition: all of selection*
+related:
+    -   id: 70ad0861-d1fe-491c-a45f-fa48148a300d
+        type: similar
 ocsf_mapping:
     class_name: process_activity
     activity_id: 1
@@ -35,21 +35,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:31:14.578422+00:00'
+            mapped_at: '2025-12-04T01:45:47.982334+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:31:14.578422+00:00'
+            mapped_at: '2025-12-04T01:45:47.982334+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:31:14.578443+00:00'
+            mapped_at: '2025-12-04T01:45:47.982351+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:31:14.578446+00:00'
+            mapped_at: '2025-12-04T01:45:47.982353+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:31:14.578448+00:00'
+            mapped_at: '2025-12-04T01:45:47.982354+00:00'

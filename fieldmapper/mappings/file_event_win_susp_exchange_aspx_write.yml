@@ -1,22 +1,21 @@
-id: 7280c9f3-a5af-45d0-916a-bc01cb4151c9
 title: Suspicious MSExchangeMailboxReplication ASPX Write
+id: 7280c9f3-a5af-45d0-916a-bc01cb4151c9
 status: test
 level: high
+author: Florian Roth (Nextron Systems)
 description: Detects suspicious activity in which the MSExchangeMailboxReplication
     process writes .asp and .apsx files to disk, which could be a sign of ProxyShell
     exploitation
-author: Florian Roth (Nextron Systems)
-date: '2022-02-25'
+references:
+    - https://redcanary.com/blog/blackbyte-ransomware/
+falsepositives:
+    - Unknown
 tags:
     - attack.initial-access
     - attack.t1190
     - attack.persistence
     - attack.t1505.003
-references:
-    - https://redcanary.com/blog/blackbyte-ransomware/
-falsepositives:
-    - Unknown
-taxonomy: sigma
+date: '2022-02-25'
 logsource:
     category: file_event
     product: windows
@@ -34,17 +33,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: file_event
-            mapped_at: '2025-11-26T02:39:08.998890+00:00'
+            mapped_at: '2025-12-04T01:51:59.442251+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:39:08.998890+00:00'
+            mapped_at: '2025-12-04T01:51:59.442251+00:00'
     detection_fields:
         -   source_field: Image
             target_table: file_activity
             target_field: actor.process.name
-            mapped_at: '2025-11-26T02:39:08.998901+00:00'
+            mapped_at: '2025-12-04T01:51:59.442308+00:00'
         -   source_field: TargetFilename
             target_table: file_activity
             target_field: file.path
-            mapped_at: '2025-11-26T02:39:08.998903+00:00'
+            mapped_at: '2025-12-04T01:51:59.442312+00:00'

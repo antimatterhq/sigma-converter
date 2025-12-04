@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Browser Execution In Headless Mode",
+    "comment": "Detects execution of Chromium based browser in headless mode",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\brave.exe')) OR endswith(lower(process.name), lower('\\\\chrome.exe')) OR endswith(lower(process.name), lower('\\\\msedge.exe')) OR endswith(lower(process.name), lower('\\\\opera.exe')) OR endswith(lower(process.name), lower('\\\\vivaldi.exe'))) AND contains(lower(process.cmd_line), lower('--headless')))"
+      }
+    },
+    "output": {
+      "summary": "Detects execution of Chromium based browser in headless mode",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://twitter.com/mrd0x/status/1478234484881436672?s=12, https://www.trendmicro.com/en_us/research/23/e/managed-xdr-investigation-of-ducktail-in-trend-micro-vision-one.html",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Command-And-Control",
+          "techniqueId": "T1105"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

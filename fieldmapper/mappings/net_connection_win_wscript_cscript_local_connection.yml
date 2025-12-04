@@ -1,24 +1,21 @@
-id: 08249dc0-a28d-4555-8ba5-9255a198e08c
 title: Local Network Connection Initiated By Script Interpreter
+id: 08249dc0-a28d-4555-8ba5-9255a198e08c
 status: test
 level: medium
+author: frack113
 description: 'Detects a script interpreter (Wscript/Cscript) initiating a local network
     connection to download or execute a script hosted on a shared folder.
 
     '
-author: frack113
-date: '2022-08-28'
-modified: '2024-05-31'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/28d190330fe44de6ff4767fc400cc10fa7cd6540/atomics/T1105/T1105.md
 falsepositives:
     - Legitimate scripts
-related: 'SigmaRelated(related=[SigmaRelatedItem(id=UUID(''992a6cae-db6a-43c8-9cec-76d7195c96fc''),
-    type=<SigmaRelatedType.DERIVED: 2>)])'
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-08-28'
+modified: '2024-05-31'
 logsource:
     category: network_connection
     product: windows
@@ -38,6 +35,9 @@ detection:
             - fe80::/10
             - fc00::/7
     condition: selection
+related:
+    -   id: 992a6cae-db6a-43c8-9cec-76d7195c96fc
+        type: derived
 ocsf_mapping:
     class_name: network_activity
     activity_id: 1
@@ -45,21 +45,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:38:03.131352+00:00'
+            mapped_at: '2025-12-04T01:51:29.861085+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:38:03.131352+00:00'
+            mapped_at: '2025-12-04T01:51:29.861085+00:00'
     detection_fields:
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:03.131367+00:00'
+            mapped_at: '2025-12-04T01:51:29.861097+00:00'
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:38:03.131369+00:00'
+            mapped_at: '2025-12-04T01:51:29.861099+00:00'
         -   source_field: DestinationIp
             target_table: network_activity
             target_field: dst_endpoint.ip
-            mapped_at: '2025-11-26T02:38:03.131370+00:00'
+            mapped_at: '2025-12-04T01:51:29.861100+00:00'

@@ -1,24 +1,23 @@
-id: 6812a10b-60ea-420c-832f-dfcc33b646ba
 title: Potential PowerShell Execution Via DLL
+id: 6812a10b-60ea-420c-832f-dfcc33b646ba
 status: test
 level: high
+author: Markus Neis, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects potential PowerShell execution from a DLL instead of the usual
     PowerShell process as seen used in PowerShdll.
 
     This detection assumes that PowerShell commands are passed via the CommandLine.
 
     '
-author: Markus Neis, Nasreddine Bencherchali (Nextron Systems)
-date: '2018-08-25'
-modified: '2024-03-07'
-tags:
-    - attack.defense-evasion
-    - attack.t1218.011
 references:
     - https://github.com/p3nt4/PowerShdll/blob/62cfa172fb4e1f7f4ac00ca942685baeb88ff356/README.md
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.defense-evasion
+    - attack.t1218.011
+date: '2018-08-25'
+modified: '2024-03-07'
 logsource:
     category: process_creation
     product: windows
@@ -53,21 +52,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:37:01.656466+00:00'
+            mapped_at: '2025-12-04T01:50:43.206989+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:01.656466+00:00'
+            mapped_at: '2025-12-04T01:50:43.206989+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:37:01.656487+00:00'
+            mapped_at: '2025-12-04T01:50:43.207004+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:37:01.656490+00:00'
+            mapped_at: '2025-12-04T01:50:43.207006+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:37:01.656492+00:00'
+            mapped_at: '2025-12-04T01:50:43.207008+00:00'

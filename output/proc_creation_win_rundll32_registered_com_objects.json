@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "name": "Rundll32 Registered COM Objects",
+    "comment": "load malicious registered COM objects",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\rundll32.exe')) AND lower(process.file.name) = lower('rundll32.exe') AND (contains(lower(process.cmd_line), lower('-sta ')) OR contains(lower(process.cmd_line), lower('-localserver '))) AND contains(lower(process.cmd_line), lower('{')) AND contains(lower(process.cmd_line), lower('}')))"
+      }
+    },
+    "output": {
+      "summary": "load malicious registered COM objects",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use References: https://nasbench.medium.com/a-deep-dive-into-rundll32-exe-642344b41e90, https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.015/T1546.015.md",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Privilege-Escalation",
+          "techniqueId": "T1546",
+          "subTechniqueId": "015"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

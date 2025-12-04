@@ -1,7 +1,8 @@
-id: ba1f7802-adc7-48b4-9ecb-81e227fddfd5
 title: Potential Network Sniffing Activity Using Network Tools
+id: ba1f7802-adc7-48b4-9ecb-81e227fddfd5
 status: test
 level: medium
+author: Timur Zinniatullin, oscd.community, Nasreddine Bencherchali (Nextron Systems)
 description: 'Detects potential network sniffing via use of network tools such as
     "tshark", "windump".
 
@@ -13,18 +14,16 @@ description: 'Detects potential network sniffing via use of network tools such a
     amount of data.
 
     '
-author: Timur Zinniatullin, oscd.community, Nasreddine Bencherchali (Nextron Systems)
-date: '2019-10-21'
-modified: '2023-02-20'
-tags:
-    - attack.credential-access
-    - attack.discovery
-    - attack.t1040
 references:
     - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1040/T1040.md
 falsepositives:
     - Legitimate administration activity to troubleshoot network issues
-taxonomy: sigma
+tags:
+    - attack.credential-access
+    - attack.discovery
+    - attack.t1040
+date: '2019-10-21'
+modified: '2023-02-20'
 logsource:
     category: process_creation
     product: windows
@@ -42,17 +41,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:33:14.920824+00:00'
+            mapped_at: '2025-12-04T01:47:34.108991+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:33:14.920824+00:00'
+            mapped_at: '2025-12-04T01:47:34.108991+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:33:14.920851+00:00'
+            mapped_at: '2025-12-04T01:47:34.109013+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:33:14.920855+00:00'
+            mapped_at: '2025-12-04T01:47:34.109015+00:00'

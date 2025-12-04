@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "name": "Use of FSharp Interpreters",
+    "comment": "Detects the execution of FSharp Interpreters \"FsiAnyCpu.exe\" and \"FSi.exe\" Both can be used for AWL bypass and to execute F# code via scripts or inline.",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "test"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\fsi.exe')) OR endswith(lower(process.name), lower('\\\\fsianycpu.exe'))) AND (lower(LOWER(process.file.name)) in ('fsi\\.exe', 'fsianycpu\\.exe')))"
+      }
+    },
+    "output": {
+      "summary": "Detects the execution of FSharp Interpreters \"FsiAnyCpu.exe\" and \"FSi.exe\" Both can be used for AWL bypass and to execute F# code via scripts or inline.",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "Medium",
+      "fidelity": "Investigative",
+      "objective": "False positive: Legitimate use by a software developer. References: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac, https://bohops.com/2020/11/02/exploring-the-wdac-microsoft-recommended-block-rules-part-ii-wfc-fsi/, https://lolbas-project.github.io/lolbas/OtherMSBinaries/FsiAnyCpu/, https://lolbas-project.github.io/lolbas/OtherMSBinaries/Fsi/",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Execution",
+          "techniqueId": "T1059"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

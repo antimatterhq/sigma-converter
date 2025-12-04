@@ -1,23 +1,22 @@
-id: 0dba975d-a193-4ed1-a067-424df57570d1
 title: Uncommon Network Connection Initiated By Certutil.EXE
+id: 0dba975d-a193-4ed1-a067-424df57570d1
 status: test
 level: high
+author: frack113, Florian Roth (Nextron Systems)
 description: 'Detects a network connection initiated by the certutil.exe utility.
 
     Attackers can abuse the utility in order to download malware or additional payloads.
 
     '
-author: frack113, Florian Roth (Nextron Systems)
-date: '2022-09-02'
-modified: '2024-05-31'
-tags:
-    - attack.command-and-control
-    - attack.t1105
 references:
     - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2022-09-02'
+modified: '2024-05-31'
 logsource:
     category: network_connection
     product: windows
@@ -38,21 +37,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: network_connection
-            mapped_at: '2025-11-26T02:37:55.418298+00:00'
+            mapped_at: '2025-12-04T01:51:25.315020+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:37:55.418298+00:00'
+            mapped_at: '2025-12-04T01:51:25.315020+00:00'
     detection_fields:
         -   source_field: Image
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:55.418309+00:00'
+            mapped_at: '2025-12-04T01:51:25.315036+00:00'
         -   source_field: Initiated
             target_table: network_activity
             target_field: <UNMAPPED>
-            mapped_at: '2025-11-26T02:37:55.418310+00:00'
+            mapped_at: '2025-12-04T01:51:25.315038+00:00'
         -   source_field: DestinationPort
             target_table: network_activity
             target_field: dst_endpoint.port
-            mapped_at: '2025-11-26T02:37:55.418312+00:00'
+            mapped_at: '2025-12-04T01:51:25.315040+00:00'

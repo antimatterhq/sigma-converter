@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "Suspicious Child Process Of Wermgr.EXE",
+    "comment": "Detects suspicious Windows Error Reporting manager (wermgr.exe) child process",
+    "annotations": {
+      "source": "sigma",
+      "category": "process_creation",
+      "product": "windows",
+      "sigma_status": "experimental"
+    }
+  },
+  "spec": {
+    "schedule": {
+      "atLeastEvery": "15m",
+      "enabled": true
+    },
+    "input": {
+      "batch": {
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\wermgr.exe')) AND (endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\cscript.exe')) OR endswith(lower(process.name), lower('\\\\ipconfig.exe')) OR endswith(lower(process.name), lower('\\\\mshta.exe')) OR endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe')) OR endswith(lower(process.name), lower('\\\\netstat.exe')) OR endswith(lower(process.name), lower('\\\\nslookup.exe')) OR endswith(lower(process.name), lower('\\\\powershell_ise.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe')) OR endswith(lower(process.name), lower('\\\\regsvr32.exe')) OR endswith(lower(process.name), lower('\\\\rundll32.exe')) OR endswith(lower(process.name), lower('\\\\systeminfo.exe')) OR endswith(lower(process.name), lower('\\\\whoami.exe')) OR endswith(lower(process.name), lower('\\\\wscript.exe'))) AND NOT (endswith(lower(process.name), lower('\\\\rundll32.exe')) AND contains(lower(process.cmd_line), lower('c:\\\\windows\\\\system32\\\\werconcpl.dll')) AND contains(lower(process.cmd_line), lower('launchercapp ')) AND (contains(lower(process.cmd_line), lower('-queuereporting')) OR contains(lower(process.cmd_line), lower('-responsepester')))))"
+      }
+    },
+    "output": {
+      "summary": "Detects suspicious Windows Error Reporting manager (wermgr.exe) child process",
+      "defaultContext": true
+    },
+    "metadata": {
+      "version": 1.0,
+      "severity": "High",
+      "fidelity": "Investigative",
+      "objective": "False positive: Unknown References: https://www.trendmicro.com/en_us/research/22/j/black-basta-infiltrates-networks-via-qakbot-brute-ratel-and-coba.html, https://www.echotrail.io/insights/search/wermgr.exe, https://github.com/binderlabs/DirCreate2System",
+      "mitre": [
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1055"
+        },
+        {
+          "taxonomy": "MITRE ATT&CK",
+          "tactic": "Defense-Evasion",
+          "techniqueId": "T1036"
+        }
+      ]
+    },
+    "computeMode": "high"
+  },
+  "apiVersion": "v1",
+  "kind": "Rule"
+}

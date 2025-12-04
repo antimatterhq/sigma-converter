@@ -1,14 +1,10 @@
-id: 11701de9-d5a5-44aa-8238-84252f131895
 title: Docker Container Discovery Via Dockerenv Listing
+id: 11701de9-d5a5-44aa-8238-84252f131895
 status: test
 level: low
+author: Seth Hanford
 description: Detects listing or file reading of ".dockerenv" which can be a sing of
     potential container discovery
-author: Seth Hanford
-date: '2023-08-23'
-tags:
-    - attack.discovery
-    - attack.t1082
 references:
     - https://blog.skyplabs.net/posts/container-detection/
     - https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker
@@ -16,7 +12,10 @@ falsepositives:
     - Legitimate system administrator usage of these commands
     - Some container tools or deployments may use these techniques natively to determine
         how they proceed with execution, and will need to be filtered
-taxonomy: sigma
+tags:
+    - attack.discovery
+    - attack.t1082
+date: '2023-08-23'
 logsource:
     category: process_creation
     product: linux
@@ -39,17 +38,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:17:02.804362+00:00'
+            mapped_at: '2025-12-04T01:36:15.619220+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:17:02.804362+00:00'
+            mapped_at: '2025-12-04T01:36:15.619220+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:17:02.804379+00:00'
+            mapped_at: '2025-12-04T01:36:15.619237+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:17:02.804382+00:00'
+            mapped_at: '2025-12-04T01:36:15.619239+00:00'

@@ -1,20 +1,19 @@
-id: 77df53a5-1d78-4f32-bc5a-0e7465bd8f41
 title: Portable Gpg.EXE Execution
+id: 77df53a5-1d78-4f32-bc5a-0e7465bd8f41
 status: test
 level: medium
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
 description: Detects the execution of "gpg.exe" from uncommon location. Often used
     by ransomware and loaders to decrypt/encrypt data.
-author: frack113, Nasreddine Bencherchali (Nextron Systems)
-date: '2023-08-06'
-modified: '2023-11-10'
-tags:
-    - attack.impact
-    - attack.t1486
 references:
     - https://www.trendmicro.com/vinfo/vn/threat-encyclopedia/malware/ransom.bat.zarlock.a
     - https://securelist.com/locked-out/68960/
     - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1486/T1486.md
-taxonomy: sigma
+tags:
+    - attack.impact
+    - attack.t1486
+date: '2023-08-06'
+modified: '2023-11-10'
 logsource:
     category: process_creation
     product: windows
@@ -39,21 +38,21 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:29:38.319504+00:00'
+            mapped_at: '2025-12-04T01:44:32.724762+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:29:38.319504+00:00'
+            mapped_at: '2025-12-04T01:44:32.724762+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:29:38.319521+00:00'
+            mapped_at: '2025-12-04T01:44:32.724993+00:00'
         -   source_field: OriginalFileName
             target_table: process_activity
             target_field: process.file.name
-            mapped_at: '2025-11-26T02:29:38.319523+00:00'
+            mapped_at: '2025-12-04T01:44:32.725247+00:00'
         -   source_field: Description
             target_table: process_activity
             target_field: device.desc
-            mapped_at: '2025-11-26T02:29:38.319525+00:00'
+            mapped_at: '2025-12-04T01:44:32.725332+00:00'

@@ -1,13 +1,9 @@
-id: cf610c15-ed71-46e1-bdf8-2bd1a99de6c4
 title: Download File To Potentially Suspicious Directory Via Wget
+id: cf610c15-ed71-46e1-bdf8-2bd1a99de6c4
 status: test
 level: medium
-description: Detects the use of wget to download content to a suspicious directory
 author: Joseliyo Sanchez, @Joseliyo_Jstnk
-date: '2023-06-02'
-tags:
-    - attack.command-and-control
-    - attack.t1105
+description: Detects the use of wget to download content to a suspicious directory
 references:
     - https://blogs.jpcert.or.jp/en/2023/05/gobrat.html
     - https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/
@@ -15,7 +11,10 @@ references:
     - https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection
 falsepositives:
     - Unknown
-taxonomy: sigma
+tags:
+    - attack.command-and-control
+    - attack.t1105
+date: '2023-06-02'
 logsource:
     category: process_creation
     product: linux
@@ -35,17 +34,17 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:16:56.998644+00:00'
+            mapped_at: '2025-12-04T01:36:11.471834+00:00'
         product:
             source_field: product
             source_value: linux
-            mapped_at: '2025-11-26T02:16:56.998644+00:00'
+            mapped_at: '2025-12-04T01:36:11.471834+00:00'
     detection_fields:
         -   source_field: Image
             target_table: process_activity
             target_field: process.name
-            mapped_at: '2025-11-26T02:16:56.998678+00:00'
+            mapped_at: '2025-12-04T01:36:11.471873+00:00'
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:16:56.998683+00:00'
+            mapped_at: '2025-12-04T01:36:11.471874+00:00'

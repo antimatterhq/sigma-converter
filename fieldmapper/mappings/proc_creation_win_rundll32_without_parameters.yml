@@ -1,18 +1,10 @@
-id: 5bb68627-3198-40ca-b458-49f973db8752
 title: Rundll32 Execution Without Parameters
+id: 5bb68627-3198-40ca-b458-49f973db8752
 status: test
 level: high
+author: Bartlomiej Czyz, Relativity
 description: Detects rundll32 execution without parameters as observed when running
     Metasploit windows/smb/psexec exploit module
-author: Bartlomiej Czyz, Relativity
-date: '2021-01-31'
-modified: '2023-02-28'
-tags:
-    - attack.lateral-movement
-    - attack.t1021.002
-    - attack.t1570
-    - attack.execution
-    - attack.t1569.002
 references:
     - https://bczyz1.github.io/2021/01/30/psexec.html
 fields:
@@ -23,7 +15,14 @@ fields:
     - ParentImage
 falsepositives:
     - False positives may occur if a user called rundll32 from CLI with no options
-taxonomy: sigma
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+    - attack.t1570
+    - attack.execution
+    - attack.t1569.002
+date: '2021-01-31'
+modified: '2023-02-28'
 logsource:
     category: process_creation
     product: windows
@@ -40,13 +39,13 @@ ocsf_mapping:
         category:
             source_field: category
             source_value: process_creation
-            mapped_at: '2025-11-26T02:28:04.580323+00:00'
+            mapped_at: '2025-12-04T01:43:18.471351+00:00'
         product:
             source_field: product
             source_value: windows
-            mapped_at: '2025-11-26T02:28:04.580323+00:00'
+            mapped_at: '2025-12-04T01:43:18.471351+00:00'
     detection_fields:
         -   source_field: CommandLine
             target_table: process_activity
             target_field: process.cmd_line
-            mapped_at: '2025-11-26T02:28:04.580350+00:00'
+            mapped_at: '2025-12-04T01:43:18.471367+00:00'
