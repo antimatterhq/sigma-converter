@@ -63,7 +63,7 @@ def test_databricks_sigma_and_expression(databricks_sigma_backend_no_validation:
                 condition: sel
         """),
         output_format="default"
-    ) == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea') AND lower(fieldB) = lower('valueb'))"]
+    ) == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea') AND lower(fieldB) = lower('valueb'))"]
 
 
 def test_databricks_sigma_or_expression(databricks_sigma_backend_no_validation: DatabricksBackend):
@@ -81,7 +81,7 @@ def test_databricks_sigma_or_expression(databricks_sigma_backend_no_validation: 
                     fieldB: valueB
                 condition: 1 of sel*
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea') OR lower(fieldB) = lower('valueb'))"]
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea') OR lower(fieldB) = lower('valueb'))"]
 
 
 def test_databricks_sigma_match_with_dot_string(databricks_sigma_backend_no_validation: DatabricksBackend):
@@ -99,7 +99,7 @@ def test_databricks_sigma_match_with_dot_string(databricks_sigma_backend_no_vali
                     fieldB: valueB
                 condition: 1 of sel*
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('value.a') OR lower(fieldB) = lower('valueb'))"]
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('value.a') OR lower(fieldB) = lower('valueb'))"]
 
 
 def test_databricks_sigma_and_or_expression(databricks_sigma_backend_no_validation: DatabricksBackend):
@@ -121,7 +121,7 @@ def test_databricks_sigma_and_or_expression(databricks_sigma_backend_no_validati
                         - valueB2
                 condition: sel
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND ((lower(LOWER(fieldA)) in ('valuea1', 'valuea2')) AND "
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(fieldA)) in ('valuea1', 'valuea2')) AND "
           "(lower(LOWER(fieldB)) in ('valueb1', 'valueb2')))"]
 
 
@@ -142,7 +142,7 @@ def test_databricks_sigma_or_and_expression(databricks_sigma_backend_no_validati
                     fieldB: valueB2
                 condition: 1 of sel*
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea1') AND lower(fieldB) = lower('valueb1') OR lower(fieldA) = lower('valuea2') "
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea1') AND lower(fieldB) = lower('valueb1') OR lower(fieldA) = lower('valuea2') "
           "AND lower(fieldB) = lower('valueb2'))"]
 
 
@@ -162,7 +162,7 @@ def test_databricks_sigma_in_expression(databricks_sigma_backend_no_validation: 
                         - valueC*
                 condition: sel
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea') OR lower(fieldA) = lower('valueb') OR "
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(fieldA) = lower('valuea') OR lower(fieldA) = lower('valueb') OR "
           "startswith(lower(fieldA), lower('valuec')))"]
 
 
@@ -180,7 +180,7 @@ def test_databricks_sigma_regex_query(databricks_sigma_backend_no_validation: Da
                     fieldB: foo
                 condition: sel
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo'))"]
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (fieldA rlike 'foo.*bar' AND lower(fieldB) = lower('foo'))"]
 
 
 def test_databricks_sigma_regex_query_flags(databricks_sigma_backend_no_validation: DatabricksBackend):
@@ -197,7 +197,7 @@ def test_databricks_sigma_regex_query_flags(databricks_sigma_backend_no_validati
                     fieldB: foo
                 condition: sel
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (fieldA rlike '(?i)foo.*bar' AND lower(fieldB) = lower('foo'))"]
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (fieldA rlike '(?i)foo.*bar' AND lower(fieldB) = lower('foo'))"]
 
 
 def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend_no_validation: DatabricksBackend):
@@ -213,7 +213,7 @@ def test_databricks_sigma_field_name_with_whitespace(databricks_sigma_backend_no
                     field name: value
                 condition: sel
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (lower(`field name`) = lower('value'))"]
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(`field name`) = lower('value'))"]
 
 
 def test_databricks_sigma_field_name_with_period(databricks_sigma_backend_no_validation: DatabricksBackend):
@@ -230,7 +230,7 @@ def test_databricks_sigma_field_name_with_period(databricks_sigma_backend_no_val
                         - value1
                 condition: sel
         """)
-    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24h AND CURRENT_TIMESTAMP() AND (lower(responseElements.publiclyAccessible) = lower('value1'))"]
+    , output_format="default") == ["SELECT * FROM None WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(responseElements.publiclyAccessible) = lower('value1'))"]
 
 
 # CIDR matching tests
