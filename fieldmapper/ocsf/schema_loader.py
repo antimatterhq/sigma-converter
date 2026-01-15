@@ -26,10 +26,15 @@ class OCSFLiteSchema:
         # Index for fast lookup
         self.event_classes = {ec["event_class"]: ec for ec in self.schema}
         self.field_index = {}  # event_class -> {field_path: field_info}
+        self.node_index = {}   # event_class -> {node_path: node_info}
         
         for ec in self.schema:
             self.field_index[ec["event_class"]] = {
                 f["path"]: f for f in ec["fields"]
+            }
+            nodes = ec.get("nodes", [])
+            self.node_index[ec["event_class"]] = {
+                n["path"]: n for n in nodes
             }
     
     def get_event_class_names(self) -> List[str]:

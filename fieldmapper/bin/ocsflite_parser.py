@@ -773,41 +773,54 @@ class Table:
     def render_to_ai_schema(self, directory: Directory, dictionary: OCSFDictionary) -> dict:
         """
         Render table schema in a format optimized for AI prompts.
-        Returns flattened dot-notation field paths with types and descriptions.
+        Keeps leaf-only 'fields' for compatibility and adds 'nodes' for full path typing.
         """
         if self.attributes is None:
             self.build(directory, dictionary)
         if self.name == "":
             raise Exception("Table name cannot be empty")
         
-        def flatten_field(field: Field, prefix: str = "") -> list:
-            """Recursively flatten struct fields into dot-notation paths."""
-            results = []
+        def walk_fields(field: Field, prefix: str = "") -> tuple[list, list]:
+            """Return (fields, nodes) for the given field subtree."""
             field_path = f"{prefix}.{field.name()}" if prefix else field.name()
+            nodes = [{
+                "path": field_path,
+                "type": field.type(),
+                "description": field.description
+            }]
+            fields = []
             
             if isinstance(field, FieldStruct):
-                # Recurse into struct - handles nested objects
                 for child in field.content:
-                    results.extend(flatten_field(child, field_path))
+                    child_fields, child_nodes = walk_fields(child, field_path)
+                    fields.extend(child_fields)
+                    nodes.extend(child_nodes)
             else:
-                # Primitive field - add to results
-                results.append({
+                fields.append({
                     "path": field_path,
                     "type": field.type(),
                     "description": field.description
                 })
             
-            return results
+            return fields, nodes
         
-        # Flatten all fields
         all_fields = []
+        all_nodes = []
         for attribute in self.attributes:
-            all_fields.extend(flatten_field(attribute))
+            fields, nodes = walk_fields(attribute)
+            all_fields.extend(fields)
+            all_nodes.extend(nodes)
+        
+        # Deduplicate nodes by path (keep first occurrence)
+        node_index = {}
+        for node in all_nodes:
+            node_index.setdefault(node["path"], node)
         
         return {
             "event_class": self.name,
             "description": self.description,
-            "fields": all_fields
+            "fields": all_fields,
+            "nodes": list(node_index.values())
         }
 
 
