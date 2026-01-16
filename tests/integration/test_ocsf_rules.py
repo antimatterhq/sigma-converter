@@ -1350,3 +1350,168 @@ ocsf_mapping:
         assert rule2_id in mappings.conflicted_rule_field_mappings
         assert "FieldC" in mappings.conflicted_rule_field_mappings[rule2_id]
         assert mappings.conflicted_rule_field_mappings[rule2_id]["FieldC"] == "target.fieldc"
+
+
+class TestPipelineMappingsFieldTypes:
+    """Tests for field type mappings generated from the OCSF schema."""
+
+    def test_build_field_types_from_schema(self, tmp_path):
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+
+        rule = mappings_dir / "rule.yml"
+        rule.write_text("""
+title: Type Mapping Rule
+id: 62345678-1234-1234-1234-123456789012
+status: test
+description: Rule with type-mapped fields
+logsource:
+    product: windows
+detection:
+    selection:
+        ProcessId: 123
+        CommandLine: test
+        Time: "2024-01-01T00:00:00Z"
+        Tags: Admin
+        UnknownField: foo
+    condition: selection
+ocsf_mapping:
+    event_class: process_activity
+    detection_fields:
+        - source_field: ProcessId
+          target_table: process_activity
+          target_field: process.pid
+        - source_field: CommandLine
+          target_table: process_activity
+          target_field: process.cmd_line
+        - source_field: Time
+          target_table: process_activity
+          target_field: time
+        - source_field: Tags
+          target_table: process_activity
+          target_field: metadata.tags
+        - source_field: UnknownField
+          target_table: process_activity
+          target_field: unknown.field
+""")
+
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        logsource_key = (None, "windows", None)
+
+        assert logsource_key in mappings.logsource_field_type_mappings
+        field_types = mappings.logsource_field_type_mappings[logsource_key]
+
+        assert field_types["process.pid"] == "INT"
+        assert field_types["process.cmd_line"] == "STRING"
+        assert field_types["time"] == "TIMESTAMP"
+        assert field_types["metadata.tags"] == "VARIANT"
+        assert "unknown.field" not in field_types
+
+    def test_build_field_types_normalizes_and_arrays(self, tmp_path):
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+
+        rule_ssh = mappings_dir / "rule_ssh.yml"
+        rule_ssh.write_text("""
+title: SSH Type Rule
+id: 72345678-1234-1234-1234-123456789012
+status: test
+logsource:
+    product: ssh
+    service: auth
+detection:
+    selection:
+        TypeUid: 1
+    condition: selection
+ocsf_mapping:
+    event_class: ssh_activity
+    detection_fields:
+        - source_field: TypeUid
+          target_table: ssh_activity
+          target_field: type_uid
+""")
+
+        rule_dns = mappings_dir / "rule_dns.yml"
+        rule_dns.write_text("""
+title: DNS Array Rule
+id: 82345678-1234-1234-1234-123456789012
+status: test
+logsource:
+    product: dns
+    service: resolver
+detection:
+    selection:
+        Flags: test
+        FlagIds: 1
+    condition: selection
+ocsf_mapping:
+    event_class: dns_activity
+    detection_fields:
+        - source_field: Flags
+          target_table: dns_activity
+          target_field: answers.flags
+        - source_field: FlagIds
+          target_table: dns_activity
+          target_field: answers.flag_ids
+""")
+
+        rule_vuln = mappings_dir / "rule_vuln.yml"
+        rule_vuln.write_text("""
+title: Vulnerability Array Rule
+id: 92345678-1234-1234-1234-123456789012
+status: test
+logsource:
+    product: vuln
+    service: scanner
+detection:
+    selection:
+        Related: abc
+    condition: selection
+ocsf_mapping:
+    event_class: vulnerability_finding
+    detection_fields:
+        - source_field: Related
+          target_table: vulnerability_finding
+          target_field: finding_info.analytic.related_analytics
+""")
+
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+
+        key_ssh = (None, "ssh", "auth")
+        key_dns = (None, "dns", "resolver")
+        key_vuln = (None, "vuln", "scanner")
+
+        assert mappings.logsource_field_type_mappings[key_ssh]["type_uid"] == "BIGINT"
+        assert mappings.logsource_field_type_mappings[key_dns]["answers.flags"] == "ARRAY<STRING>"
+        assert mappings.logsource_field_type_mappings[key_dns]["answers.flag_ids"] == "ARRAY<INT>"
+        assert mappings.logsource_field_type_mappings[key_vuln]["finding_info.analytic.related_analytics"] == "ARRAY<VARIANT>"
+
+    def test_build_field_parent_info_arrays(self, tmp_path):
+        mappings_dir = tmp_path / "mappings"
+        mappings_dir.mkdir()
+
+        rule = mappings_dir / "rule_auth.yml"
+        rule.write_text("""
+title: Auth Array Parent Rule
+id: a2345678-1234-1234-1234-123456789012
+status: test
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    selection:
+        Status: success
+    condition: selection
+ocsf_mapping:
+    event_class: authentication
+    detection_fields:
+        - source_field: Status
+          target_table: authentication
+          target_field: actor.authorizations.decision
+""")
+
+        mappings = SigmaRuleOCSFLite.build_pipeline_mappings(str(mappings_dir))
+        key_auth = (None, "m365", "threat_management")
+        parent_info = mappings.logsource_field_parent_mappings[key_auth]["actor.authorizations.decision"]
+        assert parent_info["parent_path"] == "actor.authorizations"
+        assert parent_info["parent_type"] == "ARRAY<STRUCT>"

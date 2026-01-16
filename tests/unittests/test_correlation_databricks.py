@@ -99,6 +99,45 @@ correlation:
     assert "PARTITION BY user_name, src_ip" in correlation_query
 
 
+def test_event_count_groupby_ignores_field_types():
+    """Test that group-by fields do not use custom field types."""
+    backend = DatabricksBackend()
+
+    rule_yaml = """
+title: Test Process Rule
+id: 52345678-1234-1234-1234-123456789abc
+logsource:
+    category: process_creation
+detection:
+    selection:
+        process.pid: 123
+    condition: selection
+"""
+
+    correlation_yaml = """
+title: Process Correlation
+correlation:
+    type: event_count
+    rules:
+        - 52345678-1234-1234-1234-123456789abc
+    group-by:
+        - process.pid
+    timespan: 5m
+    condition:
+        gte: 2
+"""
+
+    collection = SigmaCollection.from_yaml(rule_yaml + "\n---\n" + correlation_yaml)
+    collection.rules[0].custom_attributes['table'] = 'process_activity'
+    collection.rules[1].custom_attributes['field_types'] = {'process.pid': 'INT'}
+
+    result = backend.convert(collection, output_format="default")
+    correlation_query = result[-1]
+
+    assert "PARTITION BY process.pid" in correlation_query
+    assert "CAST(process.pid AS INT)" not in correlation_query
+
+
 def test_event_count_multi_rule():
     """Test event_count correlation with multiple rules"""
     backend = DatabricksBackend()

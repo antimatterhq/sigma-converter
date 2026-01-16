@@ -1,7 +1,7 @@
 import re
 import json
 import warnings
-from typing import Pattern, Union, ClassVar, Tuple, List, Dict, Any, Optional
+from typing import Pattern, Union, ClassVar, Tuple, List, Dict, Any, Optional, Set
 
 from sigma.conditions import ConditionItem, ConditionOR, ConditionAND, ConditionNOT, \
     ConditionFieldEqualsValueExpression
@@ -10,7 +10,7 @@ from sigma.conversion.deferred import DeferredQueryExpression
 from sigma.conversion.state import ConversionState
 from sigma.processing.pipeline import ProcessingPipeline
 from sigma.rule import SigmaRule
-from sigma.types import SigmaCompareExpression, SigmaString, SigmaCasedString, SigmaNumber
+from sigma.types import SigmaCompareExpression, SigmaString, SigmaCasedString, SigmaNumber, SigmaBool
 from sigma.types import SpecialChars
 
 from sigma.validation import SigmaValidator
@@ -70,6 +70,27 @@ class DatabricksBaseBackend(TextQueryBackend):
         self.catalog = catalog
         self.schema = schema
         self.time_filter = time_filter
+
+        # Track rule-specific custom attributes for type-aware conversions
+        self._current_rule_custom_attributes: Optional[Dict[str, Any]] = None
+
+    def convert_rule(self, rule: SigmaRule, output_format: Optional[str] = None) -> List[Any]:
+        """Capture per-rule custom attributes for type-aware conversions."""
+        previous = self._current_rule_custom_attributes
+        try:
+            self._current_rule_custom_attributes = rule.custom_attributes
+            return super().convert_rule(rule, output_format)
+        finally:
+            self._current_rule_custom_attributes = previous
+
+    def convert_correlation_rule(self, rule, output_format: Optional[str] = None, method: Optional[str] = None) -> List[Any]:
+        """Capture correlation rule custom attributes for type-aware conversions."""
+        previous = self._current_rule_custom_attributes
+        try:
+            self._current_rule_custom_attributes = getattr(rule, "custom_attributes", {})
+            return super().convert_correlation_rule(rule, output_format, method)
+        finally:
+            self._current_rule_custom_attributes = previous
 
     def convert(self, rule, output_format: Optional[str] = None, correlation_method: Optional[str] = None, **kwargs):
         """
@@ -177,6 +198,23 @@ class DatabricksBaseBackend(TextQueryBackend):
     bool_values: ClassVar[Dict[bool, str]] = {  # Values to which boolean values are mapped.
         True: "true",
         False: "false",
+    }
+
+    # Field type handling (from custom_attributes["field_types"])
+    # These types are normalized to strict Databricks SQL types and are derived
+    # from the OCSF Lite schema via the pipeline.
+    numeric_field_types: ClassVar[Set[str]] = {"INT", "FLOAT", "DOUBLE", "BIGINT"}
+    timestamp_field_types: ClassVar[Set[str]] = {"TIMESTAMP"}
+    boolean_field_types: ClassVar[Set[str]] = {"BOOLEAN"}
+    variant_field_types: ClassVar[Set[str]] = {"VARIANT"}
+    array_string_field_types: ClassVar[Set[str]] = {"ARRAY<STRING>"}
+    array_int_field_types: ClassVar[Set[str]] = {"ARRAY<INT>", "ARRAY<BIGINT>"}
+    array_variant_field_types: ClassVar[Set[str]] = {"ARRAY<VARIANT>"}
+    field_type_casts: ClassVar[Dict[str, str]] = {
+        "INT": "INT",
+        "FLOAT": "DOUBLE",
+        "DOUBLE": "DOUBLE",
+        "BOOLEAN": "BOOLEAN",
     }
 
     # String matching operators. if none is appropriate eq_token is used.
@@ -297,10 +335,306 @@ class DatabricksBaseBackend(TextQueryBackend):
             self.str_quote + self.add_escaped,
             self.filter_chars,
         )
+        converted = self._normalize_sql_string_literal(converted)
         # Convert to lowercase for case-insensitive matching
         if not case_sensitive:
             converted = converted.lower()
         return self.quote_string(converted)
+
+    def _get_field_types(self) -> Dict[str, str]:
+        """Return field type mappings from current rule custom attributes.
+
+        The pipeline sets custom_attributes["field_types"] to a map of
+        target_field -> normalized Databricks SQL type.
+        """
+        attrs = self._current_rule_custom_attributes
+        if not isinstance(attrs, dict):
+            return {}
+        field_types = attrs.get("field_types")
+        return field_types if isinstance(field_types, dict) else {}
+
+    def _get_field_parent_info(self) -> Dict[str, Dict[str, str]]:
+        """Return parent array info from current rule custom attributes."""
+        attrs = self._current_rule_custom_attributes
+        if not isinstance(attrs, dict):
+            return {}
+        parent_info = attrs.get("field_parent_info")
+        return parent_info if isinstance(parent_info, dict) else {}
+
+    def _normalize_field_key(self, field: str) -> str:
+        """Normalize field key for type lookups."""
+        if field.startswith(self.field_quote) and field.endswith(self.field_quote):
+            return field[len(self.field_quote):-len(self.field_quote)]
+        return field
+
+    def _get_field_type(self, field: str) -> Optional[str]:
+        """Lookup field type from custom attributes.
+
+        Returns normalized Databricks SQL type or None if no mapping exists.
+        """
+        field_types = self._get_field_types()
+        if not field_types:
+            return None
+        field_key = self._normalize_field_key(field)
+        field_type = field_types.get(field_key)
+        return field_type.upper() if isinstance(field_type, str) else None
+
+    def _get_field_parent(self, field: str) -> Optional[Dict[str, str]]:
+        """Lookup parent array info for a field."""
+        parent_info = self._get_field_parent_info()
+        if not parent_info:
+            return None
+        field_key = self._normalize_field_key(field)
+        return parent_info.get(field_key)
+
+    def _cast_field_for_type(self, field_expr: str, field_type: str) -> str:
+        """Cast field expression for numeric, boolean, and timestamp types."""
+        if field_type in self.numeric_field_types or field_type in self.boolean_field_types:
+            sql_type = self.field_type_casts.get(field_type, field_type)
+            return f"CAST({field_expr} AS {sql_type})"
+        if field_type in self.timestamp_field_types:
+            return f"try_to_timestamp({field_expr})"
+        return field_expr
+
+    def _cast_value_for_type(self, value_expr: str, field_type: str) -> str:
+        """Cast value expression for numeric, boolean, and timestamp types."""
+        if field_type in self.numeric_field_types or field_type in self.boolean_field_types:
+            sql_type = self.field_type_casts.get(field_type, field_type)
+            return f"CAST({value_expr} AS {sql_type})"
+        if field_type in self.timestamp_field_types:
+            return f"try_to_timestamp({value_expr})"
+        return value_expr
+
+    def _variant_array_expression(self, field_expr: str) -> str:
+        """Return safe JSON-parsed array expression for VARIANT fields.
+
+        We treat VARIANT as JSON stored in a string-like column. try_cast avoids
+        runtime failures on non-JSON values; from_json then returns NULL.
+        """
+        return f"from_json(try_cast({field_expr} AS STRING), 'array<string>')"
+
+    def _array_string_expression(self, field_expr: str, field_type: str) -> str:
+        """Return array expression for string comparisons.
+
+        ARRAY<VARIANT> values are normalized to STRING so membership checks are stable.
+        """
+        if field_type in self.array_variant_field_types:
+            return f"transform({field_expr}, x -> CAST(x AS STRING))"
+        return field_expr
+
+    def _infer_case_sensitive(self, args) -> bool:
+        """Infer whether membership matching should be case-sensitive."""
+        if any(isinstance(arg.value, SigmaCasedString) for arg in args):
+            return True
+        if any(isinstance(arg.value, SigmaString) for arg in args):
+            return False
+        return True
+
+    def _string_array_expression(self, field_expr: str, field_type: str) -> str:
+        """Resolve array expression for string membership.
+
+        VARIANT uses JSON parsing; ARRAY<STRING>/ARRAY<VARIANT> uses raw/normalized arrays.
+        """
+        if field_type in self.variant_field_types:
+            return self._variant_array_expression(field_expr)
+        return self._array_string_expression(field_expr, field_type)
+
+    def _stringify_membership_value(self, value, case_sensitive: bool) -> str:
+        """Normalize values into comparable STRING SQL literals for membership tests."""
+        if isinstance(value, SigmaString):
+            return self.make_sql_string(value, case_sensitive=case_sensitive)
+        if isinstance(value, SigmaNumber):
+            return f"CAST({value} AS STRING)"
+        if isinstance(value, SigmaBool):
+            return f"CAST({self.bool_values[value.boolean]} AS STRING)"
+        return str(value)
+
+    def _build_membership_list(self, args, case_sensitive: bool) -> list[str]:
+        return [self._stringify_membership_value(arg.value, case_sensitive) for arg in args]
+
+    def _format_string_array_equality(
+        self, field_expr: str, value_expr: str, case_sensitive: bool, field_type: str
+    ) -> str:
+        """Format equality against string-like arrays or VARIANT JSON arrays.
+
+        Example:
+            field_expr="tags", value_expr="'admin'" ->
+            "exists(tags, x -> lower(x) = 'admin')"
+        """
+        array_expr = self._string_array_expression(field_expr, field_type)
+        if case_sensitive:
+            return f"array_contains({array_expr}, {value_expr})"
+        return f"exists({array_expr}, x -> lower(x) = {value_expr})"
+
+    def _format_string_array_in_list(
+        self, field_expr: str, values_expr: str, case_sensitive: bool, field_type: str
+    ) -> str:
+        """Format list-membership for string-like arrays or VARIANT JSON arrays.
+
+        Example:
+            field_expr="tags", values_expr="'a','b'" ->
+            "exists(tags, x -> lower(x) in ('a','b'))"
+        """
+        array_expr = self._string_array_expression(field_expr, field_type)
+        if case_sensitive:
+            return f"exists({array_expr}, x -> x in ({values_expr}))"
+        return f"exists({array_expr}, x -> lower(x) in ({values_expr}))"
+
+    def _array_numeric_cast(self, field_type: str) -> str:
+        """Return numeric element type for ARRAY<INT> or ARRAY<BIGINT>."""
+        return "BIGINT" if field_type == "ARRAY<BIGINT>" else "INT"
+
+    def _format_array_numeric_equality(
+        self, field_expr: str, value_expr: str, field_type: str
+    ) -> str:
+        """Format equality against numeric arrays.
+
+        Example:
+            field_expr="ids", value_expr="CAST('5' AS INT)" ->
+            "array_contains(ids, CAST('5' AS INT))"
+        """
+        return f"array_contains({field_expr}, {value_expr})"
+
+    def _format_array_numeric_in_list(
+        self, field_expr: str, values_expr: str
+    ) -> str:
+        """Format list-membership against numeric arrays.
+
+        Example:
+            field_expr="ids", values_expr="1,2,3" ->
+            "exists(ids, x -> x in (1,2,3))"
+        """
+        return f"exists({field_expr}, x -> x in ({values_expr}))"
+
+    def _format_parent_array_equality(
+        self,
+        parent_path: str,
+        leaf_name: str,
+        value_expr: str,
+        case_sensitive: bool,
+        field_type: Optional[str],
+    ) -> str:
+        """Format equality against a leaf inside ARRAY<STRUCT>.
+
+        Example:
+            parent_path="actor.authorizations", leaf_name="decision" ->
+            "exists(actor.authorizations, x -> lower(x.decision) = 'allow')"
+        """
+        parent_expr = self.escape_and_quote_field(parent_path)
+        member_expr = f"x.{self.escape_and_quote_field(leaf_name)}"
+        if (
+            field_type in self.numeric_field_types
+            or field_type in self.boolean_field_types
+            or field_type in self.timestamp_field_types
+        ):
+            return (
+                f"exists({parent_expr}, x -> "
+                f"{self._cast_field_for_type(member_expr, field_type)} = "
+                f"{self._cast_value_for_type(value_expr, field_type)})"
+            )
+        if case_sensitive:
+            return f"exists({parent_expr}, x -> {member_expr} = {value_expr})"
+        return f"exists({parent_expr}, x -> lower({member_expr}) = {value_expr})"
+
+    def _format_parent_array_in_list(
+        self,
+        parent_path: str,
+        leaf_name: str,
+        values_expr: str,
+        case_sensitive: bool,
+        field_type: Optional[str],
+    ) -> str:
+        """Format list-membership against a leaf inside ARRAY<STRUCT>.
+
+        Example:
+            parent_path="actor.authorizations", leaf_name="decision" ->
+            "exists(actor.authorizations, x -> lower(x.decision) in ('allow','deny'))"
+        """
+        parent_expr = self.escape_and_quote_field(parent_path)
+        member_expr = f"x.{self.escape_and_quote_field(leaf_name)}"
+        if case_sensitive:
+            return f"exists({parent_expr}, x -> {member_expr} in ({values_expr}))"
+        return f"exists({parent_expr}, x -> lower({member_expr}) in ({values_expr}))"
+
+    def _build_string_match_expression(
+        self,
+        field_expr: str,
+        cond: ConditionFieldEqualsValueExpression,
+        case_sensitive: bool,
+        state: ConversionState,
+    ) -> str:
+        """Build a string match expression with the provided field expression.
+
+        We distinguish plain prefix/suffix/contains patterns from true wildcard
+        patterns. Simple patterns map to startswith/endswith/contains (or LIKE in
+        case-sensitive mode), while wildcard patterns fall back to regex.
+
+        Example:
+            value="adm*" -> "startswith(lower(field), lower('adm'))"
+        """
+        if (
+            self.startswith_expression is not None
+            and cond.value.endswith(SpecialChars.WILDCARD_MULTI)
+            and not cond.value[:-1].contains_special()
+        ):
+            # Simple prefix pattern: "foo*"
+            if case_sensitive:
+                expr = self.case_sensitive_startswith_expression
+                plain_value = str(cond.value[:-1])
+                value = self.quote_string(plain_value + "%")
+            else:
+                expr = self.startswith_expression
+                value = self.make_sql_string(cond.value[:-1], case_sensitive=False)
+        elif (
+            self.endswith_expression is not None
+            and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
+            and not cond.value[1:].contains_special()
+        ):
+            # Simple suffix pattern: "*foo"
+            if case_sensitive:
+                expr = self.case_sensitive_endswith_expression
+                plain_value = str(cond.value[1:])
+                value = self.quote_string("%" + plain_value)
+            else:
+                expr = self.endswith_expression
+                value = self.make_sql_string(cond.value[1:], case_sensitive=False)
+        elif (
+            self.contains_expression is not None
+            and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
+            and cond.value.endswith(SpecialChars.WILDCARD_MULTI)
+            and not cond.value[1:-1].contains_special()
+        ):
+            # Simple contains pattern: "*foo*"
+            if case_sensitive:
+                expr = self.case_sensitive_contains_expression
+                plain_value = str(cond.value[1:-1])
+                value = self.quote_string("%" + plain_value + "%")
+            else:
+                expr = self.contains_expression
+                value = self.make_sql_string(cond.value[1:-1], case_sensitive=False)
+        elif (
+            self.wildcard_match_expression is not None
+            and cond.value.contains_special()
+        ):
+            # Complex wildcard pattern: use regex match.
+            expr = self.wildcard_match_expression
+            value = self.convert_value_str(cond.value, state)
+        else:
+            # No wildcards; plain equality (case-sensitive or lowered).
+            if case_sensitive:
+                expr = self.case_sensitive_match_expression
+                value = self.make_sql_string(cond.value, case_sensitive=True)
+            else:
+                expr = "lower({field}) = lower({value})"
+                value = self.make_sql_string(cond.value, case_sensitive=False)
+
+        return expr.format(field=field_expr, value=value)
+
+    def _format_typed_equality(self, field: str, value_expr: str, field_type: str) -> str:
+        field_expr = self._cast_field_for_type(self.escape_and_quote_field(field), field_type)
+        typed_value = self._cast_value_for_type(value_expr, field_type)
+        return f"{field_expr} = {typed_value}"
+
     
     def convert_value_str(self, s: SigmaString, state: ConversionState) -> str:
         """
@@ -314,10 +648,54 @@ class DatabricksBaseBackend(TextQueryBackend):
             The converted string value.
         """
         converted = super().convert_value_str(s, state)
+        if converted.startswith("'") and converted.endswith("'"):
+            inner = converted[1:-1]
+            inner = self._normalize_sql_string_literal(inner)
+            converted = self.quote_string(inner)
+        else:
+            converted = self._normalize_sql_string_literal(converted)
         # Only convert to lowercase if not case-sensitive
         if not isinstance(s, SigmaCasedString):
             converted = converted.casefold()
         return converted
+
+    def _normalize_sql_string_literal(self, value: str) -> str:
+        """Normalize SQL string literals for Databricks.
+
+        Converts backslash-escaped single quotes into doubled quotes and escapes
+        remaining backslashes so they are treated as literal characters.
+        """
+        if not value:
+            return value
+
+        result = []
+        i = 0
+        while i < len(value):
+            if value[i] == "\\":
+                j = i
+                while j < len(value) and value[j] == "\\":
+                    j += 1
+                slash_count = j - i
+                if j < len(value) and value[j] == "'":
+                    if slash_count % 2 == 1:
+                        literal_backslashes = slash_count - 1
+                        if literal_backslashes:
+                            result.append("\\" * literal_backslashes)
+                        result.append("''")
+                        i = j + 1
+                        continue
+                result.append("\\" * slash_count)
+                i = j
+                continue
+            if value[i] == "'":
+                result.append("''")
+                i += 1
+                continue
+            result.append(value[i])
+            i += 1
+
+        normalized = "".join(result)
+        return normalized.replace("\\", "\\\\")
 
     def _ip_string_to_int_expression(self, field_expr: str) -> str:
         """
@@ -409,95 +787,346 @@ class DatabricksBaseBackend(TextQueryBackend):
         
         return network_int, mask_int
 
-    def convert_condition_field_eq_val_str(self, cond: ConditionFieldEqualsValueExpression,
-                                           state: ConversionState) -> Union[str, DeferredQueryExpression]:
-        """Conversion of field = string value expressions"""
+    def _convert_condition_field_eq_val_str(
+        self,
+        cond: ConditionFieldEqualsValueExpression,
+        state: ConversionState,
+        case_sensitive: bool,
+    ) -> Union[str, DeferredQueryExpression]:
+        """Conversion of field = string value expressions with optional case sensitivity.
+
+        Order of handling:
+        1) If the field lives under ARRAY<STRUCT>, route through `exists` and apply
+           array-aware membership/equals handling at the leaf.
+        2) If the field is an array/variant at the top level, use array membership
+           helpers with proper normalization.
+        3) If the field is typed numeric/boolean/timestamp, cast and compare.
+        4) Fallback to plain string matching.
+
+        Example:
+            field="process.name", value="cmd*" ->
+            "startswith(lower(process.name), lower('cmd'))"
+        """
         if not isinstance(cond.value, SigmaString):
             raise TypeError(f"cond.value type isn't SigmaString: {type(cond.value)}")
         try:
-            # Check if value is case-sensitive
-            is_case_sensitive = isinstance(cond.value, SigmaCasedString)
-            
-            if (  # Check conditions for usage of 'startswith' operator
-                self.startswith_expression is not None  # 'startswith' operator is defined in backend
-                and cond.value.endswith(SpecialChars.WILDCARD_MULTI)  # String ends with wildcard
-                and not cond.value[:-1].contains_special()  # Remainder of string doesn't contain special characters
-            ):
-                if is_case_sensitive:
-                    expr = self.case_sensitive_startswith_expression
-                    # For case-sensitive LIKE, extract string value and add wildcard
-                    plain_value = str(cond.value[:-1])
-                    value = self.quote_string(plain_value + "%")
-                else:
-                    expr = self.startswith_expression
-                    value = self.make_sql_string(cond.value[:-1], case_sensitive=False)
-            elif (
-                # Same as above but for 'endswith' operator: string starts with wildcard and doesn't contain further
-                # special characters
-                self.endswith_expression is not None
-                and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
-                and not cond.value[1:].contains_special()
-            ):
-                if is_case_sensitive:
-                    expr = self.case_sensitive_endswith_expression
-                    # For case-sensitive LIKE, extract string value and add wildcard
-                    plain_value = str(cond.value[1:])
-                    value = self.quote_string("%" + plain_value)
-                else:
-                    expr = self.endswith_expression
-                    value = self.make_sql_string(cond.value[1:], case_sensitive=False)
-            elif (  # contains: string starts and ends with wildcard
-                self.contains_expression is not None
-                and cond.value.startswith(SpecialChars.WILDCARD_MULTI)
-                and cond.value.endswith(SpecialChars.WILDCARD_MULTI)
-                and not cond.value[1:-1].contains_special()
-            ):
-                if is_case_sensitive:
-                    expr = self.case_sensitive_contains_expression
-                    # For case-sensitive LIKE, extract string value and add wildcards
-                    plain_value = str(cond.value[1:-1])
-                    value = self.quote_string("%" + plain_value + "%")
-                else:
-                    expr = self.contains_expression
-                    value = self.make_sql_string(cond.value[1:-1], case_sensitive=False)
-            elif (  # wildcard match expression: string contains wildcard
-                self.wildcard_match_expression is not None
-                and cond.value.contains_special()
-            ):
-                expr = self.wildcard_match_expression
-                value = self.convert_value_str(cond.value, state)
-            else:  # We have just plain string
-                if is_case_sensitive:
-                    expr = self.case_sensitive_match_expression
-                    value = self.make_sql_string(cond.value, case_sensitive=True)
-                else:
-                    expr = "lower({field}) = lower({value})"
-                    value = self.make_sql_string(cond.value, case_sensitive=False)
+            field_type = self._get_field_type(cond.field)
 
-            return expr.format(field=self.escape_and_quote_field(cond.field),
-                               value=value)
+            parent_info = self._get_field_parent(cond.field)
+            if parent_info and parent_info.get("parent_path"):
+                # Leaf of ARRAY<STRUCT>: compare against each member `x`.
+                leaf_name = self._normalize_field_key(cond.field).split(".")[-1]
+                member_expr = f"x.{self.escape_and_quote_field(leaf_name)}"
+                parent_expr = self.escape_and_quote_field(parent_info["parent_path"])
+                if field_type in self.array_int_field_types:
+                    # Leaf is an array of ints; match membership within the leaf array.
+                    numeric_type = self._array_numeric_cast(field_type)
+                    value_expr = f"CAST({self.make_sql_string(cond.value, case_sensitive=True)} AS {numeric_type})"
+                    return f"exists({parent_expr}, x -> array_contains({member_expr}, {value_expr}))"
+                if field_type in self.array_string_field_types or field_type in self.array_variant_field_types:
+                    # Leaf is an array of strings/variants; use array-aware equality.
+                    value_expr = self.make_sql_string(cond.value, case_sensitive=case_sensitive)
+                    return f"exists({parent_expr}, x -> {self._format_string_array_equality(member_expr, value_expr, case_sensitive, field_type)})"
+                # Leaf is scalar; use string match on the member field.
+                match_expr = self._build_string_match_expression(
+                    member_expr,
+                    cond,
+                    case_sensitive,
+                    state,
+                )
+                return f"exists({parent_expr}, x -> {match_expr})"
+
+            if field_type in self.variant_field_types or field_type in self.array_string_field_types or field_type in self.array_variant_field_types:
+                value = self.make_sql_string(cond.value, case_sensitive=case_sensitive)
+                return self._format_string_array_equality(
+                    self.escape_and_quote_field(cond.field),
+                    value,
+                    case_sensitive,
+                    field_type,
+                )
+
+            if field_type in self.array_int_field_types:
+                numeric_type = self._array_numeric_cast(field_type)
+                value = f"CAST({self.make_sql_string(cond.value, case_sensitive=True)} AS {numeric_type})"
+                return self._format_array_numeric_equality(
+                    self.escape_and_quote_field(cond.field),
+                    value,
+                    field_type,
+                )
+
+            if field_type in self.numeric_field_types or field_type in self.boolean_field_types or field_type in self.timestamp_field_types:
+                value = self.make_sql_string(cond.value, case_sensitive=True)
+                return self._format_typed_equality(cond.field, value, field_type)
+            
+            field_expr = self.escape_and_quote_field(cond.field)
+            return self._build_string_match_expression(
+                field_expr,
+                cond,
+                case_sensitive,
+                state,
+            )
         except TypeError:  # pragma: no cover
             raise NotImplementedError("Field equals string value expressions with strings are not supported by the "
                                       "backend.")
 
+    def convert_condition_field_eq_val_str(
+        self, cond: ConditionFieldEqualsValueExpression, state: ConversionState
+    ) -> Union[str, DeferredQueryExpression]:
+        """Case-insensitive string equality.
+
+        Dispatches to `_convert_condition_field_eq_val_str` to share the full
+        type/array/parent handling, only differing by the case-sensitivity flag.
+
+        Example:
+            field="user.name", value="Admin" ->
+            "lower(user.name) = lower('admin')"
+        """
+        return self._convert_condition_field_eq_val_str(cond, state, case_sensitive=False)
+
+    def convert_condition_field_eq_val_str_case_sensitive(
+        self, cond: ConditionFieldEqualsValueExpression, state: ConversionState
+    ) -> Union[str, DeferredQueryExpression]:
+        """Case-sensitive string equality.
+
+        Uses the shared implementation with `case_sensitive=True` so all type
+        and array handling remains identical to the insensitive path.
+
+        Example:
+            field="user.name", value="Admin" ->
+            "user.name = 'Admin'"
+        """
+        return self._convert_condition_field_eq_val_str(cond, state, case_sensitive=True)
+
+    def convert_condition_field_eq_val_re(
+        self, cond: ConditionFieldEqualsValueExpression, state: ConversionState
+    ) -> Union[str, DeferredQueryExpression]:
+        """Regex match, with special handling for ARRAY<STRUCT> parents.
+
+        Example:
+            field="file.name", regex=".*\\.tmp" ->
+            "file.name rlike '.*\\.tmp'"
+        """
+        parent_info = self._get_field_parent(cond.field)
+        if parent_info and parent_info.get("parent_path"):
+            # Apply regex to the member field inside the parent array.
+            leaf_name = self._normalize_field_key(cond.field).split(".")[-1]
+            member_expr = f"x.{self.escape_and_quote_field(leaf_name)}"
+            parent_expr = self.escape_and_quote_field(parent_info["parent_path"])
+            regex = self.convert_value_re(cond.value, state)
+            if not regex.startswith("'"):
+                # Ensure regex literal is quoted for rlike.
+                regex = self.quote_string(regex)
+            return f"exists({parent_expr}, x -> {member_expr} rlike {regex})"
+        # Fallback to default regex handling for non-array fields.
+        return super().convert_condition_field_eq_val_re(cond, state)
+
+    def convert_condition_field_eq_val_num(
+        self, cond: ConditionFieldEqualsValueExpression, state: ConversionState
+    ) -> Union[str, DeferredQueryExpression]:
+        """Conversion of field = number value expressions with type awareness.
+
+        Example:
+            field="event.count", value=5 ->
+            "CAST(event.count AS INT) = CAST(5 AS INT)"
+        """
+        field_type = self._get_field_type(cond.field)
+        parent_info = self._get_field_parent(cond.field)
+        if parent_info and parent_info.get("parent_path"):
+            # Leaf under ARRAY<STRUCT>: compare against each member, with casting if typed.
+            value_expr = self._stringify_membership_value(cond.value, True)
+            leaf_name = self._normalize_field_key(cond.field).split(".")[-1]
+            return self._format_parent_array_equality(
+                parent_info["parent_path"],
+                leaf_name,
+                value_expr,
+                True,
+                field_type,
+            )
+
+        if field_type in self.variant_field_types or field_type in self.array_string_field_types or field_type in self.array_variant_field_types:
+            # Numeric compared against a string/variant array: stringify and compare per element.
+            value_expr = self._stringify_membership_value(cond.value, True)
+            return self._format_string_array_equality(
+                self.escape_and_quote_field(cond.field),
+                value_expr,
+                True,
+                field_type,
+            )
+        if field_type in self.array_int_field_types:
+            # Numeric array: direct array membership check.
+            return self._format_array_numeric_equality(
+                self.escape_and_quote_field(cond.field),
+                str(cond.value),
+                field_type,
+            )
+        if field_type in self.numeric_field_types or field_type in self.boolean_field_types or field_type in self.timestamp_field_types:
+            # Typed scalar comparison (casts applied inside `_format_typed_equality`).
+            return self._format_typed_equality(cond.field, str(cond.value), field_type)
+        # Fallback to base backend behavior for unknown types.
+        return super().convert_condition_field_eq_val_num(cond, state)
+
+    def convert_condition_field_eq_val_bool(
+        self, cond: ConditionFieldEqualsValueExpression, state: ConversionState
+    ) -> Union[str, DeferredQueryExpression]:
+        """Conversion of field = bool value expressions with type awareness.
+
+        Example:
+            field="user.is_admin", value=true ->
+            "CAST(user.is_admin AS BOOLEAN) = true"
+        """
+        field_type = self._get_field_type(cond.field)
+        parent_info = self._get_field_parent(cond.field)
+        if parent_info and parent_info.get("parent_path"):
+            # Leaf under ARRAY<STRUCT>: compare against each member, with casting if typed.
+            value = self._stringify_membership_value(cond.value, True)
+            leaf_name = self._normalize_field_key(cond.field).split(".")[-1]
+            return self._format_parent_array_equality(
+                parent_info["parent_path"],
+                leaf_name,
+                value,
+                True,
+                field_type,
+            )
+
+        if field_type in self.variant_field_types or field_type in self.array_string_field_types or field_type in self.array_variant_field_types:
+            # Boolean compared against string/variant arrays: stringify and compare per element.
+            value = self._stringify_membership_value(cond.value, True)
+            return self._format_string_array_equality(
+                self.escape_and_quote_field(cond.field),
+                value,
+                True,
+                field_type,
+            )
+        if field_type in self.numeric_field_types or field_type in self.boolean_field_types or field_type in self.timestamp_field_types:
+            # Typed scalar comparison (casts applied inside `_format_typed_equality`).
+            value = self.bool_values[cond.value.boolean]
+            return self._format_typed_equality(cond.field, value, field_type)
+        # Fallback to base backend behavior for unknown types.
+        return super().convert_condition_field_eq_val_bool(cond, state)
+
     def convert_condition_as_in_expression(
         self, cond: Union[ConditionOR, ConditionAND], state: ConversionState
     ) -> Union[str, DeferredQueryExpression]:
-        """
-        Convert a field-in-value-list condition, respecting case sensitivity.
-        
+        """Convert OR/AND lists into IN-style expressions with type awareness.
+
         Args:
             cond: The OR or AND condition to convert.
             state: Current conversion state.
-            
+
         Returns:
             The converted query string or deferred expression.
+
+        Examples:
+            field="user.name" OR ['alice','bob'] ->
+            "lower(user.name) in ('alice','bob')"
+        """
+        field_name = cond.args[0].field
+        field_type = self._get_field_type(field_name)
+        op = self.or_in_operator if isinstance(cond, ConditionOR) else self.and_in_operator
+
+        parent_info = self._get_field_parent(field_name)
+        if parent_info and parent_info.get("parent_path"):
+            # Field is under ARRAY<STRUCT>: build an exists(...) over parent members.
+            leaf_name = self._normalize_field_key(field_name).split(".")[-1]
+            parent_expr = self.escape_and_quote_field(parent_info["parent_path"])
+            member_expr = f"x.{self.escape_and_quote_field(leaf_name)}"
+            if field_type in self.array_int_field_types:
+                # Leaf is array of ints: check membership inside each leaf array.
+                numeric_type = self._array_numeric_cast(field_type)
+                values = []
+                for arg in cond.args:
+                    if isinstance(arg.value, SigmaString):
+                        raw_value = self.make_sql_string(arg.value, case_sensitive=True)
+                        values.append(f"CAST({raw_value} AS {numeric_type})")
+                    else:
+                        values.append(str(arg.value))
+                return f"exists({parent_expr}, x -> exists({member_expr}, y -> y in ({self.list_separator.join(values)})))"
+            if field_type in self.array_string_field_types or field_type in self.array_variant_field_types:
+                # Leaf is array of strings/variants: normalize and compare per element.
+                case_sensitive = self._infer_case_sensitive(cond.args)
+                values = self._build_membership_list(cond.args, case_sensitive)
+                return (
+                    f"exists({parent_expr}, x -> "
+                    f"{self._format_string_array_in_list(member_expr, self.list_separator.join(values), case_sensitive, field_type)})"
+                )
+            if field_type in self.numeric_field_types or field_type in self.boolean_field_types or field_type in self.timestamp_field_types:
+                # Leaf is typed scalar: cast values and compare per member.
+                values = []
+                for arg in cond.args:
+                    if isinstance(arg.value, SigmaString):
+                        raw_value = self.make_sql_string(arg.value, case_sensitive=True)
+                    elif isinstance(arg.value, SigmaBool):
+                        raw_value = self.bool_values[arg.value.boolean]
+                    else:
+                        raw_value = str(arg.value)
+                    values.append(self._cast_value_for_type(raw_value, field_type))
+                member_expr = self._cast_field_for_type(member_expr, field_type)
+                return f"exists({parent_expr}, x -> {member_expr} in ({self.list_separator.join(values)}))"
+            # Default: treat as string membership on the member field.
+            case_sensitive = self._infer_case_sensitive(cond.args)
+            values = self._build_membership_list(cond.args, case_sensitive)
+            return self._format_parent_array_in_list(
+                parent_info["parent_path"],
+                leaf_name,
+                self.list_separator.join(values),
+                case_sensitive,
+                field_type,
+            )
+
+        if field_type in self.variant_field_types or field_type in self.array_string_field_types or field_type in self.array_variant_field_types:
+            # Top-level string/variant arrays use array membership helpers.
+            case_sensitive = self._infer_case_sensitive(cond.args)
+            values = self._build_membership_list(cond.args, case_sensitive)
+            return self._format_string_array_in_list(
+                self.escape_and_quote_field(field_name),
+                self.list_separator.join(values),
+                case_sensitive,
+                field_type,
+            )
+
+        if field_type in self.array_int_field_types:
+            # Top-level numeric arrays use element membership.
+            numeric_type = self._array_numeric_cast(field_type)
+            values = []
+            for arg in cond.args:
+                if isinstance(arg.value, SigmaString):
+                    raw_value = self.make_sql_string(arg.value, case_sensitive=True)
+                    values.append(f"CAST({raw_value} AS {numeric_type})")
+                else:
+                    values.append(str(arg.value))
+            return self._format_array_numeric_in_list(
+                self.escape_and_quote_field(field_name),
+                self.list_separator.join(values),
+            )
+
+        if field_type in self.numeric_field_types or field_type in self.boolean_field_types or field_type in self.timestamp_field_types:
+            # Typed scalar field: cast values then use IN with appropriate operator.
+            field_expr = self._cast_field_for_type(self.escape_and_quote_field(field_name), field_type)
+            values = []
+            for arg in cond.args:
+                if isinstance(arg.value, SigmaString):
+                    raw_value = self.make_sql_string(arg.value, case_sensitive=True)
+                    values.append(self._cast_value_for_type(raw_value, field_type))
+                else:
+                    values.append(str(arg.value))
+            return f"{field_expr} {op} ({self.list_separator.join(values)})"
+
+        # Fallback: default string IN conversion (legacy behavior).
+        return self._convert_string_in_expression(cond, state)
+
+    def _convert_string_in_expression(
+        self, cond: Union[ConditionOR, ConditionAND], state: ConversionState
+    ) -> Union[str, DeferredQueryExpression]:
+        """Default string IN expression conversion (preserves legacy behavior).
+
+        Example:
+            field="user.name" OR ['a','b'] ->
+            "lower(user.name) in ('a','b')"
         """
         field = self.escape_and_quote_field(cond.args[0].field)
-        # Check if any value is case-sensitive
         if not any(isinstance(arg.value, SigmaCasedString) for arg in cond.args):
             field = f"LOWER({field})"
-        
+
         return self.field_in_list_expression.format(
             field=field,
             op=(
@@ -516,6 +1145,47 @@ class DatabricksBaseBackend(TextQueryBackend):
                 ]
             ),
         )
+
+    def convert_condition_field_compare_op_val(
+        self, cond: ConditionFieldEqualsValueExpression, state: ConversionState
+    ) -> Union[str, DeferredQueryExpression]:
+        """Conversion of numeric/timestamp comparison operations with type awareness.
+
+        Example:
+            field="time", op="gte", value=1700000000 ->
+            "try_to_timestamp(from_unixtime(1700000000)) >= ..."
+        """
+        field_expr = self.escape_and_quote_field(cond.field)
+        field_type = self._get_field_type(cond.field)
+        value_number = cond.value.number.number
+        value_expr = value_number
+        parent_info = self._get_field_parent(cond.field)
+        if field_type in self.numeric_field_types or field_type in self.boolean_field_types:
+            # Typed scalar: cast field to the expected numeric/boolean type.
+            field_expr = self._cast_field_for_type(field_expr, field_type)
+        if field_type in self.timestamp_field_types:
+            # Timestamp compare: infer seconds vs millis from magnitude.
+            field_expr = self._cast_field_for_type(field_expr, field_type)
+            value_expr = (
+                f"try_to_timestamp(from_unixtime({value_number} / 1000))"
+                if value_number >= 1000000000000
+                else f"try_to_timestamp(from_unixtime({value_number}))"
+            )
+        if parent_info and parent_info.get("parent_path"):
+            # Leaf under ARRAY<STRUCT>: compare against each member.
+            leaf_name = self._normalize_field_key(cond.field).split(".")[-1]
+            member_expr = f"x.{self.escape_and_quote_field(leaf_name)}"
+            if field_type in self.numeric_field_types or field_type in self.boolean_field_types or field_type in self.timestamp_field_types:
+                # Apply the same type casting to the member field.
+                member_expr = self._cast_field_for_type(member_expr, field_type)
+            parent_expr = self.escape_and_quote_field(parent_info["parent_path"])
+            return f"exists({parent_expr}, x -> {member_expr} {self.compare_operators[cond.value.op]} {value_expr})"
+        # Non-array scalar comparison.
+        return self.compare_op_expression.format(
+            field=field_expr,
+            operator=self.compare_operators[cond.value.op],
+            value=value_expr,
+        )
     
     def decide_convert_condition_as_in_expression(
         self, cond: Union[ConditionOR, ConditionAND], state: ConversionState
@@ -529,6 +1199,9 @@ class DatabricksBaseBackend(TextQueryBackend):
             
         Returns:
             True if the condition should be converted to an IN expression, False otherwise.
+
+        Example:
+            (field = 'a' OR field = 'b') -> True
         """
         # Check if conversion is enabled for this condition type
         if (

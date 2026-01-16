@@ -152,8 +152,10 @@ def map_sigma_level_to_severity(level) -> str:
         'critical': 'Critical',
         'high': 'High',
         'medium': 'Medium',
-        'low': 'Low',
-        'informational': 'Low'
+        'low': 'Informational',
+        'informational': 'Informational',
+        'info': 'Informational',
+        'informative': 'Informational',
     }
     return mapping.get(level_str, 'Medium')
 

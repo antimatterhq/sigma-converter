@@ -7,10 +7,13 @@ from collections import defaultdict
 import yaml
 import json
 
+from fieldmapper.ocsf.schema_loader import OCSFLiteSchema
 
 PATHS = [
     "rules/"
 ]
+
+DEFAULT_SCHEMA_PATH = Path(__file__).resolve().parents[1] / "ocsf_data" / "ocsf_lite_ai_schema.json"
 
 @dataclass
 class FieldMapping:
@@ -124,6 +127,18 @@ class PipelineMappings:
     
     conflicted_rule_field_mappings: Dict[str, Dict[str, str]]
     """1:1 field mappings for conflicted rules (source_field -> target_field)"""
+
+    logsource_field_type_mappings: Dict[tuple[Optional[str], Optional[str], Optional[str]], Dict[str, str]]
+    """Field type mappings for non-conflicted logsources (target_field -> type)"""
+
+    conflicted_rule_field_type_mappings: Dict[str, Dict[str, str]]
+    """Field type mappings for conflicted rules (target_field -> type)"""
+
+    logsource_field_parent_mappings: Dict[tuple[Optional[str], Optional[str], Optional[str]], Dict[str, Dict[str, str]]]
+    """Parent array info for non-conflicted logsources (target_field -> {parent_path,parent_type})"""
+
+    conflicted_rule_field_parent_mappings: Dict[str, Dict[str, Dict[str, str]]]
+    """Parent array info for conflicted rules (target_field -> {parent_path,parent_type})"""
     
     @property
     def logsource_count(self) -> int:
@@ -385,7 +400,8 @@ class SigmaRuleOCSFLite(SigmaRule):
     @classmethod
     def build_pipeline_mappings(
         cls,
-        mappings_dir: str = "fieldmapper/mappings"
+        mappings_dir: str = "fieldmapper/mappings",
+        schema_path: Optional[str] = None
     ) -> PipelineMappings:
         """
         Build all pipeline mappings (tables, activity_id, fields).
@@ -395,6 +411,7 @@ class SigmaRuleOCSFLite(SigmaRule):
         2. Conflicted rules: Where the logsource maps to multiple tables, requiring per-rule assignment
         3. Activity IDs: For rules with valid integer activity_id values
         4. Field mappings: Source field -> target field (1:1, scoped by event class/table)
+        5. Field types: Target field -> datatype from OCSF Lite schema (scoped by event class/table)
         
         Args:
             mappings_dir: Directory containing OCSF-mapped rule files
@@ -412,6 +429,10 @@ class SigmaRuleOCSFLite(SigmaRule):
               For non-conflicted logsources (1:1 mappings, scoped by table)
             - conflicted_rule_field_mappings: Dict[rule_id] -> Dict[source_field, target_field]
               For conflicted rules (1:1 mappings, scoped by table)
+            - logsource_field_type_mappings: Dict[(category, product, service)] -> Dict[target_field, type]
+              For non-conflicted logsources (type mappings for mapped target fields)
+            - conflicted_rule_field_type_mappings: Dict[rule_id] -> Dict[target_field, type]
+              For conflicted rules (type mappings for mapped target fields)
         
         Example:
             >>> mappings = SigmaRuleOCSFLite.build_pipeline_mappings()
@@ -436,11 +457,21 @@ class SigmaRuleOCSFLite(SigmaRule):
             >>> print(mappings.conflicted_rule_field_mappings['fcc6d700-68d9-4241-9a1a-06874d621b06']['Image'])
             'actor.process.name'
             >>> 
+            >>> # Field type mappings for non-conflicted logsources
+            >>> print(mappings.logsource_field_type_mappings[('process_creation', 'linux', None)]['process.pid'])
+            'INT'
+            >>> 
             >>> # Use helper properties
             >>> print(f"Logsources: {mappings.logsource_count}, Conflicted: {mappings.conflicted_count}")
             >>> print(f"Rules with activity_id: {mappings.activity_id_count}")
             >>> print(f"Mapped fields: {mappings.field_mapping_count}")
         """
+        # Load schema to map OCSF field types -> Databricks SQL types for the pipeline.
+        # This keeps type knowledge in the private mapping layer and avoids backend coupling.
+        schema = OCSFLiteSchema(str(schema_path or DEFAULT_SCHEMA_PATH))
+        schema_fields_by_class = schema.field_index
+        schema_nodes_by_class = schema.node_index
+
         # Group rules by logsource
         logsource_to_rules = defaultdict(list)
         
@@ -565,13 +596,154 @@ class SigmaRuleOCSFLite(SigmaRule):
                     }
                     if table_mappings:  # Only add if there are mappings
                         conflicted_rule_field_mappings[rule['id']] = table_mappings
+
+        # Build table-scoped field type mappings using the schema
+        def normalize_event_class(table: str) -> str:
+            return table.split("/")[-1] if table else table
+
+        def normalize_schema_type(raw_type: str) -> Optional[str]:
+            """Normalize OCSF Lite types to strict Databricks SQL types.
+
+            This preserves ARRAY<...> for explicit array handling and maps LONG -> BIGINT.
+            """
+            type_map = {
+                "LONG": "BIGINT",
+                "INT": "INT",
+                "FLOAT": "FLOAT",
+                "STRING": "STRING",
+                "BOOLEAN": "BOOLEAN",
+                "TIMESTAMP": "TIMESTAMP",
+                "VARIANT": "VARIANT",
+                "ARRAY<STRING>": "ARRAY<STRING>",
+                "ARRAY<INT>": "ARRAY<INT>",
+                "ARRAY<VARIANT>": "ARRAY<VARIANT>",
+                "ARRAY<BIGINT>": "ARRAY<BIGINT>",
+                "ARRAY<LONG>": "ARRAY<BIGINT>",
+            }
+            return type_map.get(raw_type)
+
+        def normalize_node_type(raw_type: str) -> Optional[str]:
+            """Normalize node types to strict Databricks SQL types."""
+            if raw_type.startswith("ARRAY<STRUCT"):
+                return "ARRAY<STRUCT>"
+            if raw_type.startswith("STRUCT<"):
+                return "STRUCT"
+            type_map = {
+                "ARRAY<STRING>": "ARRAY<STRING>",
+                "ARRAY<INT>": "ARRAY<INT>",
+                "ARRAY<VARIANT>": "ARRAY<VARIANT>",
+                "ARRAY<BIGINT>": "ARRAY<BIGINT>",
+                "STRING": "STRING",
+                "INT": "INT",
+                "FLOAT": "FLOAT",
+                "BOOLEAN": "BOOLEAN",
+                "TIMESTAMP": "TIMESTAMP",
+                "VARIANT": "VARIANT",
+                "BIGINT": "BIGINT",
+                "LONG": "BIGINT",
+            }
+            return type_map.get(raw_type)
+
+        table_field_types: Dict[str, Dict[str, str]] = defaultdict(dict)
+        table_node_types: Dict[str, Dict[str, str]] = defaultdict(dict)
+        for table_name, source_to_targets in field_mappings_by_table.items():
+            event_class = normalize_event_class(table_name)
+            schema_fields = schema_fields_by_class.get(event_class, {})
+            schema_nodes = schema_nodes_by_class.get(event_class, {})
+            for node_path, node_info in schema_nodes.items():
+                raw_type = node_info.get("type")
+                if raw_type:
+                    normalized = normalize_node_type(raw_type)
+                    if normalized:
+                        table_node_types[table_name][node_path] = normalized
+            for targets in source_to_targets.values():
+                for target_field in targets:
+                    field_info = schema_fields.get(target_field)
+                    if field_info and field_info.get("type"):
+                        normalized = normalize_schema_type(field_info["type"])
+                        if normalized:
+                            table_field_types[table_name][target_field] = normalized
+
+        def find_parent_array_path(field_path: str, node_types: Dict[str, str]) -> Optional[Dict[str, str]]:
+            parts = field_path.split(".")
+            for i in range(len(parts) - 1, 0, -1):
+                parent_path = ".".join(parts[:i])
+                parent_type = node_types.get(parent_path)
+                if parent_type and parent_type.startswith("ARRAY<"):
+                    return {"parent_path": parent_path, "parent_type": parent_type}
+            return None
+
+        # Build field type mappings for non-conflicted logsources
+        logsource_field_type_mappings: Dict[tuple[Optional[str], Optional[str], Optional[str]], Dict[str, str]] = {}
+        for logsource_key, rules in logsource_to_rules.items():
+            tables = set(r['table'] for r in rules)
+            if len(tables) == 1:
+                table_name = list(tables)[0]
+                table_mappings = logsource_field_mappings.get(logsource_key, {})
+                type_map = {
+                    target_field: table_field_types[table_name].get(target_field)
+                    for target_field in table_mappings.values()
+                    if table_field_types[table_name].get(target_field)
+                }
+                if type_map:
+                    logsource_field_type_mappings[logsource_key] = type_map
+
+        # Build field type mappings for conflicted rules
+        conflicted_rule_field_type_mappings: Dict[str, Dict[str, str]] = {}
+        for logsource_key, rules in logsource_to_rules.items():
+            tables = set(r['table'] for r in rules)
+            if len(tables) > 1:
+                for rule in rules:
+                    table_name = rule['table']
+                    table_mappings = conflicted_rule_field_mappings.get(rule['id'], {})
+                    type_map = {
+                        target_field: table_field_types[table_name].get(target_field)
+                        for target_field in table_mappings.values()
+                        if table_field_types[table_name].get(target_field)
+                    }
+                    if type_map:
+                        conflicted_rule_field_type_mappings[rule['id']] = type_map
+
+        # Build parent array info mappings
+        logsource_field_parent_mappings: Dict[tuple[Optional[str], Optional[str], Optional[str]], Dict[str, Dict[str, str]]] = {}
+        for logsource_key, rules in logsource_to_rules.items():
+            tables = set(r['table'] for r in rules)
+            if len(tables) == 1:
+                table_name = list(tables)[0]
+                table_mappings = logsource_field_mappings.get(logsource_key, {})
+                parent_info = {}
+                for target_field in table_mappings.values():
+                    parent = find_parent_array_path(target_field, table_node_types[table_name])
+                    if parent:
+                        parent_info[target_field] = parent
+                if parent_info:
+                    logsource_field_parent_mappings[logsource_key] = parent_info
+
+        conflicted_rule_field_parent_mappings: Dict[str, Dict[str, Dict[str, str]]] = {}
+        for logsource_key, rules in logsource_to_rules.items():
+            tables = set(r['table'] for r in rules)
+            if len(tables) > 1:
+                for rule in rules:
+                    table_name = rule['table']
+                    table_mappings = conflicted_rule_field_mappings.get(rule['id'], {})
+                    parent_info = {}
+                    for target_field in table_mappings.values():
+                        parent = find_parent_array_path(target_field, table_node_types[table_name])
+                        if parent:
+                            parent_info[target_field] = parent
+                    if parent_info:
+                        conflicted_rule_field_parent_mappings[rule['id']] = parent_info
         
         return PipelineMappings(
             logsource_mappings=logsource_mappings,
             conflicted_rule_mappings=conflicted_rule_mappings,
             activity_id_mappings=activity_id_mappings,
             logsource_field_mappings=logsource_field_mappings,
-            conflicted_rule_field_mappings=conflicted_rule_field_mappings
+            conflicted_rule_field_mappings=conflicted_rule_field_mappings,
+            logsource_field_type_mappings=logsource_field_type_mappings,
+            conflicted_rule_field_type_mappings=conflicted_rule_field_type_mappings,
+            logsource_field_parent_mappings=logsource_field_parent_mappings,
+            conflicted_rule_field_parent_mappings=conflicted_rule_field_parent_mappings
         )
 
     @property

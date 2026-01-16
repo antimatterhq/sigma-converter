@@ -96,6 +96,93 @@ def lakewatch_pipeline() -> ProcessingPipeline:
                     rule_conditions=[RuleIDCondition(rule_id=rule_id)]
                 )
             )
+
+    # Step 2c: Attach field type mappings for non-conflicted logsources
+    for (category, product, service), table_name in lakewatch_mappings.logsource_mappings.items():
+        if (category, product, service) in lakewatch_mappings.logsource_field_type_mappings:
+            field_types = lakewatch_mappings.logsource_field_type_mappings[(category, product, service)]
+            # Create a safe identifier from logsource fields
+            id_parts = []
+            if category:
+                id_parts.append(f"cat_{category.replace(' ', '_')}")
+            if product:
+                id_parts.append(f"prod_{product.replace(' ', '_')}")
+            if service:
+                id_parts.append(f"svc_{service.replace(' ', '_')}")
+            identifier = "field_types_ls_" + "_".join(id_parts) if id_parts else "field_types_ls_default"
+
+            items.append(
+                ProcessingItem(
+                    identifier=identifier,
+                    transformation=SetCustomAttributeTransformation(
+                        attribute="field_types",
+                        value=field_types
+                    ),
+                    rule_conditions=[LogsourceCondition(
+                        category=category,
+                        product=product,
+                        service=service
+                    )]
+                )
+            )
+
+    # Step 2d: Attach field type mappings for conflicted rules
+    for rule_id, table_name in lakewatch_mappings.conflicted_rule_mappings.items():
+        if rule_id in lakewatch_mappings.conflicted_rule_field_type_mappings:
+            field_types = lakewatch_mappings.conflicted_rule_field_type_mappings[rule_id]
+            items.append(
+                ProcessingItem(
+                    identifier=f"field_types_rule_{rule_id}",
+                    transformation=SetCustomAttributeTransformation(
+                        attribute="field_types",
+                        value=field_types
+                    ),
+                    rule_conditions=[RuleIDCondition(rule_id=rule_id)]
+                )
+            )
+
+    # Step 2e: Attach parent array info for non-conflicted logsources
+    for (category, product, service), table_name in lakewatch_mappings.logsource_mappings.items():
+        if (category, product, service) in lakewatch_mappings.logsource_field_parent_mappings:
+            parent_info = lakewatch_mappings.logsource_field_parent_mappings[(category, product, service)]
+            id_parts = []
+            if category:
+                id_parts.append(f"cat_{category.replace(' ', '_')}")
+            if product:
+                id_parts.append(f"prod_{product.replace(' ', '_')}")
+            if service:
+                id_parts.append(f"svc_{service.replace(' ', '_')}")
+            identifier = "field_parent_ls_" + "_".join(id_parts) if id_parts else "field_parent_ls_default"
+
+            items.append(
+                ProcessingItem(
+                    identifier=identifier,
+                    transformation=SetCustomAttributeTransformation(
+                        attribute="field_parent_info",
+                        value=parent_info
+                    ),
+                    rule_conditions=[LogsourceCondition(
+                        category=category,
+                        product=product,
+                        service=service
+                    )]
+                )
+            )
+
+    # Step 2f: Attach parent array info for conflicted rules
+    for rule_id, table_name in lakewatch_mappings.conflicted_rule_mappings.items():
+        if rule_id in lakewatch_mappings.conflicted_rule_field_parent_mappings:
+            parent_info = lakewatch_mappings.conflicted_rule_field_parent_mappings[rule_id]
+            items.append(
+                ProcessingItem(
+                    identifier=f"field_parent_rule_{rule_id}",
+                    transformation=SetCustomAttributeTransformation(
+                        attribute="field_parent_info",
+                        value=parent_info
+                    ),
+                    rule_conditions=[RuleIDCondition(rule_id=rule_id)]
+                )
+            )
     
     # Step 3a: Apply table assignments for non-conflicted logsources
     # These logsources map unambiguously to a single OCSF table
@@ -146,7 +233,7 @@ def lakewatch_pipeline() -> ProcessingPipeline:
             ProcessingItem(
                 identifier=f"add_activity_id_{rule_id}",
                 transformation=AddConditionTransformation(
-                    conditions={"activity_id": str(activity_id)}
+                    conditions={"activity_id": activity_id}
                 ),
                 rule_conditions=[RuleIDCondition(rule_id=rule_id)]
             )

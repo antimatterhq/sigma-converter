@@ -66,8 +66,8 @@ LakeWatch JSON (convert-lakewatch)
 
 ```bash
 # Setup OCSF data (one-time)
-python fieldmapper/ocsf_data/bin/ocsflite_parser.py --export-ai-schema .
-python fieldmapper/ocsf_data/bin/mitre.py
+python fieldmapper/bin/ocsflite_parser.py --export-ai-schema .
+python fieldmapper/bin/mitre.py
 
 # Map rules (requires OPENAI_API_KEY env var)
 field-mapper --map --output fieldmapper/mappings/ --limit 10
