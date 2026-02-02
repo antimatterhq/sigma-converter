@@ -153,7 +153,7 @@ class Directory:
             # },
         }
 
-        self.root = "_ocsf_lite"
+        self.root = "fieldmapper/ocsf_data/_ocsf_lite"
 
         events_path = f"{self.root}/events"
         event_types = next(os.walk(events_path))[1]

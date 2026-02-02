@@ -69,7 +69,7 @@ LakeWatch JSON (convert-lakewatch)
 python fieldmapper/bin/ocsflite_parser.py --export-ai-schema .
 python fieldmapper/bin/mitre.py
 
-# Map rules (requires OPENAI_API_KEY env var)
+# Map rules (requires OPENAI_KEY env var)
 field-mapper --map --output fieldmapper/mappings/ --limit 10
 
 # Analyze mapping coverage
