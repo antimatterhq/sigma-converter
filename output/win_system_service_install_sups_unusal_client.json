@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND process.pid = 0)"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.log_provider) = lower('service control manager') AND metadata.event_code = 7045 AND CAST(process.pid AS INT) = CAST(0 AS INT))"
       }
     },
     "output": {

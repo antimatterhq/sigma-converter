@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(status_detail) = lower('fastpass declined phishing attempt') AND lower(actor.authorizations.decision) = lower('failure') AND lower(action) = lower('user.authentication.auth_via_mfa'))"
+        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(status_detail) = lower('fastpass declined phishing attempt') AND exists(actor.authorizations, x -> lower(x.decision) = lower('failure')) AND lower(action) = lower('user.authentication.auth_via_mfa'))"
       }
     },
     "output": {

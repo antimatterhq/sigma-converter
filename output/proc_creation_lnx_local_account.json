@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/lastlog')) OR contains(lower(process.cmd_line), lower('\\'x:0:\\'')) OR (endswith(lower(process.name), lower('/cat')) OR endswith(lower(process.name), lower('/ed')) OR endswith(lower(process.name), lower('/head')) OR endswith(lower(process.name), lower('/more')) OR endswith(lower(process.name), lower('/nano')) OR endswith(lower(process.name), lower('/tail')) OR endswith(lower(process.name), lower('/vi')) OR endswith(lower(process.name), lower('/vim')) OR endswith(lower(process.name), lower('/less')) OR endswith(lower(process.name), lower('/emacs')) OR endswith(lower(process.name), lower('/sqlite3')) OR endswith(lower(process.name), lower('/makemap'))) AND (contains(lower(process.cmd_line), lower('/etc/passwd')) OR contains(lower(process.cmd_line), lower('/etc/shadow')) OR contains(lower(process.cmd_line), lower('/etc/sudoers')) OR contains(lower(process.cmd_line), lower('/etc/spwd.db')) OR contains(lower(process.cmd_line), lower('/etc/pwd.db')) OR contains(lower(process.cmd_line), lower('/etc/master.passwd'))) OR endswith(lower(process.name), lower('/id')) OR endswith(lower(process.name), lower('/lsof')) AND contains(lower(process.cmd_line), lower('-u'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (endswith(lower(process.name), lower('/lastlog')) OR contains(lower(process.cmd_line), lower('''x:0:''')) OR (endswith(lower(process.name), lower('/cat')) OR endswith(lower(process.name), lower('/ed')) OR endswith(lower(process.name), lower('/head')) OR endswith(lower(process.name), lower('/more')) OR endswith(lower(process.name), lower('/nano')) OR endswith(lower(process.name), lower('/tail')) OR endswith(lower(process.name), lower('/vi')) OR endswith(lower(process.name), lower('/vim')) OR endswith(lower(process.name), lower('/less')) OR endswith(lower(process.name), lower('/emacs')) OR endswith(lower(process.name), lower('/sqlite3')) OR endswith(lower(process.name), lower('/makemap'))) AND (contains(lower(process.cmd_line), lower('/etc/passwd')) OR contains(lower(process.cmd_line), lower('/etc/shadow')) OR contains(lower(process.cmd_line), lower('/etc/sudoers')) OR contains(lower(process.cmd_line), lower('/etc/spwd.db')) OR contains(lower(process.cmd_line), lower('/etc/pwd.db')) OR contains(lower(process.cmd_line), lower('/etc/master.passwd'))) OR endswith(lower(process.name), lower('/id')) OR endswith(lower(process.name), lower('/lsof')) AND contains(lower(process.cmd_line), lower('-u'))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Legitimate administration activities References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1087.001/T1087.001.md, https://my.f5.com/manage/s/article/K589, https://man.freebsd.org/cgi/man.cgi?pwd_mkdb",
       "mitre": [

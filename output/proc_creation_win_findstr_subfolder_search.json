@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('findstr')) AND endswith(lower(process.name), lower('findstr.exe')) AND lower(process.file.name) = lower('findstr.exe') AND (contains(lower(process.cmd_line), lower(' -s ')) OR contains(lower(process.cmd_line), lower(' /s ')) OR contains(lower(process.cmd_line), lower(' \u2013s ')) OR contains(lower(process.cmd_line), lower(' \u2014s ')) OR contains(lower(process.cmd_line), lower(' \u2015s '))) AND (contains(lower(process.cmd_line), lower(' -i ')) OR contains(lower(process.cmd_line), lower(' /i ')) OR contains(lower(process.cmd_line), lower(' \u2013i ')) OR contains(lower(process.cmd_line), lower(' \u2014i ')) OR contains(lower(process.cmd_line), lower(' \u2015i '))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND contains(lower(process.cmd_line), lower('findstr')) AND endswith(lower(process.name), lower('findstr.exe')) AND lower(process.file.name) = lower('findstr.exe') AND (contains(lower(process.cmd_line), lower(' -s ')) OR contains(lower(process.cmd_line), lower(' /s ')) OR contains(lower(process.cmd_line), lower(' \u2013s ')) OR contains(lower(process.cmd_line), lower(' \u2014s ')) OR contains(lower(process.cmd_line), lower(' \u2015s '))) AND (contains(lower(process.cmd_line), lower(' -i ')) OR contains(lower(process.cmd_line), lower(' /i ')) OR contains(lower(process.cmd_line), lower(' \u2013i ')) OR contains(lower(process.cmd_line), lower(' \u2014i ')) OR contains(lower(process.cmd_line), lower(' \u2015i '))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Administrative or software activity References: https://lolbas-project.github.io/lolbas/Binaries/Findstr/, https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/, https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f",
       "mitre": [

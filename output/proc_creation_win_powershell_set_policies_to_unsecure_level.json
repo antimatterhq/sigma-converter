@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (contains(lower(process.cmd_line), lower('-executionpolicy ')) OR contains(lower(process.cmd_line), lower(' -ep ')) OR contains(lower(process.cmd_line), lower(' -exec '))) AND (contains(lower(process.cmd_line), lower('bypass')) OR contains(lower(process.cmd_line), lower('unrestricted'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (lower(LOWER(process.file.name)) in ('powershell\\\\.exe', 'pwsh\\\\.dll')) AND (endswith(lower(process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\\\\\pwsh.exe'))) AND (contains(lower(process.cmd_line), lower('-executionpolicy ')) OR contains(lower(process.cmd_line), lower(' -ep ')) OR contains(lower(process.cmd_line), lower(' -exec '))) AND (contains(lower(process.cmd_line), lower('bypass')) OR contains(lower(process.cmd_line), lower('unrestricted'))))"
       }
     },
     "output": {

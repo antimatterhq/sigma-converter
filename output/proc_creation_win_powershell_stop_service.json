@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('stop-service ')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 2 AND (lower(LOWER(process.file.name)) in ('powershell\\\\.exe', 'pwsh\\\\.dll')) AND (endswith(lower(process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('stop-service ')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: There are many legitimate reasons to stop a service. This rule isn't looking for any suspicious behaviour in particular. Filter legitimate activity accordingly Reference: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/stop-service?view=powershell-7.4",
       "mitre": [

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\sdbinst.exe')) AND lower(process.file.name) = lower('sdbinst.exe') AND contains(lower(process.cmd_line), lower('.sdb')) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\msiexec.exe')) AND (contains(lower(process.cmd_line), lower(':\\\\program files (x86)\\\\iis express\\\\iisexpressshim.sdb')) OR contains(lower(process.cmd_line), lower(':\\\\program files\\\\iis express\\\\iisexpressshim.sdb')))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\sdbinst.exe')) AND lower(process.file.name) = lower('sdbinst.exe') AND contains(lower(process.cmd_line), lower('.sdb')) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\\\\\msiexec.exe')) AND (contains(lower(process.cmd_line), lower(':\\\\\\\\program files (x86)\\\\\\\\iis express\\\\\\\\iisexpressshim.sdb')) OR contains(lower(process.cmd_line), lower(':\\\\\\\\program files\\\\\\\\iis express\\\\\\\\iisexpressshim.sdb')))))"
       }
     },
     "output": {

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(process.cmd_line) regexp '.*cmd\\.exe /q /c .* 1> \\\\.*\\*\\* 2>&1.*' OR lower(process.cmd_line) regexp '.*cmd\\.exe /c .* > \\\\.*\\*\\* 2>&1.*' OR lower(process.cmd_line) regexp '.*cmd\\.exe /c .* > .*\\\\temp\\* 2>&1.*' OR contains(lower(process.cmd_line), lower('powershell.exe -exec bypass -noni -nop -w 1 -c \"')) OR contains(lower(process.cmd_line), lower('powershell.exe -noni -nop -w 1 -enc '))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (lower(process.cmd_line) regexp '.*cmd\\\\.exe /q /c .* 1> \\\\\\\\.*\\\\*\\\\* 2>&1.*' OR lower(process.cmd_line) regexp '.*cmd\\\\.exe /c .* > \\\\\\\\.*\\\\*\\\\* 2>&1.*' OR lower(process.cmd_line) regexp '.*cmd\\\\.exe /c .* > .*\\\\\\\\temp\\\\* 2>&1.*' OR contains(lower(process.cmd_line), lower('powershell.exe -exec bypass -noni -nop -w 1 -c \"')) OR contains(lower(process.cmd_line), lower('powershell.exe -noni -nop -w 1 -enc '))))"
       }
     },
     "output": {

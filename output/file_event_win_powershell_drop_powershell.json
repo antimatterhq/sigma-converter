@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(actor.process.name), lower('\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\pwsh.exe'))) AND endswith(lower(file.path), lower('.ps1')) AND NOT (contains(lower(file.path), lower('__psscriptpolicytest_')) OR startswith(lower(file.path), lower('c:\\\\users\\\\')) AND contains(lower(file.path), lower('\\\\appdata\\\\local\\\\temp\\\\')) OR startswith(lower(file.path), lower('c:\\\\windows\\\\temp\\\\'))))"
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (endswith(lower(actor.process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(actor.process.name), lower('\\\\\\\\pwsh.exe'))) AND endswith(lower(file.path), lower('.ps1')) AND NOT (contains(lower(file.path), lower('__psscriptpolicytest_')) OR startswith(lower(file.path), lower('c:\\\\\\\\users\\\\\\\\')) AND contains(lower(file.path), lower('\\\\\\\\appdata\\\\\\\\local\\\\\\\\temp\\\\\\\\')) OR startswith(lower(file.path), lower('c:\\\\\\\\windows\\\\\\\\temp\\\\\\\\'))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: False positives will differ depending on the environment and scripts used. Apply additional filters accordingly. Reference: https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution",
       "mitre": [

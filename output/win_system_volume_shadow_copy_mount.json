@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('12') AND lower(metadata.log_provider) = lower('microsoft-windows-ntfs') AND metadata.event_code = 98 AND contains(lower(device.name), lower('harddiskvolumeshadowcopy')))"
+        "sql": "SELECT * FROM file_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 12 AND lower(metadata.log_provider) = lower('microsoft-windows-ntfs') AND metadata.event_code = 98 AND contains(lower(device.name), lower('harddiskvolumeshadowcopy')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Legitimate use of volume shadow copy mounts (backups maybe). Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-3---esentutlexe-sam-copy",
       "mitre": [

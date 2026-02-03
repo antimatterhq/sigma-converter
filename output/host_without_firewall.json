@@ -15,7 +15,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(finding_info.analytic.category) = lower('security policy') AND contains(lower(vulnerabilities.desc), lower('firewall product not detected')))"
+        "sql": "SELECT * FROM vulnerability_finding WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(finding_info.analytic.category) = lower('security policy') AND exists(vulnerabilities, x -> contains(lower(x.desc), lower('firewall product not detected'))))"
       }
     },
     "output": {
@@ -24,7 +24,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "References: https://www.cisecurity.org/controls/cis-controls-list/, https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf, https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf"
     },

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\agentexecutor.exe')) AND lower(process.file.name) = lower('agentexecutor.exe') AND (contains(lower(process.cmd_line), lower(' -powershell')) OR contains(lower(process.cmd_line), lower(' -remediationscript'))) AND NOT (contains(lower(process.cmd_line), lower('c:\\\\windows\\\\system32\\\\windowspowershell\\\\v1.0\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\windows\\\\syswow64\\\\windowspowershell\\\\v1.0\\\\')) OR endswith(lower(process.parent_process.name), lower('\\\\microsoft.management.services.intunewindowsagent.exe'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\agentexecutor.exe')) AND lower(process.file.name) = lower('agentexecutor.exe') AND (contains(lower(process.cmd_line), lower(' -powershell')) OR contains(lower(process.cmd_line), lower(' -remediationscript'))) AND NOT (contains(lower(process.cmd_line), lower('c:\\\\\\\\windows\\\\\\\\system32\\\\\\\\windowspowershell\\\\\\\\v1.0\\\\\\\\')) OR contains(lower(process.cmd_line), lower('c:\\\\\\\\windows\\\\\\\\syswow64\\\\\\\\windowspowershell\\\\\\\\v1.0\\\\\\\\')) OR endswith(lower(process.parent_process.name), lower('\\\\\\\\microsoft.management.services.intunewindowsagent.exe'))))"
       }
     },
     "output": {

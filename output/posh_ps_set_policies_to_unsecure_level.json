@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(script.script_content.value), lower('set-executionpolicy')) AND (contains(lower(script.script_content.value), lower('unrestricted')) OR contains(lower(script.script_content.value), lower('bypass'))) AND NOT (contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(\\'https://community.chocolatey.org/install.ps1\\')')) OR contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(\\'https://chocolatey.org/install.ps1\\')'))))"
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND contains(lower(script.script_content.value), lower('set-executionpolicy')) AND (contains(lower(script.script_content.value), lower('unrestricted')) OR contains(lower(script.script_content.value), lower('bypass'))) AND NOT (contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(''https://community.chocolatey.org/install.ps1'')')) OR contains(lower(script.script_content.value), lower('(new-object system.net.webclient).downloadstring(''https://chocolatey.org/install.ps1'')'))))"
       }
     },
     "output": {

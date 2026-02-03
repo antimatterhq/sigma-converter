@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(script.script_content.value), lower('get-localgroup')) OR contains(lower(script.script_content.value), lower('get-localgroupmember')) OR contains(lower(script.script_content.value), lower('get-wmiobject')) AND contains(lower(script.script_content.value), lower('win32_group'))))"
+        "sql": "SELECT * FROM script_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (contains(lower(script.script_content.value), lower('get-localgroup')) OR contains(lower(script.script_content.value), lower('get-localgroupmember')) OR contains(lower(script.script_content.value), lower('get-wmiobject')) AND contains(lower(script.script_content.value), lower('win32_group'))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.001/T1069.001.md",
       "mitre": [

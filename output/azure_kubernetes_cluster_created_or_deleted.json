@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(api.operation)) in ('microsoft\\.kubernetes/connectedclusters/write', 'microsoft\\.kubernetes/connectedclusters/delete'))"
+        "sql": "SELECT * FROM entity_management WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(api.operation)) in ('microsoft\\\\.kubernetes/connectedclusters/write', 'microsoft\\\\.kubernetes/connectedclusters/delete'))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positives: 1. Kubernetes cluster being created or deleted may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. 2. Kubernetes cluster created or deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule. References: https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes, https://www.microsoft.com/security/blog/2021/03/23/secure-containerized-environments-with-updated-threat-matrix-for-kubernetes/, https://www.microsoft.com/security/blog/2020/04/02/attack-matrix-kubernetes/, https://medium.com/mitre-engenuity/att-ck-for-containers-now-available-4c2359654bf1, https://attack.mitre.org/matrices/enterprise/cloud/",
       "mitre": [

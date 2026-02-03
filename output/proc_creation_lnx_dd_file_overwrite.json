@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (lower(LOWER(process.name)) in ('/bin/dd', '/usr/bin/dd')) AND contains(lower(process.cmd_line), lower('of=')) AND (contains(lower(process.cmd_line), lower('if=/dev/zero')) OR contains(lower(process.cmd_line), lower('if=/dev/null'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (lower(LOWER(process.name)) in ('/bin/dd', '/usr/bin/dd')) AND contains(lower(process.cmd_line), lower('of=')) AND (contains(lower(process.cmd_line), lower('if=/dev/zero')) OR contains(lower(process.cmd_line), lower('if=/dev/null'))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Any user deleting files that way. Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md#atomic-test-2---macoslinux---overwrite-file-with-dd",
       "mitre": [

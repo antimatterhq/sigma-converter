@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\netsh.exe')) AND lower(process.file.name) = lower('netsh.exe') AND contains(lower(process.cmd_line), lower('firewall ')) AND contains(lower(process.cmd_line), lower('add ')) AND contains(lower(process.cmd_line), lower('tcp ')) AND contains(lower(process.cmd_line), lower('3389')) AND (contains(lower(process.cmd_line), lower('portopening')) OR contains(lower(process.cmd_line), lower('allow'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\netsh.exe')) AND lower(process.file.name) = lower('netsh.exe') AND contains(lower(process.cmd_line), lower('firewall ')) AND contains(lower(process.cmd_line), lower('add ')) AND contains(lower(process.cmd_line), lower('tcp ')) AND contains(lower(process.cmd_line), lower('3389')) AND (contains(lower(process.cmd_line), lower('portopening')) OR contains(lower(process.cmd_line), lower('allow'))))"
       }
     },
     "output": {

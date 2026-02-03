@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\schtasks.exe')) AND lower(process.file.name) = lower('schtasks.exe') AND contains(lower(process.cmd_line), lower('/create')) AND (contains(lower(process.cmd_line), lower('get-itemproperty')) OR contains(lower(process.cmd_line), lower(' gp '))) AND (contains(lower(process.cmd_line), lower('hkcu:')) OR contains(lower(process.cmd_line), lower('hklm:')) OR contains(lower(process.cmd_line), lower('registry::')) OR contains(lower(process.cmd_line), lower('hkey_'))) AND NOT (contains(lower(process.cmd_line), lower('frombase64string')) OR contains(lower(process.cmd_line), lower('encodedcommand'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\schtasks.exe')) AND lower(process.file.name) = lower('schtasks.exe') AND contains(lower(process.cmd_line), lower('/create')) AND (contains(lower(process.cmd_line), lower('get-itemproperty')) OR contains(lower(process.cmd_line), lower(' gp '))) AND (contains(lower(process.cmd_line), lower('hkcu:')) OR contains(lower(process.cmd_line), lower('hklm:')) OR contains(lower(process.cmd_line), lower('registry::')) OR contains(lower(process.cmd_line), lower('hkey_'))) AND NOT (contains(lower(process.cmd_line), lower('frombase64string')) OR contains(lower(process.cmd_line), lower('encodedcommand'))))"
       }
     },
     "output": {

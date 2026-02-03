@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND contains(lower(process.cmd_line), lower('assoc')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\cmd.exe')) AND lower(process.file.name) = lower('cmd.exe') AND contains(lower(process.cmd_line), lower('assoc')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "Examine fields: process.name, process.cmd_line, actor.user.name, LogonGuid, process.file.hashes.value, ParentProcessGuid, process.parent_process.cmd_line False positive: Admin activity Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.001/T1546.001.md",
       "mitre": [

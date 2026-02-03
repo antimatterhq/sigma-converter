@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.cmd_line), lower('vboxrt.dll,rtr3init')) OR contains(lower(process.cmd_line), lower('vboxc.dll')) OR contains(lower(process.cmd_line), lower('vboxdrv.sys')) OR contains(lower(process.cmd_line), lower('startvm')) OR contains(lower(process.cmd_line), lower('controlvm'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (contains(lower(process.cmd_line), lower('vboxrt.dll,rtr3init')) OR contains(lower(process.cmd_line), lower('vboxc.dll')) OR contains(lower(process.cmd_line), lower('vboxdrv.sys')) OR contains(lower(process.cmd_line), lower('startvm')) OR contains(lower(process.cmd_line), lower('controlvm'))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "Examine fields: ComputerName, actor.user.name, process.cmd_line, process.parent_process.cmd_line False positive: This may have false positives on hosts where Virtualbox is legitimately being used for operations References: https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/, https://threatpost.com/maze-ransomware-ragnar-locker-virtual-machine/159350/",
       "mitre": [

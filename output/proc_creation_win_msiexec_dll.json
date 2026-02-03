@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\msiexec.exe')) AND lower(process.file.name) = lower('\\\\msiexec.exe') AND (contains(lower(process.cmd_line), lower(' -z ')) OR contains(lower(process.cmd_line), lower(' /z ')) OR contains(lower(process.cmd_line), lower(' \u2013z ')) OR contains(lower(process.cmd_line), lower(' \u2014z ')) OR contains(lower(process.cmd_line), lower(' \u2015z '))) AND contains(lower(process.cmd_line), lower('.dll')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\msiexec.exe')) AND lower(process.file.name) = lower('\\\\\\\\msiexec.exe') AND (contains(lower(process.cmd_line), lower(' -z ')) OR contains(lower(process.cmd_line), lower(' /z ')) OR contains(lower(process.cmd_line), lower(' \u2013z ')) OR contains(lower(process.cmd_line), lower(' \u2014z ')) OR contains(lower(process.cmd_line), lower(' \u2015z '))) AND contains(lower(process.cmd_line), lower('.dll')))"
       }
     },
     "output": {

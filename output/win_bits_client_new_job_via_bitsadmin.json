@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 3 AND endswith(lower(actor.process.name), lower('\\\\bitsadmin.exe')))"
+        "sql": "SELECT * FROM scheduled_job_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND metadata.event_code = 3 AND endswith(lower(actor.process.name), lower('\\\\\\\\bitsadmin.exe')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Many legitimate applications or scripts could leverage \"bitsadmin\". This event is best correlated with EID 16403 via the JobID field Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md",
       "mitre": [

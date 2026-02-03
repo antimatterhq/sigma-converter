@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.parent_process.name), lower('\\\\ftp.exe')) OR endswith(lower(process.name), lower('\\\\ftp.exe')) AND lower(process.file.name) = lower('ftp.exe') AND (contains(lower(process.cmd_line), lower('-s:')) OR contains(lower(process.cmd_line), lower('/s:')) OR contains(lower(process.cmd_line), lower('\u2013s:')) OR contains(lower(process.cmd_line), lower('\u2014s:')) OR contains(lower(process.cmd_line), lower('\u2015s:')))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (endswith(lower(process.parent_process.name), lower('\\\\\\\\ftp.exe')) OR endswith(lower(process.name), lower('\\\\\\\\ftp.exe')) AND lower(process.file.name) = lower('ftp.exe') AND (contains(lower(process.cmd_line), lower('-s:')) OR contains(lower(process.cmd_line), lower('/s:')) OR contains(lower(process.cmd_line), lower('\u2013s:')) OR contains(lower(process.cmd_line), lower('\u2014s:')) OR contains(lower(process.cmd_line), lower('\u2015s:')))))"
       }
     },
     "output": {

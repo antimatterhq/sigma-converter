@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('securitycompliancecenter') AND lower(metadata.event_code) = lower('suspicious inbox forwarding') AND lower(actor.authorizations.decision) = lower('success'))"
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('securitycompliancecenter') AND lower(metadata.event_code) = lower('suspicious inbox forwarding') AND exists(actor.authorizations, x -> lower(x.decision) = lower('success')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Unknown References: https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy, https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference",
       "mitre": [

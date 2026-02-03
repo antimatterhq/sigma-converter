@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (contains(lower(process.file.hashes.value), lower('imphash=a53a02b997935fd8eedcb5f7abab9b9f')) OR contains(lower(process.file.hashes.value), lower('imphash=e96a73c7bf33a464c510ede582318bf2')) OR endswith(lower(process.cmd_line), lower('.exe -s')) AND endswith(lower(process.parent_process.name), lower('\\\\services.exe'))) AND NOT endswith(lower(process.name), lower('\\\\clussvc.exe')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (contains(lower(process.file.hashes.value), lower('imphash=a53a02b997935fd8eedcb5f7abab9b9f')) OR contains(lower(process.file.hashes.value), lower('imphash=e96a73c7bf33a464c510ede582318bf2')) OR endswith(lower(process.cmd_line), lower('.exe -s')) AND endswith(lower(process.parent_process.name), lower('\\\\\\\\services.exe'))) AND NOT endswith(lower(process.name), lower('\\\\\\\\clussvc.exe')))"
       }
     },
     "output": {

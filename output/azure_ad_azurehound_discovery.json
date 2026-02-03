@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.user_agent), lower('azurehound')) AND api.response.code = 0)"
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (contains(lower(http_request.user_agent), lower('azurehound')) AND CAST(api.response.code AS INT) = CAST(0 AS INT))"
       }
     },
     "output": {

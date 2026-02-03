@@ -17,7 +17,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND lower(api.operation) = lower('delete') AND lower(resources.name) = lower('deployments'))"
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 4 AND lower(api.operation) = lower('delete') AND exists(resources, x -> lower(x.name) = lower('deployments')))"
       }
     },
     "output": {
@@ -26,7 +26,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Unknown Reference: https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Data%20destruction/",
       "mitre": [

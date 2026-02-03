@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (lower(process.cmd_line) regexp '.*join.*split.*' OR contains(lower(process.cmd_line), lower('( $shellid[1]+$shellid[13]+\\'x\\')')) OR lower(process.cmd_line) regexp '.*( $pshome[.*]+$pshome[.*]+.*' OR contains(lower(process.cmd_line), lower('( $env:public[13]+$env:public[5]+\\'x\\')')) OR lower(process.cmd_line) regexp '.*( $env:comspec[4,.*,25]-join\\'\\').*' OR contains(lower(process.cmd_line), lower('[1,3]+\\'x\\'-join\\'\\')'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (endswith(lower(process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\\\\\pwsh.exe'))) AND (lower(LOWER(process.file.name)) in ('powershell\\\\.exe', 'pwsh\\\\.dll')) AND (lower(process.cmd_line) regexp '.*join.*split.*' OR contains(lower(process.cmd_line), lower('( $shellid[1]+$shellid[13]+''x'')')) OR lower(process.cmd_line) regexp '.*( $pshome[.*]+$pshome[.*]+.*' OR contains(lower(process.cmd_line), lower('( $env:public[13]+$env:public[5]+''x'')')) OR lower(process.cmd_line) regexp '.*( $env:comspec[4,.*,25]-join'''').*' OR contains(lower(process.cmd_line), lower('[1,3]+''x''-join'''')'))))"
       }
     },
     "output": {

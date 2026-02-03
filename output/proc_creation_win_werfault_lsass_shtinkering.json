@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\werfault.exe')) AND lower(process.file.name) = lower('werfault.exe') AND (contains(lower(process.parent_process.session.issuer), lower('authori')) OR contains(lower(process.parent_process.session.issuer), lower('autori'))) AND (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))) AND contains(lower(process.cmd_line), lower(' -u -p ')) AND contains(lower(process.cmd_line), lower(' -ip ')) AND contains(lower(process.cmd_line), lower(' -s ')) AND NOT lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\lsass.exe'))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\werfault.exe')) AND lower(process.file.name) = lower('werfault.exe') AND (contains(lower(process.parent_process.session.issuer), lower('authori')) OR contains(lower(process.parent_process.session.issuer), lower('autori'))) AND (contains(lower(actor.user.name), lower('authori')) OR contains(lower(actor.user.name), lower('autori'))) AND contains(lower(process.cmd_line), lower(' -u -p ')) AND contains(lower(process.cmd_line), lower(' -ip ')) AND contains(lower(process.cmd_line), lower(' -s ')) AND NOT lower(process.parent_process.name) = lower('c:\\\\\\\\windows\\\\\\\\system32\\\\\\\\lsass.exe'))"
       }
     },
     "output": {

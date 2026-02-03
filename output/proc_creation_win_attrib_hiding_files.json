@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\attrib.exe')) AND lower(process.file.name) = lower('attrib.exe') AND contains(lower(process.cmd_line), lower(' +h ')) AND NOT contains(lower(process.cmd_line), lower('\\\\desktop.ini ')) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\cmd.exe')) AND lower(process.cmd_line) regexp '+r +h +s +a \\\\.*\\.cui' AND lower(process.parent_process.cmd_line) regexp 'c:\\\\windows\\\\system32\\\\.*\\.bat'))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\attrib.exe')) AND lower(process.file.name) = lower('attrib.exe') AND contains(lower(process.cmd_line), lower(' +h ')) AND NOT contains(lower(process.cmd_line), lower('\\\\\\\\desktop.ini ')) AND NOT (endswith(lower(process.parent_process.name), lower('\\\\\\\\cmd.exe')) AND lower(process.cmd_line) regexp '+r +h +s +a \\\\\\\\.*\\\\.cui' AND lower(process.parent_process.cmd_line) regexp 'c:\\\\\\\\windows\\\\\\\\system32\\\\\\\\.*\\\\.bat'))"
       }
     },
     "output": {

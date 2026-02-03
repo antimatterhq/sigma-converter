@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(process.file.name)) in ('powershell\\.exe', 'pwsh\\.dll')) AND (endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('set-acl ')) AND contains(lower(process.cmd_line), lower('-aclobject ')) AND (contains(lower(process.cmd_line), lower('-path \"c:\\\\windows')) OR contains(lower(process.cmd_line), lower('-path \\'c:\\\\windows')) OR contains(lower(process.cmd_line), lower('-path %windir%')) OR contains(lower(process.cmd_line), lower('-path $env:windir'))) AND (contains(lower(process.cmd_line), lower('fullcontrol')) OR contains(lower(process.cmd_line), lower('allow'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND ((lower(LOWER(process.file.name)) in ('powershell\\\\.exe', 'pwsh\\\\.dll')) AND (endswith(lower(process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('set-acl ')) AND contains(lower(process.cmd_line), lower('-aclobject ')) AND (contains(lower(process.cmd_line), lower('-path \"c:\\\\\\\\windows')) OR contains(lower(process.cmd_line), lower('-path ''c:\\\\\\\\windows')) OR contains(lower(process.cmd_line), lower('-path %windir%')) OR contains(lower(process.cmd_line), lower('-path $env:windir'))) AND (contains(lower(process.cmd_line), lower('fullcontrol')) OR contains(lower(process.cmd_line), lower('allow'))))"
       }
     },
     "output": {

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND lower(process.parent_process.cmd_line) = lower('bash -i') AND (contains(lower(process.cmd_line), lower('-c import ')) OR contains(lower(process.cmd_line), lower('base64')) OR contains(lower(process.cmd_line), lower('pty.spawn')) OR endswith(lower(process.name), lower('whoami')) OR endswith(lower(process.name), lower('iptables')) OR endswith(lower(process.name), lower('/ncat')) OR endswith(lower(process.name), lower('/nc')) OR endswith(lower(process.name), lower('/netcat'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND lower(process.parent_process.cmd_line) = lower('bash -i') AND (contains(lower(process.cmd_line), lower('-c import ')) OR contains(lower(process.cmd_line), lower('base64')) OR contains(lower(process.cmd_line), lower('pty.spawn')) OR endswith(lower(process.name), lower('whoami')) OR endswith(lower(process.name), lower('iptables')) OR endswith(lower(process.name), lower('/ncat')) OR endswith(lower(process.name), lower('/nc')) OR endswith(lower(process.name), lower('/netcat'))))"
       }
     },
     "output": {

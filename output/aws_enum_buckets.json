@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM datastore_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('8') AND lower(metadata.product.name) = lower('s3.amazonaws.com') AND lower(api.operation) = lower('listbuckets') AND NOT lower(actor.user.type) = lower('assumedrole'))"
+        "sql": "SELECT * FROM datastore_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 8 AND lower(metadata.product.name) = lower('s3.amazonaws.com') AND lower(api.operation) = lower('listbuckets') AND NOT lower(actor.user.type) = lower('assumedrole'))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Administrators listing buckets, it may be necessary to filter out users who commonly conduct this activity. References: https://github.com/Lifka/hacking-resources/blob/c2ae355d381bd0c9f0b32c4ead049f44e5b1573f/cloud-hacking-cheat-sheets.md, https://jamesonhacking.blogspot.com/2020/12/pivoting-to-private-aws-s3-buckets.html, https://securitycafe.ro/2022/12/14/aws-enumeration-part-ii-practical-enumeration/",
       "mitre": [

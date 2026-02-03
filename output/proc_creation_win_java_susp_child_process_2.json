@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.parent_process.name), lower('\\\\java.exe')) AND (endswith(lower(process.name), lower('\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\pwsh.exe'))) AND NOT (contains(lower(process.parent_process.name), lower('build')) AND contains(lower(process.cmd_line), lower('build'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.parent_process.name), lower('\\\\\\\\java.exe')) AND (endswith(lower(process.name), lower('\\\\\\\\bash.exe')) OR endswith(lower(process.name), lower('\\\\\\\\cmd.exe')) OR endswith(lower(process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\\\\\pwsh.exe'))) AND NOT (contains(lower(process.parent_process.name), lower('build')) AND contains(lower(process.cmd_line), lower('build'))))"
       }
     },
     "output": {

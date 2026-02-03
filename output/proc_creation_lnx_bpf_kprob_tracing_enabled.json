@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(process.cmd_line), lower('echo 1 >')) AND contains(lower(process.cmd_line), lower('/sys/kernel/debug/tracing/events/kprobes/')) AND (contains(lower(process.cmd_line), lower('/myprobe/enable')) OR contains(lower(process.cmd_line), lower('/myretprobe/enable'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND contains(lower(process.cmd_line), lower('echo 1 >')) AND contains(lower(process.cmd_line), lower('/sys/kernel/debug/tracing/events/kprobes/')) AND (contains(lower(process.cmd_line), lower('/myprobe/enable')) OR contains(lower(process.cmd_line), lower('/myretprobe/enable'))))"
       }
     },
     "output": {

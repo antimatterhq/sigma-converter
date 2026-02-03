@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('6') AND http_response.code = 200 AND lower(http_request.url) = lower('/wsman') AND lower(http_request.http_method) = lower('post') AND NOT contains(lower(http_request.http_headers.name), lower('authorization')) AND NOT http_request.body_length = 0)"
+        "sql": "SELECT * FROM http_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 6 AND CAST(http_response.code AS INT) = CAST(200 AS INT) AND lower(http_request.url) = lower('/wsman') AND lower(http_request.http_method) = lower('post') AND NOT exists(http_request.http_headers, x -> contains(lower(x.name), lower('authorization'))) AND NOT CAST(http_request.body_length AS INT) = CAST(0 AS INT))"
       }
     },
     "output": {

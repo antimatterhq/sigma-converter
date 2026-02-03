@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\mstsc.exe')) AND lower(process.file.name) = lower('mstsc.exe') AND (endswith(lower(process.cmd_line), lower('.rdp')) OR endswith(lower(process.cmd_line), lower('.rdp\"'))) AND NOT (lower(process.parent_process.name) = lower('c:\\\\windows\\\\system32\\\\lxss\\\\wslhost.exe') AND contains(lower(process.cmd_line), lower('c:\\\\programdata\\\\microsoft\\\\wsl\\\\wslg.rdp'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\mstsc.exe')) AND lower(process.file.name) = lower('mstsc.exe') AND (endswith(lower(process.cmd_line), lower('.rdp')) OR endswith(lower(process.cmd_line), lower('.rdp\"'))) AND NOT (lower(process.parent_process.name) = lower('c:\\\\\\\\windows\\\\\\\\system32\\\\\\\\lxss\\\\\\\\wslhost.exe') AND contains(lower(process.cmd_line), lower('c:\\\\\\\\programdata\\\\\\\\microsoft\\\\\\\\wsl\\\\\\\\wslg.rdp'))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Likely with legitimate usage of \".rdp\" files References: https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/, https://web.archive.org/web/20230726144748/https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/",
       "mitre": [

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND process.cmd_line rlike '\\\\w\\+`\\(\\\\w\\+|-|.\\)`\\[\\\\w\\+|\\\\s\\]' AND process.cmd_line rlike '\"\\(\\\\\\{\\\\d\\\\\\}\\)\\+\"\\\\s*-f' AND process.cmd_line rlike '\\(?i\\)\\\\$\\\\\\{`?e`?n`?v`?:`?p`?a`?t`?h`?\\\\\\}' AND NOT contains(lower(process.cmd_line), lower('${env:path}')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND process.cmd_line rlike '\\\\w\\+`\\(\\\\w\\+|-|.\\)`\\[\\\\w\\+|\\\\s\\]' AND process.cmd_line rlike '\"\\(\\\\\\{\\\\d\\\\\\}\\)\\+\"\\\\s*-f' AND process.cmd_line rlike '\\(?i\\)\\\\$\\\\\\{`?e`?n`?v`?:`?p`?a`?t`?h`?\\\\\\}' AND NOT contains(lower(process.cmd_line), lower('${env:path}')))"
       }
     },
     "output": {

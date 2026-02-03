@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\te.exe')) AND endswith(lower(process.parent_process.name), lower('\\\\te.exe')) AND lower(process.file.name) = lower('\\\\te.exe'))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\te.exe')) AND endswith(lower(process.parent_process.name), lower('\\\\\\\\te.exe')) AND lower(process.file.name) = lower('\\\\\\\\te.exe'))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: It's not an uncommon to use te.exe directly to execute legal TAEF tests References: https://lolbas-project.github.io/lolbas/OtherMSBinaries/Te/, https://twitter.com/pabraeken/status/993298228840992768, https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/",
       "mitre": [

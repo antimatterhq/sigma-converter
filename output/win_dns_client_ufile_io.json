@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND metadata.event_code = 3008 AND contains(lower(query.hostname), lower('ufile.io')))"
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND metadata.event_code = 3008 AND contains(lower(query.hostname), lower('ufile.io')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: DNS queries for \"ufile\" are not malicious by nature necessarily. Investigate the source to determine the necessary actions to take Reference: https://thedfirreport.com/2021/12/13/diavol-ransomware/",
       "mitre": [

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(LOWER(api.response.code)) in (401, 403))"
+        "sql": "SELECT * FROM user_access WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(api.response.code AS INT) in (401, 403))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: A misconfigured RBAC policy, a mistake by a valid user, or a wider issue with authentication tokens can also generate these errors. References: https://kubernetes.io/docs/reference/config-api/apiserver-audit.v1/, https://www.datadoghq.com/blog/monitor-kubernetes-audit-logs/#monitor-api-authentication-issues",
       "mitre": [

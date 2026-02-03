@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('/dscl')) AND contains(lower(process.cmd_line), lower('create')) OR endswith(lower(process.name), lower('/sysadminctl')) AND contains(lower(process.cmd_line), lower('adduser'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (endswith(lower(process.name), lower('/dscl')) AND contains(lower(process.cmd_line), lower('create')) OR endswith(lower(process.name), lower('/sysadminctl')) AND contains(lower(process.cmd_line), lower('adduser'))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Legitimate administration activities References: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1136.001/T1136.001.md, https://ss64.com/osx/sysadminctl.html",
       "mitre": [

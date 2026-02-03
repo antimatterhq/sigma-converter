@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM datastore_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('rds.amazonaws.com') AND lower(databucket.is_public) = lower('true') AND lower(api.operation) = lower('restoredbinstancefromdbsnapshot'))"
+        "sql": "SELECT * FROM datastore_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('rds.amazonaws.com') AND CAST(databucket.is_public AS BOOLEAN) = CAST('true' AS BOOLEAN) AND lower(api.operation) = lower('restoredbinstancefromdbsnapshot'))"
       }
     },
     "output": {

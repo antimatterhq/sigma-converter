@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\dumpminitool.exe')) OR endswith(lower(process.name), lower('\\\\dumpminitool.x86.exe')) OR endswith(lower(process.name), lower('\\\\dumpminitool.arm64.exe'))) AND (lower(LOWER(process.file.name)) in ('dumpminitool\\.exe', 'dumpminitool\\.x86\\.exe', 'dumpminitool\\.arm64\\.exe')) AND (contains(lower(process.cmd_line), lower(' full')) OR contains(lower(process.cmd_line), lower(' mini')) OR contains(lower(process.cmd_line), lower(' withheap'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (endswith(lower(process.name), lower('\\\\\\\\dumpminitool.exe')) OR endswith(lower(process.name), lower('\\\\\\\\dumpminitool.x86.exe')) OR endswith(lower(process.name), lower('\\\\\\\\dumpminitool.arm64.exe'))) AND (lower(LOWER(process.file.name)) in ('dumpminitool\\\\.exe', 'dumpminitool\\\\.x86\\\\.exe', 'dumpminitool\\\\.arm64\\\\.exe')) AND (contains(lower(process.cmd_line), lower(' full')) OR contains(lower(process.cmd_line), lower(' mini')) OR contains(lower(process.cmd_line), lower(' withheap'))))"
       }
     },
     "output": {

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(device.desc), lower('7-zip')) AND (endswith(lower(process.name), lower('\\\\7z.exe')) OR endswith(lower(process.name), lower('\\\\7zr.exe')) OR endswith(lower(process.name), lower('\\\\7za.exe'))) AND (lower(LOWER(process.file.name)) in ('7z\\.exe', '7za\\.exe')) AND (contains(lower(process.cmd_line), lower('.dmp')) OR contains(lower(process.cmd_line), lower('.dump')) OR contains(lower(process.cmd_line), lower('.hdmp'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND contains(lower(device.desc), lower('7-zip')) AND (endswith(lower(process.name), lower('\\\\\\\\7z.exe')) OR endswith(lower(process.name), lower('\\\\\\\\7zr.exe')) OR endswith(lower(process.name), lower('\\\\\\\\7za.exe'))) AND (lower(LOWER(process.file.name)) in ('7z\\\\.exe', '7za\\\\.exe')) AND (contains(lower(process.cmd_line), lower('.dmp')) OR contains(lower(process.cmd_line), lower('.dump')) OR contains(lower(process.cmd_line), lower('.hdmp'))))"
       }
     },
     "output": {

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND contains(lower(query.hostname), lower('seed')) AND contains(lower(query.hostname), lower('.nkn.org')))"
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND contains(lower(query.hostname), lower('seed')) AND contains(lower(query.hostname), lower('.nkn.org')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "Examine fields: id.orig_h, id.resp_h, answers.rdata False positive: Unknown References: https://github.com/nknorg/nkn-sdk-go, https://unit42.paloaltonetworks.com/manageengine-godzilla-nglite-kdcsponge/, https://github.com/Maka8ka/NGLite",
       "mitre": [

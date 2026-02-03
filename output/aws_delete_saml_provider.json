@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('iam.amazonaws.com') AND lower(metadata.event_code) = lower('deletesamlprovider') AND lower(actor.authorizations.decision) = lower('success'))"
+        "sql": "SELECT * FROM authentication WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(metadata.product.name) = lower('iam.amazonaws.com') AND lower(metadata.event_code) = lower('deletesamlprovider') AND exists(actor.authorizations, x -> lower(x.decision) = lower('success')))"
       }
     },
     "output": {

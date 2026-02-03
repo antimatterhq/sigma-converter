@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND endswith(lower(process.name), lower('\\\\runonce.exe')) AND lower(device.desc) = lower('run once wrapper') AND contains(lower(process.cmd_line), lower('/alternateshellstartup')) AND endswith(lower(process.cmd_line), lower('/r')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\runonce.exe')) AND lower(device.desc) = lower('run once wrapper') AND contains(lower(process.cmd_line), lower('/alternateshellstartup')) AND endswith(lower(process.cmd_line), lower('/r')))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Unknown References: https://twitter.com/pabraeken/status/990717080805789697, https://lolbas-project.github.io/lolbas/Binaries/Runonce/, https://twitter.com/0gtweet/status/1602644163824156672?s=20&t=kuxbUnZPltpvFPZdCrqPXA",
       "mitre": [

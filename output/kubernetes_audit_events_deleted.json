@@ -17,7 +17,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('4') AND lower(api.operation) = lower('delete') AND lower(resources.name) = lower('events'))"
+        "sql": "SELECT * FROM api_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 4 AND lower(api.operation) = lower('delete') AND exists(resources, x -> lower(x.name) = lower('events')))"
       }
     },
     "output": {

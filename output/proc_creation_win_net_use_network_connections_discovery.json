@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('1') AND (endswith(lower(process.name), lower('\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\net1.exe'))) AND (lower(LOWER(process.file.name)) in ('net\\.exe', 'net1\\.exe')) AND (endswith(lower(process.cmd_line), lower(' use')) OR endswith(lower(process.cmd_line), lower(' sessions'))) AND (contains(lower(process.cmd_line), lower(' use ')) OR contains(lower(process.cmd_line), lower(' sessions '))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (endswith(lower(process.name), lower('\\\\\\\\net.exe')) OR endswith(lower(process.name), lower('\\\\\\\\net1.exe'))) AND (lower(LOWER(process.file.name)) in ('net\\\\.exe', 'net1\\\\.exe')) AND (endswith(lower(process.cmd_line), lower(' use')) OR endswith(lower(process.cmd_line), lower(' sessions'))) AND (contains(lower(process.cmd_line), lower(' use ')) OR contains(lower(process.cmd_line), lower(' sessions '))))"
       }
     },
     "output": {
@@ -25,7 +25,7 @@
     },
     "metadata": {
       "version": 1.0,
-      "severity": "Low",
+      "severity": "Informational",
       "fidelity": "Investigative",
       "objective": "False positive: Unknown Reference: https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-1---system-network-connections-discovery",
       "mitre": [

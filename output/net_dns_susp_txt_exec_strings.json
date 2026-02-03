@@ -15,7 +15,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (lower(activity_id) = lower('2') AND lower(query.type) = lower('txt') AND (contains(lower(answers.rdata), lower('iex')) OR contains(lower(answers.rdata), lower('invoke-expression')) OR contains(lower(answers.rdata), lower('cmd.exe'))))"
+        "sql": "SELECT * FROM dns_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 2 AND lower(query.type) = lower('txt') AND (exists(answers, x -> contains(lower(x.rdata), lower('iex'))) OR exists(answers, x -> contains(lower(x.rdata), lower('invoke-expression'))) OR exists(answers, x -> contains(lower(x.rdata), lower('cmd.exe')))))"
       }
     },
     "output": {
