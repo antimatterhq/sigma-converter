@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND lower(process.file.name) = lower('advancedrun.exe') AND contains(lower(process.cmd_line), lower(' /exefilename ')) AND contains(lower(process.cmd_line), lower(' /run')) AND contains(lower(process.cmd_line), lower(' /windowstate 0')) AND contains(lower(process.cmd_line), lower(' /runas ')) AND contains(lower(process.cmd_line), lower(' /commandline ')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(1 AS INT) AND lower(process.file.name) = lower('advancedrun.exe') AND contains(lower(process.cmd_line), lower(' /exefilename ')) AND contains(lower(process.cmd_line), lower(' /run')) AND contains(lower(process.cmd_line), lower(' /windowstate 0')) AND contains(lower(process.cmd_line), lower(' /runas ')) AND contains(lower(process.cmd_line), lower(' /commandline ')))"
       }
     },
     "output": {

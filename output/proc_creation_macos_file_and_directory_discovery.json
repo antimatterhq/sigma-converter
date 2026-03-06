@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (lower(process.name) = lower('/usr/bin/file') AND process.cmd_line rlike '\\(.\\)\\{200,\\}' OR lower(process.name) = lower('/bin/ls') AND contains(lower(process.cmd_line), lower('-r')) OR lower(process.name) = lower('/usr/bin/find') OR lower(process.name) = lower('/usr/bin/mdfind') OR lower(process.name) = lower('/tree')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(1 AS INT) AND (lower(process.name) = lower('/usr/bin/file') AND process.cmd_line rlike '\\(.\\)\\{200,\\}' OR lower(process.name) = lower('/bin/ls') AND contains(lower(process.cmd_line), lower('-r')) OR lower(process.name) = lower('/usr/bin/find') OR lower(process.name) = lower('/usr/bin/mdfind') OR lower(process.name) = lower('/tree')))"
       }
     },
     "output": {

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 2 AND (lower(LOWER(process.file.name)) in ('powershell\\\\.exe', 'pwsh\\\\.dll')) AND (endswith(lower(process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('stop-service ')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(2 AS INT) AND (lower(LOWER(process.file.name)) in ('powershell\\\\.exe', 'pwsh\\\\.dll')) AND (endswith(lower(process.name), lower('\\\\\\\\powershell.exe')) OR endswith(lower(process.name), lower('\\\\\\\\pwsh.exe'))) AND contains(lower(process.cmd_line), lower('stop-service ')))"
       }
     },
     "output": {

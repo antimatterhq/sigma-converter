@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 5 AND contains(lower(process.cmd_line), lower('chown root')) AND (contains(lower(process.cmd_line), lower(' chmod u+s')) OR contains(lower(process.cmd_line), lower(' chmod g+s'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(5 AS INT) AND contains(lower(process.cmd_line), lower('chown root')) AND (contains(lower(process.cmd_line), lower(' chmod u+s')) OR contains(lower(process.cmd_line), lower(' chmod g+s'))))"
       }
     },
     "output": {

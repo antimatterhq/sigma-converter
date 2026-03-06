@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND endswith(lower(process.name), lower('\\\\\\\\whoami.exe')) AND lower(process.file.name) = lower('whoami.exe') AND (contains(lower(process.cmd_line), lower(' -all')) OR contains(lower(process.cmd_line), lower(' /all')) OR contains(lower(process.cmd_line), lower(' \u2013all')) OR contains(lower(process.cmd_line), lower(' \u2014all')) OR contains(lower(process.cmd_line), lower(' \u2015all'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(1 AS INT) AND endswith(lower(process.name), lower('\\\\\\\\whoami.exe')) AND lower(process.file.name) = lower('whoami.exe') AND (contains(lower(process.cmd_line), lower(' -all')) OR contains(lower(process.cmd_line), lower(' /all')) OR contains(lower(process.cmd_line), lower(' \u2013all')) OR contains(lower(process.cmd_line), lower(' \u2014all')) OR contains(lower(process.cmd_line), lower(' \u2015all'))))"
       }
     },
     "output": {
