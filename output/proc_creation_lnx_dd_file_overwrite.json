@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND (lower(LOWER(process.name)) in ('/bin/dd', '/usr/bin/dd')) AND contains(lower(process.cmd_line), lower('of=')) AND (contains(lower(process.cmd_line), lower('if=/dev/zero')) OR contains(lower(process.cmd_line), lower('if=/dev/null'))))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(1 AS INT) AND (lower(LOWER(process.name)) in ('/bin/dd', '/usr/bin/dd')) AND contains(lower(process.cmd_line), lower('of=')) AND (contains(lower(process.cmd_line), lower('if=/dev/zero')) OR contains(lower(process.cmd_line), lower('if=/dev/null'))))"
       }
     },
     "output": {

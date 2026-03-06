@@ -685,6 +685,10 @@ class SigmaRuleOCSFLite(SigmaRule):
                     for target_field in table_mappings.values()
                     if table_field_types[table_name].get(target_field)
                 }
+                # `activity_id` is injected into rules by the LakeWatch pipeline (AddConditionTransformation),
+                # so it won't be discovered via mapped detection fields. Ensure it's typed so the backend
+                # emits numeric comparisons (CAST(... AS INT)) rather than string lowering.
+                type_map.setdefault("activity_id", "INT")
                 if type_map:
                     logsource_field_type_mappings[logsource_key] = type_map
 
@@ -701,6 +705,7 @@ class SigmaRuleOCSFLite(SigmaRule):
                         for target_field in table_mappings.values()
                         if table_field_types[table_name].get(target_field)
                     }
+                    type_map.setdefault("activity_id", "INT")
                     if type_map:
                         conflicted_rule_field_type_mappings[rule['id']] = type_map
 

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 1 AND lower(process.name) = lower('teamviewer_desktop.exe') AND lower(process.parent_process.name) = lower('teamviewer_service.exe') AND endswith(lower(process.cmd_line), lower('teamviewer_desktop.exe --ipcport 5939 --module 1')))"
+        "sql": "SELECT * FROM process_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(1 AS INT) AND lower(process.name) = lower('teamviewer_desktop.exe') AND lower(process.parent_process.name) = lower('teamviewer_service.exe') AND endswith(lower(process.cmd_line), lower('teamviewer_desktop.exe --ipcport 5939 --module 1')))"
       }
     },
     "output": {

@@ -16,7 +16,7 @@
     },
     "input": {
       "batch": {
-        "sql": "SELECT * FROM datastore_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (activity_id = 8 AND lower(metadata.product.name) = lower('s3.amazonaws.com') AND lower(api.operation) = lower('listbuckets') AND NOT lower(actor.user.type) = lower('assumedrole'))"
+        "sql": "SELECT * FROM datastore_activity WHERE time BETWEEN CURRENT_TIMESTAMP() - INTERVAL 24 HOUR AND CURRENT_TIMESTAMP() AND (CAST(activity_id AS INT) = CAST(8 AS INT) AND lower(metadata.product.name) = lower('s3.amazonaws.com') AND lower(api.operation) = lower('listbuckets') AND NOT lower(actor.user.type) = lower('assumedrole'))"
       }
     },
     "output": {
